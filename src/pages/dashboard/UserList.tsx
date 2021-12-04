@@ -153,7 +153,7 @@ export default function UserList() {
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="User: List | Minimal-UI">
+    <Page title="User: List | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="User List"

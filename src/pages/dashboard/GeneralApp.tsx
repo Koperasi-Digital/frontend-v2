@@ -26,7 +26,7 @@ export default function GeneralApp() {
   const { user } = useAuth();
 
   return (
-    <Page title="General: App | Minimal-UI">
+    <Page title="General: App | CoopChick">
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>

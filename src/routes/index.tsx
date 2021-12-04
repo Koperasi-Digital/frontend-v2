@@ -68,6 +68,10 @@ export default function Router() {
 
     // Dashboard Routes
     {
+      path: '/',
+      element: <Navigate to="/dashboard" replace />
+    },
+    {
       path: 'dashboard',
       element: (
         <AuthGuard>

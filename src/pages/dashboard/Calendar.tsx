@@ -156,7 +156,7 @@ export default function Calendar() {
   };
 
   return (
-    <Page title="Calendar | Minimal-UI">
+    <Page title="Calendar | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Calendar"

@@ -20,7 +20,7 @@ import {
 
 export default function GeneralEcommerce() {
   return (
-    <Page title="General: E-commerce | Minimal-UI">
+    <Page title="General: E-commerce | CoopChick">
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>

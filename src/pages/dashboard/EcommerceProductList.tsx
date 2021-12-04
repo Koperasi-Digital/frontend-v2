@@ -163,7 +163,7 @@ export default function EcommerceProductList() {
   const isProductNotFound = filteredProducts.length === 0;
 
   return (
-    <Page title="Ecommerce: Product List | Minimal-UI">
+    <Page title="Ecommerce: Product List | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Product List"

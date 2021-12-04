@@ -20,7 +20,7 @@ import {
 
 export default function GeneralBooking() {
   return (
-    <Page title="General: Banking | Minimal-UI">
+    <Page title="General: Banking | CoopChick">
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>

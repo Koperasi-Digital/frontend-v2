@@ -117,7 +117,7 @@ export default function UserProfile() {
   ];
 
   return (
-    <Page title="User: Profile | Minimal-UI">
+    <Page title="User: Profile | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Profile"

@@ -32,7 +32,7 @@ export default function UserCards() {
   }, [dispatch]);
 
   return (
-    <Page title="User: Cards | Minimal-UI">
+    <Page title="User: Cards | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="User Cards"

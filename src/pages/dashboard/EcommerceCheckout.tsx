@@ -95,7 +95,7 @@ export default function EcommerceCheckout() {
   }, [dispatch, activeStep]);
 
   return (
-    <Page title="Ecommerce: Checkout | Minimal-UI">
+    <Page title="Ecommerce: Checkout | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Checkout"

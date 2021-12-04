@@ -22,7 +22,7 @@ export default function Chat() {
   }, [dispatch]);
 
   return (
-    <Page title="Chat | Minimal-UI">
+    <Page title="Chat | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Chat"

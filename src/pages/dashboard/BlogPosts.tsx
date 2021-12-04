@@ -74,7 +74,7 @@ export default function BlogPosts() {
   };
 
   return (
-    <Page title="Blog: Posts | Minimal-UI">
+    <Page title="Blog: Posts | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Blog"

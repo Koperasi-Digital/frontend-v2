@@ -1,6 +1,6 @@
 {
-  "name": "@minimal/material-kit-react",
-  "author": "minimals.cc",
+  "name": "coopchick-frontend",
+  "author": "coopchick",
   "version": "2.6.0",
   "private": true,
   "scripts": {

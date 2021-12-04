@@ -49,7 +49,7 @@ export default function BlogPost() {
   }, [dispatch, title]);
 
   return (
-    <Page title="Blog: Post Details | Minimal-UI">
+    <Page title="Blog: Post Details | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Post Details"

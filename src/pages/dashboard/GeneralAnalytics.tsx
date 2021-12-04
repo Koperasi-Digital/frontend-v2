@@ -21,7 +21,7 @@ import {
 
 export default function GeneralAnalytics() {
   return (
-    <Page title="General: Analytics | Minimal-UI">
+    <Page title="General: Analytics | CoopChick">
       <Container maxWidth={false}>
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
