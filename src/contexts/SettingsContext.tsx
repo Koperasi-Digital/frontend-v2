@@ -2,13 +2,13 @@ import { ReactNode, createContext } from 'react';
 // hooks
 import useLocalStorage from '../hooks/useLocalStorage';
 // @type
-import { ThemeMode, SettingsContextProps } from '../@types/settings';
+import { SettingsContextProps } from '../@types/settings';
 
 // ----------------------------------------------------------------------
 
 const initialState: SettingsContextProps = {
   themeMode: 'light',
-  onChangeMode: () => {}
+  toggleChangeMode: () => {}
 };
 
 const SettingsContext = createContext(initialState);
@@ -18,14 +18,14 @@ type SettingsProviderProps = {
 };
 
 function SettingsProvider({ children }: SettingsProviderProps) {
-  const [settings, setSettings] = useLocalStorage('settings', {
+  const [settings, setSettings] = useLocalStorage<Partial<SettingsContextProps>>('settings', {
     themeMode: initialState.themeMode
   });
 
-  const onChangeMode = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const toggleChangeMode = () => {
     setSettings({
       ...settings,
-      themeMode: (event.target as HTMLInputElement).value as ThemeMode
+      themeMode: settings.themeMode === 'light' ? 'dark' : 'light'
     });
   };
 
@@ -34,7 +34,7 @@ function SettingsProvider({ children }: SettingsProviderProps) {
       value={{
         ...settings,
         // Mode
-        onChangeMode
+        toggleChangeMode
       }}
     >
       {children}

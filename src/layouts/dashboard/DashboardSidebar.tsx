@@ -2,21 +2,12 @@ import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { alpha, styled } from '@mui/material/styles';
-import {
-  Box,
-  Link,
-  Stack,
-  Button,
-  Drawer,
-  Tooltip,
-  Typography,
-  CardActionArea
-} from '@mui/material';
+import { Box, Link, Stack, Drawer, Tooltip, Typography, CardActionArea } from '@mui/material';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useCollapseDrawer from '../../hooks/useCollapseDrawer';
 // routes
-import { PATH_DASHBOARD, PATH_DOCS } from '../../routes/paths';
+import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import Logo from '../../components/Logo';
 import MyAvatar from '../../components/MyAvatar';
@@ -25,7 +16,6 @@ import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 //
 import sidebarConfig from './SidebarConfig';
-import { DocIllustration } from '../../assets';
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 280;
@@ -166,31 +156,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
       </Stack>
 
       <NavSection navConfig={sidebarConfig} isShow={!isCollapse} />
-
-      <Box sx={{ flexGrow: 1 }} />
-
-      {!isCollapse && (
-        <Stack
-          spacing={3}
-          alignItems="center"
-          sx={{ px: 5, pb: 5, mt: 10, width: 1, textAlign: 'center' }}
-        >
-          <DocIllustration sx={{ width: 1 }} />
-
-          <div>
-            <Typography gutterBottom variant="subtitle1">
-              Hi, {user?.displayName}
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Need help?
-              <br /> Please check our docs
-            </Typography>
-          </div>
-          <Button href={PATH_DOCS} target="_blank" variant="contained">
-            Documentation
-          </Button>
-        </Stack>
-      )}
     </Scrollbar>
   );
 
