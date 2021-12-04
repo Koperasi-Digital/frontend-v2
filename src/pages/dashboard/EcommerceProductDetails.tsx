@@ -16,8 +16,6 @@ import { getProduct, addCart, onGotoStep } from '../../redux/slices/product';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // @types
 import { CartItem, ProductState } from '../../@types/products';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import Markdown from '../../components/Markdown';
@@ -80,7 +78,6 @@ const SkeletonLoad = (
 );
 
 export default function EcommerceProductDetails() {
-  const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const [value, setValue] = useState('1');
   const { name = '' } = useParams();
@@ -102,7 +99,7 @@ export default function EcommerceProductDetails() {
 
   return (
     <Page title="Ecommerce: Product Details | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Product Details"
           links={[

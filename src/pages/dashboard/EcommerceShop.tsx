@@ -12,8 +12,6 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import fakeRequest from '../../utils/fakeRequest';
 // @types
 import { Product, ProductState, ProductFilter } from '../../@types/products';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -79,7 +77,6 @@ function applyFilter(products: Product[], sortBy: string | null, filters: Produc
 }
 
 export default function EcommerceShop() {
-  const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const [openFilter, setOpenFilter] = useState(false);
   const { products, sortBy, filters } = useSelector(
@@ -145,7 +142,7 @@ export default function EcommerceShop() {
         </Backdrop>
       )}
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Shop"
           links={[

@@ -8,8 +8,6 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { getPost, getRecentPosts } from '../../redux/slices/blog';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // @types
 import { BlogState } from '../../@types/blog';
 // components
@@ -41,7 +39,6 @@ const SkeletonLoad = (
 );
 
 export default function BlogPost() {
-  const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { title = '' } = useParams();
   const { post, error, recentPosts } = useSelector((state: { blog: BlogState }) => state.blog);
@@ -53,7 +50,7 @@ export default function BlogPost() {
 
   return (
     <Page title="Blog: Post Details | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Post Details"
           links={[

@@ -26,8 +26,6 @@ import { RootState, useDispatch, useSelector } from '../../redux/store';
 import { getUserList, deleteUser } from '../../redux/slices/user';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // @types
 import { UserManager } from '../../@types/user';
 // components
@@ -87,7 +85,6 @@ function applySortFilter(
 }
 
 export default function UserList() {
-  const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
 
@@ -157,7 +154,7 @@ export default function UserList() {
 
   return (
     <Page title="User: List | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="User List"
           links={[

@@ -1,7 +1,5 @@
 // material
 import { Grid, Container } from '@mui/material';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import {
@@ -21,11 +19,9 @@ import {
 // ----------------------------------------------------------------------
 
 export default function GeneralBooking() {
-  const { themeStretch } = useSettings();
-
   return (
     <Page title="General: Banking | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
+      <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
             <BookingTotal />

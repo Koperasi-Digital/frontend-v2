@@ -22,7 +22,6 @@ import {
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useAuth from '../../hooks/useAuth';
-import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -55,7 +54,6 @@ const TabsWrapperStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function UserProfile() {
-  const { themeStretch } = useSettings();
   const { user } = useAuth();
   const dispatch = useDispatch();
   const { myProfile, posts, followers, friends, gallery } = useSelector(
@@ -120,7 +118,7 @@ export default function UserProfile() {
 
   return (
     <Page title="User: Profile | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Profile"
           links={[

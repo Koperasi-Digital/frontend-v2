@@ -19,8 +19,6 @@ import {
 } from '../../redux/slices/user';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -35,7 +33,6 @@ import {
 // ----------------------------------------------------------------------
 
 export default function UserAccount() {
-  const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { cards, invoices, myProfile, addressBook, notifications } = useSelector(
     (state: RootState) => state.user
@@ -93,7 +90,7 @@ export default function UserAccount() {
 
   return (
     <Page title="User: Account Settings | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Account"
           links={[

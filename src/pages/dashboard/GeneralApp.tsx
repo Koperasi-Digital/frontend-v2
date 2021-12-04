@@ -2,7 +2,6 @@
 import { Container, Grid, Stack } from '@mui/material';
 // hooks
 import useAuth from '../../hooks/useAuth';
-import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import {
@@ -24,12 +23,11 @@ import {
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
-  const { themeStretch } = useSettings();
   const { user } = useAuth();
 
   return (
     <Page title="General: App | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
+      <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
             <AppWelcome displayName={user?.displayName} />

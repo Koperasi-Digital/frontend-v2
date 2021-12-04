@@ -8,9 +8,7 @@ import { ThemeMode, SettingsContextProps } from '../@types/settings';
 
 const initialState: SettingsContextProps = {
   themeMode: 'light',
-  themeStretch: false,
-  onChangeMode: () => {},
-  onToggleStretch: () => {}
+  onChangeMode: () => {}
 };
 
 const SettingsContext = createContext(initialState);
@@ -21,8 +19,7 @@ type SettingsProviderProps = {
 
 function SettingsProvider({ children }: SettingsProviderProps) {
   const [settings, setSettings] = useLocalStorage('settings', {
-    themeMode: initialState.themeMode,
-    themeStretch: initialState.themeStretch
+    themeMode: initialState.themeMode
   });
 
   const onChangeMode = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,21 +29,12 @@ function SettingsProvider({ children }: SettingsProviderProps) {
     });
   };
 
-  const onToggleStretch = () => {
-    setSettings({
-      ...settings,
-      themeStretch: !settings.themeStretch
-    });
-  };
-
   return (
     <SettingsContext.Provider
       value={{
         ...settings,
         // Mode
-        onChangeMode,
-        // Stretch
-        onToggleStretch
+        onChangeMode
       }}
     >
       {children}

@@ -6,8 +6,6 @@ import { RootState, useDispatch, useSelector } from '../../redux/store';
 import { getUsers } from '../../redux/slices/user';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import { UserCard } from '../../components/_dashboard/user/cards';
@@ -26,7 +24,6 @@ const SkeletonLoad = (
 );
 
 export default function UserCards() {
-  const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { users } = useSelector((state: RootState) => state.user);
 
@@ -36,7 +33,7 @@ export default function UserCards() {
 
   return (
     <Page title="User: Cards | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="User Cards"
           links={[
