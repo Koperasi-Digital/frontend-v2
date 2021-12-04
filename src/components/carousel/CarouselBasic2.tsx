@@ -1,7 +1,6 @@
 import Slider from 'react-slick';
 import { useState, useRef } from 'react';
 // material
-import { useTheme } from '@mui/material/styles';
 import { Box, Card, Typography, CardContent } from '@mui/material';
 // utils
 import mockData from '../../utils/mock-data'; //
@@ -49,7 +48,6 @@ function CarouselItem({ item }: { item: CarouselItemProps }) {
 }
 
 export default function CarouselBasic2() {
-  const theme = useTheme();
   const carouselRef = useRef<Slider | null>(null);
   const [currentIndex, setCurrentIndex] = useState(2);
 
@@ -60,8 +58,7 @@ export default function CarouselBasic2() {
     slidesToShow: 1,
     slidesToScroll: 1,
     initialSlide: currentIndex,
-    fade: Boolean(theme.direction !== 'rtl'),
-    rtl: Boolean(theme.direction === 'rtl'),
+    fade: false,
     beforeChange: (current: number, next: number) => setCurrentIndex(next)
   };
 

@@ -19,12 +19,10 @@ const MOCK_CAROUSELS = [...Array(5)].map((_, index) => ({
 const THUMB_SIZE = 64;
 
 const RootStyle = styled(Box)(({ theme }) => {
-  const isRTL = theme.direction === 'rtl';
-
   return {
     root: {
       '& .slick-slide': {
-        float: isRTL ? 'right' : 'left'
+        float: 'left'
       }
     }
   };

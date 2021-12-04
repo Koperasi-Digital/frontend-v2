@@ -1,12 +1,10 @@
 // ----------------------------------------------------------------------
 
 export type ThemeMode = 'light' | 'dark';
-export type ThemeDirection = 'rtl' | 'ltr';
 export type ThemeColor = 'default' | 'purple' | 'cyan' | 'blue' | 'orange' | 'red';
 
 export type SettingsContextProps = {
   themeMode: ThemeMode;
-  themeDirection: ThemeDirection;
   themeColor: ThemeColor;
   themeStretch: boolean;
   setColor: {
@@ -23,7 +21,6 @@ export type SettingsContextProps = {
     value: string;
   }[];
   onChangeMode: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeDirection: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeColor: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onToggleStretch: VoidFunction;
 };

@@ -86,7 +86,6 @@ export default function BookingCustomerReviews() {
     arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1,
-    rtl: Boolean(theme.direction === 'rtl'),
     adaptiveHeight: true
   };
 

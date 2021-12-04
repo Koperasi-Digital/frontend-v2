@@ -4,7 +4,7 @@ import arrowRightFill from '@iconify/icons-eva/arrow-right-fill';
 import roundKeyboardArrowLeft from '@iconify/icons-ic/round-keyboard-arrow-left';
 import roundKeyboardArrowRight from '@iconify/icons-ic/round-keyboard-arrow-right';
 // material
-import { alpha, useTheme, styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import { Typography, Box, BoxProps } from '@mui/material';
 //
 import { MIconButton } from '../../@material-extend';
@@ -53,16 +53,13 @@ export default function CarouselControlsArrowsIndex({
   onPrevious,
   ...other
 }: CarouselControlsArrowsIndexProps) {
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
-
   return (
     <RootStyle {...other}>
       <ArrowStyle size="small" onClick={onPrevious}>
         {arrowLine ? (
-          <Icon icon={isRTL ? roundKeyboardArrowRight : roundKeyboardArrowLeft} {...ICON_SIZE} />
+          <Icon icon={roundKeyboardArrowLeft} {...ICON_SIZE} />
         ) : (
-          <Icon icon={isRTL ? arrowRightFill : arrowLeftFill} {...ICON_SIZE} />
+          <Icon icon={arrowLeftFill} {...ICON_SIZE} />
         )}
       </ArrowStyle>
 
@@ -72,9 +69,9 @@ export default function CarouselControlsArrowsIndex({
 
       <ArrowStyle size="small" onClick={onNext}>
         {arrowLine ? (
-          <Icon icon={isRTL ? roundKeyboardArrowLeft : roundKeyboardArrowRight} {...ICON_SIZE} />
+          <Icon icon={roundKeyboardArrowRight} {...ICON_SIZE} />
         ) : (
-          <Icon icon={isRTL ? arrowLeftFill : arrowRightFill} {...ICON_SIZE} />
+          <Icon icon={arrowRightFill} {...ICON_SIZE} />
         )}
       </ArrowStyle>
     </RootStyle>

@@ -7,7 +7,6 @@ import GlobalStyles from './theme/globalStyles';
 import useAuth from './hooks/useAuth';
 // components
 import Settings from './components/settings';
-import RtlLayout from './components/RtlLayout';
 import ScrollToTop from './components/ScrollToTop';
 import GoogleAnalytics from './components/GoogleAnalytics';
 import NotistackProvider from './components/NotistackProvider';
@@ -25,17 +24,15 @@ export default function App() {
     <ThemeConfig>
       <ThemePrimaryColor>
         <ThemeLocalization>
-          <RtlLayout>
-            <NotistackProvider>
-              <GlobalStyles />
-              <ProgressBarStyle />
-              <BaseOptionChartStyle />
-              <Settings />
-              <ScrollToTop />
-              <GoogleAnalytics />
-              {isInitialized ? <Router /> : <LoadingScreen />}
-            </NotistackProvider>
-          </RtlLayout>
+          <NotistackProvider>
+            <GlobalStyles />
+            <ProgressBarStyle />
+            <BaseOptionChartStyle />
+            <Settings />
+            <ScrollToTop />
+            <GoogleAnalytics />
+            {isInitialized ? <Router /> : <LoadingScreen />}
+          </NotistackProvider>
         </ThemeLocalization>
       </ThemePrimaryColor>
     </ThemeConfig>

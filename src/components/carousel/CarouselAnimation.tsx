@@ -92,11 +92,8 @@ function CarouselItem({ item, isActive }: { item: CarouselItemProps; isActive: b
 }
 
 export default function CarouselAnimation() {
-  const theme = useTheme();
   const carouselRef = useRef<Slider | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(
-    theme.direction === 'rtl' ? MOCK_CAROUSELS.length - 1 : 0
-  );
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const settings = {
     speed: 800,
@@ -105,7 +102,6 @@ export default function CarouselAnimation() {
     autoplay: true,
     slidesToShow: 1,
     slidesToScroll: 1,
-    rtl: Boolean(theme.direction === 'rtl'),
     beforeChange: (current: number, next: number) => setCurrentIndex(next)
   };
 

@@ -1,7 +1,7 @@
 import Slider from 'react-slick';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { alpha, useTheme, styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import { Box, Card, Button, CardContent, Typography } from '@mui/material';
 // utils
 import mockData from '../../../utils/mock-data';
@@ -81,8 +81,6 @@ function CarouselItem({ item }: CarouselItemProps) {
 }
 
 export default function EcommerceNewProducts() {
-  const theme = useTheme();
-
   const settings = {
     speed: 1000,
     dots: true,
@@ -90,7 +88,6 @@ export default function EcommerceNewProducts() {
     autoplay: true,
     slidesToShow: 1,
     slidesToScroll: 1,
-    rtl: Boolean(theme.direction === 'rtl'),
     ...CarouselControlsPaging1({ color: 'primary.main' })
   };
 

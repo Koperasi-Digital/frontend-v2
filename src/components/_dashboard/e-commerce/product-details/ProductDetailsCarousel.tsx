@@ -16,7 +16,7 @@ const THUMB_SIZE = 64;
 
 const RootStyle = styled('div')(({ theme }) => ({
   '& .slick-slide': {
-    float: theme.direction === 'rtl' ? 'right' : 'left',
+    float: 'left',
     '&:focus': { outline: 'none' }
   }
 }));

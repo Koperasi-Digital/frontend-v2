@@ -4,7 +4,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 // theme
 import palette from '../theme/palette';
 // @type
-import { ThemeMode, ThemeDirection, ThemeColor, SettingsContextProps } from '../@types/settings';
+import { ThemeMode, ThemeColor, SettingsContextProps } from '../@types/settings';
 
 // ----------------------------------------------------------------------
 
@@ -99,11 +99,9 @@ function SetColor(themeColor: ThemeColor) {
 
 const initialState: SettingsContextProps = {
   themeMode: 'light',
-  themeDirection: 'ltr',
   themeColor: 'default',
   themeStretch: false,
   onChangeMode: () => {},
-  onChangeDirection: () => {},
   onChangeColor: () => {},
   onToggleStretch: () => {},
   setColor: PRIMARY_COLOR[0],
@@ -119,7 +117,6 @@ type SettingsProviderProps = {
 function SettingsProvider({ children }: SettingsProviderProps) {
   const [settings, setSettings] = useLocalStorage('settings', {
     themeMode: initialState.themeMode,
-    themeDirection: initialState.themeDirection,
     themeColor: initialState.themeColor,
     themeStretch: initialState.themeStretch
   });
@@ -128,13 +125,6 @@ function SettingsProvider({ children }: SettingsProviderProps) {
     setSettings({
       ...settings,
       themeMode: (event.target as HTMLInputElement).value as ThemeMode
-    });
-  };
-
-  const onChangeDirection = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSettings({
-      ...settings,
-      themeDirection: (event.target as HTMLInputElement).value as ThemeDirection
     });
   };
 
@@ -158,8 +148,6 @@ function SettingsProvider({ children }: SettingsProviderProps) {
         ...settings,
         // Mode
         onChangeMode,
-        // Direction
-        onChangeDirection,
         // Color
         onChangeColor,
         setColor: SetColor(settings.themeColor),
