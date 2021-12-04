@@ -8,7 +8,6 @@ import { Box, Backdrop, Paper, Tooltip, Divider, Typography, Stack } from '@mui/
 import Scrollbar from '../Scrollbar';
 import { MIconButton } from '../@material-extend';
 import SettingMode from './SettingMode';
-import SettingColor from './SettingColor';
 import SettingStretch from './SettingStretch';
 
 // ----------------------------------------------------------------------
@@ -111,11 +110,6 @@ export default function Settings() {
               <Stack spacing={1.5}>
                 <Typography variant="subtitle2">Mode</Typography>
                 <SettingMode />
-              </Stack>
-
-              <Stack spacing={1.5}>
-                <Typography variant="subtitle2">Color</Typography>
-                <SettingColor />
               </Stack>
 
               <Stack spacing={1.5}>

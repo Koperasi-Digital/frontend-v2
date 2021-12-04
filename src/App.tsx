@@ -10,7 +10,6 @@ import Settings from './components/settings';
 import ScrollToTop from './components/ScrollToTop';
 import GoogleAnalytics from './components/GoogleAnalytics';
 import NotistackProvider from './components/NotistackProvider';
-import ThemePrimaryColor from './components/ThemePrimaryColor';
 import ThemeLocalization from './components/ThemeLocalization';
 import { BaseOptionChartStyle } from './components/charts/BaseOptionChart';
 import LoadingScreen, { ProgressBarStyle } from './components/LoadingScreen';
@@ -22,19 +21,17 @@ export default function App() {
 
   return (
     <ThemeConfig>
-      <ThemePrimaryColor>
-        <ThemeLocalization>
-          <NotistackProvider>
-            <GlobalStyles />
-            <ProgressBarStyle />
-            <BaseOptionChartStyle />
-            <Settings />
-            <ScrollToTop />
-            <GoogleAnalytics />
-            {isInitialized ? <Router /> : <LoadingScreen />}
-          </NotistackProvider>
-        </ThemeLocalization>
-      </ThemePrimaryColor>
+      <ThemeLocalization>
+        <NotistackProvider>
+          <GlobalStyles />
+          <ProgressBarStyle />
+          <BaseOptionChartStyle />
+          <Settings />
+          <ScrollToTop />
+          <GoogleAnalytics />
+          {isInitialized ? <Router /> : <LoadingScreen />}
+        </NotistackProvider>
+      </ThemeLocalization>
     </ThemeConfig>
   );
 }
