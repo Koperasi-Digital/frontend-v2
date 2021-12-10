@@ -135,7 +135,22 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
             )}
           </MHidden>
         </Stack>
-
+      </Stack>
+      <NavSection navConfig={sidebarConfig} isShow={!isCollapse} />
+      <Stack
+        spacing={3}
+        sx={{
+          position: 'sticky',
+          bottom: 0,
+          px: 2.5,
+          pt: 3,
+          pb: 2,
+          backgroundColor: (theme) => theme.palette.background.paper,
+          ...(isCollapse && {
+            alignItems: 'center'
+          })
+        }}
+      >
         {isCollapse ? (
           <MyAvatar sx={{ mx: 'auto', mb: 2 }} />
         ) : (
@@ -154,8 +169,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
           </Link>
         )}
       </Stack>
-
-      <NavSection navConfig={sidebarConfig} isShow={!isCollapse} />
     </Scrollbar>
   );
 

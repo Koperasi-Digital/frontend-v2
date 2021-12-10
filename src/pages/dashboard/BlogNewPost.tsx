@@ -11,15 +11,11 @@ import { BlogNewPostForm } from '../../components/_dashboard/blog';
 
 export default function BlogNewPost() {
   return (
-    <Page title="Blog: New Post | CoopChick">
+    <Page title="New Blog | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Create a new post"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Blog', href: PATH_DASHBOARD.blog.root },
-            { name: 'New Post' }
-          ]}
+          heading="Create a new blog"
+          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'New Blog' }]}
         />
 
         <BlogNewPostForm />

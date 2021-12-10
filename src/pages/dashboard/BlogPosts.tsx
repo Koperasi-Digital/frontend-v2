@@ -74,23 +74,19 @@ export default function BlogPosts() {
   };
 
   return (
-    <Page title="Blog: Posts | CoopChick">
+    <Page title="Blogs | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Blog"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Blog', href: PATH_DASHBOARD.blog.root },
-            { name: 'Posts' }
-          ]}
+          heading="Blogs"
+          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Blogs' }]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_DASHBOARD.blog.newPost}
+              to={PATH_DASHBOARD.general.newBlog}
               startIcon={<Icon icon={plusFill} />}
             >
-              New Post
+              New Blog
             </Button>
           }
         />

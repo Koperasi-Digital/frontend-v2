@@ -72,7 +72,7 @@ type BlogPostCardProps = {
 
 export default function BlogPostCard({ post, index }: BlogPostCardProps) {
   const { cover, title, view, comment, share, author, createdAt } = post;
-  const linkTo = `${PATH_DASHBOARD.blog.root}/post/${paramCase(title)}`;
+  const linkTo = `${PATH_DASHBOARD.root}/blogs/${paramCase(title)}`;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
 

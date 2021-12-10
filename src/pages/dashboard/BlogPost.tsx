@@ -49,15 +49,11 @@ export default function BlogPost() {
   }, [dispatch, title]);
 
   return (
-    <Page title="Blog: Post Details | CoopChick">
+    <Page title="Blog Details | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Post Details"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Blog', href: PATH_DASHBOARD.blog.root },
-            { name: sentenceCase(title) }
-          ]}
+          heading="Blog Details"
+          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: sentenceCase(title) }]}
         />
 
         {post && (
