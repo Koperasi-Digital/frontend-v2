@@ -23,8 +23,6 @@ import {
 } from '../../redux/slices/calendar';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // @types
 import { CalendarView } from '../../@types/calendar';
 // components
@@ -44,7 +42,6 @@ const selectedEventSelector = (state: RootState) => {
 };
 
 export default function Calendar() {
-  const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -159,8 +156,8 @@ export default function Calendar() {
   };
 
   return (
-    <Page title="Calendar | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
+    <Page title="Calendar | CoopChick">
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Calendar"
           links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Calendar' }]}

@@ -1,9 +1,6 @@
 // mock api
 import './_apis_';
 
-// i18n
-import './locales/i18n';
-
 // highlight
 import './utils/highlight';
 
@@ -18,7 +15,6 @@ import 'react-image-lightbox/style.css';
 
 // editor
 import 'react-quill/dist/quill.snow.css';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 // slick-carousel
 import 'slick-carousel/slick/slick.css';
@@ -46,12 +42,7 @@ import { CollapseDrawerProvider } from './contexts/CollapseDrawerContext';
 // components
 import LoadingScreen from './components/LoadingScreen';
 
-// Check our docs
-// https://docs-minimals.vercel.app/authentication/ts-version
-
 import { AuthProvider } from './contexts/JWTContext';
-// import { AuthProvider } from './contexts/AwsCognitoContext';
-// import { AuthProvider } from './contexts/Auth0Context';
 // import { AuthProvider } from './contexts/FirebaseContext';
 
 //

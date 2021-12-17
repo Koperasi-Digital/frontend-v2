@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { Icon } from '@iconify/react';
 import moreHorizontalFill from '@iconify/icons-eva/more-horizontal-fill';
 // material
-import { alpha, useTheme, styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import { Box, Card, Typography } from '@mui/material';
 // utils
 import mockData from '../../utils/mock-data'; //
@@ -34,7 +34,7 @@ const ContentItemStyle = styled('div')(({ theme }) => ({
   borderBottomRightRadius: 16,
   justifyContent: 'space-between',
   backgroundColor: alpha(theme.palette.grey[900], 0.72),
-  flexDirection: theme.direction === 'rtl' ? 'row-reverse' : 'row'
+  flexDirection: 'row'
 }));
 
 // ----------------------------------------------------------------------
@@ -79,7 +79,6 @@ function CarouselItem({ item }: { item: CarouselItemProps }) {
 }
 
 export default function CarouselBasic4() {
-  const theme = useTheme();
   const carouselRef = useRef<Slider | null>(null);
 
   const settings = {
@@ -88,8 +87,7 @@ export default function CarouselBasic4() {
     autoplay: true,
     slidesToShow: 1,
     slidesToScroll: 1,
-    fade: Boolean(theme.direction !== 'rtl'),
-    rtl: Boolean(theme.direction === 'rtl')
+    fade: false
   };
 
   const handlePrevious = () => {

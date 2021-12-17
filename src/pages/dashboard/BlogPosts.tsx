@@ -9,8 +9,6 @@ import { Box, Grid, Button, Skeleton, Container, Stack } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getPostsInitial, getMorePosts } from '../../redux/slices/blog';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // @types
@@ -58,7 +56,6 @@ const SkeletonLoad = (
 );
 
 export default function BlogPosts() {
-  const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const [filters, setFilters] = useState('latest');
   const { posts, hasMore, index, step } = useSelector((state: { blog: BlogState }) => state.blog);
@@ -77,23 +74,19 @@ export default function BlogPosts() {
   };
 
   return (
-    <Page title="Blog: Posts | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+    <Page title="Blogs | CoopChick">
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Blog"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Blog', href: PATH_DASHBOARD.blog.root },
-            { name: 'Posts' }
-          ]}
+          heading="Blogs"
+          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Blogs' }]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_DASHBOARD.blog.newPost}
+              to={PATH_DASHBOARD.general.newBlog}
               startIcon={<Icon icon={plusFill} />}
             >
-              New Post
+              New Blog
             </Button>
           }
         />

@@ -140,7 +140,7 @@ const CalendarStyle = styled('div')(({ theme }) => ({
   },
 
   // Agenda View
-  '& .fc-direction-ltr .fc-list-day-text, .fc-direction-rtl .fc-list-day-side-text, .fc-direction-ltr .fc-list-day-side-text, .fc-direction-rtl .fc-list-day-text':
+  '& .fc-direction-ltr .fc-list-day-text, .fc-list-day-side-text, .fc-direction-ltr .fc-list-day-side-text, .fc-list-day-text':
     {
       ...theme.typography.subtitle2
     },

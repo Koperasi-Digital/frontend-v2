@@ -21,8 +21,6 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // utils
 import { fCurrency } from '../../utils/formatNumber';
 import mockData from '../../utils/mock-data';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import Label from '../../components/Label';
@@ -70,14 +68,12 @@ const RowResultStyle = styled(TableRow)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function EcommerceInvoice() {
-  const { themeStretch } = useSettings();
-
   const subTotal = sum(INVOICE.items.map((item) => item.price * item.qty));
   const total = subTotal - INVOICE.discount + INVOICE.taxes;
 
   return (
-    <Page title="Ecommerce: Invoice | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+    <Page title="Ecommerce: Invoice | CoopChick">
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Invoice Details"
           links={[
@@ -229,7 +225,7 @@ export default function EcommerceInvoice() {
             </Grid>
             <Grid item xs={12} md={3} sx={{ py: 3, textAlign: 'right' }}>
               <Typography variant="subtitle2">Have a Question?</Typography>
-              <Typography variant="body2">support@minimals.cc</Typography>
+              <Typography variant="body2">support@coopchick.cc</Typography>
             </Grid>
           </Grid>
         </Card>

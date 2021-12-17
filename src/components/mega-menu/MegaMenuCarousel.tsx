@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import Slider from 'react-slick';
 import { NavLink as RouterLink } from 'react-router-dom';
 // material
-import { useTheme } from '@mui/material/styles';
 import { Box, Link, Typography } from '@mui/material';
 // @types
 import { MegaMenuCarouselProps } from '../../@types/mega-menu';
@@ -12,7 +11,6 @@ import { CarouselControlsPaging1, CarouselControlsArrowsBasic2 } from '../carous
 // ----------------------------------------------------------------------
 
 export default function MegaMenuCarousel({ products, numberShow, sx }: MegaMenuCarouselProps) {
-  const theme = useTheme();
   const carouselRef = useRef<Slider | null>(null);
 
   const settings = {
@@ -20,7 +18,6 @@ export default function MegaMenuCarousel({ products, numberShow, sx }: MegaMenuC
     arrows: false,
     slidesToShow: numberShow,
     slidesToScroll: numberShow,
-    rtl: Boolean(theme.direction === 'rtl'),
     ...CarouselControlsPaging1({
       color: 'primary.main',
       sx: {

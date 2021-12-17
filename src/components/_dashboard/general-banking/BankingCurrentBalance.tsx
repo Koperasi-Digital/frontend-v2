@@ -7,7 +7,7 @@ import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 import editFill from '@iconify/icons-eva/edit-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 // material
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { Box, Typography, Stack, MenuItem } from '@mui/material';
 // utils
 import { fCurrency } from '../../../utils/formatNumber';
@@ -209,14 +209,11 @@ function CardItem({ card }: CardItemProps) {
 }
 
 export default function BankingCurrentBalance() {
-  const theme = useTheme();
-
   const settings = {
     dots: true,
     arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1,
-    rtl: Boolean(theme.direction === 'rtl'),
     ...CarouselControlsPaging1({
       color: 'primary.main',
       bottom: '16px !important',

@@ -104,9 +104,7 @@ function CarouselItem({ item, isActive }: CarouselItemProps) {
 export default function AppFeatured() {
   const theme = useTheme();
   const carouselRef = useRef<Slider>(null);
-  const [currentIndex, setCurrentIndex] = useState(
-    theme.direction === 'rtl' ? MOCK_APPS.length - 1 : 0
-  );
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const settings = {
     speed: 800,
@@ -115,7 +113,6 @@ export default function AppFeatured() {
     autoplay: true,
     slidesToShow: 1,
     slidesToScroll: 1,
-    rtl: Boolean(theme.direction === 'rtl'),
     beforeChange: (current: number, next: number) => setCurrentIndex(next),
 
     ...CarouselControlsPaging1({

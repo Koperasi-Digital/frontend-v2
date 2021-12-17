@@ -94,7 +94,6 @@ export default function BookingCustomerReviews() {
     arrows: false,
     slidesToShow: 4,
     slidesToScroll: 1,
-    rtl: Boolean(theme.direction === 'rtl'),
     responsive: [
       {
         breakpoint: theme.breakpoints.values.lg,

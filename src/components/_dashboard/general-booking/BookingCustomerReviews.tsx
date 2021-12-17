@@ -4,7 +4,6 @@ import { Icon } from '@iconify/react';
 import checkmarkCircle2Fill from '@iconify/icons-eva/checkmark-circle-2-fill';
 import closeCircleFill from '@iconify/icons-eva/close-circle-fill';
 // material
-import { useTheme } from '@mui/material/styles';
 import { Card, Chip, Stack, Avatar, Rating, Button, CardHeader, Typography } from '@mui/material';
 // utils
 import { fDateTime } from '../../../utils/formatTime';
@@ -78,7 +77,6 @@ function ReviewItem({ item }: { item: ReviewItemProps }) {
 }
 
 export default function BookingCustomerReviews() {
-  const theme = useTheme();
   const carouselRef = useRef<Slider | null>(null);
 
   const settings = {
@@ -86,7 +84,6 @@ export default function BookingCustomerReviews() {
     arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1,
-    rtl: Boolean(theme.direction === 'rtl'),
     adaptiveHeight: true
   };
 

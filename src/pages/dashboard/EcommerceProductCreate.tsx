@@ -8,8 +8,6 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts } from '../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // @types
 import { ProductState } from '../../@types/products';
 // components
@@ -20,7 +18,6 @@ import ProductNewForm from '../../components/_dashboard/e-commerce/ProductNewFor
 // ----------------------------------------------------------------------
 
 export default function EcommerceProductCreate() {
-  const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { name = '' } = useParams();
@@ -33,8 +30,8 @@ export default function EcommerceProductCreate() {
   }, [dispatch]);
 
   return (
-    <Page title="Ecommerce: Create a new product | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+    <Page title="Ecommerce: Create a new product | CoopChick">
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading={!isEdit ? 'Create a new product' : 'Edit product'}
           links={[

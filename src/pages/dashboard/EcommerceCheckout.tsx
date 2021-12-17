@@ -11,7 +11,6 @@ import { getCart, createBilling } from '../../redux/slices/product';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useIsMountedRef from '../../hooks/useIsMountedRef';
-import useSettings from '../../hooks/useSettings';
 // @types
 import { ProductState } from '../../@types/products';
 // components
@@ -77,7 +76,6 @@ function QontoStepIcon({ active, completed }: { active: boolean; completed: bool
 }
 
 export default function EcommerceCheckout() {
-  const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const isMountedRef = useIsMountedRef();
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
@@ -97,8 +95,8 @@ export default function EcommerceCheckout() {
   }, [dispatch, activeStep]);
 
   return (
-    <Page title="Ecommerce: Checkout | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+    <Page title="Ecommerce: Checkout | CoopChick">
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Checkout"
           links={[

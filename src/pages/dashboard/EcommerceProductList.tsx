@@ -27,8 +27,6 @@ import { fDate } from '../../utils/formatTime';
 import { fCurrency } from '../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // @types
 import { Product, ProductState } from '../../@types/products';
 // components
@@ -101,7 +99,6 @@ function applySortFilter(array: Product[], comparator: (a: any, b: any) => numbe
 // ----------------------------------------------------------------------
 
 export default function EcommerceProductList() {
-  const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
 
@@ -166,8 +163,8 @@ export default function EcommerceProductList() {
   const isProductNotFound = filteredProducts.length === 0;
 
   return (
-    <Page title="Ecommerce: Product List | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+    <Page title="Ecommerce: Product List | CoopChick">
+      <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Product List"
           links={[

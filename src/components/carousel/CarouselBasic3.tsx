@@ -1,7 +1,7 @@
 import Slider from 'react-slick';
 import { useRef } from 'react';
 // material
-import { useTheme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 // utils
 import mockData from '../../utils/mock-data'; //
@@ -46,7 +46,6 @@ function CarouselItem({ item }: { item: CarouselItemProps }) {
 }
 
 export default function CarouselBasic3() {
-  const theme = useTheme();
   const carouselRef = useRef<Slider | null>(null);
 
   const settings = {
@@ -55,7 +54,6 @@ export default function CarouselBasic3() {
     autoplay: true,
     slidesToShow: 1,
     slidesToScroll: 1,
-    rtl: Boolean(theme.direction === 'rtl'),
     ...CarouselControlsPaging2({
       sx: { mt: 3 }
     })

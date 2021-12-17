@@ -22,28 +22,20 @@ export const PATH_AUTH = {
 export const PATH_PAGE = {
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
-  pricing: '/pricing',
-  payment: '/payment',
-  about: '/about-us',
-  contact: '/contact-us',
-  faqs: '/faqs',
   page404: '/404',
-  page500: '/500',
-  components: '/components'
+  page500: '/500'
 };
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   general: {
-    app: path(ROOTS_DASHBOARD, '/app'),
-    ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),
-    analytics: path(ROOTS_DASHBOARD, '/analytics'),
-    banking: path(ROOTS_DASHBOARD, '/banking'),
-    booking: path(ROOTS_DASHBOARD, '/booking')
-  },
-  mail: {
-    root: path(ROOTS_DASHBOARD, '/mail'),
-    all: path(ROOTS_DASHBOARD, '/mail/all')
+    dashboard: path(ROOTS_DASHBOARD, '/app'),
+    activities: path(ROOTS_DASHBOARD, '/activities'),
+    activity: path(ROOTS_DASHBOARD, '/activities/:id'),
+    blogs: path(ROOTS_DASHBOARD, '/blogs'),
+    blog: path(ROOTS_DASHBOARD, '/blogs/:title'),
+    blogById: path(ROOTS_DASHBOARD, '/blogs/apply-these-7-secret-techniques-to-improve-event'),
+    newBlog: path(ROOTS_DASHBOARD, '/blogs/new')
   },
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),
@@ -51,11 +43,9 @@ export const PATH_DASHBOARD = {
     conversation: path(ROOTS_DASHBOARD, '/chat/:conversationKey')
   },
   calendar: path(ROOTS_DASHBOARD, '/calendar'),
-  kanban: path(ROOTS_DASHBOARD, '/kanban'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
     profile: path(ROOTS_DASHBOARD, '/user/profile'),
-    cards: path(ROOTS_DASHBOARD, '/user/cards'),
     list: path(ROOTS_DASHBOARD, '/user/list'),
     newUser: path(ROOTS_DASHBOARD, '/user/new'),
     editById: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
@@ -72,13 +62,9 @@ export const PATH_DASHBOARD = {
     checkout: path(ROOTS_DASHBOARD, '/e-commerce/checkout'),
     invoice: path(ROOTS_DASHBOARD, '/e-commerce/invoice')
   },
-  blog: {
-    root: path(ROOTS_DASHBOARD, '/blog'),
-    posts: path(ROOTS_DASHBOARD, '/blog/posts'),
-    post: path(ROOTS_DASHBOARD, '/blog/post/:title'),
-    postById: path(ROOTS_DASHBOARD, '/blog/post/apply-these-7-secret-techniques-to-improve-event'),
-    newPost: path(ROOTS_DASHBOARD, '/blog/new-post')
+  finance: {
+    root: path(ROOTS_DASHBOARD, '/finance'),
+    home: path(ROOTS_DASHBOARD, '/finance/home'),
+    report: path(ROOTS_DASHBOARD, '/finance/report')
   }
 };
-
-export const PATH_DOCS = 'https://docs-minimals.vercel.app/introduction';

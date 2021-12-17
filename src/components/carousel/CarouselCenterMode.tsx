@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react';
 import { Link as RouterLink } from 'react-router-dom';
 import arrowForwardFill from '@iconify/icons-eva/arrow-forward-fill';
 // material
-import { alpha, useTheme, styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import { Box, Paper, Link, Typography, CardContent } from '@mui/material';
 // utils
 import mockData from '../../utils/mock-data'; //
@@ -119,13 +119,11 @@ function CarouselItem({ item }: { item: CarouselItemProps }) {
 
 export default function CarouselCenterMode() {
   const carouselRef = useRef<Slider | null>(null);
-  const theme = useTheme();
 
   const settings = {
     slidesToShow: 3,
     centerMode: true,
     centerPadding: '60px',
-    rtl: Boolean(theme.direction === 'rtl'),
     responsive: [
       {
         breakpoint: 1024,

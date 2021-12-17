@@ -1,7 +1,5 @@
 // material
 import { Grid, Container, Stack } from '@mui/material';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import {
@@ -19,11 +17,9 @@ import {
 // ----------------------------------------------------------------------
 
 export default function GeneralBanking() {
-  const { themeStretch } = useSettings();
-
   return (
-    <Page title="General: Banking | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
+    <Page title="General: Banking | CoopChick">
+      <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={7}>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3}>

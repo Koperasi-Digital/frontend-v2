@@ -172,7 +172,6 @@ export default function BankingQuickTransfer() {
     swipeToSlide: true,
     focusOnSelect: true,
     centerPadding: '0 40px',
-    rtl: Boolean(theme.direction === 'rtl'),
     beforeChange: (current: number, next: number) => setSelectContact(next),
     responsive: [
       {

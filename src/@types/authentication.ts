@@ -47,31 +47,3 @@ export type FirebaseContextType = {
   resetPassword: (email: string) => Promise<void>;
   updateProfile: VoidFunction;
 };
-
-export type AWSCognitoContextType = {
-  isAuthenticated: boolean;
-  isInitialized: boolean;
-  user: AuthUser;
-  method: 'cognito';
-  login: (email: string, password: string) => Promise<unknown>;
-  register: (
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string
-  ) => Promise<unknown>;
-  logout: VoidFunction;
-  resetPassword: (email: string) => void;
-  updateProfile: VoidFunction;
-};
-
-export type Auth0ContextType = {
-  isAuthenticated: boolean;
-  isInitialized: boolean;
-  user: AuthUser;
-  method: 'auth0';
-  login: () => Promise<void>;
-  logout: VoidFunction;
-  resetPassword: (email: string) => void;
-  updateProfile: VoidFunction;
-};

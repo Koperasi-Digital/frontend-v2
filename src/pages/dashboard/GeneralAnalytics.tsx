@@ -1,7 +1,5 @@
 // material
 import { Grid, Container, Typography } from '@mui/material';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import {
@@ -22,11 +20,9 @@ import {
 // ----------------------------------------------------------------------
 
 export default function GeneralAnalytics() {
-  const { themeStretch } = useSettings();
-
   return (
-    <Page title="General: Analytics | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
+    <Page title="General: Analytics | CoopChick">
+      <Container maxWidth={false}>
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
