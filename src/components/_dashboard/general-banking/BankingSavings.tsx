@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
-import { Box, Card, CardHeader, Stack, Typography, Button } from '@mui/material';
+import { Box, Card, CardHeader, Stack, Typography, Button, Link } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 const RootStyle = styled(Card)(({ theme }) => ({
   boxShadow: 'none',
@@ -9,7 +10,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
   }
 }));
 
-export default function Savings() {
+export default function BankingSavings() {
   return (
     <>
       <RootStyle>
@@ -45,6 +46,11 @@ export default function Savings() {
               </Typography>
               <Button>Bayar</Button>
             </Stack>
+          </Box>
+          <Box>
+            <Link component={RouterLink} to="./transactions" sx={{ typography: 'button' }}>
+              See Savings Report
+            </Link>
           </Box>
         </Box>
       </RootStyle>
