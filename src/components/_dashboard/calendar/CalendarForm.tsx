@@ -136,7 +136,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           <TextField
             fullWidth
             multiline
-            maxRows={4}
+            rows={4}
             label="Description"
             {...getFieldProps('description')}
             error={Boolean(touched.description && errors.description)}
