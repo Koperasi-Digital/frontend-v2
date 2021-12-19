@@ -43,7 +43,6 @@ export default function BlogPost() {
   const { title = '' } = useParams();
   // const { post, error, recentPosts } = useSelector((state: { blog: BlogState }) => state.blog);
   const { post, error } = useSelector((state: { blog: BlogState }) => state.blog);
-  console.log(post);
 
   useEffect(() => {
     dispatch(getPost(title));
