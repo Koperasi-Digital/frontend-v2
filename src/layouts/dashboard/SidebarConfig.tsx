@@ -62,9 +62,9 @@ const sidebarConfig = [
       // MANAGEMENT: KNOWLEDGE
       {
         title: 'blogs',
-        path: PATH_DASHBOARD.general.blogs,
+        path: PATH_DASHBOARD.general.blogVerification,
         icon: ICONS.blog,
-        children: [{ title: 'verification', path: PATH_DASHBOARD.general.blogs }]
+        children: [{ title: 'verification', path: PATH_DASHBOARD.general.blogVerification }]
       }
     ]
   },
