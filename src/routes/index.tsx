@@ -80,7 +80,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <GeneralApp /> },
-        { path: 'activities', element: <BlogPosts /> },
+        { path: 'activities', element: <Calendar /> },
         { path: 'activities/:id', element: <BlogPost /> },
         { path: 'blogs', element: <BlogPosts /> },
         { path: 'blogs/:title', element: <BlogPost /> },
