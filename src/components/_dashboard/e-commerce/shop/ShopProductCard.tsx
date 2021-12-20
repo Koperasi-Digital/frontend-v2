@@ -62,9 +62,9 @@ export default function ShopProductCard({ product }: ShopProductCardProps) {
         </Link>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colors} />
+          {/* <ColorPreview colors={colors} /> */}
           <Typography variant="subtitle1">
-            <Typography
+            {/* <Typography
               component="span"
               variant="body1"
               sx={{
@@ -72,9 +72,9 @@ export default function ShopProductCard({ product }: ShopProductCardProps) {
                 textDecoration: 'line-through'
               }}
             >
-              {priceSale && fCurrency(priceSale)}
-            </Typography>
-            &nbsp;
+              {priceSale && fCurrency(priceSale)} */}
+            {/* </Typography> */}
+            {/* &nbsp; */}
             {fCurrency(price)}
           </Typography>
         </Stack>

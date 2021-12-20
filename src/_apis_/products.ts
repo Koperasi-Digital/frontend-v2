@@ -7,18 +7,18 @@ import mockData from '../utils/mock-data';
 // ----------------------------------------------------------------------
 
 const PRODUCT_NAME = [
-  'Nike Air Force 1 NDESTRUKT',
-  'Nike Space Hippie 04',
-  'Nike Air Zoom Pegasus 37 A.I.R. Chaz Bear',
-  'Nike Blazer Low 77 Vintage',
-  'Nike ZoomX SuperRep Surge',
-  'Zoom Freak 2',
-  'Nike Air Max Zephyr',
-  'Jordan Delta',
-  'Air Jordan XXXV PF',
-  'Nike Waffle Racer Crater',
-  'Kyrie 7 EP Sisterhood',
-  'Nike Air Zoom BB NXT',
+  'Ayam Petelur Utuh',
+  'Telur Ayam Petelur',
+  'Ayam Potong Utuh',
+  'Itik Ayam',
+  'Vaksin N.C.D',
+  'Alas Kaki Ayam',
+  'Pakan Kompit Ayam Hobir',
+  'Ayam Petelur Putih',
+  'Pakan Komplit 511-Bravo',
+  'Telur Ayam Kampung',
+  'Kemoceng',
+  'Ayam Sayap Potong',
   'Nike Air Force 1 07 LX',
   'Nike Air Force 1 Shadow SE',
   'Nike Air Zoom Tempo NEXT%',
@@ -56,7 +56,7 @@ const PRODUCT_SIZE = ['6', '7', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.
 
 // ----------------------------------------------------------------------
 
-const products = [...Array(24)].map((_, index) => ({
+const products = [...Array(12)].map((_, index) => ({
   id: mockData.id(index),
   cover: mockData.image.product(index),
   images: [...Array(8)].map((_, index) => mockData.image.product(index)),
@@ -64,8 +64,8 @@ const products = [...Array(24)].map((_, index) => ({
   code: `38BEE27${index}`,
   sku: `WW75K521${index}YW/SV`,
   tags: PRODUCT_TAGS,
-  price: mockData.number.price(index),
-  priceSale: index % 3 ? null : mockData.number.price(index),
+  price: mockData.number.price(index) * 1000,
+  priceSale: index % 3 ? null : mockData.number.price(index) * 1000,
   totalRating: mockData.number.rating(index),
   totalReview: random(9999),
   ratings: [...Array(5)].map((_, index) => ({

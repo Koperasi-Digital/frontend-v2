@@ -228,15 +228,16 @@ export default function ProductDetailsSummary({
           </Box>
 
           <Typography variant="h4" sx={{ mb: 3 }}>
-            <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
+            {/* <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
               {priceSale && fCurrency(priceSale)}
             </Box>
-            &nbsp;{fCurrency(price)}
+            &nbsp; */}
+            {fCurrency(price)}
           </Typography>
 
           <Divider sx={{ borderStyle: 'dashed' }} />
 
-          <Box
+          {/* <Box
             sx={{
               my: 3,
               display: 'flex',
@@ -256,7 +257,7 @@ export default function ProductDetailsSummary({
                 })
               }}
             />
-          </Box>
+          </Box> */}
 
           <Box
             sx={{

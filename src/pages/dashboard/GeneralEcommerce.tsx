@@ -8,7 +8,7 @@ import {
   EcommerceProductSold,
   EcommerceSalesProfit,
   EcommerceYearlySales,
-  EcommerceBestSalesman,
+  EcommerceRecentSold,
   EcommerceTotalBalance,
   EcommerceSaleByGender,
   EcommerceSalesOverview,
@@ -58,7 +58,7 @@ export default function GeneralEcommerce() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <EcommerceBestSalesman />
+            <EcommerceRecentSold />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
