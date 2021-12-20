@@ -5,7 +5,7 @@ import Page from '../../components/Page';
 import {
   BankingIncome,
   BankingExpenses,
-  Savings,
+  BankingSavings,
   BankingCurrentBalance,
   BankingBalanceStatistics,
   BankingExpensesCategories,
@@ -39,8 +39,7 @@ export default function Finance() {
 
           <Grid item xs={12} md={4}>
             <Stack spacing={3}>
-              <Savings />
-              <Transactions />
+              <BankingSavings />
             </Stack>
           </Grid>
         </Grid>
