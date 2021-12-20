@@ -34,8 +34,8 @@ export const PATH_DASHBOARD = {
     activity: path(ROOTS_DASHBOARD, '/activities/:id'),
     blogs: path(ROOTS_DASHBOARD, '/blogs'),
     blog: path(ROOTS_DASHBOARD, '/blogs/:title'),
-    blogById: path(ROOTS_DASHBOARD, '/blogs/apply-these-7-secret-techniques-to-improve-event'),
-    newBlog: path(ROOTS_DASHBOARD, '/blogs/new')
+    newBlog: path(ROOTS_DASHBOARD, '/blogs/new'),
+    blogVerification: path(ROOTS_DASHBOARD, '/blog/verification')
   },
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),
