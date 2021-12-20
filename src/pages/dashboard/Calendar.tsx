@@ -156,19 +156,18 @@ export default function Calendar() {
   };
 
   return (
-    <Page title="Calendar | CoopChick">
+    <Page title="Activities | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Calendar"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Calendar' }]}
-          moreLink="https://fullcalendar.io/docs/react"
+          heading="Activities"
+          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Activities' }]}
           action={
             <Button
               variant="contained"
               startIcon={<Icon icon={plusFill} width={20} height={20} />}
               onClick={handleAddEvent}
             >
-              New Event
+              New Activity
             </Button>
           }
         />
@@ -215,7 +214,7 @@ export default function Calendar() {
         </Card>
 
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
-          <DialogTitle>{selectedEvent ? 'Edit Event' : 'Add Event'}</DialogTitle>
+          <DialogTitle>{selectedEvent ? 'Edit Activity' : 'Add Activity'}</DialogTitle>
 
           <CalendarForm
             event={selectedEvent || {}}
