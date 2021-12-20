@@ -89,6 +89,7 @@ export default function Router() {
           path: 'e-commerce',
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
+            { path: 'seller', element: <Seller /> },
             { path: 'shop', element: <EcommerceShop /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'list', element: <EcommerceProductList /> },
@@ -158,6 +159,7 @@ const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')))
 // const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
 // const GeneralBanking = Loadable(lazy(() => import('../pages/dashboard/GeneralBanking')));
 // const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
+const Seller = Loadable(lazy(() => import('../pages/dashboard/Seller')));
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
 const EcommerceProductDetails = Loadable(
   lazy(() => import('../pages/dashboard/EcommerceProductDetails'))
