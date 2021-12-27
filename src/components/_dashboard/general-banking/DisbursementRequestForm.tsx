@@ -1,49 +1,15 @@
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 // material
-import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
-import {
-  Card,
-  Chip,
-  Grid,
-  Stack,
-  Radio,
-  Switch,
-  Select,
-  TextField,
-  InputLabel,
-  Typography,
-  RadioGroup,
-  FormControl,
-  Autocomplete,
-  InputAdornment,
-  FormHelperText,
-  FormControlLabel
-} from '@mui/material';
+import { Card, Grid, Stack, TextField, Typography } from '@mui/material';
 // utils
 import fakeRequest from '../../../utils/fakeRequest';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
-//
-import { QuillEditor } from '../../editor';
-import { UploadMultiFile } from '../../upload';
 
 // ----------------------------------------------------------------------
 
-const CATEGORY_OPTION = ['Saldo', 'Sharing'];
-
-const LabelStyle = styled(Typography)(({ theme }) => ({
-  ...theme.typography.subtitle2,
-  color: theme.palette.text.secondary,
-  marginBottom: theme.spacing(1)
-}));
-
 export default function DisbursementRequestForm() {
-  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   const NewProductSchema = Yup.object().shape({
@@ -54,8 +20,8 @@ export default function DisbursementRequestForm() {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      disbursementRequestId: '',
-      category: CATEGORY_OPTION[0],
+      amount: '',
+      bankNumber: '',
       images: []
     },
     validationSchema: NewProductSchema,
@@ -73,31 +39,7 @@ export default function DisbursementRequestForm() {
     }
   });
 
-  const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } =
-    formik;
-
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      setFieldValue(
-        'images',
-        acceptedFiles.map((file: File | string) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file)
-          })
-        )
-      );
-    },
-    [setFieldValue]
-  );
-
-  const handleRemoveAll = () => {
-    setFieldValue('images', []);
-  };
-
-  const handleRemove = (file: File | string) => {
-    const filteredItems = values.images.filter((_file) => _file !== file);
-    setFieldValue('images', filteredItems);
-  };
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -110,9 +52,9 @@ export default function DisbursementRequestForm() {
                   <TextField
                     fullWidth
                     label="Amount"
-                    {...getFieldProps('disbursementRequestId')}
-                    error={Boolean(touched.disbursementRequestId && errors.disbursementRequestId)}
-                    helperText={touched.disbursementRequestId && errors.disbursementRequestId}
+                    {...getFieldProps('amount')}
+                    error={Boolean(touched.amount && errors.amount)}
+                    helperText={touched.amount && errors.amount}
                   />
                   <Typography variant="body2" sx={{ mb: 10 }}>
                     Sisa saldo Rp100.000,00 / Maksimal pencairan Rp100.000,00
@@ -121,9 +63,9 @@ export default function DisbursementRequestForm() {
                 <TextField
                   fullWidth
                   label="Bank Number"
-                  {...getFieldProps('disbursementRequestId')}
-                  error={Boolean(touched.disbursementRequestId && errors.disbursementRequestId)}
-                  helperText={touched.disbursementRequestId && errors.disbursementRequestId}
+                  {...getFieldProps('bankNumber')}
+                  error={Boolean(touched.bankNumber && errors.bankNumber)}
+                  helperText={touched.bankNumber && errors.bankNumber}
                 />
               </Stack>
             </Card>

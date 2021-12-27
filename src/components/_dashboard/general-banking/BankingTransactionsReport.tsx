@@ -2,7 +2,6 @@ import { useRef, useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
 import { Icon, IconifyIcon } from '@iconify/react';
-import { Link as RouterLink } from 'react-router-dom';
 import bookFill from '@iconify/icons-eva/book-fill';
 import heartFill from '@iconify/icons-eva/heart-fill';
 import shareFill from '@iconify/icons-eva/share-fill';
@@ -239,7 +238,7 @@ export default function BankingTransactionsReport() {
 
     setFilterMode(filterName);
 
-    if (filterName == 'All') {
+    if (filterName === 'All') {
       setFilteredTransactionData(allTransactionData);
     } else {
       let result = [];
@@ -253,7 +252,7 @@ export default function BankingTransactionsReport() {
   useEffect(() => {
     setAllTransactionData(TRANSACTIONS);
     setFilteredTransactionData(TRANSACTIONS);
-  }, [TRANSACTIONS]);
+  }, []);
 
   //Table Pagination
   const [page, setPage] = useState(0);

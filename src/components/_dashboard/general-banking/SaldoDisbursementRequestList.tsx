@@ -1,27 +1,19 @@
 import { useRef, useState } from 'react';
 import { format } from 'date-fns';
-import { sentenceCase } from 'change-case';
 import { Icon, IconifyIcon } from '@iconify/react';
-import { Link as RouterLink } from 'react-router-dom';
 import bookFill from '@iconify/icons-eva/book-fill';
-import heartFill from '@iconify/icons-eva/heart-fill';
 import shareFill from '@iconify/icons-eva/share-fill';
 import printerFill from '@iconify/icons-eva/printer-fill';
 import downloadFill from '@iconify/icons-eva/download-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
-import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
-import diagonalArrowRightUpFill from '@iconify/icons-eva/diagonal-arrow-right-up-fill';
-import diagonalArrowLeftDownFill from '@iconify/icons-eva/diagonal-arrow-left-down-fill';
 // material
-import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Card,
   Menu,
   Table,
   Avatar,
-  Button,
   Divider,
   MenuItem,
   TableRow,
@@ -36,7 +28,6 @@ import {
 // utils
 import { fCurrency } from '../../../utils/formatNumber';
 //
-import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
@@ -203,9 +194,6 @@ function MoreMenuButton({ onDownload, onPrint, onShare, onDelete }: MoreMenuButt
 }
 
 export default function SaldoDisbursementRequestList() {
-  const theme = useTheme();
-  const isLight = theme.palette.mode === 'light';
-
   const handleClickDownload = () => {};
   const handleClickPrint = () => {};
   const handleClickShare = () => {};
@@ -286,6 +274,11 @@ export default function SaldoDisbursementRequestList() {
                     </TableCell>
                   </TableRow>
                 ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>

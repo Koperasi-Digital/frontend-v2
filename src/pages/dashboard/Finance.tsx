@@ -8,8 +8,7 @@ import {
   BankingSavings,
   BankingCurrentBalance,
   BankingBalanceStatistics,
-  BankingExpensesCategories,
-  Transactions
+  BankingExpensesCategories
 } from '../../components/_dashboard/general-banking';
 
 // ----------------------------------------------------------------------
