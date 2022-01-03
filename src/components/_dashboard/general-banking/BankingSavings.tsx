@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { Box, Card, CardHeader, Stack, Typography, Button, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import PaymentButton from '../general-banking/PaymentGateway';
 
 const RootStyle = styled(Card)(({ theme }) => ({
   boxShadow: 'none',
@@ -44,7 +45,7 @@ export default function BankingSavings() {
               <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                 lunasi sebelum 15/1/2022
               </Typography>
-              <Button>Bayar</Button>
+              <PaymentButton buttonName="Bayar" tokenName="a27981a8-fae3-47ba-86e9-feb3cbb77e66" />
             </Stack>
           </Box>
           <Box>
