@@ -29,7 +29,7 @@ const sidebarConfig = [
     subheader: 'general',
     items: [
       { title: 'dashboard', path: PATH_DASHBOARD.general.dashboard, icon: ICONS.dashboard },
-      { title: 'activities', path: PATH_DASHBOARD.general.activities, icon: ICONS.user },
+      { title: 'activities', path: PATH_DASHBOARD.general.activities, icon: ICONS.calendar },
       { title: 'blogs', path: PATH_DASHBOARD.general.blogs, icon: ICONS.blog }
     ]
   },

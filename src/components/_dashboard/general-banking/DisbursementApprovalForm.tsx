@@ -1,6 +1,5 @@
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 // material
@@ -8,28 +7,17 @@ import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
 import {
   Card,
-  Chip,
   Grid,
   Stack,
-  Radio,
-  Switch,
   Select,
   TextField,
   InputLabel,
   Typography,
-  RadioGroup,
   FormControl,
-  Autocomplete,
-  InputAdornment,
-  FormHelperText,
-  FormControlLabel
+  FormHelperText
 } from '@mui/material';
 // utils
 import fakeRequest from '../../../utils/fakeRequest';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
-//
-import { QuillEditor } from '../../editor';
 import { UploadMultiFile } from '../../upload';
 
 // ----------------------------------------------------------------------
@@ -43,7 +31,6 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 }));
 
 export default function DisbursementApprovalForm() {
-  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   const NewProductSchema = Yup.object().shape({
