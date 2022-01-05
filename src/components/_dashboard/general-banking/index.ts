@@ -7,7 +7,7 @@ export { default as BankingCurrentBalance } from './BankingCurrentBalance';
 export { default as BankingBalanceStatistics } from './BankingBalanceStatistics';
 export { default as BankingRecentTransitions } from './BankingRecentTransitions';
 export { default as BankingTransactionsReport } from './BankingTransactionsReport';
-export { default as BankingMemberReport } from './BankingMemberReport';
+export { default as PeriodicMemberReport } from './PeriodicMemberReport';
 export { default as BankingExpensesCategories } from './BankingExpensesCategories';
 export { default as BankingSavings } from './BankingSavings';
 export { default as Transactions } from './Transactions';
