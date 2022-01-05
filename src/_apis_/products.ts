@@ -56,7 +56,7 @@ const PRODUCT_SIZE = ['TON', 'KILOGRAM', 'LUSIN'];
 
 // ----------------------------------------------------------------------
 
-const products = [...Array(24)].map((_, index) => ({
+const products = [...Array(12)].map((_, index) => ({
   id: mockData.id(index),
   cover: mockData.image.product(index),
   images: [...Array(8)].map((_, index) => mockData.image.product(index)),

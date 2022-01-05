@@ -228,35 +228,10 @@ export default function ProductDetailsSummary({
           </Box>
 
           <Typography variant="h4" sx={{ mb: 3 }}>
-            <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-              {priceSale && fCurrency(priceSale)}
-            </Box>
-            &nbsp;{fCurrency(price)}
+            {fCurrency(price)}
           </Typography>
 
           <Divider sx={{ borderStyle: 'dashed' }} />
-
-          <Box
-            sx={{
-              my: 3,
-              display: 'flex',
-              justifyContent: 'space-between'
-            }}
-          >
-            <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              Color
-            </Typography>
-            <ColorSinglePicker
-              {...getFieldProps('color')}
-              colors={colors}
-              sx={{
-                ...(colors.length > 4 && {
-                  maxWidth: 144,
-                  justifyContent: 'flex-end'
-                })
-              }}
-            />
-          </Box>
 
           <Box
             sx={{

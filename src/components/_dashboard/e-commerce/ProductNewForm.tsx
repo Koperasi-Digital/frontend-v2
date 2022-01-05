@@ -36,28 +36,9 @@ import { UploadMultiFile } from '../../upload';
 
 // ----------------------------------------------------------------------
 
-const GENDER_OPTION = ['Men', 'Women', 'Kids'];
-
 const CATEGORY_OPTION = [
-  { group: 'Clothing', classify: ['Shirts', 'T-shirts', 'Jeans', 'Leather'] },
-  { group: 'Tailored', classify: ['Suits', 'Blazers', 'Trousers', 'Waistcoats'] },
-  { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] }
-];
-
-const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots'
+  { group: 'Infrastruktur', classify: ['Kandang', 'Handmade'] },
+  { group: 'Bahan Mentah', classify: ['Telur', 'Daging'] }
 ];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
@@ -94,10 +75,8 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
       sku: currentProduct?.sku || '',
       price: currentProduct?.price || '',
       priceSale: currentProduct?.priceSale || '',
-      tags: currentProduct?.tags || [TAGS_OPTION[0]],
       inStock: Boolean(currentProduct?.inventoryType !== 'out_of_stock'),
       taxes: true,
-      gender: currentProduct?.gender || GENDER_OPTION[2],
       category: currentProduct?.category || CATEGORY_OPTION[0].classify[1]
     },
     validationSchema: NewProductSchema,
@@ -208,22 +187,6 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                   <TextField fullWidth label="Product Code" {...getFieldProps('code')} />
                   <TextField fullWidth label="Product SKU" {...getFieldProps('sku')} />
 
-                  <div>
-                    <LabelStyle>Gender</LabelStyle>
-                    <RadioGroup {...getFieldProps('gender')} row>
-                      <Stack spacing={1} direction="row">
-                        {GENDER_OPTION.map((gender) => (
-                          <FormControlLabel
-                            key={gender}
-                            value={gender}
-                            control={<Radio />}
-                            label={gender}
-                          />
-                        ))}
-                      </Stack>
-                    </RadioGroup>
-                  </div>
-
                   <FormControl fullWidth>
                     <InputLabel>Category</InputLabel>
                     <Select
@@ -243,26 +206,6 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                       ))}
                     </Select>
                   </FormControl>
-                  <Autocomplete
-                    multiple
-                    freeSolo
-                    value={values.tags}
-                    onChange={(event, newValue) => {
-                      setFieldValue('tags', newValue);
-                    }}
-                    options={TAGS_OPTION.map((option) => option)}
-                    renderTags={(value, getTagProps) =>
-                      value.map((option, index) => (
-                        <Chip
-                          {...getTagProps({ index })}
-                          key={option}
-                          size="small"
-                          label={option}
-                        />
-                      ))
-                    }
-                    renderInput={(params) => <TextField label="Tags" {...params} />}
-                  />
                 </Stack>
               </Card>
 
@@ -279,17 +222,6 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                     }}
                     error={Boolean(touched.price && errors.price)}
                     helperText={touched.price && errors.price}
-                  />
-
-                  <TextField
-                    fullWidth
-                    placeholder="0.00"
-                    label="Sale Price"
-                    {...getFieldProps('priceSale')}
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                      type: 'number'
-                    }}
                   />
                 </Stack>
 
