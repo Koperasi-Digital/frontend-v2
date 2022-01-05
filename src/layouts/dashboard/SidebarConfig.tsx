@@ -51,16 +51,16 @@ const sidebarConfig = [
       // MANAGEMENT : FINANCE
       {
         title: 'finance',
-        path: PATH_DASHBOARD.finance.root,
+        path: PATH_DASHBOARD.managementFinance.root,
         icon: ICONS.banking,
         children: [
           {
             title: 'disbursement approval',
-            path: PATH_DASHBOARD.finance.disbursementApproval
+            path: PATH_DASHBOARD.managementFinance.disbursementApproval
           },
           {
             title: 'disbursement request list',
-            path: PATH_DASHBOARD.finance.disbursementRequestList
+            path: PATH_DASHBOARD.managementFinance.disbursementRequestList
           }
         ]
       },

@@ -112,6 +112,18 @@ export default function Router() {
           ]
         },
         {
+          path: 'management-finance',
+          children: [
+            {
+              element: (
+                <Navigate to="/dashboard/management-finance/disbursement-request-list" replace />
+              )
+            },
+            { path: 'disbursement-approval', element: <DisbursementApproval /> },
+            { path: 'disbursement-request-list', element: <DisbursementRequestList /> }
+          ]
+        },
+        {
           path: 'user',
           children: [
             { element: <Navigate to="/dashboard/user/profile" replace /> },

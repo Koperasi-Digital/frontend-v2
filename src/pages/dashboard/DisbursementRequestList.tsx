@@ -16,12 +16,12 @@ export default function DisbursementRequestList() {
     <Page title="Banking: Transaction Report | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={'Create disbursement approval'}
+          heading={'Disbursement Request List'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Finance',
-              href: PATH_DASHBOARD.finance.root
+              href: PATH_DASHBOARD.managementFinance.root
             },
             { name: 'Disbursement Request List' }
           ]}
