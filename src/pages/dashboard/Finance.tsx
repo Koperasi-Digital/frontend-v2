@@ -6,9 +6,9 @@ import {
   BankingIncome,
   BankingExpenses,
   BankingSavings,
-  BankingCurrentBalance,
   BankingBalanceStatistics,
-  BankingExpensesCategories
+  BankingExpensesCategories,
+  BankingEMoneyBalance
 } from '../../components/_dashboard/general-banking';
 
 // ----------------------------------------------------------------------
@@ -18,17 +18,12 @@ export default function Finance() {
     <Page title="General: Finance | CoopChick">
       <Container maxWidth={false}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={7}>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3}>
-              <BankingIncome />
-              <BankingExpenses />
-            </Stack>
+          <Grid item xs={12} md={6}>
+            <BankingSavings />
           </Grid>
-
-          <Grid item xs={12} md={5}>
-            <BankingCurrentBalance />
+          <Grid item xs={12} md={6}>
+            <BankingEMoneyBalance />
           </Grid>
-
           <Grid item xs={12} md={8}>
             <Stack spacing={3}>
               <BankingBalanceStatistics />
@@ -38,7 +33,8 @@ export default function Finance() {
 
           <Grid item xs={12} md={4}>
             <Stack spacing={3}>
-              <BankingSavings />
+              <BankingIncome />
+              <BankingExpenses />
             </Stack>
           </Grid>
         </Grid>

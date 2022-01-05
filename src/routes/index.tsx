@@ -107,7 +107,7 @@ export default function Router() {
             { path: 'report', element: <TransactionsReport /> },
             { path: 'member-report', element: <MemberReport /> },
             { path: 'disbursement-approval', element: <DisbursementApproval /> },
-            { path: 'disbursement-request', element: <DisbursementRequest /> },
+            { path: 'create-disbursement-request', element: <DisbursementRequest /> },
             { path: 'disbursement-request-list', element: <DisbursementRequestList /> }
           ]
         },

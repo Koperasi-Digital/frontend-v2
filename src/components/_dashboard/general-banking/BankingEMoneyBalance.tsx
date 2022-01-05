@@ -1,7 +1,6 @@
 import { styled } from '@mui/material/styles';
 import { Box, Card, CardHeader, Stack, Typography, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import PaymentButton from './PaymentCreation';
 
 const RootStyle = styled(Card)(({ theme }) => ({
   boxShadow: 'none',
@@ -12,47 +11,38 @@ const RootStyle = styled(Card)(({ theme }) => ({
   height: 300
 }));
 
-export default function BankingSavings() {
+export default function BankingEMoneyBalance() {
   return (
     <>
       <RootStyle>
-        <CardHeader title="Simpanan" />
+        <CardHeader title="Current Balance" />
         <Box sx={{ p: 3 }}>
           <Box sx={{ mb: 5 }}>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography variant="overline" sx={{ color: 'text.primary' }}>
-                Pembayaran Simpanan Pokok
+                Saldo
               </Typography>
               <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-                Lunas
+                Rp 200.000,00
               </Typography>
             </Stack>
+            <Link
+              component={RouterLink}
+              to="./../create-disbursement-request"
+              sx={{ typography: 'button' }}
+            >
+              Add disbursement request
+            </Link>
           </Box>
           <Box sx={{ mb: 5 }}>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography variant="overline" sx={{ color: 'text.primary' }}>
-                Pembayaran Simpanan Wajib
+                Gopay
               </Typography>
               <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-                Belum Dibayar
+                Rp 350.000,00
               </Typography>
             </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-                periode 1/1/2022 - 31/1/2022
-              </Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-                lunasi sebelum 15/1/2022
-              </Typography>
-              <PaymentButton buttonName="Bayar" tokenName="a27981a8-fae3-47ba-86e9-feb3cbb77e66" />
-            </Stack>
-          </Box>
-          <Box>
-            <Link component={RouterLink} to="./../member-report" sx={{ typography: 'button' }}>
-              See Savings Report
-            </Link>
           </Box>
         </Box>
       </RootStyle>

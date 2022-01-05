@@ -68,7 +68,7 @@ export const PATH_DASHBOARD = {
     report: path(ROOTS_DASHBOARD, '/finance/report'),
     memberReport: path(ROOTS_DASHBOARD, '/finance/member-report'),
     disbursementApproval: path(ROOTS_DASHBOARD, '/finance/disbursement-approval'),
-    disbursementRequest: path(ROOTS_DASHBOARD, '/finance/disbursement-request'),
+    disbursementRequest: path(ROOTS_DASHBOARD, '/finance/create-disbursement-request'),
     disbursementRequestList: path(ROOTS_DASHBOARD, '/finance/disbursement-request-list')
   }
 };

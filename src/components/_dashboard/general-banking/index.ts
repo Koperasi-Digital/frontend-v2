@@ -14,4 +14,5 @@ export { default as Transactions } from './Transactions';
 export { default as DisbursementApprovalForm } from './DisbursementApprovalForm';
 export { default as SaldoDisbursementRequestList } from './SaldoDisbursementRequestList';
 export { default as ShareDisbursementRequestList } from './ShareDisbursementRequestList';
-export { default as PaymentButton } from './PaymentGateway';
+export { default as PaymentCreation } from './PaymentCreation';
+export { default as BankingEMoneyBalance } from './BankingEMoneyBalance';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@mui/material';
 
-type PaymentButtonProps = {
+type PaymentCreationProps = {
   buttonName: string;
   tokenName: string;
 };
@@ -12,7 +12,7 @@ declare global {
   }
 }
 
-const PaymentButton = ({ buttonName, tokenName }: PaymentButtonProps) => {
+const PaymentCreation = ({ buttonName, tokenName }: PaymentCreationProps) => {
   React.useEffect(() => {
     const snapSrcUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
     const myMidtransClientKey = 'SB-Mid-client-hGP5UBKXCE-VIit4'; //change this according to your client-key
@@ -40,4 +40,4 @@ const PaymentButton = ({ buttonName, tokenName }: PaymentButtonProps) => {
   );
 };
 
-export default PaymentButton;
+export default PaymentCreation;
