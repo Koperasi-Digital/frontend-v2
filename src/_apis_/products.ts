@@ -52,7 +52,7 @@ const PRODUCT_DESCRIPTION = `
 <p><strong><small> MATERIAL AND WASHING INSTRUCTIONS</small></strong></p>
 <p>Shoeupper: 54% bovine leather,46% polyurethane. Lining: 65% polyester,35% cotton. Insole: 100% polyurethane. Sole: 100% thermoplastic. Fixing sole: 100% glued.</p>
 `;
-const PRODUCT_SIZE = ['6', '7', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5', '12', '13'];
+const PRODUCT_SIZE = ['TON', 'KILOGRAM', 'LUSIN'];
 
 // ----------------------------------------------------------------------
 
@@ -64,8 +64,8 @@ const products = [...Array(24)].map((_, index) => ({
   code: `38BEE27${index}`,
   sku: `WW75K521${index}YW/SV`,
   tags: PRODUCT_TAGS,
-  price: mockData.number.price(index),
-  priceSale: index % 3 ? null : mockData.number.price(index),
+  price: mockData.number.price(index) * 10000,
+  priceSale: index % 3 ? null : mockData.number.price(index) * 10000,
   totalRating: mockData.number.rating(index),
   totalReview: random(9999),
   ratings: [...Array(5)].map((_, index) => ({
