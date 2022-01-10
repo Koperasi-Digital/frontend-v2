@@ -68,12 +68,12 @@ export default function CheckoutSummary({
             <Typography variant="subtitle2">{fCurrency(subtotal)}</Typography>
           </Stack>
 
-          <Stack direction="row" justifyContent="space-between">
+          {/* <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Discount
             </Typography>
             <Typography variant="subtitle2">{discount ? fCurrency(-discount) : '-'}</Typography>
-          </Stack>
+          </Stack> */}
 
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -98,7 +98,7 @@ export default function CheckoutSummary({
             </Box>
           </Stack>
 
-          {enableDiscount && onApplyDiscount && (
+          {/* {enableDiscount && onApplyDiscount && (
             <TextField
               fullWidth
               placeholder="Discount codes / Gifts"
@@ -113,7 +113,7 @@ export default function CheckoutSummary({
                 )
               }}
             />
-          )}
+          )} */}
         </Stack>
       </CardContent>
     </Card>
