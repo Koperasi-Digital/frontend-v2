@@ -55,6 +55,10 @@ const sidebarConfig = [
         icon: ICONS.banking,
         children: [
           {
+            title: 'home',
+            path: PATH_DASHBOARD.managementFinance.home
+          },
+          {
             title: 'disbursement approval',
             path: PATH_DASHBOARD.managementFinance.disbursementApproval
           },

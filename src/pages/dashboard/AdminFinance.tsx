@@ -5,18 +5,15 @@ import Page from '../../components/Page';
 import {
   BankingIncome,
   BankingExpenses,
-  BankingSavings,
   BankingBalanceStatistics,
-  BankingExpensesCategories,
-  BankingEMoneyBalance,
-  BankingReport
+  BankingExpensesCategories
 } from '../../components/_dashboard/general-banking';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 
-export default function Finance() {
+export default function AdminFinance() {
   return (
     <Page title="General: Finance | CoopChick">
       <Container maxWidth={false}>
@@ -26,18 +23,12 @@ export default function Finance() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Finance',
-              href: PATH_DASHBOARD.finance.root
+              href: PATH_DASHBOARD.managementFinance.root
             },
             { name: 'Home' }
           ]}
         />
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <BankingSavings />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <BankingEMoneyBalance />
-          </Grid>
           <Grid item xs={12} md={8}>
             <Stack spacing={3}>
               <BankingBalanceStatistics />
@@ -47,7 +38,6 @@ export default function Finance() {
 
           <Grid item xs={12} md={4}>
             <Stack spacing={3}>
-              <BankingReport />
               <BankingIncome />
               <BankingExpenses />
             </Stack>

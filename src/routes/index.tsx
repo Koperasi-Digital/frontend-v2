@@ -115,10 +115,9 @@ export default function Router() {
           path: 'management-finance',
           children: [
             {
-              element: (
-                <Navigate to="/dashboard/management-finance/disbursement-request-list" replace />
-              )
+              element: <Navigate to="/dashboard/management-finance/home" replace />
             },
+            { path: 'home', element: <AdminFinance /> },
             { path: 'disbursement-approval', element: <DisbursementApproval /> },
             { path: 'disbursement-request-list', element: <DisbursementRequestList /> }
           ]
@@ -198,6 +197,7 @@ const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')))
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
+const AdminFinance = Loadable(lazy(() => import('../pages/dashboard/AdminFinance')));
 const TransactionsReport = Loadable(lazy(() => import('../pages/dashboard/TransactionsReport')));
 const MemberReport = Loadable(lazy(() => import('../pages/dashboard/MemberReport')));
 const DisbursementApproval = Loadable(
