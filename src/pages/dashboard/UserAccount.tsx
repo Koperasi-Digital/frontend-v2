@@ -1,10 +1,10 @@
 import { Icon } from '@iconify/react';
 import { capitalCase } from 'change-case';
 import { useState, useEffect } from 'react';
-import bellFill from '@iconify/icons-eva/bell-fill';
-import shareFill from '@iconify/icons-eva/share-fill';
+// import bellFill from '@iconify/icons-eva/bell-fill';
+// import shareFill from '@iconify/icons-eva/share-fill';
 import roundVpnKey from '@iconify/icons-ic/round-vpn-key';
-import roundReceipt from '@iconify/icons-ic/round-receipt';
+// import roundReceipt from '@iconify/icons-ic/round-receipt';
 import roundAccountBox from '@iconify/icons-ic/round-account-box';
 // material
 import { Container, Tab, Box, Tabs } from '@mui/material';
@@ -24,9 +24,9 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import {
   AccountGeneral,
-  AccountBilling,
-  AccountSocialLinks,
-  AccountNotifications,
+  // AccountBilling,
+  // AccountSocialLinks,
+  // AccountNotifications,
   AccountChangePassword
 } from '../../components/_dashboard/user/account';
 
@@ -34,9 +34,13 @@ import {
 
 export default function UserAccount() {
   const dispatch = useDispatch();
-  const { cards, invoices, myProfile, addressBook, notifications } = useSelector(
-    (state: RootState) => state.user
-  );
+  const {
+    cards,
+    // invoices,
+    myProfile,
+    // addressBook,
+    notifications
+  } = useSelector((state: RootState) => state.user);
 
   const [currentTab, setCurrentTab] = useState('general');
 
@@ -66,21 +70,21 @@ export default function UserAccount() {
       icon: <Icon icon={roundAccountBox} width={20} height={20} />,
       component: <AccountGeneral />
     },
-    {
-      value: 'billing',
-      icon: <Icon icon={roundReceipt} width={20} height={20} />,
-      component: <AccountBilling cards={cards} addressBook={addressBook} invoices={invoices} />
-    },
-    {
-      value: 'notifications',
-      icon: <Icon icon={bellFill} width={20} height={20} />,
-      component: <AccountNotifications notifications={notifications} />
-    },
-    {
-      value: 'social_links',
-      icon: <Icon icon={shareFill} width={20} height={20} />,
-      component: <AccountSocialLinks myProfile={myProfile} />
-    },
+    // {
+    //   value: 'billing',
+    //   icon: <Icon icon={roundReceipt} width={20} height={20} />,
+    //   component: <AccountBilling cards={cards} addressBook={addressBook} invoices={invoices} />
+    // },
+    // {
+    //   value: 'notifications',
+    //   icon: <Icon icon={bellFill} width={20} height={20} />,
+    //   component: <AccountNotifications notifications={notifications} />
+    // },
+    // {
+    //   value: 'social_links',
+    //   icon: <Icon icon={shareFill} width={20} height={20} />,
+    //   component: <AccountSocialLinks myProfile={myProfile} />
+    // },
     {
       value: 'change_password',
       icon: <Icon icon={roundVpnKey} width={20} height={20} />,
