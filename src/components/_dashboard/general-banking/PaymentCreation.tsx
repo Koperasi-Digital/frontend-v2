@@ -1,9 +1,16 @@
 import React from 'react';
 import { Button } from '@mui/material';
+import { handleCreateTransaction } from '../../../utils/transaction';
 
 type PaymentCreationProps = {
   buttonName: string;
-  tokenName: string;
+  transaction_details: transaction_details;
+  item_details: any;
+};
+
+type transaction_details = {
+  order_id: string;
+  gross_amount: number;
 };
 
 declare global {
@@ -12,7 +19,11 @@ declare global {
   }
 }
 
-const PaymentCreation = ({ buttonName, tokenName }: PaymentCreationProps) => {
+const PaymentCreation = ({
+  buttonName,
+  transaction_details,
+  item_details
+}: PaymentCreationProps) => {
   React.useEffect(() => {
     const snapSrcUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
     const myMidtransClientKey = 'SB-Mid-client-hGP5UBKXCE-VIit4'; //change this according to your client-key
@@ -29,7 +40,8 @@ const PaymentCreation = ({ buttonName, tokenName }: PaymentCreationProps) => {
     };
   }, []);
 
-  const paymentFunction = () => {
+  const paymentFunction = async () => {
+    const tokenName = await handleCreateTransaction(transaction_details, item_details);
     window.snap.pay(tokenName);
   };
 

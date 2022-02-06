@@ -13,6 +13,20 @@ const RootStyle = styled(Card)(({ theme }) => ({
 }));
 
 export default function BankingSavings() {
+  const transaction_details = {
+    order_id: 'ORDER-101',
+    gross_amount: 10000
+  };
+
+  const item_details = [
+    {
+      price: 10000,
+      quantity: 1,
+      name: 'Simpanan Pokok',
+      category: 'Simpanan'
+    }
+  ];
+
   return (
     <>
       <RootStyle>
@@ -46,7 +60,11 @@ export default function BankingSavings() {
               <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                 lunasi sebelum 15/1/2022
               </Typography>
-              <PaymentButton buttonName="Bayar" tokenName="a27981a8-fae3-47ba-86e9-feb3cbb77e66" />
+              <PaymentButton
+                buttonName="Bayar"
+                transaction_details={transaction_details}
+                item_details={item_details}
+              />
             </Stack>
           </Box>
           <Box>
