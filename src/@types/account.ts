@@ -1,5 +1,7 @@
 // ----------------------------------------------------------------------
 
+import { Role } from './role';
+
 export type User = {
   id: string;
   displayName: string;
@@ -13,6 +15,6 @@ export type User = {
   city: string | null;
   zipCode: string | null;
   about: string | null;
-  role: string;
+  role: Role;
   isPublic: boolean;
 };
