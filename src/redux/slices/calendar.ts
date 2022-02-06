@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { EventInput } from '@fullcalendar/common';
 import { dispatch } from '../store';
 // utils
-import axios from '../../utils/axios';
+import axios from '../../utils/axiosMock';
 //
 import { CalendarState } from '../../@types/calendar';
 

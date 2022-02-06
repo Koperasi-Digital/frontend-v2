@@ -1,7 +1,8 @@
 import { createContext, ReactNode, useEffect, useReducer } from 'react';
 // utils
-import axios from '../utils/axios';
-import { isValidToken, setSession } from '../utils/jwt';
+import { isValidToken, setSession } from 'utils/jwt';
+import axiosMock from 'utils/axiosMock';
+import axios from 'utils/axios';
 // @types
 import { ActionMap, AuthState, AuthUser, JWTContextType } from '../@types/authentication';
 
@@ -82,7 +83,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
 
-          const response = await axios.get('/api/account/my-account');
+          const response = await axiosMock.get('/api/account/my-account');
           const { user } = response.data;
 
           dispatch({
@@ -117,11 +118,11 @@ function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await axios.post('/api/account/login', {
+    const response = await axios.post('auth/login', {
       email,
       password
     });
-    const { accessToken, user } = response.data;
+    const { accessToken, user } = response.data.payload;
 
     setSession(accessToken);
     dispatch({
@@ -133,7 +134,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const register = async (email: string, password: string, firstName: string, lastName: string) => {
-    const response = await axios.post('/api/account/register', {
+    const response = await axiosMock.post('/api/account/register', {
       email,
       password,
       firstName,

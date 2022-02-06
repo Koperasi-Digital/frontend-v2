@@ -17,7 +17,7 @@ import {
   BoxProps
 } from '@mui/material';
 // utils
-import axios from '../../../utils/axios';
+import axios from '../../../utils/axiosMock';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
