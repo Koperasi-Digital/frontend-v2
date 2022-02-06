@@ -74,18 +74,6 @@ export default function Register() {
 
           <RegisterForm />
 
-          <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-            By registering, I agree to CoopChick&nbsp;
-            <Link underline="always" color="text.primary" href="#">
-              Terms of Service
-            </Link>
-            &nbsp;and&nbsp;
-            <Link underline="always" color="text.primary" href="#">
-              Privacy Policy
-            </Link>
-            .
-          </Typography>
-
           <MHidden width="smUp">
             <Typography variant="subtitle2" sx={{ mt: 3, textAlign: 'center' }}>
               Already have an account?&nbsp;
