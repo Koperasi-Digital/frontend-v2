@@ -133,16 +133,22 @@ function AuthProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const register = async (email: string, password: string, firstName: string, lastName: string) => {
-    const response = await axiosMock.post('/api/account/register', {
+  const register = async (
+    email: string,
+    password: string,
+    passwordConfirm: string,
+    firstName: string,
+    lastName: string
+  ) => {
+    const response = await axios.post('auth/register', {
       email,
       password,
-      firstName,
-      lastName
+      passwordConfirm,
+      displayName: firstName.concat(' ', lastName)
     });
-    const { accessToken, user } = response.data;
+    const { accessToken, user } = response.data.payload;
 
-    window.localStorage.setItem('accessToken', accessToken);
+    setSession(accessToken);
     dispatch({
       type: Types.Register,
       payload: {
