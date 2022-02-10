@@ -1,7 +1,6 @@
 import { createContext, ReactNode, useEffect, useReducer } from 'react';
 // utils
-import { isValidToken, setSession } from 'utils/jwt';
-import axiosMock from 'utils/axiosMock';
+import { setSession } from 'utils/jwt';
 import axios from 'utils/axios';
 // @types
 import { ActionMap, AuthState, AuthUser, JWTContextType } from '../@types/authentication';
@@ -80,11 +79,10 @@ function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
 
-        if (accessToken && isValidToken(accessToken)) {
-          setSession(accessToken);
-
-          const response = await axiosMock.get('/api/account/my-account');
-          const { user } = response.data;
+        if (accessToken) {
+          await setSession(accessToken, null /* token still valid */);
+          const response = await axios.get('auth/my-account');
+          const { user } = response.data.payload;
 
           dispatch({
             type: Types.Initial,
@@ -122,9 +120,9 @@ function AuthProvider({ children }: { children: ReactNode }) {
       email,
       password
     });
-    const { accessToken, user } = response.data.payload;
+    const { accessToken, refreshToken, user } = response.data.payload;
 
-    setSession(accessToken);
+    setSession(accessToken, refreshToken);
     dispatch({
       type: Types.Login,
       payload: {
@@ -146,9 +144,9 @@ function AuthProvider({ children }: { children: ReactNode }) {
       passwordConfirm,
       displayName: firstName.concat(' ', lastName)
     });
-    const { accessToken, user } = response.data.payload;
+    const { accessToken, refreshToken, user } = response.data.payload;
 
-    setSession(accessToken);
+    setSession(accessToken, refreshToken);
     dispatch({
       type: Types.Register,
       payload: {
@@ -158,7 +156,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    setSession(null);
+    await axios.post('auth/invalidate-token');
+    setSession(null, null);
     dispatch({ type: Types.Logout });
   };
 
