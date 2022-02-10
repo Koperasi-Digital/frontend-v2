@@ -36,6 +36,7 @@ const handleTokenExpired = (exp: number) => {
       setSession(newAccessToken, newRefreshToken);
     } catch (err) {
       console.log('Failed to refresh token');
+      setSession(null, null);
     }
   }, timeLeft);
 };
