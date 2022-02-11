@@ -2,7 +2,7 @@ import { map, filter } from 'lodash';
 import { createSlice } from '@reduxjs/toolkit';
 import { dispatch } from '../store';
 // utils
-import axios from '../../utils/axios';
+import axios from '../../utils/axiosMock';
 import {
   Friend,
   Gallery,

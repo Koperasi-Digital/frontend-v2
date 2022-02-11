@@ -8,7 +8,7 @@ import {
   BankingSavings,
   BankingBalanceStatistics,
   BankingExpensesCategories,
-  BankingEMoneyBalance,
+  BankingBalance,
   BankingReport
 } from '../../components/_dashboard/general-banking';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -36,7 +36,7 @@ export default function Finance() {
             <BankingSavings />
           </Grid>
           <Grid item xs={12} md={6}>
-            <BankingEMoneyBalance />
+            <BankingBalance />
           </Grid>
           <Grid item xs={12} md={8}>
             <Stack spacing={3}>

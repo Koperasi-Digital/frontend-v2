@@ -14,7 +14,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
 
 export default function BankingSavings() {
   const transaction_details = {
-    order_id: 'ORDER-101',
+    order_id: 8,
     gross_amount: 10000
   };
 
@@ -61,6 +61,7 @@ export default function BankingSavings() {
                 lunasi sebelum 15/1/2022
               </Typography>
               <PaymentButton
+                user_id={2}
                 buttonName="Bayar"
                 transaction_details={transaction_details}
                 item_details={item_details}

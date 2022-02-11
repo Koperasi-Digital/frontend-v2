@@ -3,13 +3,14 @@ import { Button } from '@mui/material';
 import { handleCreateTransaction } from '../../../utils/transaction';
 
 type PaymentCreationProps = {
+  user_id: number;
   buttonName: string;
   transaction_details: transaction_details;
   item_details: any;
 };
 
 type transaction_details = {
-  order_id: string;
+  order_id: number;
   gross_amount: number;
 };
 
@@ -20,6 +21,7 @@ declare global {
 }
 
 const PaymentCreation = ({
+  user_id,
   buttonName,
   transaction_details,
   item_details
@@ -41,8 +43,33 @@ const PaymentCreation = ({
   }, []);
 
   const paymentFunction = async () => {
-    const tokenName = await handleCreateTransaction(transaction_details, item_details);
-    window.snap.pay(tokenName);
+    const snapOptions = {
+      onSuccess: function (result: any) {
+        //TODO: PUSH NOTIFICATION
+        console.log('success');
+        console.log(result);
+        window.location.href = './';
+      },
+      onPending: function (result: any) {
+        console.log('pending');
+        console.log(result);
+        window.location.href = './';
+      },
+      onError: function (result: any) {
+        console.log('error');
+        console.log(result);
+        window.location.href = './';
+      },
+      onClose: function () {
+        // window.location.href = './';
+        // console.log('customer closed the popup without finishing the payment');
+      }
+    };
+
+    const tokenName = await handleCreateTransaction(user_id, transaction_details, item_details);
+    console.log('The token is');
+    console.log(tokenName);
+    window.snap.pay(tokenName, snapOptions);
   };
 
   return (

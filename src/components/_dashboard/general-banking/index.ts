@@ -3,7 +3,6 @@ export { default as BankingExpenses } from './BankingExpenses';
 export { default as BankingContacts } from './BankingContacts';
 export { default as BankingQuickTransfer } from './BankingQuickTransfer';
 export { default as BankingInviteFriends } from './BankingInviteFriends';
-export { default as BankingCurrentBalance } from './BankingCurrentBalance';
 export { default as BankingBalanceStatistics } from './BankingBalanceStatistics';
 export { default as BankingRecentTransitions } from './BankingRecentTransitions';
 export { default as BankingTransactionsReport } from './BankingTransactionsReport';
@@ -15,5 +14,5 @@ export { default as DisbursementApprovalForm } from './DisbursementApprovalForm'
 export { default as SaldoDisbursementRequestList } from './SaldoDisbursementRequestList';
 export { default as ShareDisbursementRequestList } from './ShareDisbursementRequestList';
 export { default as PaymentCreation } from './PaymentCreation';
-export { default as BankingEMoneyBalance } from './BankingEMoneyBalance';
+export { default as BankingBalance } from './BankingBalance';
 export { default as BankingReport } from './BankingReport';
