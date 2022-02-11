@@ -5,11 +5,10 @@ import Page from '../../components/Page';
 import {
   BankingIncome,
   BankingExpenses,
-  Savings,
+  BankingSavings,
   BankingCurrentBalance,
   BankingBalanceStatistics,
-  BankingExpensesCategories,
-  Transactions
+  BankingExpensesCategories
 } from '../../components/_dashboard/general-banking';
 
 // ----------------------------------------------------------------------
@@ -39,8 +38,7 @@ export default function Finance() {
 
           <Grid item xs={12} md={4}>
             <Stack spacing={3}>
-              <Savings />
-              <Transactions />
+              <BankingSavings />
             </Stack>
           </Grid>
         </Grid>

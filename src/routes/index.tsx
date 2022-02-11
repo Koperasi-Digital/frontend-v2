@@ -85,6 +85,7 @@ export default function Router() {
         { path: 'blogs', element: <BlogPosts /> },
         { path: 'blogs/:title', element: <BlogPost /> },
         { path: 'blogs/new', element: <BlogNewPost /> },
+        { path: 'blog/verification', element: <BlogVerification /> },
         {
           path: 'e-commerce',
           children: [
@@ -103,7 +104,11 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/finance/home" replace /> },
             { path: 'home', element: <Finance /> },
-            { path: 'report', element: <TransactionsReport /> }
+            { path: 'report', element: <TransactionsReport /> },
+            { path: 'member-report', element: <MemberReport /> },
+            { path: 'disbursement-approval', element: <DisbursementApproval /> },
+            { path: 'disbursement-request', element: <DisbursementRequest /> },
+            { path: 'disbursement-request-list', element: <DisbursementRequestList /> }
           ]
         },
         {
@@ -173,6 +178,7 @@ const EcommerceInvoice = Loadable(lazy(() => import('../pages/dashboard/Ecommerc
 const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
 const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
+const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
 const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
@@ -181,6 +187,14 @@ const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
 const TransactionsReport = Loadable(lazy(() => import('../pages/dashboard/TransactionsReport')));
+const MemberReport = Loadable(lazy(() => import('../pages/dashboard/MemberReport')));
+const DisbursementApproval = Loadable(
+  lazy(() => import('../pages/dashboard/DisbursementApproval'))
+);
+const DisbursementRequestList = Loadable(
+  lazy(() => import('../pages/dashboard/DisbursementRequestList'))
+);
+const DisbursementRequest = Loadable(lazy(() => import('../pages/dashboard/DisbursementRequest')));
 // Main
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));

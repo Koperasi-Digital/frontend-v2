@@ -34,8 +34,8 @@ export const PATH_DASHBOARD = {
     activity: path(ROOTS_DASHBOARD, '/activities/:id'),
     blogs: path(ROOTS_DASHBOARD, '/blogs'),
     blog: path(ROOTS_DASHBOARD, '/blogs/:title'),
-    blogById: path(ROOTS_DASHBOARD, '/blogs/apply-these-7-secret-techniques-to-improve-event'),
-    newBlog: path(ROOTS_DASHBOARD, '/blogs/new')
+    newBlog: path(ROOTS_DASHBOARD, '/blogs/new'),
+    blogVerification: path(ROOTS_DASHBOARD, '/blog/verification')
   },
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),
@@ -65,6 +65,10 @@ export const PATH_DASHBOARD = {
   finance: {
     root: path(ROOTS_DASHBOARD, '/finance'),
     home: path(ROOTS_DASHBOARD, '/finance/home'),
-    report: path(ROOTS_DASHBOARD, '/finance/report')
+    report: path(ROOTS_DASHBOARD, '/finance/report'),
+    memberReport: path(ROOTS_DASHBOARD, '/finance/member-report'),
+    disbursementApproval: path(ROOTS_DASHBOARD, '/finance/disbursement-approval'),
+    disbursementRequest: path(ROOTS_DASHBOARD, '/finance/disbursement-request'),
+    disbursementRequestList: path(ROOTS_DASHBOARD, '/finance/disbursement-request-list')
   }
 };
