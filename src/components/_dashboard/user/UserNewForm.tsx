@@ -77,7 +77,7 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
         navigate(PATH_DASHBOARD.user.list);
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
         setSubmitting(false);
         setErrors(error);
@@ -107,14 +107,14 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
             <Card sx={{ py: 10, px: 3 }}>
-              {isEdit && (
+              {/* {isEdit && (
                 <Label
                   color={values.status !== 'active' ? 'error' : 'success'}
                   sx={{ textTransform: 'uppercase', position: 'absolute', top: 24, right: 24 }}
                 >
                   {values.status}
                 </Label>
-              )}
+              )} */}
 
               <Box sx={{ mb: 5 }}>
                 <UploadAvatar
@@ -144,7 +144,7 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
                 </FormHelperText>
               </Box>
 
-              {isEdit && (
+              {/* {isEdit && (
                 <FormControlLabel
                   labelPlacement="start"
                   control={
@@ -167,9 +167,9 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
                   }
                   sx={{ mx: 0, mb: 3, width: 1, justifyContent: 'space-between' }}
                 />
-              )}
+              )} */}
 
-              <FormControlLabel
+              {/* <FormControlLabel
                 labelPlacement="start"
                 control={<Switch {...getFieldProps('isVerified')} checked={values.isVerified} />}
                 label={
@@ -183,7 +183,7 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
                   </>
                 }
                 sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-              />
+              /> */}
             </Card>
           </Grid>
 
