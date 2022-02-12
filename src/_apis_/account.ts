@@ -26,7 +26,7 @@ const users: User[] = [
     city: 'Bandung',
     zipCode: '40132',
     about: 'Praesent turpis. Phasellus viverra nulla ut metus varius laoreet. Phasellus tempus.',
-    role: 'admin',
+    role: 'Admin',
     isPublic: true
   }
 ];
