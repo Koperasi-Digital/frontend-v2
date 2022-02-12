@@ -1,4 +1,4 @@
-import { filter } from 'lodash';
+import { filter, sample } from 'lodash';
 // import { Icon } from '@iconify/react';
 // import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
@@ -35,13 +35,16 @@ import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user/list';
+import { fDateTime } from 'utils/formatTime';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
+  { id: 'email', label: 'Email', alignRight: false },
   // { id: 'company', label: 'Company', alignRight: false },
   { id: 'role', label: 'Role', alignRight: false },
+  { id: 'createdAt', label: 'Joined At', alignRight: false },
   // { id: 'isVerified', label: 'Verified', alignRight: false },
   // { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
@@ -201,10 +204,11 @@ export default function UserList() {
                         id,
                         name,
                         role,
+                        email,
                         // status,
                         // company,
                         avatarUrl
-                        // isVerified
+                        // isVerified,
                       } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
 
@@ -229,7 +233,17 @@ export default function UserList() {
                             </Stack>
                           </TableCell>
                           {/* <TableCell align="left">{company}</TableCell> */}
+                          <TableCell align="left">{email}</TableCell>
                           <TableCell align="left">{role}</TableCell>
+                          <TableCell align="left">
+                            {fDateTime(
+                              sample([
+                                new Date(1592452800000),
+                                new Date(1592742800000),
+                                new Date(1602732800000)
+                              ])!
+                            )}
+                          </TableCell>
                           {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> */}
                           {/* <TableCell align="left">
                             <Label
