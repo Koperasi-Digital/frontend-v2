@@ -117,7 +117,7 @@ export default function Router() {
             { element: <Navigate to="/dashboard/user/profile" replace /> },
             { path: 'profile', element: <UserProfile /> },
             { path: 'list', element: <UserList /> },
-            { path: 'new', element: <UserCreate /> },
+            // { path: 'new', element: <UserCreate /> },
             { path: ':name/edit', element: <UserCreate /> },
             { path: 'account', element: <UserAccount /> }
           ]
