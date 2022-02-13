@@ -30,7 +30,7 @@ const sidebarConfig = [
     subheader: 'general',
     items: [
       { title: 'dashboard', path: PATH_DASHBOARD.general.dashboard, icon: ICONS.dashboard },
-      { title: 'activities', path: PATH_DASHBOARD.general.activities, icon: ICONS.user },
+      { title: 'activities', path: PATH_DASHBOARD.general.activities, icon: ICONS.calendar },
       { title: 'blogs', path: PATH_DASHBOARD.general.blogs, icon: ICONS.blog },
       { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq }
     ]
@@ -48,6 +48,22 @@ const sidebarConfig = [
           { title: 'list', path: PATH_DASHBOARD.user.list },
           { title: 'create', path: PATH_DASHBOARD.user.newUser },
           { title: 'edit', path: PATH_DASHBOARD.user.editById }
+        ]
+      },
+      // MANAGEMENT : FINANCE
+      {
+        title: 'finance',
+        path: PATH_DASHBOARD.finance.root,
+        icon: ICONS.banking,
+        children: [
+          {
+            title: 'disbursement approval',
+            path: PATH_DASHBOARD.finance.disbursementApproval
+          },
+          {
+            title: 'disbursement request list',
+            path: PATH_DASHBOARD.finance.disbursementRequestList
+          }
         ]
       },
       // MANAGEMENT : E-COMMERCE
@@ -74,7 +90,13 @@ const sidebarConfig = [
     subheader: 'finance',
     items: [
       { title: 'home', path: PATH_DASHBOARD.finance.home, icon: ICONS.banking },
-      { title: 'report', path: PATH_DASHBOARD.finance.report, icon: ICONS.banking }
+      { title: 'report', path: PATH_DASHBOARD.finance.report, icon: ICONS.banking },
+      { title: 'member report', path: PATH_DASHBOARD.finance.memberReport, icon: ICONS.banking },
+      {
+        title: 'disbursement request',
+        path: PATH_DASHBOARD.finance.disbursementRequest,
+        icon: ICONS.banking
+      }
     ]
   },
   // E-COMMERCE
