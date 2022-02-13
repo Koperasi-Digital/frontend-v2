@@ -81,6 +81,7 @@ export default function EcommerceProductDetails() {
   const dispatch = useDispatch();
   const [value, setValue] = useState('1');
   const { name = '' } = useParams();
+  console.log(name);
   const { product, error, checkout } = useSelector(
     (state: { product: ProductState }) => state.product
   );
@@ -132,7 +133,7 @@ export default function EcommerceProductDetails() {
               </Grid>
             </Card>
 
-            <Grid container sx={{ my: 8 }}>
+            {/* <Grid container sx={{ my: 8 }}>
               {PRODUCT_DESCRIPTION.map((item) => (
                 <Grid item xs={12} md={4} key={item.title}>
                   <Box sx={{ my: 2, mx: 'auto', maxWidth: 280, textAlign: 'center' }}>
@@ -146,19 +147,19 @@ export default function EcommerceProductDetails() {
                   </Box>
                 </Grid>
               ))}
-            </Grid>
+            </Grid> */}
 
             <Card>
               <TabContext value={value}>
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
                     <Tab disableRipple value="1" label="Description" />
-                    <Tab
+                    {/* <Tab
                       disableRipple
                       value="2"
                       label={`Review (${product.reviews.length})`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
-                    />
+                    /> */}
                   </TabList>
                 </Box>
 
@@ -169,9 +170,9 @@ export default function EcommerceProductDetails() {
                     <Markdown children={product.description} />
                   </Box>
                 </TabPanel>
-                <TabPanel value="2">
+                {/* <TabPanel value="2">
                   <ProductDetailsReview product={product} />
-                </TabPanel>
+                </TabPanel> */}
               </TabContext>
             </Card>
           </>

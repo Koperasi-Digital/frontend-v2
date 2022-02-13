@@ -8,18 +8,14 @@ import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
 import {
   Card,
-  Chip,
   Grid,
   Stack,
-  Radio,
   Switch,
   Select,
   TextField,
   InputLabel,
   Typography,
-  RadioGroup,
   FormControl,
-  Autocomplete,
   InputAdornment,
   FormHelperText,
   FormControlLabel
@@ -33,10 +29,16 @@ import { Product } from '../../../@types/products';
 //
 import { QuillEditor } from '../../editor';
 import { UploadMultiFile } from '../../upload';
+import addProduct from 'utils/products';
 
 // ----------------------------------------------------------------------
 
 const CATEGORY_OPTION = [
+  { group: 'Infrastruktur', classify: ['Kandang', 'Handmade'] },
+  { group: 'Bahan Mentah', classify: ['Telur', 'Daging'] }
+];
+
+const TYPE_OPTION = [
   { group: 'Infrastruktur', classify: ['Kandang', 'Handmade'] },
   { group: 'Bahan Mentah', classify: ['Telur', 'Daging'] }
 ];
@@ -71,22 +73,21 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
       name: currentProduct?.name || '',
       description: currentProduct?.description || '',
       images: currentProduct?.images || [],
-      code: currentProduct?.code || '',
-      sku: currentProduct?.sku || '',
+      id: currentProduct?.code || '',
       price: currentProduct?.price || '',
-      priceSale: currentProduct?.priceSale || '',
-      inStock: Boolean(currentProduct?.inventoryType !== 'out_of_stock'),
-      taxes: true,
-      category: currentProduct?.category || CATEGORY_OPTION[0].classify[1]
+      active: Boolean(currentProduct?.inventoryType !== 'out_of_stock'),
+      category: currentProduct?.category || CATEGORY_OPTION[0].classify[1],
+      type: currentProduct?.category || CATEGORY_OPTION[0].classify[1]
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        await fakeRequest(500);
+        // await fakeRequest(500);
+        await addProduct(values);
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-        navigate(PATH_DASHBOARD.eCommerce.list);
+        // navigate(PATH_DASHBOARD.eCommerce.list);
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -178,14 +179,13 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
             <Stack spacing={3}>
               <Card sx={{ p: 3 }}>
                 <FormControlLabel
-                  control={<Switch {...getFieldProps('inStock')} checked={values.inStock} />}
+                  control={<Switch {...getFieldProps('active')} checked={values.active} />}
                   label="In stock"
                   sx={{ mb: 2 }}
                 />
 
                 <Stack spacing={3}>
-                  <TextField fullWidth label="Product Code" {...getFieldProps('code')} />
-                  <TextField fullWidth label="Product SKU" {...getFieldProps('sku')} />
+                  <TextField fullWidth label="Product ID" {...getFieldProps('id')} />
 
                   <FormControl fullWidth>
                     <InputLabel>Category</InputLabel>
@@ -206,6 +206,20 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                       ))}
                     </Select>
                   </FormControl>
+                  <FormControl fullWidth>
+                    <InputLabel>Type</InputLabel>
+                    <Select label="Type" native {...getFieldProps('type')} value={values.type}>
+                      {TYPE_OPTION.map((type) => (
+                        <optgroup key={type.group} label={type.group}>
+                          {type.classify.map((classify) => (
+                            <option key={classify} value={classify}>
+                              {classify}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Stack>
               </Card>
 
@@ -213,23 +227,17 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                 <Stack spacing={3}>
                   <TextField
                     fullWidth
-                    placeholder="0.00"
-                    label="Regular Price"
+                    placeholder="0"
+                    label="Price"
                     {...getFieldProps('price')}
                     InputProps={{
-                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                      startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
                       type: 'number'
                     }}
                     error={Boolean(touched.price && errors.price)}
                     helperText={touched.price && errors.price}
                   />
                 </Stack>
-
-                <FormControlLabel
-                  control={<Switch {...getFieldProps('taxes')} checked={values.taxes} />}
-                  label="Price includes taxes"
-                  sx={{ mt: 2 }}
-                />
               </Card>
 
               <LoadingButton

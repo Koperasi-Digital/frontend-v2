@@ -219,14 +219,6 @@ export default function ProductDetailsSummary({
             {name}
           </Typography>
 
-          <Box sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-            <Rating value={totalRating} precision={0.1} readOnly />
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              ({fShortenNumber(totalReview)}
-              reviews)
-            </Typography>
-          </Box>
-
           <Typography variant="h4" sx={{ mb: 3 }}>
             {fCurrency(price)}
           </Typography>
@@ -241,7 +233,7 @@ export default function ProductDetailsSummary({
             }}
           >
             <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              Size
+              Satuan
             </Typography>
             <TextField
               select
@@ -257,7 +249,7 @@ export default function ProductDetailsSummary({
               }}
               helperText={
                 <Link href="#" underline="always" color="text.primary">
-                  Size Chart
+                  Informasi Satuan
                 </Link>
               }
             >
@@ -277,7 +269,7 @@ export default function ProductDetailsSummary({
             }}
           >
             <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              Quantity
+              Jumlah
             </Typography>
 
             <div>
@@ -291,7 +283,7 @@ export default function ProductDetailsSummary({
                   color: 'text.secondary'
                 }}
               >
-                Available: {available}
+                Tersedia: {available}
               </Typography>
 
               <FormHelperText error>{touched.quantity && errors.quantity}</FormHelperText>
@@ -324,14 +316,6 @@ export default function ProductDetailsSummary({
                 </Button>
               </Grid>
             </Grid>
-          </Box>
-
-          <Box sx={{ mt: 3, textAlign: 'center' }}>
-            {SOCIALS.map((social) => (
-              <Tooltip key={social.name} title={social.name}>
-                <MIconButton>{social.icon}</MIconButton>
-              </Tooltip>
-            ))}
           </Box>
         </Form>
       </FormikProvider>
