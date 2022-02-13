@@ -86,6 +86,8 @@ export default function Router() {
         { path: 'blogs/:title', element: <BlogPost /> },
         { path: 'blogs/new', element: <BlogNewPost /> },
         { path: 'blog/verification', element: <BlogVerification /> },
+        { path: 'faq', element: <FAQ /> },
+        { path: 'faq/:number', element: <FAQPost /> },
         {
           path: 'e-commerce',
           children: [
@@ -179,6 +181,8 @@ const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
 const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
 const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
+const FAQ = Loadable(lazy(() => import('../pages/dashboard/FAQ')));
+const FAQPost = Loadable(lazy(() => import('../pages/dashboard/FAQPost')));
 const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));

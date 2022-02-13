@@ -35,7 +35,9 @@ export const PATH_DASHBOARD = {
     blogs: path(ROOTS_DASHBOARD, '/blogs'),
     blog: path(ROOTS_DASHBOARD, '/blogs/:title'),
     newBlog: path(ROOTS_DASHBOARD, '/blogs/new'),
-    blogVerification: path(ROOTS_DASHBOARD, '/blog/verification')
+    blogVerification: path(ROOTS_DASHBOARD, '/blog/verification'),
+    faq: path(ROOTS_DASHBOARD, '/faq'),
+    faqPost: path(ROOTS_DASHBOARD, '/faq/:number')
   },
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),
