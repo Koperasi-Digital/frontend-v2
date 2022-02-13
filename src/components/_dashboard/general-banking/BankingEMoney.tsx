@@ -95,9 +95,6 @@ export default function BankingEMoney() {
             </div>
           ) : (
             <Button
-              // onClick={() => {
-              //   handleRegisterEMoney(3, 'gopay', '81212345678', '62');
-              // }}
               onClick={() => {
                 setOpenModalEMoney(true);
               }}

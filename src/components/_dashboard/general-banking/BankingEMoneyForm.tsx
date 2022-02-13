@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { DialogActions, DialogContent, TextField, Button } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
 type CalendarFormProps = {
   handleCloseModal: VoidFunction;
@@ -50,7 +51,7 @@ export default function BankingEMoneyForm({
     }
   });
 
-  const { errors, touched, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -90,9 +91,14 @@ export default function BankingEMoneyForm({
           <Button type="button" variant="outlined" color="inherit" onClick={handleCloseModal}>
             Cancel
           </Button>
-          <Button type="submit" variant="contained">
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+            loadingIndicator="Loading..."
+          >
             Submit
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Form>
     </FormikProvider>
