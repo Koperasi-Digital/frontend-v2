@@ -44,7 +44,6 @@ const sidebarConfig = [
         icon: ICONS.user,
         children: [
           { title: 'list', path: PATH_DASHBOARD.user.list },
-          // { title: 'create', path: PATH_DASHBOARD.user.newUser },
           { title: 'edit', path: PATH_DASHBOARD.user.editById }
         ]
       },
