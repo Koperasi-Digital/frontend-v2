@@ -34,12 +34,7 @@ import addProduct from 'utils/products';
 // ----------------------------------------------------------------------
 
 const CATEGORY_OPTION = [
-  { group: 'Infrastruktur', classify: ['Kandang', 'Handmade'] },
-  { group: 'Bahan Mentah', classify: ['Telur', 'Daging'] }
-];
-
-const TYPE_OPTION = [
-  { group: 'Infrastruktur', classify: ['Kandang', 'Handmade'] },
+  { group: 'Infrastruktur', classify: ['Kandang', 'Perkakas'] },
   { group: 'Bahan Mentah', classify: ['Telur', 'Daging'] }
 ];
 
@@ -74,6 +69,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
       description: currentProduct?.description || '',
       images: currentProduct?.images || [],
       id: currentProduct?.code || '',
+      quantity: currentProduct?.available || '',
       price: currentProduct?.price || '',
       active: Boolean(currentProduct?.inventoryType !== 'out_of_stock'),
       category: currentProduct?.category || CATEGORY_OPTION[0].classify[1],
@@ -196,27 +192,20 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                       value={values.category}
                     >
                       {CATEGORY_OPTION.map((category) => (
-                        <optgroup key={category.group} label={category.group}>
-                          {category.classify.map((classify) => (
-                            <option key={classify} value={classify}>
-                              {classify}
-                            </option>
-                          ))}
-                        </optgroup>
+                        <option key={category.group} value={category.group}>
+                          {category.group}
+                        </option>
                       ))}
                     </Select>
                   </FormControl>
+
                   <FormControl fullWidth>
-                    <InputLabel>Type</InputLabel>
-                    <Select label="Type" native {...getFieldProps('type')} value={values.type}>
-                      {TYPE_OPTION.map((type) => (
-                        <optgroup key={type.group} label={type.group}>
-                          {type.classify.map((classify) => (
-                            <option key={classify} value={classify}>
-                              {classify}
-                            </option>
-                          ))}
-                        </optgroup>
+                    <InputLabel>Jenis</InputLabel>
+                    <Select label="Jenis" native {...getFieldProps('type')} value={values.type}>
+                      {CATEGORY_OPTION[0].classify.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
                       ))}
                     </Select>
                   </FormControl>
@@ -225,6 +214,18 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
 
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
+                  <TextField
+                    fullWidth
+                    placeholder="0"
+                    label="Jumlah"
+                    {...getFieldProps('quantity')}
+                    InputProps={{
+                      endAdornment: <InputAdornment position="end">kilogram</InputAdornment>,
+                      type: 'number'
+                    }}
+                    error={Boolean(touched.quantity && errors.quantity)}
+                    helperText={touched.quantity && errors.quantity}
+                  />
                   <TextField
                     fullWidth
                     placeholder="0"

@@ -215,11 +215,10 @@ export function getProducts() {
     const { dispatch } = store;
     dispatch(slice.actions.startLoading());
     try {
-      // const response: { data: { products: Product[] } } = await axios.get('/api/products');
-      const response = await axiosExternal.get('/products');
-      console.log(response.data.data);
-      dispatch(slice.actions.getProductsSuccess(response.data.data));
-      // dispatch(slice.actions.getProductsSuccess(response.data.products));
+      const response: { data: { products: Product[] } } = await axios.get('/api/products');
+      // const response = await axiosExternal.get('/products');
+      // dispatch(slice.actions.getProductsSuccess(response.data.data));
+      dispatch(slice.actions.getProductsSuccess(response.data.products));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error));
