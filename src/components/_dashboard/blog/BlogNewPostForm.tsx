@@ -126,7 +126,7 @@ export default function BlogNewPostForm() {
                 <Stack spacing={3}>
                   <TextField
                     fullWidth
-                    label="Post Title"
+                    label="Blog Title"
                     {...getFieldProps('title')}
                     error={Boolean(touched.title && errors.title)}
                     helperText={touched.title && errors.title}
@@ -217,7 +217,7 @@ export default function BlogNewPostForm() {
                     renderInput={(params) => <TextField {...params} label="Tags" />}
                   />
 
-                  <TextField fullWidth label="Meta title" {...getFieldProps('metaTitle')} />
+                  {/* <TextField fullWidth label="Meta title" {...getFieldProps('metaTitle')} />
 
                   <TextField
                     fullWidth
@@ -247,7 +247,7 @@ export default function BlogNewPostForm() {
                       ))
                     }
                     renderInput={(params) => <TextField {...params} label="Meta keywords" />}
-                  />
+                  /> */}
                 </Stack>
               </Card>
 

@@ -17,9 +17,9 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import {
   BlogPostHero,
   BlogPostTags,
-  BlogPostRecent,
-  BlogPostCommentList,
-  BlogPostCommentForm
+  // BlogPostRecent,
+  BlogPostCommentList
+  // BlogPostCommentForm
 } from '../../components/_dashboard/blog';
 
 // ----------------------------------------------------------------------
@@ -41,7 +41,8 @@ const SkeletonLoad = (
 export default function BlogPost() {
   const dispatch = useDispatch();
   const { title = '' } = useParams();
-  const { post, error, recentPosts } = useSelector((state: { blog: BlogState }) => state.blog);
+  // const { post, error, recentPosts } = useSelector((state: { blog: BlogState }) => state.blog);
+  const { post, error } = useSelector((state: { blog: BlogState }) => state.blog);
 
   useEffect(() => {
     dispatch(getPost(title));
@@ -53,7 +54,14 @@ export default function BlogPost() {
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Blog Details"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: sentenceCase(title) }]}
+          links={[
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            {
+              name: 'Blogs',
+              href: PATH_DASHBOARD.general.blogs
+            },
+            { name: sentenceCase(title) }
+          ]}
         />
 
         {post && (
@@ -86,7 +94,7 @@ export default function BlogPost() {
                 <Pagination count={8} color="primary" />
               </Box>
 
-              <BlogPostCommentForm />
+              {/* <BlogPostCommentForm /> */}
             </Box>
           </Card>
         )}
@@ -95,7 +103,7 @@ export default function BlogPost() {
 
         {error && <Typography variant="h6">404 Post not found</Typography>}
 
-        {recentPosts.length > 0 && <BlogPostRecent posts={recentPosts} />}
+        {/* {recentPosts.length > 0 && <BlogPostRecent posts={recentPosts} />} */}
       </Container>
     </Page>
   );

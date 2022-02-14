@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { merge } from 'lodash';
+import { merge, startCase } from 'lodash';
 import { isBefore } from 'date-fns';
 import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack';
@@ -8,12 +8,15 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import {
   Box,
   Button,
+  Select,
   Switch,
   Tooltip,
   TextField,
   IconButton,
+  InputLabel,
   DialogContent,
   DialogActions,
+  FormControl,
   FormControlLabel
 } from '@mui/material';
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
@@ -21,8 +24,6 @@ import { EventInput } from '@fullcalendar/common';
 // redux
 import { useDispatch } from '../../../redux/store';
 import { createEvent, updateEvent, deleteEvent } from '../../../redux/slices/calendar';
-//
-import ColorSinglePicker from '../../ColorSinglePicker';
 
 // ----------------------------------------------------------------------
 
@@ -36,13 +37,22 @@ const COLOR_OPTIONS = [
   '#7A0C2E' // theme.palette.error.darker
 ];
 
+const EVENT_TYPE_OPTIONS: string[] = ['koperasi', 'peternakan'];
+
+const EVENT_COLOR = {
+  koperasi: COLOR_OPTIONS[0],
+  peternakan: COLOR_OPTIONS[3]
+};
+
 const getInitialValues = (event: EventInput, range: { start: Date; end: Date } | null) => {
   // eslint-disable-next-line no-underscore-dangle
   const _event = {
     title: '',
     description: '',
-    textColor: '#1890FF',
+    type: 'koperasi',
+    textColor: EVENT_COLOR.koperasi,
     allDay: false,
+    pushNotification: false,
     start: range ? new Date(range.start) : new Date(),
     end: range ? new Date(range.end) : new Date()
   };
@@ -83,17 +93,19 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
         const newEvent = {
           title: values.title,
           description: values.description,
-          textColor: values.textColor,
+          type: values.type,
+          textColor: EVENT_COLOR[values.type as keyof typeof EVENT_COLOR],
           allDay: values.allDay,
+          pushNotification: values.pushNotification,
           start: values.start,
           end: values.end
         };
         if (event.id) {
           dispatch(updateEvent(event.id, newEvent));
-          enqueueSnackbar('Update event success', { variant: 'success' });
+          enqueueSnackbar('Update activity success', { variant: 'success' });
         } else {
           dispatch(createEvent(newEvent));
-          enqueueSnackbar('Create event success', { variant: 'success' });
+          enqueueSnackbar('Create activity success', { variant: 'success' });
         }
         resetForm();
         onCancel();
@@ -112,7 +124,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
     try {
       onCancel();
       dispatch(deleteEvent(event.id));
-      enqueueSnackbar('Delete event success', { variant: 'success' });
+      enqueueSnackbar('Delete activity success', { variant: 'success' });
     } catch (error) {
       console.error(error);
     }
@@ -136,7 +148,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           <TextField
             fullWidth
             multiline
-            maxRows={4}
+            rows={4}
             label="Description"
             {...getFieldProps('description')}
             error={Boolean(touched.description && errors.description)}
@@ -144,11 +156,22 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
             sx={{ mb: 3 }}
           />
 
-          <FormControlLabel
-            control={<Switch checked={values.allDay} {...getFieldProps('allDay')} />}
-            label="All day"
-            sx={{ mb: 3 }}
-          />
+          <FormControl fullWidth>
+            <InputLabel>Type</InputLabel>
+            <Select
+              label="Type"
+              native
+              {...getFieldProps('type')}
+              value={values.type}
+              sx={{ mb: 3 }}
+            >
+              {EVENT_TYPE_OPTIONS.map((eventType) => (
+                <option key={eventType} value={eventType}>
+                  {startCase(eventType)}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
 
           <MobileDateTimePicker
             label="Start date"
@@ -174,7 +197,19 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
             )}
           />
 
-          <ColorSinglePicker {...getFieldProps('textColor')} colors={COLOR_OPTIONS} />
+          <FormControlLabel
+            control={<Switch checked={values.allDay} {...getFieldProps('allDay')} />}
+            label="All Day"
+            sx={{ mb: 3 }}
+          />
+
+          <FormControlLabel
+            control={
+              <Switch checked={values.pushNotification} {...getFieldProps('pushNotification')} />
+            }
+            label="Push Notification"
+            sx={{ mb: 3 }}
+          />
         </DialogContent>
 
         <DialogActions>

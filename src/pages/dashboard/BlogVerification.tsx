@@ -1,5 +1,8 @@
-import { filter, sample } from 'lodash';
+import { filter } from 'lodash';
+import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
+// material
+import { useTheme } from '@mui/material/styles';
 import {
   Card,
   Table,
@@ -20,28 +23,56 @@ import { getUserList, deleteUser } from '../../redux/slices/user';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // @types
-import { UserManager } from '../../@types/user';
+// import { UserManager } from '../../@types/user';
 // components
 import Page from '../../components/Page';
+import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user/list';
-import { fDateTime } from 'utils/formatTime';
+import { fDateTime } from '../../utils/formatTime';
+import {
+  BlogVerificationHead,
+  BlogVerificationToolbar,
+  BlogVerificationMoreMenu
+} from '../../components/_dashboard/blog/list';
+import { sample } from 'lodash';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'email', label: 'Email', alignRight: false },
+  { id: 'title', label: 'Title', alignRight: false },
+  { id: 'createdBy', label: 'Created By', alignRight: false },
+  { id: 'createdAt', label: 'Created At', alignRight: false },
   { id: 'role', label: 'Role', alignRight: false },
-  { id: 'createdAt', label: 'Joined At', alignRight: false },
+  { id: 'isVerified', label: 'Verified', alignRight: false },
   { id: '' }
 ];
 
 // ----------------------------------------------------------------------
 
 type Anonymous = Record<string | number, string>;
+
+function makeMockData(arr: any[]) {
+  let mock = [...Array(24)].map((_, index) => ({
+    id: index,
+    avatarUrl: undefined,
+    title: sample([
+      'Cara merawat DOC (Day Old Chick)',
+      'Cara menyuntik vaksin pada ayam',
+      'Cara merawat ayam'
+    ]),
+    createdBy: sample(['John Doe', 'Jane Doe']),
+    isVerified: index % 2,
+    createdAt: sample([new Date(1592452800000), new Date()]),
+    role: sample(['Admin', 'Non-Admin'])
+  }));
+  for (let i = 0; i < mock.length; i++) {
+    mock[i].createdBy = arr[i].name;
+    mock[i].avatarUrl = arr[i].avatarUrl;
+  }
+  return mock;
+}
 
 function descendingComparator(a: Anonymous, b: Anonymous, orderBy: string) {
   if (b[orderBy] < a[orderBy]) {
@@ -59,11 +90,7 @@ function getComparator(order: string, orderBy: string) {
     : (a: Anonymous, b: Anonymous) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(
-  array: UserManager[],
-  comparator: (a: any, b: any) => number,
-  query: string
-) {
+function applySortFilter(array: any[], comparator: (a: any, b: any) => number, query: string) {
   const stabilizedThis = array.map((el, index) => [el, index] as const);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -71,26 +98,33 @@ function applySortFilter(
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_blog) => _blog.title.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function UserList() {
+export default function BlogVerification() {
+  const theme = useTheme();
   const dispatch = useDispatch();
 
   const { userList } = useSelector((state: RootState) => state.user);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [selected, setSelected] = useState<string[]>([]);
-  const [orderBy, setOrderBy] = useState('name');
-  const [filterName, setFilterName] = useState('');
+  const [orderBy, setOrderBy] = useState('title');
+  const [filterTitle, setFilterTitle] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [data, setData] = useState([]) as any[];
 
   useEffect(() => {
     dispatch(getUserList());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (userList.length > 0) {
+      setData(makeMockData(userList));
+    }
+  }, [userList]);
   const handleRequestSort = (property: string) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -99,18 +133,18 @@ export default function UserList() {
 
   const handleSelectAllClick = (checked: boolean) => {
     if (checked) {
-      const newSelecteds = userList.map((n) => n.name);
+      const newSelecteds = data.map((n: { title: any }) => n.title);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (name: string) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (title: string) => {
+    const selectedIndex = selected.indexOf(title);
     let newSelected: string[] = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, title);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -129,43 +163,42 @@ export default function UserList() {
     setPage(0);
   };
 
-  const handleFilterByName = (filterName: string) => {
-    setFilterName(filterName);
+  const handleFilterByTitle = (filterTitle: string) => {
+    setFilterTitle(filterTitle);
   };
 
   const handleDeleteUser = (userId: string) => {
     dispatch(deleteUser(userId));
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
-  const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
+  const filteredBlogs = applySortFilter(data, getComparator(order, orderBy), filterTitle);
 
-  const isUserNotFound = filteredUsers.length === 0;
+  const isBlogNotFound = filteredBlogs.length === 0;
 
   return (
-    <Page title="User: List | CoopChick">
+    <Page title="Blog Verification | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="User List"
+          heading="Blog Verification"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'List' }
+            { name: 'Blog Verification', href: PATH_DASHBOARD.general.blogVerification }
           ]}
         />
 
         <Card>
-          <UserListToolbar
+          <BlogVerificationToolbar
             numSelected={selected.length}
-            filterName={filterName}
-            onFilterName={handleFilterByName}
+            filterTitle={filterTitle}
+            onFilterTitle={handleFilterByTitle}
           />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
+                <BlogVerificationHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
@@ -175,11 +208,11 @@ export default function UserList() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers
+                  {filteredBlogs
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, name, role, email, avatarUrl } = row;
-                      const isItemSelected = selected.indexOf(name) !== -1;
+                      const { id, title, createdBy, createdAt, avatarUrl, isVerified, role } = row;
+                      const isItemSelected = selected.indexOf(title) !== -1;
 
                       return (
                         <TableRow
@@ -191,30 +224,33 @@ export default function UserList() {
                           aria-checked={isItemSelected}
                         >
                           <TableCell padding="checkbox">
-                            <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
+                            <Checkbox checked={isItemSelected} onClick={() => handleClick(title)} />
                           </TableCell>
+                          <TableCell align="left">{title}</TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={name} src={avatarUrl} />
+                              <Avatar alt={createdBy} src={avatarUrl} />
                               <Typography variant="subtitle2" noWrap>
-                                {name}
+                                {createdBy}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{fDateTime(createdAt)}</TableCell>
                           <TableCell align="left">{role}</TableCell>
                           <TableCell align="left">
-                            {fDateTime(
-                              sample([
-                                new Date(1592452800000),
-                                new Date(1592742800000),
-                                new Date(1602732800000)
-                              ])!
-                            )}
+                            <Label
+                              variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                              color={(!isVerified && 'error') || 'success'}
+                            >
+                              {sentenceCase(isVerified ? 'Yes' : 'No')}
+                            </Label>
                           </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                            <BlogVerificationMoreMenu
+                              onDelete={() => handleDeleteUser(id)}
+                              title={title}
+                            />
                           </TableCell>
                         </TableRow>
                       );
@@ -225,11 +261,11 @@ export default function UserList() {
                     </TableRow>
                   )}
                 </TableBody>
-                {isUserNotFound && (
+                {isBlogNotFound && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
+                        <SearchNotFound searchQuery={filterTitle} />
                       </TableCell>
                     </TableRow>
                   </TableBody>

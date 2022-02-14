@@ -34,8 +34,10 @@ export const PATH_DASHBOARD = {
     activity: path(ROOTS_DASHBOARD, '/activities/:id'),
     blogs: path(ROOTS_DASHBOARD, '/blogs'),
     blog: path(ROOTS_DASHBOARD, '/blogs/:title'),
-    blogById: path(ROOTS_DASHBOARD, '/blogs/apply-these-7-secret-techniques-to-improve-event'),
-    newBlog: path(ROOTS_DASHBOARD, '/blogs/new')
+    newBlog: path(ROOTS_DASHBOARD, '/blogs/new'),
+    blogVerification: path(ROOTS_DASHBOARD, '/blog/verification'),
+    faq: path(ROOTS_DASHBOARD, '/faq'),
+    faqPost: path(ROOTS_DASHBOARD, '/faq/:number')
   },
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),
@@ -45,9 +47,7 @@ export const PATH_DASHBOARD = {
   calendar: path(ROOTS_DASHBOARD, '/calendar'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
-    profile: path(ROOTS_DASHBOARD, '/user/profile'),
     list: path(ROOTS_DASHBOARD, '/user/list'),
-    newUser: path(ROOTS_DASHBOARD, '/user/new'),
     editById: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
     account: path(ROOTS_DASHBOARD, '/user/account')
   },
@@ -65,6 +65,10 @@ export const PATH_DASHBOARD = {
   finance: {
     root: path(ROOTS_DASHBOARD, '/finance'),
     home: path(ROOTS_DASHBOARD, '/finance/home'),
-    report: path(ROOTS_DASHBOARD, '/finance/report')
+    report: path(ROOTS_DASHBOARD, '/finance/report'),
+    memberReport: path(ROOTS_DASHBOARD, '/finance/member-report'),
+    disbursementApproval: path(ROOTS_DASHBOARD, '/finance/disbursement-approval'),
+    disbursementRequest: path(ROOTS_DASHBOARD, '/finance/disbursement-request'),
+    disbursementRequestList: path(ROOTS_DASHBOARD, '/finance/disbursement-request-list')
   }
 };

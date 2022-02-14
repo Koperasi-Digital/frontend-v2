@@ -80,11 +80,14 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <GeneralApp /> },
-        { path: 'activities', element: <BlogPosts /> },
+        { path: 'activities', element: <Calendar /> },
         { path: 'activities/:id', element: <BlogPost /> },
         { path: 'blogs', element: <BlogPosts /> },
         { path: 'blogs/:title', element: <BlogPost /> },
         { path: 'blogs/new', element: <BlogNewPost /> },
+        { path: 'blog/verification', element: <BlogVerification /> },
+        { path: 'faq', element: <FAQ /> },
+        { path: 'faq/:number', element: <FAQPost /> },
         {
           path: 'e-commerce',
           children: [
@@ -103,7 +106,11 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/finance/home" replace /> },
             { path: 'home', element: <Finance /> },
-            { path: 'report', element: <TransactionsReport /> }
+            { path: 'report', element: <TransactionsReport /> },
+            { path: 'member-report', element: <MemberReport /> },
+            { path: 'disbursement-approval', element: <DisbursementApproval /> },
+            { path: 'disbursement-request', element: <DisbursementRequest /> },
+            { path: 'disbursement-request-list', element: <DisbursementRequestList /> }
           ]
         },
         {
@@ -112,7 +119,6 @@ export default function Router() {
             { element: <Navigate to="/dashboard/user/profile" replace /> },
             { path: 'profile', element: <UserProfile /> },
             { path: 'list', element: <UserList /> },
-            { path: 'new', element: <UserCreate /> },
             { path: ':name/edit', element: <UserCreate /> },
             { path: 'account', element: <UserAccount /> }
           ]
@@ -174,6 +180,9 @@ const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
 const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
 const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
+const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
+const FAQ = Loadable(lazy(() => import('../pages/dashboard/FAQ')));
+const FAQPost = Loadable(lazy(() => import('../pages/dashboard/FAQPost')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
@@ -181,6 +190,14 @@ const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
 const TransactionsReport = Loadable(lazy(() => import('../pages/dashboard/TransactionsReport')));
+const MemberReport = Loadable(lazy(() => import('../pages/dashboard/MemberReport')));
+const DisbursementApproval = Loadable(
+  lazy(() => import('../pages/dashboard/DisbursementApproval'))
+);
+const DisbursementRequestList = Loadable(
+  lazy(() => import('../pages/dashboard/DisbursementRequestList'))
+);
+const DisbursementRequest = Loadable(lazy(() => import('../pages/dashboard/DisbursementRequest')));
 // Main
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));

@@ -4,7 +4,8 @@ import numeral from 'numeral';
 // ----------------------------------------------------------------------
 
 export function fCurrency(number: string | number) {
-  return 'Rp' + numeral(number).format('0,0');
+  // return numeral(number).format(Number.isInteger(number) ? 'Rp0.0' : 'Rp0.0,00');
+  return Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(Number(number));
 }
 
 export function fPercent(number: number) {

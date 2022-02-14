@@ -16,7 +16,6 @@ import {
   Divider,
   Typography,
   ListItemText,
-  ListSubheader,
   ListItemAvatar,
   ListItemButton
 } from '@mui/material';
@@ -30,29 +29,20 @@ import { MIconButton } from '../../components/@material-extend';
 
 // ----------------------------------------------------------------------
 
-const TITLES = [
-  'Your order is placed',
-  'Sylvan King',
-  'You have new message',
-  'You have new mail',
-  'Delivery processing'
-];
+const TITLES = ['Vaksinasi DOC', 'Rapat Anggota Koperasi'];
 
 const DESCRIPTIONS = [
-  'waiting for shipping',
-  'answered to your comment on the Minimal',
-  '5 unread messages',
-  'sent from Guido Padberg',
-  'Your order is being shipped'
+  'akan berlangsung pada tanggal 9 Januari pada Pukul 14.00',
+  'akan berlangsung pada tanggal 8 Januari pada Pukul 16.00'
 ];
 
-const TYPES = ['order_placed', 'friend_interactive', 'chat_message', 'mail', 'order_shipped'];
+const TYPES = ['friend_interactive', 'friend_interactive'];
 
-const AVATARS = [null, mockData.image.avatar(2), null, null, null];
+const AVATARS = [null, null];
 
-const UNREADS = [true, true, false, false, false];
+const UNREADS = [true, false];
 
-const MOCK_NOTIFICATIONS = [...Array(5)].map((_, index) => ({
+const MOCK_NOTIFICATIONS = [...Array(2)].map((_, index) => ({
   id: mockData.id(index),
   title: TITLES[index],
   description: DESCRIPTIONS[index],
@@ -216,28 +206,8 @@ export default function NotificationsPopover() {
         <Divider />
 
         <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
-          <List
-            disablePadding
-            subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                New
-              </ListSubheader>
-            }
-          >
-            {notifications.slice(0, 2).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
-            ))}
-          </List>
-
-          <List
-            disablePadding
-            subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                Before that
-              </ListSubheader>
-            }
-          >
-            {notifications.slice(2, 5).map((notification) => (
+          <List disablePadding>
+            {notifications.map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
           </List>

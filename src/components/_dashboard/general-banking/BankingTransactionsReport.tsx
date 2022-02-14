@@ -1,8 +1,7 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
 import { Icon, IconifyIcon } from '@iconify/react';
-import { Link as RouterLink } from 'react-router-dom';
 import bookFill from '@iconify/icons-eva/book-fill';
 import heartFill from '@iconify/icons-eva/heart-fill';
 import shareFill from '@iconify/icons-eva/share-fill';
@@ -10,7 +9,7 @@ import printerFill from '@iconify/icons-eva/printer-fill';
 import downloadFill from '@iconify/icons-eva/download-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
-import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
+import arrowDownOutline from '@iconify/icons-eva/arrow-down-outline';
 import diagonalArrowRightUpFill from '@iconify/icons-eva/diagonal-arrow-right-up-fill';
 import diagonalArrowLeftDownFill from '@iconify/icons-eva/diagonal-arrow-left-down-fill';
 // material
@@ -18,6 +17,7 @@ import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Card,
+  Grid,
   Menu,
   Table,
   Avatar,
@@ -30,18 +30,28 @@ import {
   TableHead,
   CardHeader,
   Typography,
-  TableContainer
+  TableContainer,
+  TablePagination,
+  TextField
 } from '@mui/material';
 // utils
 import { fCurrency } from '../../../utils/formatNumber';
-//
+
+//Popover
+import MenuPopover from '../../MenuPopover';
+
+//for calendar
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
+
 import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
 // ----------------------------------------------------------------------
 
-const RECENT_TRANSITIONS = [
+const TRANSACTIONS = [
   {
     id: '1b0fc8a1-cd68-41f6-899e-d0e0676c90bb',
     avatar: '/static/mock-images/avatars/avatar_8.jpg',
@@ -59,6 +69,15 @@ const RECENT_TRANSITIONS = [
     status: 'pending',
     gross_amount: 150000,
     type: 'Expenses'
+  },
+  {
+    id: '1b0fc8a1-cd72-41f6-8777-d0e0676c90bb',
+    avatar: '/static/mock-images/avatars/avatar_8.jpg',
+    category: 'Beth White',
+    timestamp: 1627554444465,
+    status: 'success',
+    gross_amount: 170000,
+    type: 'Income'
   },
   {
     id: '1b0fc8a1-cd54-41f6-899e-d0e0676c90bb',
@@ -89,8 +108,6 @@ const RECENT_TRANSITIONS = [
   }
 ];
 
-// ----------------------------------------------------------------------
-
 type AvatarIconProps = {
   icon: IconifyIcon;
 };
@@ -110,7 +127,7 @@ function AvatarIcon({ icon }: AvatarIconProps) {
   );
 }
 
-type TransitionsProps = {
+type TransactionsProps = {
   id: string;
   avatar: string | null;
   category: string;
@@ -120,7 +137,7 @@ type TransitionsProps = {
   type: 'Expenses' | 'Income' | string;
 };
 
-function renderAvatar(transitions: TransitionsProps) {
+function renderAvatar(transitions: TransactionsProps) {
   if (transitions.category === 'Simpanan pokok') {
     return <AvatarIcon icon={bookFill} />;
   }
@@ -203,7 +220,57 @@ function MoreMenuButton({ onDownload, onPrint, onShare, onDelete }: MoreMenuButt
   );
 }
 
-export default function BankingRecentTransitions() {
+export default function BankingTransactionsReport() {
+  // Transactions Filter
+  const filterDropdownRef = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [filterMode, setFilterMode] = useState<string>('All');
+  const [allTransactionData, setAllTransactionData] = useState<TransactionsProps[]>([]);
+  const [filteredTransactionData, setFilteredTransactionData] = useState<TransactionsProps[]>([]);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleSearch = (filterName: string) => {
+    handleClose();
+
+    setFilterMode(filterName);
+
+    if (filterName === 'All') {
+      setFilteredTransactionData(allTransactionData);
+    } else {
+      let result = [];
+      result = allTransactionData.filter((data) => {
+        return data.type === filterName;
+      });
+      setFilteredTransactionData(result);
+    }
+  };
+
+  useEffect(() => {
+    setAllTransactionData(TRANSACTIONS);
+    setFilteredTransactionData(TRANSACTIONS);
+  }, []);
+
+  //Table Pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (_event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredTransactionData.length) : 0;
+
+  //Date picker
+  const [fromDateValue, setFromDateValue] = useState<Date | null>(new Date());
+  const [toDateValue, setToDateValue] = useState<Date | null>(new Date());
+
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
 
@@ -215,7 +282,88 @@ export default function BankingRecentTransitions() {
   return (
     <>
       <Card>
-        <CardHeader title="Recent Transitions" sx={{ mb: 3 }} />
+        <CardHeader title="Transactions Report" sx={{ mb: 3 }} />
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <Grid
+            container
+            spacing={3}
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ mb: 2 }}
+          >
+            <Grid item sm={12} lg={4}>
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <DatePicker
+                  disableFuture
+                  label="Dari"
+                  openTo="year"
+                  views={['year', 'month', 'day']}
+                  value={fromDateValue}
+                  onChange={(newValue) => {
+                    setFromDateValue(newValue);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </Box>
+            </Grid>
+
+            <Grid item sm={12} lg={4}>
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <DatePicker
+                  disableFuture
+                  label="Sampai"
+                  openTo="year"
+                  views={['year', 'month', 'day']}
+                  value={toDateValue}
+                  onChange={(newValue) => {
+                    setToDateValue(newValue);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </Box>
+            </Grid>
+
+            <Grid item sm={12} lg={4}>
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <Button
+                  onClick={handleOpen}
+                  ref={filterDropdownRef}
+                  sx={{ typography: 'h6', py: 1, px: 2.5, border: 2 }}
+                >
+                  {filterMode}
+                  <Icon icon={arrowDownOutline} width={16} height={16} />
+                </Button>
+
+                <MenuPopover
+                  open={open}
+                  onClose={handleClose}
+                  anchorEl={filterDropdownRef.current}
+                  sx={{ width: 220 }}
+                >
+                  <MenuItem
+                    onClick={() => handleSearch('All')}
+                    sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                  >
+                    All
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => handleSearch('Income')}
+                    sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                  >
+                    Income
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => handleSearch('Expenses')}
+                    sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                  >
+                    Expenses
+                  </MenuItem>
+                </MenuPopover>
+              </Box>
+            </Grid>
+          </Grid>
+        </LocalizationProvider>
         <Scrollbar>
           <TableContainer sx={{ minWidth: 720 }}>
             <Table>
@@ -229,7 +377,13 @@ export default function BankingRecentTransitions() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {RECENT_TRANSITIONS.map((row) => (
+                {(rowsPerPage > 0
+                  ? filteredTransactionData.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : filteredTransactionData
+                ).map((row) => (
                   <TableRow key={row.id}>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -307,24 +461,25 @@ export default function BankingRecentTransitions() {
                     </TableCell>
                   </TableRow>
                 ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
         </Scrollbar>
 
-        <Divider />
-
-        <Box sx={{ p: 2, textAlign: 'right' }}>
-          <Button
-            to="#"
-            size="small"
-            color="inherit"
-            component={RouterLink}
-            endIcon={<Icon icon={arrowIosForwardFill} />}
-          >
-            View All
-          </Button>
-        </Box>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={filteredTransactionData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Card>
     </>
   );

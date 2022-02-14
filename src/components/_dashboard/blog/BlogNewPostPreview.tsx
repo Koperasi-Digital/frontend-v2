@@ -74,7 +74,7 @@ export default function BlogNewPostPreview({
   const cover = isString(values.cover) ? values.cover : values.cover?.preview;
   const hasContent = title || description || content || cover;
   const hasHero = title || cover;
-
+  console.log(content);
   return (
     <DialogAnimate fullScreen open={isOpenPreview} onClose={onClosePreview}>
       <DialogActions sx={{ py: 2, px: 3 }}>
