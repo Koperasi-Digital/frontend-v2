@@ -75,9 +75,9 @@ const setColorAndTime = (index: number) => {
   };
 };
 
-let events = [...Array(9)].map((_, index) => ({
+let events = [...Array(6)].map((_, index) => ({
   id: uuidv4(),
-  title: mockData.text.title(index),
+  title: mockData.text.calendarTitle(index),
   description: mockData.text.description(index),
   allDay: mockData.boolean(index),
   ...setColorAndTime(index)

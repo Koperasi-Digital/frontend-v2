@@ -15,16 +15,16 @@ const JWT_EXPIRES_IN = '5 days';
 const users: User[] = [
   {
     id: '8864c717-587d-472a-929a-8e5f298024da-0',
-    displayName: 'Jaydon Frankie',
+    displayName: 'John Doe',
     email: 'demo@coopchick.cc',
     password: 'demo1234',
     photoURL: '/static/mock-images/avatars/avatar_default.jpg',
-    phoneNumber: '+40 777666555',
-    country: 'United States',
-    address: '90210 Broadway Blvd',
-    state: 'California',
-    city: 'San Francisco',
-    zipCode: '94116',
+    phoneNumber: '+62 8123123123',
+    country: 'Indonesia',
+    address: 'Jl. Ganesa No.10, Lb. Siliwangi, Kec. Coblong',
+    state: 'West Java',
+    city: 'Bandung',
+    zipCode: '40132',
     about: 'Praesent turpis. Phasellus viverra nulla ut metus varius laoreet. Phasellus tempus.',
     role: {
       id: 1,

@@ -11,6 +11,7 @@ const getIcon = (name: string) => (
 
 const ICONS = {
   blog: getIcon('ic_blog'),
+  faq: getIcon('ic_faq'),
   cart: getIcon('ic_cart'),
   chat: getIcon('ic_chat'),
   user: getIcon('ic_user'),
@@ -30,7 +31,8 @@ const sidebarConfig = [
     items: [
       { title: 'dashboard', path: PATH_DASHBOARD.general.dashboard, icon: ICONS.dashboard },
       { title: 'activities', path: PATH_DASHBOARD.general.activities, icon: ICONS.calendar },
-      { title: 'blogs', path: PATH_DASHBOARD.general.blogs, icon: ICONS.blog }
+      { title: 'blogs', path: PATH_DASHBOARD.general.blogs, icon: ICONS.blog },
+      { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq }
     ]
   },
   // MANAGEMENT
@@ -44,7 +46,6 @@ const sidebarConfig = [
         icon: ICONS.user,
         children: [
           { title: 'list', path: PATH_DASHBOARD.user.list },
-          { title: 'create', path: PATH_DASHBOARD.user.newUser },
           { title: 'edit', path: PATH_DASHBOARD.user.editById }
         ]
       },
