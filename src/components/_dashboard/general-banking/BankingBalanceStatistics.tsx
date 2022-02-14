@@ -70,7 +70,8 @@ export default function BankingBalanceStatistics() {
 
   useEffect(() => {
     handleSetChartData();
-  });
+  }, []);
+
   return (
     <Card>
       <CardHeader

@@ -84,7 +84,7 @@ export default function BankingExpensesCategories() {
 
   useEffect(() => {
     handleSetChartData();
-  });
+  }, []);
 
   return (
     <RootStyle>
