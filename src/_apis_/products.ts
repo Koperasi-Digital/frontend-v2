@@ -46,11 +46,10 @@ const PRODUCT_COLOR = [
 const PRODUCT_TAGS = ['Dangal', 'The Sting', '2001: A Space Odyssey', "Singin' in the Rain"];
 
 const PRODUCT_DESCRIPTION = `
-<p><strong><small> SPECIFICATION</small></strong></p>
-<p>Leather panels. Laces. Rounded toe. Rubber sole.
+<p><strong><small>DESKRIPSI</small></strong></p>
+<p>DOC yang siap digunakan untuk mengembangkan ayam-ayam petelur
 <br /><br />
-<p><strong><small> MATERIAL AND WASHING INSTRUCTIONS</small></strong></p>
-<p>Shoeupper: 54% bovine leather,46% polyurethane. Lining: 65% polyester,35% cotton. Insole: 100% polyurethane. Sole: 100% thermoplastic. Fixing sole: 100% glued.</p>
+<p>DOC yang berkualitas</p>
 `;
 const PRODUCT_SIZE = ['TON', 'KILOGRAM', 'LUSIN'];
 
