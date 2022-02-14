@@ -117,9 +117,7 @@ export default function Router() {
           path: 'user',
           children: [
             { element: <Navigate to="/dashboard/user/profile" replace /> },
-            { path: 'profile', element: <UserProfile /> },
             { path: 'list', element: <UserList /> },
-            { path: 'new', element: <UserCreate /> },
             { path: ':name/edit', element: <UserCreate /> },
             { path: 'account', element: <UserAccount /> }
           ]
@@ -183,7 +181,6 @@ const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')
 const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
 const FAQ = Loadable(lazy(() => import('../pages/dashboard/FAQ')));
 const FAQPost = Loadable(lazy(() => import('../pages/dashboard/FAQPost')));
-const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
