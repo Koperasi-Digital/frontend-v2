@@ -27,10 +27,7 @@ export default function BankingEMoney() {
       if (response.account_status === 'ENABLED') {
         setDoesExist(true);
         const response1 = await handleRegister(user_id, payment_type, phone_number, country_code);
-        console.log('This is response 1');
-        console.log(response1);
         const response2 = await handleGetPayAccountInfo(response1.account_id);
-        console.log('This is response 2');
         setSaldo(response2.metadata.payment_options[0].balance.value);
       }
     }
@@ -51,9 +48,13 @@ export default function BankingEMoney() {
       })
     );
     const response = await handleRegister(user_id, payment_type, phone_number, country_code);
-    const activationURL = response.actions[0].url;
-    window.location.href = activationURL;
-    // setOpenModalEMoney(true);
+    if (response.actions) {
+      //for mock request
+      const activationURL = response.actions[0].url;
+      window.location.href = activationURL;
+    } else {
+      window.location.href = './';
+    }
   };
 
   const handleUnregisterEMoney = async () => {
@@ -61,12 +62,10 @@ export default function BankingEMoney() {
     if (fetchedRegisterData) {
       const { payment_type, phone_number, country_code } = JSON.parse(fetchedRegisterData);
       const response1 = await handleRegister(user_id, payment_type, phone_number, country_code);
-      console.log('Response 1');
-      console.log(response1);
       const response2 = await handleUnbindPayAccount(response1.account_id);
-      console.log('Response 2');
-      console.log(response2);
-      window.localStorage.removeItem('registerData');
+      if (!response2.mock) {
+        window.localStorage.removeItem('registerData');
+      }
       setDoesExist(false);
     }
   };

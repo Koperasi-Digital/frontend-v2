@@ -71,18 +71,21 @@ export default function BankingExpensesCategories() {
     ]
   });
 
-  const handleSetChartData = async () => {
-    const temp = JSON.parse(JSON.stringify(chartData));
-    let tempData = [];
-    const date = new Date();
-    const labaRugiInfo = await handleGetLabaRugiInfo(date);
-    tempData.push(labaRugiInfo.biayaProduksiProdukTerjual);
-    tempData.push(labaRugiInfo.biayaOperasi);
-    temp.data = tempData;
-    setChartData(temp);
-  };
-
   useEffect(() => {
+    const handleSetChartData = async () => {
+      const temp: { labels: string[]; data: number[] } = {
+        labels: ['Biaya Produksi Produk Terjual', 'Biaya Operasi'],
+        data: []
+      };
+      let tempData = [];
+      const date = new Date();
+      const labaRugiInfo = await handleGetLabaRugiInfo(date);
+      tempData.push(labaRugiInfo.biayaProduksiProdukTerjual);
+      tempData.push(labaRugiInfo.biayaOperasi);
+      temp.data = tempData;
+      setChartData(temp);
+    };
+
     handleSetChartData();
   }, []);
 

@@ -14,7 +14,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
 
 export default function BankingSavings() {
   const transaction_details = {
-    order_id: 8,
+    order_id: 21,
     gross_amount: 10000
   };
 

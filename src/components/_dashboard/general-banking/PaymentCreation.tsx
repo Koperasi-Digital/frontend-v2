@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { handleCreateTransaction } from '../../../utils/transaction';
+import { handleCreateTransaction } from '../../../utils/financeTransaction';
 
 type PaymentCreationProps = {
   user_id: number;
@@ -46,29 +46,20 @@ const PaymentCreation = ({
     const snapOptions = {
       onSuccess: function (result: any) {
         //TODO: PUSH NOTIFICATION
-        console.log('success');
-        console.log(result);
         window.location.href = './';
       },
       onPending: function (result: any) {
-        console.log('pending');
-        console.log(result);
+        //TODO: PUSH NOTIFICATION
         window.location.href = './';
       },
       onError: function (result: any) {
-        console.log('error');
-        console.log(result);
+        //TODO: PUSH NOTIFICATION
         window.location.href = './';
       },
-      onClose: function () {
-        // window.location.href = './';
-        // console.log('customer closed the popup without finishing the payment');
-      }
+      onClose: function () {}
     };
 
     const tokenName = await handleCreateTransaction(user_id, transaction_details, item_details);
-    console.log('The token is');
-    console.log(tokenName);
     window.snap.pay(tokenName, snapOptions);
   };
 

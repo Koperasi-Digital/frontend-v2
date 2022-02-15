@@ -70,6 +70,7 @@ export default function BankingIncome() {
     const currentLabaRugi = await handleGetLabaRugiInfo(currentDate);
     const prevLabaRugi = await handleGetLabaRugiInfo(prevMonthDate);
     setTotal(currentLabaRugi.jumlahPenjualan);
+
     setPercent(
       ((currentLabaRugi.jumlahPenjualan - prevLabaRugi.jumlahPenjualan) /
         currentLabaRugi.jumlahPenjualan) *

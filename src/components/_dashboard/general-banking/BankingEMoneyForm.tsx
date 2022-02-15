@@ -35,9 +35,6 @@ export default function BankingEMoneyForm({
     validationSchema: EventSchema,
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       try {
-        console.log(values.payment_type);
-        console.log(values.phone_number);
-        console.log(values.country_code);
         await handleRegisterEMoney(
           user_id,
           values.payment_type,

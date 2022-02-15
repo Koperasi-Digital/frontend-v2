@@ -46,7 +46,10 @@ export default function BankingBalanceStatistics() {
   });
 
   const handleSetChartData = async () => {
-    const temp = JSON.parse(JSON.stringify(chartData));
+    const temp: { name: string; data: number[] }[] = [
+      { name: 'Income', data: [] },
+      { name: 'Expense', data: [] }
+    ];
     let date = new Date();
     let i = 0;
     let incomeArray: number[] = [];

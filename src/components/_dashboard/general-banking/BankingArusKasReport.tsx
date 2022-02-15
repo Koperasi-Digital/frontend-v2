@@ -46,7 +46,7 @@ export default function BankingArusKasReport({ dateValue }: BankingArusKasReport
     jumlahKasAwal: number;
     kasMasuk: number;
     kasCair: number;
-    jumlah_kas_akhir: number;
+    jumlahKasAkhir: number;
   }
 
   const [arusKasData, setArusKasData] = useState<IArusKasData | undefined>(undefined);
@@ -126,7 +126,7 @@ export default function BankingArusKasReport({ dateValue }: BankingArusKasReport
                   <RowResultStyle>
                     <TableCell width={10}></TableCell>
                     <TableCell align="left">Jumlah Kas Akhir</TableCell>
-                    <TableCell align="left">{fCurrency(arusKasData.jumlah_kas_akhir)}</TableCell>
+                    <TableCell align="left">{fCurrency(arusKasData.jumlahKasAkhir)}</TableCell>
                   </RowResultStyle>
                 </TableBody>
               </Table>
