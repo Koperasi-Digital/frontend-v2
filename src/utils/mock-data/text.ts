@@ -128,3 +128,12 @@ export const description = [
   'Dolor numquam maiores praesentium dolorem nihil minus praesentium rem dolorem. Est rerum placeat. Numquam sed magni aliquam laborum enim facere ducimus.',
   'In sint enim nam et itaque et qui. Molestiae a iusto quidem quia temporibus id quia eaque eius. Quis quia consectetur saepe vero et molestias. Rem minima accusamus vitae adipisci molestiae unde voluptate consequatur molestiae. Rerum exercitationem quisquam vitae.'
 ];
+
+export const calendarTitle = [
+  'Vaksinasi DOC',
+  'Pengecekan Kesehatan Ayam',
+  'Pembersihan Kandang',
+  'Rapat Pengurus Koperasi',
+  'Rapat Anggota Koperasi',
+  'Pengecekan Pakan/Sekam'
+];

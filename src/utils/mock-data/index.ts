@@ -7,7 +7,7 @@ import { company } from './company';
 import { phoneNumber } from './phoneNumber';
 import { fullAddress, country } from './address';
 import { firstName, lastName, fullName } from './name';
-import { title, sentence, description } from './text';
+import { title, sentence, description, calendarTitle } from './text';
 import { price, rating, age, percent } from './number';
 
 // ----------------------------------------------------------------------
@@ -32,7 +32,8 @@ const mockData = {
   text: {
     title: (index: number) => title[index],
     sentence: (index: number) => sentence[index],
-    description: (index: number) => description[index]
+    description: (index: number) => description[index],
+    calendarTitle: (index: number) => calendarTitle[index]
   },
   number: {
     percent: (index: number) => percent[index],
