@@ -42,6 +42,7 @@ export default function BankingEMoneyForm({
           values.country_code
         );
         handleCloseModal();
+        window.localStorage.setItem('isRegisterJustNow', '1'); //for notification
       } catch (err) {
         console.log(err);
       }

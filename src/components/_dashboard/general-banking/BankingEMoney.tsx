@@ -1,6 +1,7 @@
 import { Box, Stack, Typography, Button, DialogTitle } from '@mui/material';
 import { useEffect, useState } from 'react';
 import BankingEMoneyForm from './BankingEMoneyForm';
+import { useSnackbar } from 'notistack';
 
 import {
   handleRegister,
@@ -18,20 +19,7 @@ export default function BankingEMoney() {
   const [openModalEMoney, setOpenModalEMoney] = useState<boolean>(false);
   const [doesExist, setDoesExist] = useState<Boolean>(false);
 
-  const handleCheckEMoney = async () => {
-    const fetchedRegisterData = window.localStorage.getItem('registerData');
-    if (fetchedRegisterData) {
-      const { payment_type, phone_number, country_code } = JSON.parse(fetchedRegisterData);
-      const response = await handleRegister(user_id, payment_type, phone_number, country_code);
-      console.log(response.account_status);
-      if (response.account_status === 'ENABLED') {
-        setDoesExist(true);
-        const response1 = await handleRegister(user_id, payment_type, phone_number, country_code);
-        const response2 = await handleGetPayAccountInfo(response1.account_id);
-        setSaldo(response2.metadata.payment_options[0].balance.value);
-      }
-    }
-  };
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleRegisterEMoney = async (
     user_id: number,
@@ -49,10 +37,10 @@ export default function BankingEMoney() {
     );
     const response = await handleRegister(user_id, payment_type, phone_number, country_code);
     if (response.actions) {
-      //for mock request
       const activationURL = response.actions[0].url;
       window.location.href = activationURL;
     } else {
+      //for mock request
       window.location.href = './';
     }
   };
@@ -75,8 +63,27 @@ export default function BankingEMoney() {
   };
 
   useEffect(() => {
+    const handleCheckEMoney = async () => {
+      const fetchedRegisterData = window.localStorage.getItem('registerData');
+      if (fetchedRegisterData) {
+        const { payment_type, phone_number, country_code } = JSON.parse(fetchedRegisterData);
+        const response = await handleRegister(user_id, payment_type, phone_number, country_code);
+        console.log(response.account_status);
+        if (response.account_status === 'ENABLED') {
+          setDoesExist(true);
+          const response1 = await handleRegister(user_id, payment_type, phone_number, country_code);
+          const response2 = await handleGetPayAccountInfo(response1.account_id);
+          setSaldo(response2.metadata.payment_options[0].balance.value);
+          if (window.localStorage.getItem('isRegisterJustNow')) {
+            window.localStorage.removeItem('isRegisterJustNow');
+            enqueueSnackbar('Register Payment Account success', { variant: 'success' });
+          }
+        }
+      }
+    };
+
     handleCheckEMoney();
-  }, []);
+  }, [enqueueSnackbar]);
 
   return (
     <>

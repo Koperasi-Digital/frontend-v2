@@ -29,3 +29,13 @@ export async function handleCreateTransaction(
     return null;
   }
 }
+
+export async function handleGetOrder(order_id: number) {
+  try {
+    const response = await axios.get('order/' + order_id);
+    return response.data.data;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}

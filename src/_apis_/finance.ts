@@ -128,3 +128,18 @@ mock.onGet(/laporanArusKas\/.*\/.*/).reply((config) => {
     }
   ];
 });
+
+mock.onGet(/order\/.*/).reply((config) => {
+  return [
+    200,
+    {
+      message: 'Order found',
+      data: {
+        id: 19,
+        user_id: 2,
+        grossAmount: 10000,
+        status: 'success'
+      }
+    }
+  ];
+});

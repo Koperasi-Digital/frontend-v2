@@ -1,6 +1,8 @@
-import React from 'react';
-import { Button } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Button, Typography } from '@mui/material';
 import { handleCreateTransaction } from '../../../utils/financeTransaction';
+import { handleGetOrder } from '../../../utils/financeTransaction';
+import { useSnackbar } from 'notistack';
 
 type PaymentCreationProps = {
   user_id: number;
@@ -12,6 +14,13 @@ type PaymentCreationProps = {
 type transaction_details = {
   order_id: number;
   gross_amount: number;
+};
+
+type order = {
+  id: number;
+  user_id: number;
+  grossAmount: number;
+  status: string;
 };
 
 declare global {
@@ -26,7 +35,12 @@ const PaymentCreation = ({
   transaction_details,
   item_details
 }: PaymentCreationProps) => {
-  React.useEffect(() => {
+  const [order, setOrder] = useState<order>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
     const snapSrcUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
     const myMidtransClientKey = 'SB-Mid-client-hGP5UBKXCE-VIit4'; //change this according to your client-key
 
@@ -42,19 +56,32 @@ const PaymentCreation = ({
     };
   }, []);
 
+  useEffect(() => {
+    const handleOrder = async () => {
+      const order = await handleGetOrder(transaction_details.order_id);
+      setOrder(order);
+      setIsLoading(false);
+    };
+
+    handleOrder();
+  }, [transaction_details.order_id]);
+
   const paymentFunction = async () => {
     const snapOptions = {
       onSuccess: function (result: any) {
         //TODO: PUSH NOTIFICATION
         window.location.href = './';
+        enqueueSnackbar('Payment success', { variant: 'success' });
       },
       onPending: function (result: any) {
         //TODO: PUSH NOTIFICATION
         window.location.href = './';
+        enqueueSnackbar('Payment pending', { variant: 'warning' });
       },
       onError: function (result: any) {
         //TODO: PUSH NOTIFICATION
         window.location.href = './';
+        enqueueSnackbar('Payment error', { variant: 'error' });
       },
       onClose: function () {}
     };
@@ -64,9 +91,19 @@ const PaymentCreation = ({
   };
 
   return (
-    <Button variant="contained" onClick={paymentFunction}>
-      {buttonName}
-    </Button>
+    <>
+      {isLoading ? (
+        <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+          Loading
+        </Typography>
+      ) : order?.status === 'success' ? (
+        <></>
+      ) : (
+        <Button variant="contained" onClick={paymentFunction}>
+          {buttonName}
+        </Button>
+      )}
+    </>
   );
 };
 

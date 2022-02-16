@@ -1,7 +1,9 @@
 import { styled } from '@mui/material/styles';
+import { useEffect, useState } from 'react';
 import { Box, Card, CardHeader, Stack, Typography, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import PaymentButton from './PaymentCreation';
+import { handleGetOrder } from '../../../utils/financeTransaction';
 
 const RootStyle = styled(Card)(({ theme }) => ({
   boxShadow: 'none',
@@ -14,7 +16,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
 
 export default function BankingSavings() {
   const transaction_details = {
-    order_id: 21,
+    order_id: 19,
     gross_amount: 10000
   };
 
@@ -26,6 +28,26 @@ export default function BankingSavings() {
       category: 'Simpanan'
     }
   ];
+
+  type orderProps = {
+    id: number;
+    user_id: number;
+    grossAmount: number;
+    status: string;
+  };
+
+  const [order, setOrder] = useState<orderProps>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const handleOrder = async () => {
+      const order = await handleGetOrder(transaction_details.order_id);
+      setOrder(order);
+      setIsLoading(false);
+    };
+
+    handleOrder();
+  }, [transaction_details.order_id]);
 
   return (
     <>
@@ -48,7 +70,7 @@ export default function BankingSavings() {
                 Pembayaran Simpanan Wajib
               </Typography>
               <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-                Belum Dibayar
+                {!isLoading && order?.status === 'success' ? 'Lunas' : 'Belum Dibayar'}
               </Typography>
             </Stack>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -58,7 +80,7 @@ export default function BankingSavings() {
             </Stack>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-                lunasi sebelum 15/1/2022
+                {!isLoading && order?.status === 'success' ? '' : 'lunasi sebelum 15/1/2022'}
               </Typography>
               <PaymentButton
                 user_id={2}
