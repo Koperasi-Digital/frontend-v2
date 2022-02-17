@@ -6,7 +6,7 @@ import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
-// import RoleBasedGuard from '../guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 // ----------------------------------------------------------------------
@@ -82,7 +82,14 @@ export default function Router() {
         { path: 'app', element: <GeneralApp /> },
         { path: 'activities', element: <Calendar /> },
         { path: 'activities/:id', element: <BlogPost /> },
-        { path: 'blogs', element: <BlogPosts /> },
+        {
+          path: 'blogs',
+          element: (
+            <RoleBasedGuard accessibleRoles={['CUSTOMER']}>
+              <BlogPosts />
+            </RoleBasedGuard>
+          )
+        },
         { path: 'blogs/:title', element: <BlogPost /> },
         { path: 'blogs/new', element: <BlogNewPost /> },
         { path: 'blog/verification', element: <BlogVerification /> },
