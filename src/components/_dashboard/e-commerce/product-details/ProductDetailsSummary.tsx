@@ -130,20 +130,8 @@ export default function ProductDetailsSummary({
 }: ProductDetailsSumaryprops) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const {
-    id,
-    name,
-    sizes,
-    price,
-    cover,
-    status,
-    colors,
-    available,
-    priceSale,
-    totalRating,
-    totalReview,
-    inventoryType
-  } = product;
+  const { id, name, category, price, available, cover, status } = product;
+  const sizes = ['KG', 'LUSIN', 'TON'];
 
   const alreadyProduct = cart.map((item) => item.id).includes(id);
   const isMaxQuantity =
@@ -157,8 +145,6 @@ export default function ProductDetailsSummary({
       cover,
       available,
       price,
-      color: colors[0],
-      size: sizes[4],
       quantity: available < 1 ? 0 : 1
     },
     onSubmit: async (values, { setErrors, setSubmitting }) => {
@@ -197,65 +183,33 @@ export default function ProductDetailsSummary({
         <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
           <Label
             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-            color={inventoryType === 'in_stock' ? 'success' : 'error'}
+            color={status === 'Active' ? 'success' : 'error'}
             sx={{ textTransform: 'uppercase' }}
           >
-            {sentenceCase(inventoryType || '')}
+            {sentenceCase(status || '')}
           </Label>
-
-          <Typography
-            variant="overline"
-            sx={{
-              mt: 2,
-              mb: 1,
-              display: 'block',
-              color: status === 'sale' ? 'error.main' : 'info.main'
-            }}
-          >
-            {status}
-          </Typography>
 
           <Typography variant="h5" paragraph>
             {name}
           </Typography>
 
-          <Box sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-            <Rating value={totalRating} precision={0.1} readOnly />
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              ({fShortenNumber(totalReview)}
-              reviews)
-            </Typography>
-          </Box>
-
           <Typography variant="h4" sx={{ mb: 3 }}>
-            <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-              {priceSale && fCurrency(priceSale)}
-            </Box>
-            &nbsp;{fCurrency(price)}
+            {fCurrency(price)}
           </Typography>
 
           <Divider sx={{ borderStyle: 'dashed' }} />
 
           <Box
             sx={{
-              my: 3,
+              mb: 3,
               display: 'flex',
               justifyContent: 'space-between'
             }}
           >
             <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              Color
+              Kategori
             </Typography>
-            <ColorSinglePicker
-              {...getFieldProps('color')}
-              colors={colors}
-              sx={{
-                ...(colors.length > 4 && {
-                  maxWidth: 144,
-                  justifyContent: 'flex-end'
-                })
-              }}
-            />
+            <Typography sx={{ mt: 0.5 }}>{category}</Typography>
           </Box>
 
           <Box
@@ -266,7 +220,7 @@ export default function ProductDetailsSummary({
             }}
           >
             <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              Size
+              Satuan
             </Typography>
             <TextField
               select
@@ -282,7 +236,7 @@ export default function ProductDetailsSummary({
               }}
               helperText={
                 <Link href="#" underline="always" color="text.primary">
-                  Size Chart
+                  Informasi Satuan
                 </Link>
               }
             >
@@ -302,7 +256,7 @@ export default function ProductDetailsSummary({
             }}
           >
             <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              Quantity
+              Jumlah
             </Typography>
 
             <div>
@@ -316,7 +270,7 @@ export default function ProductDetailsSummary({
                   color: 'text.secondary'
                 }}
               >
-                Available: {available}
+                Tersedia: {available}
               </Typography>
 
               <FormHelperText error>{touched.quantity && errors.quantity}</FormHelperText>
@@ -349,14 +303,6 @@ export default function ProductDetailsSummary({
                 </Button>
               </Grid>
             </Grid>
-          </Box>
-
-          <Box sx={{ mt: 3, textAlign: 'center' }}>
-            {SOCIALS.map((social) => (
-              <Tooltip key={social.name} title={social.name}>
-                <MIconButton>{social.icon}</MIconButton>
-              </Tooltip>
-            ))}
           </Box>
         </Form>
       </FormikProvider>

@@ -1,6 +1,7 @@
 import { filter } from 'lodash';
+import { Link, Link as RouterLink } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import { sentenceCase } from 'change-case';
+import { paramCase, sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 // material
@@ -44,8 +45,8 @@ import {
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Product', alignRight: false },
-  { id: 'createdAt', label: 'Create at', alignRight: false },
-  { id: 'inventoryType', label: 'Status', alignRight: false },
+  { id: 'available', label: 'Available', alignRight: false },
+  { id: 'status', label: 'Status', alignRight: false },
   { id: 'price', label: 'Price', alignRight: true },
   { id: '' }
 ];
@@ -102,6 +103,7 @@ export default function EcommerceProductList() {
   const theme = useTheme();
   const dispatch = useDispatch();
 
+  const linkTo = `${PATH_DASHBOARD.eCommerce.root}/product/`;
   const { products } = useSelector((state: { product: ProductState }) => state.product);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
@@ -200,7 +202,7 @@ export default function EcommerceProductList() {
                   {filteredProducts
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
-                      const { id, name, cover, price, createdAt, inventoryType } = row;
+                      const { id, name, cover, price, available, status } = row;
 
                       const isItemSelected = selected.indexOf(name) !== -1;
 
@@ -231,23 +233,21 @@ export default function EcommerceProductList() {
                               </Typography>
                             </Box>
                           </TableCell>
-                          <TableCell style={{ minWidth: 160 }}>{fDate(createdAt)}</TableCell>
+                          <TableCell style={{ minWidth: 160 }}>{available}</TableCell>
                           <TableCell style={{ minWidth: 160 }}>
                             <Label
                               variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                              color={
-                                (inventoryType === 'out_of_stock' && 'error') ||
-                                (inventoryType === 'low_stock' && 'warning') ||
-                                'success'
-                              }
+                              color={(status === 'Inactive' && 'error') || 'success'}
                             >
-                              {inventoryType ? sentenceCase(inventoryType) : ''}
+                              {status ? sentenceCase(status) : ''}
                             </Label>
                           </TableCell>
                           <TableCell align="right">{fCurrency(price)}</TableCell>
                           <TableCell align="right">
                             <IconButton>
-                              <Icon icon={moreVerticalFill} width={20} height={20} />
+                              <Link to={linkTo + paramCase(name) + '/edit'} color="inherit">
+                                <Icon icon={moreVerticalFill} width={20} height={20} />
+                              </Link>
                             </IconButton>
                           </TableCell>
                         </TableRow>
