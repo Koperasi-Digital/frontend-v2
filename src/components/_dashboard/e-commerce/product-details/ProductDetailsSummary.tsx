@@ -130,20 +130,8 @@ export default function ProductDetailsSummary({
 }: ProductDetailsSumaryprops) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const {
-    id,
-    name,
-    sizes,
-    price,
-    cover,
-    status,
-    colors,
-    available,
-    priceSale,
-    totalRating,
-    totalReview,
-    inventoryType
-  } = product;
+  const { id, name, category, price, available, cover, status } = product;
+  const sizes = ['KG', 'LUSIN', 'TON'];
 
   const alreadyProduct = cart.map((item) => item.id).includes(id);
   const isMaxQuantity =
@@ -157,8 +145,6 @@ export default function ProductDetailsSummary({
       cover,
       available,
       price,
-      color: colors[0],
-      size: sizes[4],
       quantity: available < 1 ? 0 : 1
     },
     onSubmit: async (values, { setErrors, setSubmitting }) => {
@@ -197,23 +183,11 @@ export default function ProductDetailsSummary({
         <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
           <Label
             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-            color={inventoryType === 'in_stock' ? 'success' : 'error'}
+            color={status === 'Active' ? 'success' : 'error'}
             sx={{ textTransform: 'uppercase' }}
           >
-            {sentenceCase(inventoryType || '')}
+            {sentenceCase(status || '')}
           </Label>
-
-          <Typography
-            variant="overline"
-            sx={{
-              mt: 2,
-              mb: 1,
-              display: 'block',
-              color: status === 'sale' ? 'error.main' : 'info.main'
-            }}
-          >
-            {status}
-          </Typography>
 
           <Typography variant="h5" paragraph>
             {name}
@@ -224,6 +198,19 @@ export default function ProductDetailsSummary({
           </Typography>
 
           <Divider sx={{ borderStyle: 'dashed' }} />
+
+          <Box
+            sx={{
+              mb: 3,
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}
+          >
+            <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+              Kategori
+            </Typography>
+            <Typography sx={{ mt: 0.5 }}>{category}</Typography>
+          </Box>
 
           <Box
             sx={{

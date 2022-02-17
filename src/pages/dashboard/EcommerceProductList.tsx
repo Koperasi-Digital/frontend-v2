@@ -46,7 +46,7 @@ import {
 const TABLE_HEAD = [
   { id: 'name', label: 'Product', alignRight: false },
   { id: 'available', label: 'Available', alignRight: false },
-  { id: 'inventoryType', label: 'Status', alignRight: false },
+  { id: 'status', label: 'Status', alignRight: false },
   { id: 'price', label: 'Price', alignRight: true },
   { id: '' }
 ];
@@ -202,7 +202,7 @@ export default function EcommerceProductList() {
                   {filteredProducts
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
-                      const { id, name, cover, price, available, inventoryType } = row;
+                      const { id, name, cover, price, available, status } = row;
 
                       const isItemSelected = selected.indexOf(name) !== -1;
 
@@ -237,13 +237,9 @@ export default function EcommerceProductList() {
                           <TableCell style={{ minWidth: 160 }}>
                             <Label
                               variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                              color={
-                                (inventoryType === 'out_of_stock' && 'error') ||
-                                (inventoryType === 'low_stock' && 'warning') ||
-                                'success'
-                              }
+                              color={(status === 'Inactive' && 'error') || 'success'}
                             >
-                              {inventoryType ? sentenceCase(inventoryType) : ''}
+                              {status ? sentenceCase(status) : ''}
                             </Label>
                           </TableCell>
                           <TableCell align="right">{fCurrency(price)}</TableCell>

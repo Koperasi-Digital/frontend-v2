@@ -22,30 +22,11 @@ import Markdown from '../../components/Markdown';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import {
   ProductDetailsSummary,
-  ProductDetailsReview,
   ProductDetailsCarousel
 } from '../../components/_dashboard/e-commerce/product-details';
 import CartWidget from '../../components/_dashboard/e-commerce/CartWidget';
 
 // ----------------------------------------------------------------------
-
-const PRODUCT_DESCRIPTION = [
-  {
-    title: '100% Original',
-    description: 'Chocolate bar candy canes ice cream toffee cookie halvah.',
-    icon: roundVerified
-  },
-  {
-    title: '10 Day Replacement',
-    description: 'Marshmallow biscuit donut dragée fruitcake wafer.',
-    icon: clockFill
-  },
-  {
-    title: 'Year Warranty',
-    description: 'Cotton candy gingerbread cake I love sugar sweet.',
-    icon: roundVerifiedUser
-  }
-];
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
   margin: 'auto',
@@ -81,7 +62,6 @@ export default function EcommerceProductDetails() {
   const dispatch = useDispatch();
   const [value, setValue] = useState('1');
   const { name = '' } = useParams();
-  console.log(name);
   const { product, error, checkout } = useSelector(
     (state: { product: ProductState }) => state.product
   );

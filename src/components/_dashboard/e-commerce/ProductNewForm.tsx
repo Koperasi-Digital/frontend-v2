@@ -33,10 +33,7 @@ import addProduct from 'utils/products';
 
 // ----------------------------------------------------------------------
 
-const CATEGORY_OPTION = [
-  { group: 'Infrastruktur', classify: ['Kandang', 'Perkakas'] },
-  { group: 'Bahan Mentah', classify: ['Telur', 'Daging'] }
-];
+const CATEGORY_OPTION = ['Ayam', 'Kandang', 'Infrastruktur', 'Pakan', 'Dagin'];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -65,15 +62,17 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
+      sku: currentProduct?.sku || '',
       name: currentProduct?.name || '',
-      description: currentProduct?.description || '',
-      images: currentProduct?.images || [],
-      id: currentProduct?.code || '',
-      quantity: currentProduct?.available || '',
+      category: currentProduct?.category || CATEGORY_OPTION[0],
       price: currentProduct?.price || '',
-      active: Boolean(currentProduct?.inventoryType !== 'out_of_stock'),
-      category: currentProduct?.category || CATEGORY_OPTION[0].classify[1],
-      type: currentProduct?.category || CATEGORY_OPTION[0].classify[1]
+      available: currentProduct?.available || '',
+      cover:
+        currentProduct?.cover || 'http://localhost:3000/static/mock-images/products/product_2.jpg',
+      description: currentProduct?.description || '',
+      status: currentProduct?.status || 'Active',
+      seller_id: currentProduct?.seller_id || 'Michael Hans',
+      images: currentProduct?.images || []
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -175,13 +174,18 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
             <Stack spacing={3}>
               <Card sx={{ p: 3 }}>
                 <FormControlLabel
-                  control={<Switch {...getFieldProps('active')} checked={values.active} />}
-                  label="In stock"
+                  control={
+                    <Switch
+                      {...getFieldProps('status')}
+                      checked={Boolean(values.status !== 'Active')}
+                    />
+                  }
+                  label="Active"
                   sx={{ mb: 2 }}
                 />
 
                 <Stack spacing={3}>
-                  <TextField fullWidth label="Product ID" {...getFieldProps('id')} />
+                  <TextField fullWidth label="Product SKU" {...getFieldProps('sku')} />
 
                   <FormControl fullWidth>
                     <InputLabel>Category</InputLabel>
@@ -192,19 +196,8 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                       value={values.category}
                     >
                       {CATEGORY_OPTION.map((category) => (
-                        <option key={category.group} value={category.group}>
-                          {category.group}
-                        </option>
-                      ))}
-                    </Select>
-                  </FormControl>
-
-                  <FormControl fullWidth>
-                    <InputLabel>Jenis</InputLabel>
-                    <Select label="Jenis" native {...getFieldProps('type')} value={values.type}>
-                      {CATEGORY_OPTION[0].classify.map((type) => (
-                        <option key={type} value={type}>
-                          {type}
+                        <option key={category} value={category}>
+                          {category}
                         </option>
                       ))}
                     </Select>
@@ -223,8 +216,8 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                       endAdornment: <InputAdornment position="end">kilogram</InputAdornment>,
                       type: 'number'
                     }}
-                    error={Boolean(touched.quantity && errors.quantity)}
-                    helperText={touched.quantity && errors.quantity}
+                    error={Boolean(touched.available && errors.available)}
+                    helperText={touched.available && errors.available}
                   />
                   <TextField
                     fullWidth
