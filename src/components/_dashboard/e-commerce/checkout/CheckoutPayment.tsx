@@ -25,6 +25,7 @@ import CheckoutSummary from './CheckoutSummary';
 import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
+import PaymentButton from '../../general-banking/CompleteOrder';
 
 // ----------------------------------------------------------------------
 
@@ -70,8 +71,24 @@ const CARDS_OPTIONS: CardOption[] = [
 
 export default function CheckoutPayment() {
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
+  console.log(checkout);
   const dispatch = useDispatch();
   const { total, discount, subtotal, shipping } = checkout;
+
+  const transaction_details = {
+    order_id: 22,
+    gross_amount: total
+  };
+  console.log(transaction_details);
+
+  const item_details = [
+    {
+      price: 90000,
+      quantity: 1,
+      name: 'Simpanan Pokok',
+      category: 'Simpanan'
+    }
+  ];
 
   const handleNextStep = () => {
     dispatch(onNextStep());
@@ -148,6 +165,7 @@ export default function CheckoutPayment() {
               shipping={shipping}
               onEdit={() => handleGotoStep(0)}
             />
+            <PaymentButton user_id={2} buttonName="Complete Order" checkout={checkout} />
             <LoadingButton
               fullWidth
               size="large"

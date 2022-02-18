@@ -1,4 +1,4 @@
-import axios from './axiosMock';
+import axios from './axios';
 
 type transaction_details = {
   order_id: number;
@@ -15,7 +15,7 @@ type item_details = {
 export async function handleCreateTransaction(
   user_id: number,
   transaction_details: transaction_details,
-  item_details: item_details
+  item_details: item_details | null
 ) {
   try {
     const response = await axios.post('payment/create', {

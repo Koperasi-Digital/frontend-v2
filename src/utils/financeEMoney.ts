@@ -1,4 +1,4 @@
-import axios from './axiosMock';
+import axios from './axios';
 
 export async function handleGetPayAccountInfo(account_id: string) {
   try {
