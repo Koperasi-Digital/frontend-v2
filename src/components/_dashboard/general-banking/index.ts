@@ -16,3 +16,5 @@ export { default as ShareDisbursementRequestList } from './ShareDisbursementRequ
 export { default as PaymentCreation } from './PaymentCreation';
 export { default as BankingBalance } from './BankingBalance';
 export { default as BankingReport } from './BankingReport';
+export { default as BankingMemberSimpananPokok } from './BankingMemberSimpananPokok';
+export { default as BankingMemberSimpananWajib } from './BankingMemberSimpananWajib';
