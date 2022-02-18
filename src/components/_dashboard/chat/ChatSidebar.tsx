@@ -11,7 +11,7 @@ import { Box, useMediaQuery, Stack, Drawer, IconButton, IconButtonProps } from '
 // redux
 import { RootState, useSelector } from '../../../redux/store';
 // utils
-import axios from '../../../utils/axios';
+import axios from '../../../utils/axiosMock';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types

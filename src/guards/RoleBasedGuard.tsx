@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { Container, Alert, AlertTitle } from '@mui/material';
+import useAuth from 'hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -8,18 +9,22 @@ type RoleBasedGuardProp = {
   children: ReactNode | string;
 };
 
-const useCurrentRole = () => {
-  // Logic here to get current user role
-  const role = 'admin';
-  return role;
+const useCurrentRole = (): string | undefined => {
+  const { user } = useAuth();
+  if (user) {
+    const { role } = user;
+    return role.name;
+  }
 };
 
 export default function RoleBasedGuard({ accessibleRoles, children }: RoleBasedGuardProp) {
   const currentRole = useCurrentRole();
 
-  if (!accessibleRoles.includes(currentRole)) {
+  if (!currentRole || !accessibleRoles.includes(currentRole)) {
     return (
-      <Container>
+      <Container
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}
+      >
         <Alert severity="error">
           <AlertTitle>Permission Denied</AlertTitle>
           You do not have permission to access this page
