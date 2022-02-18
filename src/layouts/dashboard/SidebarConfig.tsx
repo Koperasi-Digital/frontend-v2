@@ -31,7 +31,12 @@ const sidebarConfig = [
     items: [
       { title: 'dashboard', path: PATH_DASHBOARD.general.dashboard, icon: ICONS.dashboard },
       { title: 'activities', path: PATH_DASHBOARD.general.activities, icon: ICONS.calendar },
-      { title: 'blogs', path: PATH_DASHBOARD.general.blogs, icon: ICONS.blog },
+      {
+        title: 'blogs',
+        path: PATH_DASHBOARD.general.blogs,
+        icon: ICONS.blog,
+        accessibleRoles: ['CUSTOMER']
+      },
       { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq }
     ]
   },
