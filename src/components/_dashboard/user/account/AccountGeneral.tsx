@@ -18,7 +18,7 @@ import countries from '../countries';
 
 // ----------------------------------------------------------------------
 
-interface InitialState extends Omit<User, 'password' | 'id'> {
+interface InitialState extends User {
   afterSubmit?: string;
 }
 
@@ -34,6 +34,7 @@ export default function AccountGeneral() {
   const formik = useFormik<InitialState>({
     enableReinitialize: true,
     initialValues: {
+      id: user?.id,
       displayName: user?.displayName || '',
       email: user?.email,
       photoURL: user?.photoURL,
@@ -43,8 +44,6 @@ export default function AccountGeneral() {
       state: user?.state,
       city: user?.city,
       zipCode: user?.zipCode,
-      about: user?.about,
-      isPublic: user?.isPublic,
       role: user?.role
     },
 

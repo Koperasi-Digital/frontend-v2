@@ -17,7 +17,6 @@ const users: User[] = [
     id: '8864c717-587d-472a-929a-8e5f298024da-0',
     displayName: 'John Doe',
     email: 'demo@coopchick.cc',
-    password: 'demo1234',
     photoURL: '/static/mock-images/avatars/avatar_default.jpg',
     phoneNumber: '+62 8123123123',
     country: 'Indonesia',
@@ -25,13 +24,11 @@ const users: User[] = [
     state: 'West Java',
     city: 'Bandung',
     zipCode: '40132',
-    about: 'Praesent turpis. Phasellus viverra nulla ut metus varius laoreet. Phasellus tempus.',
     role: {
       id: 1,
       name: 'ADMIN',
       description: 'Admin Koperasi'
-    },
-    isPublic: true
+    }
   }
 ];
 
@@ -41,16 +38,16 @@ mock.onPost('/api/account/login').reply(async (config) => {
   try {
     await fakeRequest(1000);
 
-    const { email, password } = JSON.parse(config.data);
+    const { email } = JSON.parse(config.data);
     const user = users.find((_user) => _user.email === email);
 
     if (!user) {
       return [400, { message: 'There is no user corresponding to the email address.' }];
     }
 
-    if (user.password !== password) {
-      return [400, { message: 'Wrong password' }];
-    }
+    // if (user.password !== password) {
+    //   return [400, { message: 'Wrong password' }];
+    // }
 
     const accessToken = sign({ userId: user.id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN
@@ -69,7 +66,7 @@ mock.onPost('/api/account/register').reply(async (config) => {
   try {
     await fakeRequest(1000);
 
-    const { email, password, firstName, lastName } = JSON.parse(config.data);
+    const { email, firstName, lastName } = JSON.parse(config.data);
     let user = users.find((_user) => _user.email === email);
 
     if (user) {
@@ -80,7 +77,7 @@ mock.onPost('/api/account/register').reply(async (config) => {
       id: uuidv4(),
       displayName: `${firstName} ${lastName}`,
       email,
-      password,
+      // password,
       photoURL: null,
       phoneNumber: null,
       country: null,
@@ -88,13 +85,11 @@ mock.onPost('/api/account/register').reply(async (config) => {
       state: null,
       city: null,
       zipCode: null,
-      about: null,
       role: {
         id: 1,
         name: 'ADMIN',
         description: 'Admin Koperasi'
-      },
-      isPublic: true
+      }
     };
 
     const accessToken = sign({ userId: user.id }, JWT_SECRET, {
