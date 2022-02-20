@@ -93,6 +93,7 @@ export type ProductState = {
     rating: string;
   };
   checkout: {
+    orderId: number;
     activeStep: number;
     cart: CartItem[];
     subtotal: number;

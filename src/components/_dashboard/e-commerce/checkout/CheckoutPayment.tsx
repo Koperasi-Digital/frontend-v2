@@ -2,9 +2,12 @@ import * as Yup from 'yup';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import arrowIosBackFill from '@iconify/icons-eva/arrow-ios-back-fill';
+import { useEffect, useState } from 'react';
 // material
-import { Grid, Button } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { Grid, Button, Typography, Stack } from '@mui/material';
+
+import PaymentButton from '../../general-banking/PaymentCreation';
+
 // @types
 import {
   DeliveryOption,
@@ -18,15 +21,22 @@ import {
   onGotoStep,
   onBackStep,
   onNextStep,
-  applyShipping
+  applyShipping,
+  addCheckoutOrder
 } from '../../../../redux/slices/product';
 //
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
+import { handleCreateOrder, handleEditOrder } from 'utils/financeOrder';
 
-// ----------------------------------------------------------------------
+type Order = {
+  id: number;
+  user_id: number;
+  total_cost: number;
+  status: string;
+};
 
 const DELIVERY_OPTIONS: DeliveryOption[] = [
   {
@@ -69,9 +79,12 @@ const CARDS_OPTIONS: CardOption[] = [
 ];
 
 export default function CheckoutPayment() {
+  const [order, setOrder] = useState<Order>();
+
+  const userId = 2;
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
   const dispatch = useDispatch();
-  const { total, discount, subtotal, shipping } = checkout;
+  const { total, discount, subtotal, shipping, orderId } = checkout;
 
   const handleNextStep = () => {
     dispatch(onNextStep());
@@ -88,6 +101,21 @@ export default function CheckoutPayment() {
   const handleApplyShipping = (value: number) => {
     dispatch(applyShipping(value));
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!orderId) {
+        const createdOrder = await handleCreateOrder(userId, Math.floor(total));
+        dispatch(addCheckoutOrder(createdOrder.id));
+        setOrder(createdOrder);
+      } else {
+        const editedOrder = await handleEditOrder(orderId, Math.floor(total));
+        setOrder(editedOrder);
+      }
+      //TODO: INSERT ORDER DETAIL TO DB
+    };
+    fetchData();
+  }, [dispatch, total, orderId]);
 
   const PaymentSchema = Yup.object().shape({
     payment: Yup.mixed().required('Payment is required')
@@ -110,7 +138,7 @@ export default function CheckoutPayment() {
     }
   });
 
-  const { isSubmitting, handleSubmit } = formik;
+  const { handleSubmit } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -148,15 +176,28 @@ export default function CheckoutPayment() {
               shipping={shipping}
               onEdit={() => handleGotoStep(0)}
             />
-            <LoadingButton
-              fullWidth
-              size="large"
-              type="submit"
-              variant="contained"
-              loading={isSubmitting}
-            >
-              Complete Order
-            </LoadingButton>
+            <Stack direction="row" justifyContent="center">
+              {order ? (
+                order.status !== 'success' ? (
+                  <PaymentButton
+                    user_id={2}
+                    buttonName="Bayar"
+                    transaction_details={{
+                      order_id: order.id,
+                      gross_amount: order.total_cost
+                    }}
+                  />
+                ) : (
+                  <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+                    Lunas
+                  </Typography>
+                )
+              ) : (
+                <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+                  Loading
+                </Typography>
+              )}
+            </Stack>
           </Grid>
         </Grid>
       </Form>
