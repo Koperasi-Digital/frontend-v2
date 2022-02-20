@@ -7,7 +7,6 @@ import { SeoIllustration } from '../../../assets';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Card)(({ theme }) => ({
-  boxShadow: 'none',
   textAlign: 'center',
   backgroundColor: theme.palette.primary.lighter,
   [theme.breakpoints.up('md')]: {

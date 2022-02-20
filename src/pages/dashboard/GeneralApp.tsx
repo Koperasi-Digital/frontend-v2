@@ -7,16 +7,34 @@ import useAuth from '../../hooks/useAuth';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
-import { AppWelcome } from '../../components/_dashboard/general-app';
 import { Calendar } from 'components/_dashboard/calendar';
+import { AppWelcome, AppTotalActive, RecentUsers } from 'components/_dashboard/general-app';
 
 // ----------------------------------------------------------------------
+
+function AdminDashboard() {
+  return (
+    <Grid container spacing={3}>
+      <Grid item xs={12} sx={{ my: 1 }}>
+        <RecentUsers />
+      </Grid>
+    </Grid>
+  );
+}
+
+function UserDashboard() {
+  return (
+    <Grid container spacing={3}>
+      <Grid item xs={12} md={4}>
+        <AppTotalActive />
+      </Grid>
+    </Grid>
+  );
+}
 
 export default function GeneralApp() {
   const { user } = useAuth();
   const role = user?.role.name;
-
-  console.log(role);
 
   return (
     <Page title="Dashboard | CoopChick">
@@ -39,6 +57,7 @@ export default function GeneralApp() {
             </Link>
           </Grid>
         </Grid>
+        {role === 'ADMIN' ? <AdminDashboard /> : <UserDashboard />}
       </Container>
     </Page>
   );
