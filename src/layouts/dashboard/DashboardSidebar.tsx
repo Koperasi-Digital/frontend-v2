@@ -137,7 +137,9 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
           </MHidden>
         </Stack>
       </Stack>
-      <NavSection navConfig={sidebarConfig} isShow={!isCollapse} />
+      <Box sx={{ flexGrow: 1 }}>
+        <NavSection navConfig={sidebarConfig} isShow={!isCollapse} />
+      </Box>
       <Stack
         spacing={3}
         sx={{

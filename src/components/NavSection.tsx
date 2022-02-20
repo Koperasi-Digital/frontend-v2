@@ -196,6 +196,7 @@ interface NavSectionProps extends BoxProps {
   isShow?: boolean | undefined;
   navConfig: {
     subheader: string;
+    accessibleRoles?: string[];
     items: NavItemProps[];
   }[];
 }
@@ -205,21 +206,27 @@ export default function NavSection({ navConfig, isShow = true, ...other }: NavSe
   return (
     <Box {...other}>
       {navConfig.map((list) => {
-        const { subheader, items } = list;
-        return (
-          <List key={subheader} disablePadding>
-            {isShow && <ListSubheaderStyle>{subheader}</ListSubheaderStyle>}
-            {items
-              .filter(
-                (item: NavItemProps) =>
-                  item.accessibleRoles === undefined ||
-                  (item.accessibleRoles && item.accessibleRoles.includes(user?.role.name))
-              )
-              .map((item: NavItemProps) => (
-                <NavItem key={item.title} item={item} isShow={isShow} />
-              ))}
-          </List>
-        );
+        const { subheader, accessibleRoles, items } = list;
+        if (
+          accessibleRoles === undefined ||
+          (accessibleRoles && accessibleRoles.includes(user?.role.name))
+        ) {
+          return (
+            <List key={subheader} disablePadding>
+              {isShow && <ListSubheaderStyle>{subheader}</ListSubheaderStyle>}
+              {items
+                .filter(
+                  (item: NavItemProps) =>
+                    item.accessibleRoles === undefined ||
+                    (item.accessibleRoles && item.accessibleRoles.includes(user?.role.name))
+                )
+                .map((item: NavItemProps) => (
+                  <NavItem key={item.title} item={item} isShow={isShow} />
+                ))}
+            </List>
+          );
+        }
+        return null;
       })}
     </Box>
   );

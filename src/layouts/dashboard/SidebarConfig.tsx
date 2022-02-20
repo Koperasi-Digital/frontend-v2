@@ -43,6 +43,7 @@ const sidebarConfig = [
   // MANAGEMENT
   {
     subheader: 'management',
+    accessibleRoles: ['ADMIN'],
     items: [
       // MANAGEMENT : USER
       {
@@ -92,6 +93,7 @@ const sidebarConfig = [
   },
   {
     subheader: 'finance',
+    accessibleRoles: ['ADMIN'],
     items: [
       { title: 'home', path: PATH_DASHBOARD.finance.home, icon: ICONS.banking },
       { title: 'report', path: PATH_DASHBOARD.finance.report, icon: ICONS.banking },
@@ -106,6 +108,7 @@ const sidebarConfig = [
   // E-COMMERCE
   {
     subheader: 'e-commerce',
+    accessibleRoles: ['CUSTOMER'],
     items: [
       { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop, icon: ICONS.cart },
       { title: 'product', path: PATH_DASHBOARD.eCommerce.productById, icon: ICONS.cart },
