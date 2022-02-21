@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
-import { filter, includes, orderBy } from 'lodash';
+import { filter, orderBy } from 'lodash';
 // material
 import { Backdrop, Container, Typography, CircularProgress, Stack } from '@mui/material';
 // redux
@@ -40,17 +40,10 @@ function applyFilter(products: Product[], sortBy: string | null, filters: Produc
     products = orderBy(products, ['price'], ['asc']);
   }
   // FILTER PRODUCTS
-  if (filters.gender.length > 0) {
-    products = filter(products, (_product) => includes(filters.gender, _product.gender));
-  }
   if (filters.category !== 'All') {
     products = filter(products, (_product) => _product.category === filters.category);
   }
-  if (filters.colors.length > 0) {
-    products = filter(products, (_product) =>
-      _product.colors.some((color) => filters.colors.includes(color))
-    );
-  }
+
   if (filters.priceRange) {
     products = filter(products, (_product) => {
       if (filters.priceRange === 'below') {
@@ -62,17 +55,7 @@ function applyFilter(products: Product[], sortBy: string | null, filters: Produc
       return _product.price > 75;
     });
   }
-  if (filters.rating) {
-    products = filter(products, (_product) => {
-      const convertRating = (value: string) => {
-        if (value === 'up4Star') return 4;
-        if (value === 'up3Star') return 3;
-        if (value === 'up2Star') return 2;
-        return 1;
-      };
-      return _product.totalRating > convertRating(filters.rating);
-    });
-  }
+
   return products;
 }
 

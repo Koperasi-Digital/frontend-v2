@@ -97,7 +97,11 @@ export default function ProductDetailsCarousel({ product }: ProductDetailsCarous
   const [nav2, setNav2] = useState<Slider>();
   const slider1 = useRef<Slider | null>(null);
   const slider2 = useRef<Slider | null>(null);
-  const imagesLightbox = product.images.map((_image) => _image);
+  const images = [...Array(8)].map(
+    (_, index) =>
+      'http://localhost:3000/static/mock-images/products/product_' + (index + 1) + '.jpg'
+  );
+  const imagesLightbox = images.map((_image) => _image);
 
   const handleOpenLightbox = (url: string) => {
     const selectedImage = findIndex(imagesLightbox, (index) => index === url);
@@ -123,7 +127,7 @@ export default function ProductDetailsCarousel({ product }: ProductDetailsCarous
     focusOnSelect: true,
     variableWidth: true,
     centerPadding: '0px',
-    slidesToShow: product.images.length > 3 ? 3 : product.images.length
+    slidesToShow: images.length > 3 ? 3 : images.length
   };
 
   useEffect(() => {
@@ -151,13 +155,13 @@ export default function ProductDetailsCarousel({ product }: ProductDetailsCarous
           }}
         >
           <Slider {...settings1} asNavFor={nav2} ref={slider1}>
-            {product.images.map((item) => (
+            {images.map((item) => (
               <LargeItem key={item} item={item} onOpenLightbox={handleOpenLightbox} />
             ))}
           </Slider>
           <CarouselControlsArrowsIndex
             index={currentIndex}
-            total={product.images.length}
+            total={images.length}
             onNext={handleNext}
             onPrevious={handlePrevious}
           />
@@ -169,12 +173,12 @@ export default function ProductDetailsCarousel({ product }: ProductDetailsCarous
           my: 3,
           mx: 'auto',
           '& .slick-current .isActive': { opacity: 1 },
-          ...(product.images.length === 1 && { maxWidth: THUMB_SIZE * 1 + 16 }),
-          ...(product.images.length === 2 && { maxWidth: THUMB_SIZE * 2 + 32 }),
-          ...(product.images.length === 3 && { maxWidth: THUMB_SIZE * 3 + 48 }),
-          ...(product.images.length === 4 && { maxWidth: THUMB_SIZE * 3 + 48 }),
-          ...(product.images.length >= 5 && { maxWidth: THUMB_SIZE * 6 }),
-          ...(product.images.length > 2 && {
+          ...(images.length === 1 && { maxWidth: THUMB_SIZE * 1 + 16 }),
+          ...(images.length === 2 && { maxWidth: THUMB_SIZE * 2 + 32 }),
+          ...(images.length === 3 && { maxWidth: THUMB_SIZE * 3 + 48 }),
+          ...(images.length === 4 && { maxWidth: THUMB_SIZE * 3 + 48 }),
+          ...(images.length >= 5 && { maxWidth: THUMB_SIZE * 6 }),
+          ...(images.length > 2 && {
             position: 'relative',
             '&:before, &:after': {
               top: 0,
@@ -193,7 +197,7 @@ export default function ProductDetailsCarousel({ product }: ProductDetailsCarous
         }}
       >
         <Slider {...settings2} asNavFor={nav1} ref={slider2}>
-          {product.images.map((item) => (
+          {images.map((item) => (
             <ThumbnailItem key={item} item={item} />
           ))}
         </Slider>
