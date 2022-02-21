@@ -80,8 +80,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <GeneralApp /> },
-        { path: 'activities', element: <Calendar /> },
-        { path: 'activities/:id', element: <BlogPost /> },
+        { path: 'activities', element: <Activities /> },
         {
           path: 'blogs',
           element: (
@@ -137,8 +136,7 @@ export default function Router() {
             { path: 'new', element: <Chat /> },
             { path: ':conversationKey', element: <Chat /> }
           ]
-        },
-        { path: 'calendar', element: <Calendar /> }
+        }
       ]
     },
 
@@ -194,7 +192,7 @@ const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
-const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
+const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
 const TransactionsReport = Loadable(lazy(() => import('../pages/dashboard/TransactionsReport')));
 const MemberReport = Loadable(lazy(() => import('../pages/dashboard/MemberReport')));
