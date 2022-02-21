@@ -9,7 +9,12 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import Page from '../../components/Page';
 import { Calendar } from 'components/_dashboard/calendar';
 import { AppWelcome, AppTotalActive, RecentUsers } from 'components/_dashboard/general-app';
-import { BankingSavings, BankingEMoney } from 'components/_dashboard/general-banking';
+import {
+  BankingSavings,
+  BankingEMoney,
+  BankingMemberSimpananPokok,
+  BankingMemberSimpananWajib
+} from 'components/_dashboard/general-banking';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +23,12 @@ function AdminDashboard() {
     <Grid container spacing={3}>
       <Grid item xs={12} sx={{ my: 1 }}>
         <RecentUsers />
+      </Grid>
+      <Grid item xs={12} md={6} sx={{ my: 1 }}>
+        <BankingMemberSimpananPokok />
+      </Grid>
+      <Grid item xs={12} md={6} sx={{ my: 1 }}>
+        <BankingMemberSimpananWajib />
       </Grid>
     </Grid>
   );

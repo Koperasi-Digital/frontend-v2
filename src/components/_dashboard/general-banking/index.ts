@@ -15,3 +15,5 @@ export { default as DisbursementApprovalForm } from './DisbursementApprovalForm'
 export { default as SaldoDisbursementRequestList } from './SaldoDisbursementRequestList';
 export { default as ShareDisbursementRequestList } from './ShareDisbursementRequestList';
 export { default as BankingEMoney } from './BankingEMoney';
+export { default as BankingMemberSimpananPokok } from './BankingMemberSimpananPokok';
+export { default as BankingMemberSimpananWajib } from './BankingMemberSimpananWajib';
