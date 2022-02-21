@@ -180,6 +180,7 @@ mock.onGet('/api/user/posts').reply(() => {
     isLiked: true,
     createdAt: mockData.time(index),
     media: mockData.image.feed(index),
+    topic: mockData.text.title(index),
     message: mockData.text.sentence(index),
     personLikes: [...Array(36)].map((_, index) => ({
       name: mockData.name.fullName(index),
