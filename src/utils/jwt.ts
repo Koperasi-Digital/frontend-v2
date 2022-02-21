@@ -2,6 +2,7 @@ import jwtDecode from 'jwt-decode';
 import { verify, sign } from 'jsonwebtoken';
 //
 import axios from './axios';
+import axiosMock from './axiosMock';
 
 // ----------------------------------------------------------------------
 
@@ -21,23 +22,41 @@ const handleTokenExpired = (exp: number) => {
   window.clearTimeout(expiredTimer);
   const currentTime = Date.now();
   const timeLeft = exp * 1000 - currentTime;
-  console.log(timeLeft);
-  expiredTimer = window.setTimeout(() => {
-    console.log('expired');
-    // You can do what ever you want here, like show a notification
+  expiredTimer = window.setTimeout(async () => {
+    console.log('Token expired. Try to refresh token');
+    const refreshToken = window.localStorage.getItem('refreshToken');
+    try {
+      if (!refreshToken) {
+        throw Error('Refresh token not found.');
+      }
+
+      const response = await axios.post('auth/refresh-token', {
+        refreshToken
+      });
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data.payload;
+      setSession(newAccessToken, newRefreshToken);
+    } catch (err) {
+      console.log('Failed to refresh token');
+      setSession(null, null);
+    }
   }, timeLeft);
 };
 
-const setSession = (accessToken: string | null) => {
+const setSession = async (accessToken: string | null, refreshToken: string | null) => {
   if (accessToken) {
     localStorage.setItem('accessToken', accessToken);
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-    // This function below will handle when token is expired
+    axiosMock.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    if (refreshToken) {
+      localStorage.setItem('refreshToken', refreshToken);
+    }
     const { exp } = jwtDecode<{ exp: number }>(accessToken);
-    handleTokenExpired(exp);
+    await handleTokenExpired(exp);
   } else {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     delete axios.defaults.headers.common.Authorization;
+    delete axiosMock.defaults.headers.common.Authorization;
   }
 };
 

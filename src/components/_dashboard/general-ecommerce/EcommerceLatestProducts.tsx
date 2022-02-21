@@ -65,22 +65,13 @@ function ProductItem({ product }: ProductItemProps) {
         </Link>
 
         <Stack direction="row">
-          {hasSale && (
-            <Typography
-              variant="body2"
-              sx={{ color: 'text.secondary', textDecoration: 'line-through' }}
-            >
-              {fCurrency(priceSale)}
-            </Typography>
-          )}
-          &nbsp;
-          <Typography variant="body2" sx={{ color: priceSale ? 'error.main' : 'text.secondary' }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             {fCurrency(price)}
           </Typography>
         </Stack>
       </Box>
 
-      <ColorPreview limit={3} colors={product.colors} sx={{ minWidth: 72, pr: 3 }} />
+      {/* <ColorPreview limit={3} colors={product.colors} sx={{ minWidth: 72, pr: 3 }} /> */}
     </Stack>
   );
 }

@@ -3,17 +3,7 @@ import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 // material
-import {
-  Box,
-  Grid,
-  Card,
-  Stack,
-  Switch,
-  TextField,
-  FormControlLabel,
-  Typography,
-  FormHelperText
-} from '@mui/material';
+import { Box, Grid, Card, Stack, TextField, Typography, FormHelperText } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // hooks
 import useAuth from '../../../../hooks/useAuth';
@@ -28,7 +18,7 @@ import countries from '../countries';
 
 // ----------------------------------------------------------------------
 
-interface InitialState extends Omit<User, 'password' | 'id' | 'role'> {
+interface InitialState extends User {
   afterSubmit?: string;
 }
 
@@ -44,6 +34,7 @@ export default function AccountGeneral() {
   const formik = useFormik<InitialState>({
     enableReinitialize: true,
     initialValues: {
+      id: user?.id,
       displayName: user?.displayName || '',
       email: user?.email,
       photoURL: user?.photoURL,
@@ -53,8 +44,7 @@ export default function AccountGeneral() {
       state: user?.state,
       city: user?.city,
       zipCode: user?.zipCode,
-      about: user?.about,
-      isPublic: user?.isPublic
+      role: user?.role
     },
 
     validationSchema: UpdateUserSchema,
@@ -94,45 +84,7 @@ export default function AccountGeneral() {
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={4}>
-            <Card sx={{ py: 10, px: 3, textAlign: 'center' }}>
-              <UploadAvatar
-                accept="image/*"
-                file={values.photoURL}
-                maxSize={3145728}
-                onDrop={handleDrop}
-                error={Boolean(touched.photoURL && errors.photoURL)}
-                caption={
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      mt: 2,
-                      mx: 'auto',
-                      display: 'block',
-                      textAlign: 'center',
-                      color: 'text.secondary'
-                    }}
-                  >
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
-                    <br /> max size of {fData(3145728)}
-                  </Typography>
-                }
-              />
-
-              <FormHelperText error sx={{ px: 2, textAlign: 'center' }}>
-                {touched.photoURL && errors.photoURL}
-              </FormHelperText>
-
-              <FormControlLabel
-                control={<Switch {...getFieldProps('isPublic')} color="primary" />}
-                labelPlacement="start"
-                label="Public Profile"
-                sx={{ mt: 5 }}
-              />
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={8} order={{ xs: 2, md: 1 }}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={{ xs: 2, md: 3 }}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
@@ -171,6 +123,10 @@ export default function AccountGeneral() {
                   <TextField fullWidth label="Zip/Code" {...getFieldProps('zipCode')} />
                 </Stack>
 
+                <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+                  <TextField fullWidth label="Role" {...getFieldProps('role')} disabled />
+                </Stack>
+
                 <TextField
                   {...getFieldProps('about')}
                   fullWidth
@@ -186,6 +142,49 @@ export default function AccountGeneral() {
                   Save Changes
                 </LoadingButton>
               </Box>
+            </Card>
+          </Grid>
+
+          <Grid
+            item
+            xs={12}
+            md={4}
+            sx={{
+              order: {
+                xs: 1,
+                md: 2
+              }
+            }}
+          >
+            <Card sx={{ py: 10, px: 3, textAlign: 'center' }}>
+              <UploadAvatar
+                accept="image/*"
+                file={values.photoURL}
+                maxSize={3145728}
+                onDrop={handleDrop}
+                error={Boolean(touched.photoURL && errors.photoURL)}
+                caption={
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      mt: 2,
+                      mx: 'auto',
+                      display: 'block',
+                      textAlign: 'center',
+                      color: 'text.secondary'
+                    }}
+                  >
+                    Click the image to upload a new Avatar
+                    <br />
+                    Allowed *.jpeg, *.jpg, *.png, *.gif
+                    <br /> max size of {fData(3145728)}
+                  </Typography>
+                }
+              />
+
+              <FormHelperText error sx={{ px: 2, textAlign: 'center' }}>
+                {touched.photoURL && errors.photoURL}
+              </FormHelperText>
             </Card>
           </Grid>
         </Grid>

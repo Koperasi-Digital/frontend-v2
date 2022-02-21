@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { store } from '../store';
 // utils
-import axios from '../../utils/axios';
+import axios from '../../utils/axiosMock';
 // @types
 import { BlogState } from '../../@types/blog';
 

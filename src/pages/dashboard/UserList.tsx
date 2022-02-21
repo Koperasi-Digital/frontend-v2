@@ -1,17 +1,10 @@
-import { filter } from 'lodash';
-import { Icon } from '@iconify/react';
-import { sentenceCase } from 'change-case';
+import { filter, sample } from 'lodash';
 import { useState, useEffect } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
-import { Link as RouterLink } from 'react-router-dom';
-// material
-import { useTheme } from '@mui/material/styles';
 import {
   Card,
   Table,
   Stack,
   Avatar,
-  Button,
   Checkbox,
   TableRow,
   TableBody,
@@ -30,20 +23,19 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import { UserManager } from '../../@types/user';
 // components
 import Page from '../../components/Page';
-import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user/list';
+import { fDateTime } from 'utils/formatTime';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
+  { id: 'email', label: 'Email', alignRight: false },
   { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'createdAt', label: 'Joined At', alignRight: false },
   { id: '' }
 ];
 
@@ -85,7 +77,6 @@ function applySortFilter(
 }
 
 export default function UserList() {
-  const theme = useTheme();
   const dispatch = useDispatch();
 
   const { userList } = useSelector((state: RootState) => state.user);
@@ -162,16 +153,6 @@ export default function UserList() {
             { name: 'User', href: PATH_DASHBOARD.user.root },
             { name: 'List' }
           ]}
-          action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.user.newUser}
-              startIcon={<Icon icon={plusFill} />}
-            >
-              New User
-            </Button>
-          }
         />
 
         <Card>
@@ -197,7 +178,7 @@ export default function UserList() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, name, role, status, company, avatarUrl, isVerified } = row;
+                      const { id, name, role, email, avatarUrl } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
 
                       return (
@@ -220,16 +201,16 @@ export default function UserList() {
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{company}</TableCell>
+                          <TableCell align="left">{email}</TableCell>
                           <TableCell align="left">{role}</TableCell>
-                          <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
                           <TableCell align="left">
-                            <Label
-                              variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                              color={(status === 'banned' && 'error') || 'success'}
-                            >
-                              {sentenceCase(status)}
-                            </Label>
+                            {fDateTime(
+                              sample([
+                                new Date(1592452800000),
+                                new Date(1592742800000),
+                                new Date(1602732800000)
+                              ])!
+                            )}
                           </TableCell>
 
                           <TableCell align="right">
