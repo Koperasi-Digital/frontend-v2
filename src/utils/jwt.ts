@@ -2,6 +2,7 @@ import jwtDecode from 'jwt-decode';
 import { verify, sign } from 'jsonwebtoken';
 //
 import axios from './axios';
+import axiosMock from './axiosMock';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +46,7 @@ const setSession = async (accessToken: string | null, refreshToken: string | nul
   if (accessToken) {
     localStorage.setItem('accessToken', accessToken);
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    axiosMock.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     if (refreshToken) {
       localStorage.setItem('refreshToken', refreshToken);
     }
@@ -54,6 +56,7 @@ const setSession = async (accessToken: string | null, refreshToken: string | nul
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     delete axios.defaults.headers.common.Authorization;
+    delete axiosMock.defaults.headers.common.Authorization;
   }
 };
 

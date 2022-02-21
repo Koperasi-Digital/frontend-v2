@@ -3,7 +3,7 @@
 import { Role } from './role';
 
 export type User = {
-  id: string;
+  id: number;
   displayName: string;
   email: string;
   photoURL: File | any;
