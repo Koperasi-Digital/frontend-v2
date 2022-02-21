@@ -20,6 +20,7 @@ import { MIconButton } from '../../@material-extend';
 type InitialValues = {
   email: string;
   password: string;
+  passwordConfirm: string;
   firstName: string;
   lastName: string;
   afterSubmit?: string;
@@ -30,6 +31,7 @@ export default function RegisterForm() {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string()
@@ -38,7 +40,8 @@ export default function RegisterForm() {
       .required('First name required'),
     lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required')
+    password: Yup.string().min(6, 'Too Short!').required('Password is required'),
+    passwordConfirm: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match')
   });
 
   const formik = useFormik<InitialValues>({
@@ -46,12 +49,19 @@ export default function RegisterForm() {
       firstName: '',
       lastName: '',
       email: '',
-      password: ''
+      password: '',
+      passwordConfirm: ''
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        await register(values.email, values.password, values.firstName, values.lastName);
+        await register(
+          values.email,
+          values.password,
+          values.passwordConfirm,
+          values.firstName,
+          values.lastName
+        );
         enqueueSnackbar('Register success', {
           variant: 'success',
           action: (key) => (
@@ -126,6 +136,24 @@ export default function RegisterForm() {
             }}
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
+          />
+
+          <TextField
+            fullWidth
+            type={showConfirmPassword ? 'text' : 'password'}
+            label="Password Confirmation"
+            {...getFieldProps('passwordConfirm')}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton edge="end" onClick={() => setShowConfirmPassword((prev) => !prev)}>
+                    <Icon icon={showConfirmPassword ? eyeFill : eyeOffFill} />
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+            error={Boolean(touched.passwordConfirm && errors.passwordConfirm)}
+            helperText={touched.passwordConfirm && errors.passwordConfirm}
           />
 
           <LoadingButton

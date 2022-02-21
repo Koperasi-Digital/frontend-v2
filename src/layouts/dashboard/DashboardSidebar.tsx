@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { capitalize } from 'lodash';
 // material
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Link, Stack, Drawer, Tooltip, Typography, CardActionArea } from '@mui/material';
@@ -162,7 +163,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
                   {user?.displayName}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  {user?.role}
+                  {capitalize(user?.role.name)}
                 </Typography>
               </Box>
             </AccountStyle>

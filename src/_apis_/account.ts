@@ -26,7 +26,11 @@ const users: User[] = [
     city: 'Bandung',
     zipCode: '40132',
     about: 'Praesent turpis. Phasellus viverra nulla ut metus varius laoreet. Phasellus tempus.',
-    role: 'Admin',
+    role: {
+      id: 1,
+      name: 'ADMIN',
+      description: 'Admin Koperasi'
+    },
     isPublic: true
   }
 ];
@@ -85,7 +89,11 @@ mock.onPost('/api/account/register').reply(async (config) => {
       city: null,
       zipCode: null,
       about: null,
-      role: 'user',
+      role: {
+        id: 1,
+        name: 'ADMIN',
+        description: 'Admin Koperasi'
+      },
       isPublic: true
     };
 
