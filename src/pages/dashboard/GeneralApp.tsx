@@ -9,6 +9,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import Page from '../../components/Page';
 import { Calendar } from 'components/_dashboard/calendar';
 import { AppWelcome, AppTotalActive, RecentUsers } from 'components/_dashboard/general-app';
+import { BankingSavings, BankingEMoney } from 'components/_dashboard/general-banking';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,12 @@ function UserDashboard() {
     <Grid container spacing={3}>
       <Grid item xs={12} md={4}>
         <AppTotalActive />
+      </Grid>
+      <Grid item xs={12} md={4}>
+        <BankingSavings />
+      </Grid>
+      <Grid item xs={12} md={4}>
+        <BankingEMoney />
       </Grid>
     </Grid>
   );
