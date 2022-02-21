@@ -94,6 +94,8 @@ export default function Router() {
         { path: 'blog/verification', element: <BlogVerification /> },
         { path: 'faq', element: <FAQ /> },
         { path: 'faq/:number', element: <FAQPost /> },
+        { path: 'forum', element: <Forum /> },
+        { path: 'forum/own', element: <MyForum /> },
         {
           path: 'e-commerce',
           children: [
@@ -188,6 +190,8 @@ const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')
 const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
 const FAQ = Loadable(lazy(() => import('../pages/dashboard/FAQ')));
 const FAQPost = Loadable(lazy(() => import('../pages/dashboard/FAQPost')));
+const Forum = Loadable(lazy(() => import('../pages/dashboard/Forum')));
+const MyForum = Loadable(lazy(() => import('../pages/dashboard/MyForum')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
