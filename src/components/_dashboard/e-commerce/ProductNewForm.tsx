@@ -29,7 +29,7 @@ import { Product } from '../../../@types/products';
 //
 import { QuillEditor } from '../../editor';
 import { UploadMultiFile } from '../../upload';
-import addProduct from 'utils/products';
+// import addProduct from 'utils/products';
 
 // ----------------------------------------------------------------------
 
@@ -77,12 +77,12 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        // await fakeRequest(500);
-        await addProduct(values);
+        await fakeRequest(500);
+        // await addProduct(values);
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-        // navigate(PATH_DASHBOARD.eCommerce.list);
+        navigate(PATH_DASHBOARD.eCommerce.list);
       } catch (error) {
         console.error(error);
         setSubmitting(false);

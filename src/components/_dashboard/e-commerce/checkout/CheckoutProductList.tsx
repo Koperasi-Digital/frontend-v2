@@ -7,7 +7,6 @@ import { styled } from '@mui/material/styles';
 import {
   Box,
   Table,
-  Divider,
   TableRow,
   TableBody,
   TableCell,
@@ -16,7 +15,6 @@ import {
   TableContainer
 } from '@mui/material';
 // utils
-import getColorName from '../../../../utils/getColorName';
 import { fCurrency } from '../../../../utils/formatNumber';
 // @types
 import { CartItem } from '../../../../@types/products';

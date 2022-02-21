@@ -1,5 +1,5 @@
 import { filter } from 'lodash';
-import { Link, Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { paramCase, sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
@@ -24,7 +24,6 @@ import {
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts } from '../../redux/slices/product';
 // utils
-import { fDate } from '../../utils/formatTime';
 import { fCurrency } from '../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';

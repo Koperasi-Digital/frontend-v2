@@ -1,12 +1,7 @@
-import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import clockFill from '@iconify/icons-eva/clock-fill';
-import roundVerified from '@iconify/icons-ic/round-verified';
-import roundVerifiedUser from '@iconify/icons-ic/round-verified-user';
 // material
-import { alpha, styled } from '@mui/material/styles';
 import { Box, Tab, Card, Grid, Divider, Skeleton, Container, Typography } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // redux
@@ -28,18 +23,18 @@ import CartWidget from '../../components/_dashboard/e-commerce/CartWidget';
 
 // ----------------------------------------------------------------------
 
-const IconWrapperStyle = styled('div')(({ theme }) => ({
-  margin: 'auto',
-  display: 'flex',
-  borderRadius: '50%',
-  alignItems: 'center',
-  width: theme.spacing(8),
-  justifyContent: 'center',
-  height: theme.spacing(8),
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-  backgroundColor: `${alpha(theme.palette.primary.main, 0.08)}`
-}));
+// const IconWrapperStyle = styled('div')(({ theme }) => ({
+//   margin: 'auto',
+//   display: 'flex',
+//   borderRadius: '50%',
+//   alignItems: 'center',
+//   width: theme.spacing(8),
+//   justifyContent: 'center',
+//   height: theme.spacing(8),
+//   marginBottom: theme.spacing(3),
+//   color: theme.palette.primary.main,
+//   backgroundColor: `${alpha(theme.palette.primary.main, 0.08)}`
+// }));
 
 // ----------------------------------------------------------------------
 

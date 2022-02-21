@@ -8,8 +8,6 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 //
-import Label from '../../../Label';
-import ColorPreview from '../../../ColorPreview';
 
 import { Product } from '../../../../@types/products';
 
@@ -30,7 +28,7 @@ type ShopProductCardProps = {
 };
 
 export default function ShopProductCard({ product }: ShopProductCardProps) {
-  const { name, cover, price, status } = product;
+  const { name, cover, price } = product;
   const linkTo = `${PATH_DASHBOARD.eCommerce.root}/product/${paramCase(name)}`;
 
   return (
