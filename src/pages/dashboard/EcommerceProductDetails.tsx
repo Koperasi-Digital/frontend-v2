@@ -1,12 +1,7 @@
-import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import clockFill from '@iconify/icons-eva/clock-fill';
-import roundVerified from '@iconify/icons-ic/round-verified';
-import roundVerifiedUser from '@iconify/icons-ic/round-verified-user';
 // material
-import { alpha, styled } from '@mui/material/styles';
 import { Box, Tab, Card, Grid, Divider, Skeleton, Container, Typography } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // redux
@@ -22,43 +17,24 @@ import Markdown from '../../components/Markdown';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import {
   ProductDetailsSummary,
-  ProductDetailsReview,
   ProductDetailsCarousel
 } from '../../components/_dashboard/e-commerce/product-details';
 import CartWidget from '../../components/_dashboard/e-commerce/CartWidget';
 
 // ----------------------------------------------------------------------
 
-const PRODUCT_DESCRIPTION = [
-  {
-    title: '100% Original',
-    description: 'Chocolate bar candy canes ice cream toffee cookie halvah.',
-    icon: roundVerified
-  },
-  {
-    title: '10 Day Replacement',
-    description: 'Marshmallow biscuit donut dragée fruitcake wafer.',
-    icon: clockFill
-  },
-  {
-    title: 'Year Warranty',
-    description: 'Cotton candy gingerbread cake I love sugar sweet.',
-    icon: roundVerifiedUser
-  }
-];
-
-const IconWrapperStyle = styled('div')(({ theme }) => ({
-  margin: 'auto',
-  display: 'flex',
-  borderRadius: '50%',
-  alignItems: 'center',
-  width: theme.spacing(8),
-  justifyContent: 'center',
-  height: theme.spacing(8),
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-  backgroundColor: `${alpha(theme.palette.primary.main, 0.08)}`
-}));
+// const IconWrapperStyle = styled('div')(({ theme }) => ({
+//   margin: 'auto',
+//   display: 'flex',
+//   borderRadius: '50%',
+//   alignItems: 'center',
+//   width: theme.spacing(8),
+//   justifyContent: 'center',
+//   height: theme.spacing(8),
+//   marginBottom: theme.spacing(3),
+//   color: theme.palette.primary.main,
+//   backgroundColor: `${alpha(theme.palette.primary.main, 0.08)}`
+// }));
 
 // ----------------------------------------------------------------------
 
@@ -132,7 +108,7 @@ export default function EcommerceProductDetails() {
               </Grid>
             </Card>
 
-            <Grid container sx={{ my: 8 }}>
+            {/* <Grid container sx={{ my: 8 }}>
               {PRODUCT_DESCRIPTION.map((item) => (
                 <Grid item xs={12} md={4} key={item.title}>
                   <Box sx={{ my: 2, mx: 'auto', maxWidth: 280, textAlign: 'center' }}>
@@ -146,19 +122,19 @@ export default function EcommerceProductDetails() {
                   </Box>
                 </Grid>
               ))}
-            </Grid>
+            </Grid> */}
 
             <Card>
               <TabContext value={value}>
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
                     <Tab disableRipple value="1" label="Description" />
-                    <Tab
+                    {/* <Tab
                       disableRipple
                       value="2"
                       label={`Review (${product.reviews.length})`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
-                    />
+                    /> */}
                   </TabList>
                 </Box>
 
@@ -169,9 +145,9 @@ export default function EcommerceProductDetails() {
                     <Markdown children={product.description} />
                   </Box>
                 </TabPanel>
-                <TabPanel value="2">
+                {/* <TabPanel value="2">
                   <ProductDetailsReview product={product} />
-                </TabPanel>
+                </TabPanel> */}
               </TabContext>
             </Card>
           </>

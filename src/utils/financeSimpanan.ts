@@ -13,7 +13,6 @@ export async function handleListSimpananPokok() {
 export async function handleGetSimpananPokok(userId: number) {
   try {
     const response = await axios.get('simpananPokok/show/' + userId);
-    console.log(response);
     return response.data.payload;
   } catch (e) {
     console.log(e);

@@ -4,13 +4,9 @@ import { FormikProps } from 'formik';
 
 export type PaymentType = 'paypal' | 'credit_card' | 'cash';
 
-export type ProductStatus = 'sale' | 'new' | '';
+export type ProductInventoryType = 'Active' | 'Inactive';
 
-export type ProductInventoryType = 'in_stock' | 'out_of_stock' | 'low_stock';
-
-export type ProductCategory = 'Accessories' | 'Apparel' | 'Shoes';
-
-export type ProductGender = 'Men' | 'Women' | 'Kids';
+export type ProductCategory = 'Ayam' | 'Infrastruktur' | 'Kandang';
 
 export type OnCreateBilling = (address: BillingAddress) => void;
 
@@ -35,28 +31,17 @@ export type ProductReview = {
 
 export type Product = {
   id: string;
-  cover: string;
-  images: string[];
+  sku: string;
   name: string;
   price: number;
-  code: string;
-  sku: string;
-  tags: string[];
-  priceSale: number | null;
-  totalRating: number;
-  totalReview: number;
-  ratings: ProductRating[];
-  reviews: ProductReview[];
-  colors: string[];
-  status: ProductStatus;
-  inventoryType: ProductInventoryType;
-  sizes: string[];
-  available: number;
-  description: string;
-  sold: number;
-  createdAt: Date | string | number;
   category: ProductCategory;
-  gender: ProductGender;
+  available: number;
+  cover: string;
+  images: string[];
+  description: string;
+  seller_id: string;
+  status: ProductInventoryType;
+  createdAt: Date | string | number;
 };
 
 export type CartItem = {
@@ -65,8 +50,6 @@ export type CartItem = {
   cover: string;
   available: number;
   price: number;
-  color: string;
-  size: string;
   quantity: number;
   subtotal: number;
 };

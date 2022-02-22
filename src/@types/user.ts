@@ -112,6 +112,7 @@ export type UserPost = {
   isLiked: boolean;
   createdAt: Date | string | number;
   media: string;
+  topic: string;
   message: string;
   personLikes: {
     name: string;

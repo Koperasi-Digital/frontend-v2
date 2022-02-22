@@ -8,18 +8,14 @@ import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
 import {
   Card,
-  Chip,
   Grid,
   Stack,
-  Radio,
   Switch,
   Select,
   TextField,
   InputLabel,
   Typography,
-  RadioGroup,
   FormControl,
-  Autocomplete,
   InputAdornment,
   FormHelperText,
   FormControlLabel
@@ -33,32 +29,11 @@ import { Product } from '../../../@types/products';
 //
 import { QuillEditor } from '../../editor';
 import { UploadMultiFile } from '../../upload';
+// import addProduct from 'utils/products';
 
 // ----------------------------------------------------------------------
 
-const GENDER_OPTION = ['Men', 'Women', 'Kids'];
-
-const CATEGORY_OPTION = [
-  { group: 'Clothing', classify: ['Shirts', 'T-shirts', 'Jeans', 'Leather'] },
-  { group: 'Tailored', classify: ['Suits', 'Blazers', 'Trousers', 'Waistcoats'] },
-  { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] }
-];
-
-const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots'
-];
+const CATEGORY_OPTION = ['Ayam', 'Kandang', 'Infrastruktur', 'Pakan', 'Dagin'];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -87,23 +62,23 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: currentProduct?.name || '',
-      description: currentProduct?.description || '',
-      images: currentProduct?.images || [],
-      code: currentProduct?.code || '',
       sku: currentProduct?.sku || '',
+      name: currentProduct?.name || '',
+      category: currentProduct?.category || CATEGORY_OPTION[0],
       price: currentProduct?.price || '',
-      priceSale: currentProduct?.priceSale || '',
-      tags: currentProduct?.tags || [TAGS_OPTION[0]],
-      inStock: Boolean(currentProduct?.inventoryType !== 'out_of_stock'),
-      taxes: true,
-      gender: currentProduct?.gender || GENDER_OPTION[2],
-      category: currentProduct?.category || CATEGORY_OPTION[0].classify[1]
+      available: currentProduct?.available || '',
+      cover:
+        currentProduct?.cover || 'http://localhost:3000/static/mock-images/products/product_2.jpg',
+      description: currentProduct?.description || '',
+      status: currentProduct?.status || 'Active',
+      seller_id: currentProduct?.seller_id || 'Michael Hans',
+      images: currentProduct?.images || []
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         await fakeRequest(500);
+        // await addProduct(values);
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
@@ -199,30 +174,18 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
             <Stack spacing={3}>
               <Card sx={{ p: 3 }}>
                 <FormControlLabel
-                  control={<Switch {...getFieldProps('inStock')} checked={values.inStock} />}
-                  label="In stock"
+                  control={
+                    <Switch
+                      {...getFieldProps('status')}
+                      checked={Boolean(values.status !== 'Active')}
+                    />
+                  }
+                  label="Active"
                   sx={{ mb: 2 }}
                 />
 
                 <Stack spacing={3}>
-                  <TextField fullWidth label="Product Code" {...getFieldProps('code')} />
                   <TextField fullWidth label="Product SKU" {...getFieldProps('sku')} />
-
-                  <div>
-                    <LabelStyle>Gender</LabelStyle>
-                    <RadioGroup {...getFieldProps('gender')} row>
-                      <Stack spacing={1} direction="row">
-                        {GENDER_OPTION.map((gender) => (
-                          <FormControlLabel
-                            key={gender}
-                            value={gender}
-                            control={<Radio />}
-                            label={gender}
-                          />
-                        ))}
-                      </Stack>
-                    </RadioGroup>
-                  </div>
 
                   <FormControl fullWidth>
                     <InputLabel>Category</InputLabel>
@@ -233,36 +196,12 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                       value={values.category}
                     >
                       {CATEGORY_OPTION.map((category) => (
-                        <optgroup key={category.group} label={category.group}>
-                          {category.classify.map((classify) => (
-                            <option key={classify} value={classify}>
-                              {classify}
-                            </option>
-                          ))}
-                        </optgroup>
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
                       ))}
                     </Select>
                   </FormControl>
-                  <Autocomplete
-                    multiple
-                    freeSolo
-                    value={values.tags}
-                    onChange={(event, newValue) => {
-                      setFieldValue('tags', newValue);
-                    }}
-                    options={TAGS_OPTION.map((option) => option)}
-                    renderTags={(value, getTagProps) =>
-                      value.map((option, index) => (
-                        <Chip
-                          {...getTagProps({ index })}
-                          key={option}
-                          size="small"
-                          label={option}
-                        />
-                      ))
-                    }
-                    renderInput={(params) => <TextField label="Tags" {...params} />}
-                  />
                 </Stack>
               </Card>
 
@@ -270,34 +209,29 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                 <Stack spacing={3}>
                   <TextField
                     fullWidth
-                    placeholder="0.00"
-                    label="Regular Price"
+                    placeholder="0"
+                    label="Jumlah"
+                    {...getFieldProps('quantity')}
+                    InputProps={{
+                      endAdornment: <InputAdornment position="end">kilogram</InputAdornment>,
+                      type: 'number'
+                    }}
+                    error={Boolean(touched.available && errors.available)}
+                    helperText={touched.available && errors.available}
+                  />
+                  <TextField
+                    fullWidth
+                    placeholder="0"
+                    label="Price"
                     {...getFieldProps('price')}
                     InputProps={{
-                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                      startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
                       type: 'number'
                     }}
                     error={Boolean(touched.price && errors.price)}
                     helperText={touched.price && errors.price}
                   />
-
-                  <TextField
-                    fullWidth
-                    placeholder="0.00"
-                    label="Sale Price"
-                    {...getFieldProps('priceSale')}
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                      type: 'number'
-                    }}
-                  />
                 </Stack>
-
-                <FormControlLabel
-                  control={<Switch {...getFieldProps('taxes')} checked={values.taxes} />}
-                  label="Price includes taxes"
-                  sx={{ mt: 2 }}
-                />
               </Card>
 
               <LoadingButton

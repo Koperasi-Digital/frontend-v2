@@ -147,8 +147,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
           state: profile?.state || '',
           city: profile?.city || '',
           zipCode: profile?.zipCode || '',
-          about: profile?.about || '',
-          isPublic: profile?.isPublic || false
+          about: profile?.about || ''
         },
         login,
         register,
