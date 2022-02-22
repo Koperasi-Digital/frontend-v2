@@ -123,6 +123,7 @@ const slice = createSlice({
     },
 
     resetCart(state) {
+      state.checkout.orderId = 0;
       state.checkout.activeStep = 0;
       state.checkout.cart = [];
       state.checkout.total = 0;

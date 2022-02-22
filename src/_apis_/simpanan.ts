@@ -6,56 +6,59 @@ mock.onGet('simpananPokok/list').reply((config) => {
     200,
     {
       message: 'Simpanan pokok data retrieved',
-      data: [
+      payload: [
         {
           id: 2,
           userId: 2,
-          status: 'LUNAS',
-          amount: 100000,
+          orderId: 10,
+          amount: 1220302343,
           user: {
             id: 2,
             email: 'standard@standard.com',
-            password: '$2a$08$v2rKqeK7x4DeBqSmweDoQe.Lnv.v9xvzJ4u.mduuSETxIRG1lRige',
-            username: 'Jesse',
-            name: 'Jesse Pinkman',
-            role: 'STANDARD',
-            language: 'en-US',
-            created_at: '2022-01-28T09:00:41.803Z',
-            updated_at: '2022-01-28T09:00:41.803Z'
+            displayName: 'Tony'
+          },
+          order: {
+            id: 2,
+            user_id: 2,
+            timestamp: 323434343,
+            total_cost: 1220302343,
+            status: 'success'
           }
         },
         {
           id: 3,
-          userId: 3,
-          status: 'BELUM DIBAYAR',
-          amount: 100000,
+          userId: 2,
+          orderId: 10,
+          amount: 1220302343,
           user: {
-            id: 3,
-            email: 'skyler.white@test.com',
-            password: '$2a$08$StyMuKqU76SIWa8qej8iNepTjuirpvlaUWMyOybprmDFAdcU.Bo22',
-            username: 'Sky',
-            name: 'Skyler White',
-            role: 'STANDARD',
-            language: 'en-US',
-            created_at: '2022-01-28T09:00:41.841Z',
-            updated_at: '2022-01-28T09:00:41.841Z'
+            id: 2,
+            email: 'standard@standard.com',
+            displayName: 'Diana'
+          },
+          order: {
+            id: 2,
+            user_id: 2,
+            timestamp: 323434343,
+            total_cost: 1220302343,
+            status: 'failure'
           }
         },
         {
           id: 4,
-          userId: 4,
-          status: 'LUNAS',
-          amount: 100000,
+          userId: 2,
+          orderId: 10,
+          amount: 1220302343,
           user: {
-            id: 4,
-            email: 'hank.schrader@test.com',
-            password: '$2a$08$WILRhrSpTKp7wUbXYWXtSO.a/HLsOOGZbuqjMAqJyod38NEKOASm6',
-            username: 'Hank',
-            name: 'Hank Schrader',
-            role: 'STANDARD',
-            language: 'en-US',
-            created_at: '2022-01-28T09:00:41.881Z',
-            updated_at: '2022-01-28T09:00:41.881Z'
+            id: 2,
+            email: 'standard@standard.com',
+            displayName: 'Juni'
+          },
+          order: {
+            id: 2,
+            user_id: 2,
+            timestamp: 323434343,
+            total_cost: 1220302343,
+            status: 'success'
           }
         }
       ]
@@ -68,41 +71,47 @@ mock.onGet(/simpananWajib\/list\/.*/).reply((config) => {
     200,
     {
       message: 'Simpanan wajib with period 2022-02-01 found',
-      data: [
+      payload: [
         {
           id: 5,
           userId: 1,
-          status: 'BELUM DIBAYAR',
           amount: 50000,
+          orderId: 5,
           period: '2022-02-01T00:00:00.000Z',
           user: {
             id: 1,
             email: 'admin@admin.com',
             password: '$2a$08$Om3B8Ep1wVkzlQI82Xzax.2qWvZ14TG9chxycoxKYJU.MvbPE8lke',
             username: 'Heisenberg',
-            name: 'Walter White',
-            role: 'ADMINISTRATOR',
-            language: 'en-US',
-            created_at: '2022-01-28T09:00:41.754Z',
-            updated_at: '2022-01-28T09:00:41.754Z'
+            displayName: 'Walter White'
+          },
+          order: {
+            id: 2,
+            user_id: 2,
+            timestamp: 323434343,
+            total_cost: 1220302343,
+            status: 'failure'
           }
         },
         {
-          id: 2,
-          userId: 2,
-          status: 'LUNAS',
+          id: 6,
+          userId: 6,
           amount: 50000,
+          orderId: 12,
           period: '2022-02-01T00:00:00.000Z',
           user: {
+            id: 1,
+            email: 'admin@admin.com',
+            password: '$2a$08$Om3B8Ep1wVkzlQI82Xzax.2qWvZ14TG9chxycoxKYJU.MvbPE8lke',
+            username: 'Heisenberg',
+            displayName: 'Tony'
+          },
+          order: {
             id: 2,
-            email: 'standard@standard.com',
-            password: '$2a$08$v2rKqeK7x4DeBqSmweDoQe.Lnv.v9xvzJ4u.mduuSETxIRG1lRige',
-            username: 'Jesse',
-            name: 'Jesse Pinkman',
-            role: 'STANDARD',
-            language: 'en-US',
-            created_at: '2022-01-28T09:00:41.803Z',
-            updated_at: '2022-01-28T09:00:41.803Z'
+            user_id: 2,
+            timestamp: 323434343,
+            total_cost: 1220302343,
+            status: 'success'
           }
         }
       ]

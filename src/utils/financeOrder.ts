@@ -25,3 +25,13 @@ export async function handleEditOrder(orderId: number, total_cost: number) {
     return undefined;
   }
 }
+
+export async function handleGetOrder(orderId: number) {
+  try {
+    const response = await axios.get('order/' + orderId);
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
