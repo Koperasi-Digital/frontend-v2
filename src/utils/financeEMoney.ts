@@ -3,7 +3,7 @@ import axios from './axios';
 export async function handleGetPayAccountInfo(account_id: string) {
   try {
     const response = await axios.get('emoney/getPayAccount/' + account_id);
-    return response.data.data;
+    return response.data.payload;
   } catch (e) {
     console.log(e);
     return undefined;
@@ -24,9 +24,10 @@ export async function handleRegister(
         phone_number: phone_number,
         country_code: country_code,
         redirect_url: process.env.REACT_APP_ENDPOINT + 'dashboard/finance/home'
+        // redirect_url: PATH_DASHBOARD.finance.home
       }
     });
-    return response.data.data;
+    return response.data.payload;
   } catch (e) {
     console.log(e);
     return undefined;
@@ -36,7 +37,7 @@ export async function handleRegister(
 export async function handleUnbindPayAccount(account_id: string) {
   try {
     const response = await axios.post('emoney/unbindPayAccount/' + account_id);
-    return response.data.data;
+    return response.data.payload;
   } catch (e) {
     console.log(e);
     return undefined;

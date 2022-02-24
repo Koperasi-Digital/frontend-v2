@@ -14,27 +14,6 @@ const RootStyle = styled(Card)(({ theme }) => ({
 }));
 
 export default function BankingSavings() {
-  const transaction_details = {
-    order_id: 19,
-    gross_amount: 10000
-  };
-
-  const item_details = [
-    {
-      price: 10000,
-      quantity: 1,
-      name: 'Simpanan Pokok',
-      category: 'Simpanan'
-    }
-  ];
-
-  type orderProps = {
-    id: number;
-    user_id: number;
-    grossAmount: number;
-    status: string;
-  };
-
   return (
     <>
       <RootStyle>

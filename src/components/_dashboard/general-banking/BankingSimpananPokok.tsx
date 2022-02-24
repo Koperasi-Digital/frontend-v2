@@ -4,6 +4,7 @@ import PaymentButton from './PaymentCreation';
 
 import { handleGetSimpananPokok, handleAddOrderSimpananPokok } from 'utils/financeSimpanan';
 import { handleCreateOrder } from 'utils/financeOrder';
+import useAuth from 'hooks/useAuth';
 
 type SimpananPokok = {
   id: number;
@@ -30,15 +31,16 @@ type SimpananPokok = {
 };
 
 export default function BankingSimpananPokok() {
-  const userId = 2;
-  const grossAmount = 240000;
+  const { user } = useAuth();
+  const userId = user?.id;
 
   const [simpananPokok, setSimpananPokok] = useState<SimpananPokok>();
   useEffect(() => {
     const fetchData = async () => {
       const fetchedSimpananPokok = await handleGetSimpananPokok(userId);
+      console.log(fetchedSimpananPokok);
       if (fetchedSimpananPokok.orderId === null) {
-        const createdOrder = await handleCreateOrder(userId, grossAmount);
+        const createdOrder = await handleCreateOrder(userId, fetchedSimpananPokok.amount);
         const temp = await handleAddOrderSimpananPokok(userId, createdOrder.id);
         fetchedSimpananPokok.orderId = temp.orderId;
         fetchedSimpananPokok.order = temp.order;
@@ -46,7 +48,7 @@ export default function BankingSimpananPokok() {
       setSimpananPokok(fetchedSimpananPokok);
     };
     fetchData();
-  }, []);
+  }, [userId]);
 
   return (
     <>

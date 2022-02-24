@@ -4,6 +4,7 @@ import PaymentButton from './PaymentCreation';
 
 import { handleGetSimpananWajib, handleAddOrderSimpananWajib } from 'utils/financeSimpanan';
 import { handleCreateOrder } from 'utils/financeOrder';
+import useAuth from 'hooks/useAuth';
 
 type SimpananWajib = {
   id: number;
@@ -31,15 +32,15 @@ type SimpananWajib = {
 };
 
 export default function BankingSimpananWajib() {
-  const userId = 2;
-  const grossAmount = 50000;
+  const { user } = useAuth();
+  const userId = user?.id;
 
   const [simpananWajib, setSimpananWajib] = useState<SimpananWajib>();
   useEffect(() => {
     const fetchData = async () => {
       const fetchedSimpananWajib = await handleGetSimpananWajib(userId, new Date());
       if (fetchedSimpananWajib.orderId === null) {
-        const createdOrder = await handleCreateOrder(userId, grossAmount);
+        const createdOrder = await handleCreateOrder(userId, fetchedSimpananWajib.amount);
         const temp = await handleAddOrderSimpananWajib(userId, new Date(), createdOrder.id);
         fetchedSimpananWajib.orderId = temp.orderId;
         fetchedSimpananWajib.order = temp.order;
@@ -47,7 +48,7 @@ export default function BankingSimpananWajib() {
       setSimpananWajib(fetchedSimpananWajib);
     };
     fetchData();
-  }, []);
+  }, [userId]);
 
   console.log(simpananWajib);
 

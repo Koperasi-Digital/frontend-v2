@@ -3,13 +3,13 @@ import { Grid, Container, Stack } from '@mui/material';
 // components
 import Page from '../../components/Page';
 import {
-  BankingIncome,
-  BankingExpenses,
+  // BankingIncome,
+  // BankingExpenses,
   BankingSavings,
-  BankingBalanceStatistics,
-  BankingExpensesCategories,
-  BankingBalance,
-  BankingReport
+  // BankingBalanceStatistics,
+  // BankingExpensesCategories,
+  BankingBalance
+  // BankingReport
 } from '../../components/_dashboard/general-banking';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 
@@ -40,16 +40,16 @@ export default function Finance() {
           </Grid>
           <Grid item xs={12} md={8}>
             <Stack spacing={3}>
-              <BankingBalanceStatistics />
-              <BankingExpensesCategories />
+              {/* <BankingBalanceStatistics />
+              <BankingExpensesCategories /> */}
             </Stack>
           </Grid>
 
           <Grid item xs={12} md={4}>
             <Stack spacing={3}>
-              <BankingReport />
+              {/* <BankingReport />
               <BankingIncome />
-              <BankingExpenses />
+              <BankingExpenses /> */}
             </Stack>
           </Grid>
         </Grid>
