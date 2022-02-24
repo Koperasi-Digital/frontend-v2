@@ -1,26 +1,17 @@
-import { useEffect, useState } from 'react';
-import { Button, Typography } from '@mui/material';
+import { useEffect } from 'react';
+import { Button } from '@mui/material';
 import { handleCreateTransaction } from '../../../utils/financeTransaction';
-import { handleGetOrder } from '../../../utils/financeTransaction';
 import { useSnackbar } from 'notistack';
 
 type PaymentCreationProps = {
   user_id: number;
   buttonName: string;
   transaction_details: transaction_details;
-  item_details: any;
 };
 
 type transaction_details = {
   order_id: number;
   gross_amount: number;
-};
-
-type order = {
-  id: number;
-  user_id: number;
-  grossAmount: number;
-  status: string;
 };
 
 declare global {
@@ -29,15 +20,7 @@ declare global {
   }
 }
 
-const PaymentCreation = ({
-  user_id,
-  buttonName,
-  transaction_details,
-  item_details
-}: PaymentCreationProps) => {
-  const [order, setOrder] = useState<order>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
+const PaymentCreation = ({ user_id, buttonName, transaction_details }: PaymentCreationProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -55,16 +38,6 @@ const PaymentCreation = ({
       document.body.removeChild(script);
     };
   }, []);
-
-  useEffect(() => {
-    const handleOrder = async () => {
-      const order = await handleGetOrder(transaction_details.order_id);
-      setOrder(order);
-      setIsLoading(false);
-    };
-
-    handleOrder();
-  }, [transaction_details.order_id]);
 
   const paymentFunction = async () => {
     const snapOptions = {
@@ -86,23 +59,15 @@ const PaymentCreation = ({
       onClose: function () {}
     };
 
-    const tokenName = await handleCreateTransaction(user_id, transaction_details, item_details);
+    const tokenName = await handleCreateTransaction(user_id, transaction_details);
     window.snap.pay(tokenName, snapOptions);
   };
 
   return (
     <>
-      {isLoading ? (
-        <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-          Loading
-        </Typography>
-      ) : order?.status === 'success' ? (
-        <></>
-      ) : (
-        <Button variant="contained" onClick={paymentFunction}>
-          {buttonName}
-        </Button>
-      )}
+      <Button variant="contained" onClick={paymentFunction}>
+        {buttonName}
+      </Button>
     </>
   );
 };

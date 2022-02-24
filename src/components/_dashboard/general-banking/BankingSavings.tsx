@@ -1,9 +1,8 @@
 import { styled } from '@mui/material/styles';
-import { useEffect, useState } from 'react';
-import { Box, Card, CardHeader, Stack, Typography, Link } from '@mui/material';
+import { Box, Card, CardHeader, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import PaymentButton from './PaymentCreation';
-import { handleGetOrder } from '../../../utils/financeTransaction';
+import BankingSimpananPokok from './BankingSimpananPokok';
+import BankingSimpananWajib from './BankingSimpananWajib';
 
 const RootStyle = styled(Card)(({ theme }) => ({
   boxShadow: 'none',
@@ -36,60 +35,13 @@ export default function BankingSavings() {
     status: string;
   };
 
-  const [order, setOrder] = useState<orderProps>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const handleOrder = async () => {
-      const order = await handleGetOrder(transaction_details.order_id);
-      setOrder(order);
-      setIsLoading(false);
-    };
-
-    handleOrder();
-  }, [transaction_details.order_id]);
-
   return (
     <>
       <RootStyle>
         <CardHeader title="Simpanan" />
         <Box sx={{ p: 3 }}>
-          <Box sx={{ mb: 5 }}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="overline" sx={{ color: 'text.primary' }}>
-                Pembayaran Simpanan Pokok
-              </Typography>
-              <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-                Lunas
-              </Typography>
-            </Stack>
-          </Box>
-          <Box sx={{ mb: 5 }}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="overline" sx={{ color: 'text.primary' }}>
-                Pembayaran Simpanan Wajib
-              </Typography>
-              <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-                {!isLoading && order?.status === 'success' ? 'Lunas' : 'Belum Dibayar'}
-              </Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-                periode 1/1/2022 - 31/1/2022
-              </Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-                {!isLoading && order?.status === 'success' ? '' : 'lunasi sebelum 15/1/2022'}
-              </Typography>
-              <PaymentButton
-                user_id={2}
-                buttonName="Bayar"
-                transaction_details={transaction_details}
-                item_details={item_details}
-              />
-            </Stack>
-          </Box>
+          <BankingSimpananPokok />
+          <BankingSimpananWajib />
           <Box>
             <Link component={RouterLink} to="./../member-report" sx={{ typography: 'button' }}>
               See Savings Report

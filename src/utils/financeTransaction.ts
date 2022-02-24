@@ -5,35 +5,15 @@ type transaction_details = {
   gross_amount: number;
 };
 
-type item_details = {
-  price: number;
-  quantity: number;
-  name: string;
-  category: string;
-}[];
-
 export async function handleCreateTransaction(
   user_id: number,
-  transaction_details: transaction_details,
-  item_details: item_details | null
+  transaction_details: transaction_details
 ) {
   try {
     const response = await axios.post('payment/create', {
-      user_id: user_id,
-      transaction_details: transaction_details,
-      item_details: item_details
+      transaction_details: transaction_details
     });
-    return response.data.data;
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
-}
-
-export async function handleGetOrder(order_id: number) {
-  try {
-    const response = await axios.get('order/' + order_id);
-    return response.data.data;
+    return response.data.payload;
   } catch (e) {
     console.log(e);
     return null;
