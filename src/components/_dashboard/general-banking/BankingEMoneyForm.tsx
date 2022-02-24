@@ -3,7 +3,7 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import { DialogActions, DialogContent, TextField, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
-type CalendarFormProps = {
+type BankingEMoneyFormProps = {
   handleCloseModal: VoidFunction;
   handleRegisterEMoney: any;
 };
@@ -11,7 +11,7 @@ type CalendarFormProps = {
 export default function BankingEMoneyForm({
   handleCloseModal,
   handleRegisterEMoney
-}: CalendarFormProps) {
+}: BankingEMoneyFormProps) {
   const user_id = 3;
 
   const getInitialValues = () => {

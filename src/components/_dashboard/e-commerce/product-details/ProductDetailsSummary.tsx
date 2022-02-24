@@ -3,11 +3,7 @@ import { sentenceCase } from 'change-case';
 import { useNavigate } from 'react-router-dom';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import minusFill from '@iconify/icons-eva/minus-fill';
-import twitterFill from '@iconify/icons-eva/twitter-fill';
-import linkedinFill from '@iconify/icons-eva/linkedin-fill';
-import facebookFill from '@iconify/icons-eva/facebook-fill';
 import { useFormik, Form, FormikProvider, useField } from 'formik';
-import instagramFilled from '@iconify/icons-ant-design/instagram-filled';
 import roundAddShoppingCart from '@iconify/icons-ic/round-add-shopping-cart';
 // material
 import { useTheme, styled } from '@mui/material/styles';
@@ -16,8 +12,6 @@ import {
   Grid,
   Link,
   Button,
-  Rating,
-  Tooltip,
   Divider,
   TextField,
   Typography,
@@ -26,33 +20,13 @@ import {
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // utils
-import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
+import { fCurrency } from '../../../../utils/formatNumber';
 //
 import Label from '../../../Label';
 import { MIconButton } from '../../../@material-extend';
-import ColorSinglePicker from '../../../ColorSinglePicker';
 import { Product, CartItem } from '../../../../@types/products';
 
 // ----------------------------------------------------------------------
-
-const SOCIALS = [
-  {
-    name: 'Facebook',
-    icon: <Icon icon={facebookFill} width={20} height={20} color="#1877F2" />
-  },
-  {
-    name: 'Instagram',
-    icon: <Icon icon={instagramFilled} width={20} height={20} color="#D7336D" />
-  },
-  {
-    name: 'Linkedin',
-    icon: <Icon icon={linkedinFill} width={20} height={20} color="#006097" />
-  },
-  {
-    name: 'Twitter',
-    icon: <Icon icon={twitterFill} width={20} height={20} color="#1C9CEA" />
-  }
-];
 
 const RootStyle = styled('div')(({ theme }) => ({
   padding: theme.spacing(3),

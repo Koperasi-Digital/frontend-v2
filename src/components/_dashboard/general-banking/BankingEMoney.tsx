@@ -7,7 +7,7 @@ import {
   handleRegister,
   handleGetPayAccountInfo,
   handleUnbindPayAccount
-} from '../../../utils/financeEMoney';
+} from 'utils/financeEMoney';
 import { fCurrency } from '../../../utils/formatNumber';
 
 import { DialogAnimate } from '../../animate';

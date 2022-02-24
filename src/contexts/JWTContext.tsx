@@ -1,7 +1,8 @@
 import { createContext, ReactNode, useEffect, useReducer } from 'react';
 // utils
-import axios from '../utils/axiosMock';
-import { isValidToken, setSession } from '../utils/jwt';
+import { setSession } from 'utils/jwt';
+import axios from 'utils/axios';
+import axiosMock from 'utils/axiosMock';
 // @types
 import { ActionMap, AuthState, AuthUser, JWTContextType } from '../@types/authentication';
 
@@ -78,12 +79,10 @@ function AuthProvider({ children }: { children: ReactNode }) {
     const initialize = async () => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
-
-        if (accessToken && isValidToken(accessToken)) {
-          setSession(accessToken);
-
-          const response = await axios.get('/api/account/my-account');
-          const { user } = response.data;
+        if (accessToken) {
+          await setSession(accessToken, null /* token still valid */);
+          const response = await axiosMock.get('auth/my-account');
+          const { user } = response.data.payload;
 
           dispatch({
             type: Types.Initial,
@@ -117,13 +116,13 @@ function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await axios.post('/api/account/login', {
+    const response = await axiosMock.post('auth/login', {
       email,
       password
     });
-    const { accessToken, user } = response.data;
+    const { accessToken, refreshToken, user } = response.data.payload;
 
-    setSession(accessToken);
+    setSession(accessToken, refreshToken);
     dispatch({
       type: Types.Login,
       payload: {
@@ -132,16 +131,22 @@ function AuthProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const register = async (email: string, password: string, firstName: string, lastName: string) => {
-    const response = await axios.post('/api/account/register', {
+  const register = async (
+    email: string,
+    password: string,
+    passwordConfirm: string,
+    firstName: string,
+    lastName: string
+  ) => {
+    const response = await axios.post('auth/register', {
       email,
       password,
-      firstName,
-      lastName
+      passwordConfirm,
+      displayName: firstName.concat(' ', lastName)
     });
-    const { accessToken, user } = response.data;
+    const { accessToken, refreshToken, user } = response.data.payload;
 
-    window.localStorage.setItem('accessToken', accessToken);
+    setSession(accessToken, refreshToken);
     dispatch({
       type: Types.Register,
       payload: {
@@ -151,7 +156,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    setSession(null);
+    await axiosMock.post('auth/invalidate-token');
+    setSession(null, null);
     dispatch({ type: Types.Logout });
   };
 

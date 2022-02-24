@@ -31,13 +31,20 @@ const sidebarConfig = [
     items: [
       { title: 'dashboard', path: PATH_DASHBOARD.general.dashboard, icon: ICONS.dashboard },
       { title: 'activities', path: PATH_DASHBOARD.general.activities, icon: ICONS.calendar },
-      { title: 'blogs', path: PATH_DASHBOARD.general.blogs, icon: ICONS.blog },
+      { title: 'Forum', path: PATH_DASHBOARD.general.forum, icon: ICONS.chat },
+      {
+        title: 'blogs',
+        path: PATH_DASHBOARD.general.blogs,
+        icon: ICONS.blog,
+        accessibleRoles: ['CUSTOMER']
+      },
       { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq }
     ]
   },
   // MANAGEMENT
   {
     subheader: 'management',
+    accessibleRoles: ['ADMIN'],
     items: [
       // MANAGEMENT : USER
       {
@@ -91,6 +98,7 @@ const sidebarConfig = [
   },
   {
     subheader: 'finance',
+    accessibleRoles: ['ADMIN'],
     items: [
       { title: 'home', path: PATH_DASHBOARD.finance.home, icon: ICONS.banking },
       { title: 'report', path: PATH_DASHBOARD.finance.report, icon: ICONS.banking },
@@ -105,6 +113,7 @@ const sidebarConfig = [
   // E-COMMERCE
   {
     subheader: 'e-commerce',
+    accessibleRoles: ['CUSTOMER'],
     items: [
       { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop, icon: ICONS.cart },
       { title: 'product', path: PATH_DASHBOARD.eCommerce.productById, icon: ICONS.cart },

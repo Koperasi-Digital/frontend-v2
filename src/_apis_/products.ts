@@ -90,14 +90,14 @@ const products = [...Array(12)].map((_, index) => ({
     (index === 23 && PRODUCT_COLOR.slice(4, 6)) ||
     (index === 24 && PRODUCT_COLOR.slice(5, 6)) ||
     PRODUCT_COLOR,
-  status: index % 3 ? sample(['new', '', '', '', '', '']) : 'sale',
+  status: index % 3 ? sample(['Active', '', '', '', '', '']) : 'Low Stock',
   inventoryType: sample(['in_stock', 'out_of_stock', 'low_stock']),
   sizes: PRODUCT_SIZE,
   available: index % 3 === 0 ? random(19, 100) : 2,
   description: PRODUCT_DESCRIPTION,
   sold: random(999),
   createdAt: mockData.time(index),
-  category: sample(['Shose', 'Apparel', 'Accessories']),
+  category: sample(['Ayam', 'Infrastruktur', 'Pakan']),
   gender: sample(['Men', 'Women', 'Kids'])
 }));
 

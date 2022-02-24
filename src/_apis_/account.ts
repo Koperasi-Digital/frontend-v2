@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 // utils
 import fakeRequest from '../utils/fakeRequest';
 import { verify, sign } from '../utils/jwt';
@@ -14,10 +13,9 @@ const JWT_EXPIRES_IN = '5 days';
 
 const users: User[] = [
   {
-    id: '8864c717-587d-472a-929a-8e5f298024da-0',
-    displayName: 'John Doe',
-    email: 'demo@coopchick.cc',
-    password: 'demo1234',
+    id: 1,
+    displayName: 'Walter White',
+    email: 'admin@admin.com',
     photoURL: '/static/mock-images/avatars/avatar_default.jpg',
     phoneNumber: '+62 8123123123',
     country: 'Indonesia',
@@ -25,34 +23,49 @@ const users: User[] = [
     state: 'West Java',
     city: 'Bandung',
     zipCode: '40132',
-    about: 'Praesent turpis. Phasellus viverra nulla ut metus varius laoreet. Phasellus tempus.',
-    role: 'Admin',
-    isPublic: true
+    role: {
+      id: 1,
+      name: 'ADMIN',
+      description: 'Admin Koperasi'
+    }
+  },
+  {
+    id: 2,
+    email: 'customer@customer.com',
+    displayName: 'Jesse Pinkman',
+    photoURL: null,
+    phoneNumber: null,
+    country: 'Indonesia',
+    address: null,
+    state: null,
+    city: null,
+    zipCode: null,
+    role: {
+      id: 2,
+      name: 'CUSTOMER',
+      description: 'E-Commerce Customer'
+    }
   }
 ];
 
 // ----------------------------------------------------------------------
 
-mock.onPost('/api/account/login').reply(async (config) => {
+mock.onPost('auth/login').reply(async (config) => {
   try {
     await fakeRequest(1000);
 
-    const { email, password } = JSON.parse(config.data);
+    const { email } = JSON.parse(config.data);
     const user = users.find((_user) => _user.email === email);
 
     if (!user) {
       return [400, { message: 'There is no user corresponding to the email address.' }];
     }
 
-    if (user.password !== password) {
-      return [400, { message: 'Wrong password' }];
-    }
-
     const accessToken = sign({ userId: user.id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN
     });
 
-    return [200, { accessToken, user }];
+    return [200, { payload: { accessToken, user } }];
   } catch (error) {
     console.error(error);
     return [500, { message: 'Internal server error' }];
@@ -65,7 +78,7 @@ mock.onPost('/api/account/register').reply(async (config) => {
   try {
     await fakeRequest(1000);
 
-    const { email, password, firstName, lastName } = JSON.parse(config.data);
+    const { email, firstName, lastName } = JSON.parse(config.data);
     let user = users.find((_user) => _user.email === email);
 
     if (user) {
@@ -73,10 +86,10 @@ mock.onPost('/api/account/register').reply(async (config) => {
     }
 
     user = {
-      id: uuidv4(),
+      id: 3,
       displayName: `${firstName} ${lastName}`,
       email,
-      password,
+      // password,
       photoURL: null,
       phoneNumber: null,
       country: null,
@@ -84,9 +97,11 @@ mock.onPost('/api/account/register').reply(async (config) => {
       state: null,
       city: null,
       zipCode: null,
-      about: null,
-      role: 'user',
-      isPublic: true
+      role: {
+        id: 2,
+        name: 'CUSTOMER',
+        description: 'E-Commerce Customer'
+      }
     };
 
     const accessToken = sign({ userId: user.id }, JWT_SECRET, {
@@ -102,7 +117,7 @@ mock.onPost('/api/account/register').reply(async (config) => {
 
 // ----------------------------------------------------------------------
 
-mock.onGet('/api/account/my-account').reply((config) => {
+mock.onGet('auth/my-account').reply((config) => {
   try {
     const { Authorization } = config.headers;
 
@@ -119,9 +134,13 @@ mock.onGet('/api/account/my-account').reply((config) => {
       return [401, { message: 'Invalid authorization token' }];
     }
 
-    return [200, { user }];
+    return [200, { payload: { user } }];
   } catch (error) {
     console.error(error);
     return [500, { message: 'Internal server error' }];
   }
+});
+
+mock.onPost('auth/invalidate-token').reply((config) => {
+  return [200, { message: 'success' }];
 });
