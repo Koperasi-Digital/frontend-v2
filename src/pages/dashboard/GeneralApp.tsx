@@ -11,6 +11,7 @@ import { Calendar } from 'components/_dashboard/calendar';
 import { AppWelcome, AppTotalActive, RecentUsers } from 'components/_dashboard/general-app';
 import {
   BankingSavings,
+  BankingSaldo,
   BankingEMoney,
   BankingMemberSimpananPokok,
   BankingMemberSimpananWajib
@@ -44,6 +45,7 @@ function UserDashboard() {
         <BankingSavings />
       </Grid>
       <Grid item xs={12} md={4}>
+        <BankingSaldo />
         <BankingEMoney />
       </Grid>
     </Grid>

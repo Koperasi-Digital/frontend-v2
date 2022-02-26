@@ -98,11 +98,21 @@ const sidebarConfig = [
   },
   {
     subheader: 'finance',
-    accessibleRoles: ['ADMIN'],
+    accessibleRoles: ['CUSTOMER'],
     items: [
-      { title: 'home', path: PATH_DASHBOARD.finance.home, icon: ICONS.banking },
+      {
+        title: 'home',
+        path: PATH_DASHBOARD.finance.home,
+        icon: ICONS.banking,
+        accessibleRoles: ['MEMBER']
+      },
       { title: 'report', path: PATH_DASHBOARD.finance.report, icon: ICONS.banking },
-      { title: 'member report', path: PATH_DASHBOARD.finance.memberReport, icon: ICONS.banking },
+      {
+        title: 'member report',
+        path: PATH_DASHBOARD.finance.memberReport,
+        icon: ICONS.banking,
+        accessibleRoles: ['MEMBER']
+      },
       {
         title: 'disbursement request',
         path: PATH_DASHBOARD.finance.disbursementRequest,

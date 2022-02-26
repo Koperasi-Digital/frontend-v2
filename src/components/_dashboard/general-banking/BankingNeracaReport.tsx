@@ -48,7 +48,7 @@ export default function BankingNeracaReport({ dateValue }: BankingNeracaReportPr
     id: number;
     kas: number;
     modal: number;
-    modal_calc: number;
+    modalCalc: number;
     periode: string;
     persediaan: number;
     prive: number;
@@ -152,7 +152,7 @@ export default function BankingNeracaReport({ dateValue }: BankingNeracaReportPr
                   <RowResultStyle>
                     <TableCell width={10}></TableCell>
                     <TableCell align="left">Ekuitas</TableCell>
-                    <TableCell align="left">{fCurrency(neracaData.modal_calc)}</TableCell>
+                    <TableCell align="left">{fCurrency(neracaData.modalCalc)}</TableCell>
                   </RowResultStyle>
                 </TableBody>
               </Table>

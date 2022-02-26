@@ -20,7 +20,7 @@ export async function handleGetNeracaInfo(dateValue: Date) {
       : '';
     const response = await axios.get('laporanNeraca/' + user_id + '/' + periodeString);
     console.log(response);
-    return response.data.data;
+    return response.data.payload;
   } catch (e) {
     console.log(e);
     return undefined;
@@ -253,7 +253,7 @@ export async function handleGetLabaRugiInfo(dateValue: Date) {
       ? dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1'
       : '';
     const response = await axios.get('laporanLabaRugi/' + user_id + '/' + periodeString);
-    return response.data.data;
+    return response.data.payload;
   } catch (e) {
     console.log(e);
     return undefined;
@@ -347,7 +347,7 @@ export async function handleGetArusKasInfo(dateValue: Date) {
       : '';
     console.log(periodeString);
     const response = await axios.get('laporanArusKas/' + user_id + '/' + periodeString);
-    return response.data.data;
+    return response.data.payload;
   } catch (e) {
     console.log(e);
     return undefined;
