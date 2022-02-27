@@ -144,7 +144,6 @@ export default function BankingMemberSimpananPokok() {
 
   const handleSearch = (filterName: string) => {
     handleClose();
-
     setFilterMode(filterName);
 
     if (filterName === 'All') {
@@ -152,7 +151,11 @@ export default function BankingMemberSimpananPokok() {
     } else {
       let result = [];
       result = allSimpananPokokData.filter((data) => {
-        return data.order.status === filterName;
+        if (filterName !== 'LUNAS') {
+          return data.order.status !== 'success';
+        } else {
+          return data.order.status === 'success';
+        }
       });
       setFilteredSimpananPokokData(result);
     }
@@ -220,7 +223,7 @@ export default function BankingMemberSimpananPokok() {
                 All
               </MenuItem>
               <MenuItem
-                onClick={() => handleSearch('success')}
+                onClick={() => handleSearch('LUNAS')}
                 sx={{ typography: 'body2', py: 1, px: 2.5 }}
               >
                 Lunas

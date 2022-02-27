@@ -162,7 +162,11 @@ export default function BankingMemberSimpananWajib() {
     } else {
       let result = [];
       result = allSimpananWajibData.filter((data) => {
-        return data.order.status === filterName;
+        if (filterName !== 'LUNAS') {
+          return data.order.status !== 'success';
+        } else {
+          return data.order.status === 'success';
+        }
       });
       setFilteredSimpananWajibData(result);
     }
