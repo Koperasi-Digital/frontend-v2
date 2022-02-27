@@ -5,10 +5,8 @@ import Page from '../../components/Page';
 import {
   BankingIncome,
   BankingExpenses,
-  BankingSavings,
   BankingBalanceStatistics,
   BankingExpensesCategories,
-  BankingBalance,
   BankingReport
 } from '../../components/_dashboard/general-banking';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -32,12 +30,6 @@ export default function Finance() {
           ]}
         />
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <BankingSavings />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <BankingBalance />
-          </Grid>
           <Grid item xs={12} md={8}>
             <Stack spacing={3}>
               <BankingBalanceStatistics />

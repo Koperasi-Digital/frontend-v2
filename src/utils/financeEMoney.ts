@@ -1,4 +1,4 @@
-import axios from './axios';
+import axios from './axiosMock';
 
 export async function handleGetPayAccountInfo(account_id: string) {
   try {
@@ -23,7 +23,7 @@ export async function handleRegister(
       gopay_partner: {
         phone_number: phone_number,
         country_code: country_code,
-        redirect_url: process.env.REACT_APP_ENDPOINT + 'dashboard/finance/home'
+        redirect_url: process.env.REACT_APP_ENDPOINT + 'dashboard/app'
         // redirect_url: PATH_DASHBOARD.finance.home
       }
     });

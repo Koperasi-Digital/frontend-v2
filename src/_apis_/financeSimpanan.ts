@@ -118,3 +118,78 @@ mock.onGet(/simpananWajib\/list\/.*/).reply((config) => {
     }
   ];
 });
+
+mock.onGet(/simpananPokok\/show\/.*/).reply((config) => {
+  return [
+    200,
+    {
+      message: 'Simpanan pokok found',
+      payload: {
+        id: 1,
+        userId: 2,
+        orderId: 69,
+        amount: 100000,
+        user: {
+          id: 2,
+          email: 'customer@customer.com',
+          password: '$2a$08$bJJqIN2U4ykSvAIO2udIqe8eSjVY1rjyPG3/nzNhcrJkjZXMFosVS',
+          displayName: 'Jesse Pinkman',
+          photoURL: null,
+          phoneNumber: null,
+          country: 'Indonesia',
+          address: null,
+          state: null,
+          city: null,
+          zipCode: null,
+          created_at: '2022-02-27T02:55:37.149Z',
+          updated_at: '2022-02-27T02:55:37.466Z'
+        },
+        order: {
+          id: 69,
+          user_id: 2,
+          timestamp: '2022-02-27T02:56:44.907Z',
+          total_cost: 100000,
+          status: 'success'
+        }
+      }
+    }
+  ];
+});
+
+mock.onGet(/simpananWajib\/show\/.*\/.*/).reply((config) => {
+  return [
+    200,
+    {
+      message: 'Simpanan wajib found',
+      payload: {
+        id: 1,
+        userId: 2,
+        orderId: 70,
+        amount: 50000,
+        period: '2022-02-01T00:00:00.000Z',
+        user: {
+          id: 2,
+          email: 'customer@customer.com',
+          password: '$2a$08$bJJqIN2U4ykSvAIO2udIqe8eSjVY1rjyPG3/nzNhcrJkjZXMFosVS',
+          displayName: 'Jesse Pinkman',
+          photoURL: null,
+          phoneNumber: null,
+          country: 'Indonesia',
+          address: null,
+          state: null,
+          city: null,
+          zipCode: null,
+          created_at: '2022-02-27T02:55:37.149Z',
+          updated_at: '2022-02-27T02:55:37.466Z'
+        },
+        order: {
+          id: 70,
+          user_id: 2,
+          timestamp: '2022-02-27T02:56:44.912Z',
+          total_cost: 50000,
+          status: 'success'
+        }
+      }
+    }
+  ];
+});

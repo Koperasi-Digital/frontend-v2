@@ -113,12 +113,24 @@ export default function Router() {
           path: 'finance',
           children: [
             { element: <Navigate to="/dashboard/finance/home" replace /> },
-            { path: 'home', element: <Finance /> },
+            {
+              path: 'home',
+              element: (
+                <RoleBasedGuard accessibleRoles={['MEMBER']}>
+                  <Finance />
+                </RoleBasedGuard>
+              )
+            },
             { path: 'report', element: <TransactionsReport /> },
-            { path: 'member-report', element: <MemberReport /> },
-            { path: 'disbursement-approval', element: <DisbursementApproval /> },
-            { path: 'create-disbursement-request', element: <DisbursementRequest /> },
-            { path: 'disbursement-request-list', element: <DisbursementRequestList /> }
+            {
+              path: 'member-report',
+              element: (
+                <RoleBasedGuard accessibleRoles={['MEMBER']}>
+                  <MemberReport />
+                </RoleBasedGuard>
+              )
+            },
+            { path: 'create-disbursement-request', element: <DisbursementRequest /> }
           ]
         },
         {
@@ -127,9 +139,30 @@ export default function Router() {
             {
               element: <Navigate to="/dashboard/management-finance/home" replace />
             },
-            { path: 'home', element: <AdminFinance /> },
-            { path: 'disbursement-approval', element: <DisbursementApproval /> },
-            { path: 'disbursement-request-list', element: <DisbursementRequestList /> }
+            {
+              path: 'home',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <AdminFinance />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'disbursement-approval',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DisbursementApproval />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'disbursement-request-list',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DisbursementRequestList />
+                </RoleBasedGuard>
+              )
+            }
           ]
         },
         {

@@ -1,4 +1,4 @@
-import axios from './axios';
+import axios from './axiosMock';
 
 export async function handleCreateNeracaReport(user_id: number, periode: string) {
   try {

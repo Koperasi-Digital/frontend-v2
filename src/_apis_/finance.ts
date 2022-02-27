@@ -10,7 +10,7 @@ mock.onPost('emoney/createPayAccount').reply((config) => {
     200,
     {
       message: 'EMoney successfully created.',
-      data: {
+      payload: {
         status_code: '200',
         payment_type: 'gopay',
         account_id: '3e571a8d-39a0-4232-94b5-82028dcd03ea',
@@ -25,7 +25,7 @@ mock.onGet(/emoney\/getPayAccount\/.*/).reply((config) => {
     200,
     {
       message: 'EMoney info successfully fetched.',
-      data: {
+      payload: {
         status_code: '200',
         payment_type: 'gopay',
         account_id: '3e571a8d-39a0-4232-94b5-82028dcd03ea',
@@ -64,7 +64,7 @@ mock.onPost(/emoney\/unbindPayAccount\/.*/).reply((config) => {
     200,
     {
       message: 'EMoney unbind called.',
-      data: {
+      payload: {
         status_code: '204',
         payment_type: 'gopay',
         account_id: 'da2d455b-0f26-45ff-ad65-18149006cf22',
@@ -83,8 +83,8 @@ mock.onGet(/laporanLabaRugi\/.*\/.*/).reply((config) => {
   return [
     200,
     {
-      message: 'EMoney unbind called.',
-      data: {
+      message: 'Laporan laba rugi found.',
+      payload: {
         id: 3,
         user_id: 2,
         periode: '2022-02-01T00:00:00.000Z',
@@ -101,8 +101,8 @@ mock.onGet(/laporanNeraca\/.*\/.*/).reply((config) => {
   return [
     200,
     {
-      message: 'EMoney unbind called.',
-      data: undefined
+      message: 'Laporan neraca found.',
+      payload: undefined
     }
   ];
 });
@@ -115,8 +115,8 @@ mock.onGet(/laporanArusKas\/.*\/.*/).reply((config) => {
   return [
     200,
     {
-      message: 'EMoney unbind called.',
-      data: {
+      message: 'Laporan arus kas found.',
+      payload: {
         id: 3,
         user_id: 2,
         periode: '2022-02-01T00:00:00.000Z',
@@ -134,7 +134,7 @@ mock.onGet(/order\/.*/).reply((config) => {
     200,
     {
       message: 'Order found',
-      data: {
+      payload: {
         id: 19,
         user_id: 2,
         grossAmount: 10000,
