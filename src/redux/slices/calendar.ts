@@ -165,7 +165,7 @@ export function deleteEvent(eventId: string) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.post('/api/calendar/events/delete', { eventId });
+      await axios.delete(`activities/${eventId}`);
       dispatch(slice.actions.deleteEventSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

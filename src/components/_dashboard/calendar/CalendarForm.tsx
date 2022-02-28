@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { merge, startCase } from 'lodash';
+import { isEmpty, merge, startCase } from 'lodash';
 import { isBefore } from 'date-fns';
 import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack';
@@ -67,7 +67,7 @@ type CalendarFormProps = {
 export default function CalendarForm({ event, range, onCancel }: CalendarFormProps) {
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
-  const isCreating = !event;
+  const isCreating = !event || isEmpty(event);
 
   const EventSchema = Yup.object().shape({
     title: Yup.string().max(255).required('Title is required'),
@@ -228,7 +228,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
 
         <DialogActions>
           {!isCreating && (
-            <Tooltip title="Delete Event">
+            <Tooltip title="Delete Activity">
               <IconButton onClick={handleDelete}>
                 <Icon icon={trash2Fill} width={20} height={20} />
               </IconButton>
