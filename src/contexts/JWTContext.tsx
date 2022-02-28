@@ -2,7 +2,7 @@ import { createContext, ReactNode, useEffect, useReducer } from 'react';
 // utils
 import { setSession } from 'utils/jwt';
 import axios from 'utils/axios';
-import axiosMock from 'utils/axiosMock';
+// import axiosMock from 'utils/axiosMock';
 // @types
 import { ActionMap, AuthState, AuthUser, JWTContextType } from '../@types/authentication';
 
@@ -81,7 +81,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
         const accessToken = window.localStorage.getItem('accessToken');
         if (accessToken) {
           await setSession(accessToken, null /* token still valid */);
-          const response = await axiosMock.get('auth/my-account');
+          const response = await axios.get('auth/my-account');
           const { user } = response.data.payload;
 
           dispatch({
@@ -116,7 +116,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await axiosMock.post('auth/login', {
+    const response = await axios.post('auth/login', {
       email,
       password
     });
@@ -156,7 +156,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    await axiosMock.post('auth/invalidate-token');
+    await axios.post('auth/invalidate-token');
     setSession(null, null);
     dispatch({ type: Types.Logout });
   };
