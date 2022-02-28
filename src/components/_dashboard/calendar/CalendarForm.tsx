@@ -17,32 +17,20 @@ import {
   DialogContent,
   DialogActions,
   FormControl,
-  FormControlLabel
+  FormControlLabel,
+  Autocomplete
 } from '@mui/material';
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 import { EventInput } from '@fullcalendar/common';
 // redux
 import { useDispatch } from '../../../redux/store';
 import { createEvent, updateEvent, deleteEvent } from '../../../redux/slices/calendar';
+// utils
+import { EVENT_COLOR } from 'utils/calendar';
 
 // ----------------------------------------------------------------------
 
-const COLOR_OPTIONS = [
-  '#00AB55', // theme.palette.primary.main,
-  '#1890FF', // theme.palette.info.main,
-  '#94D82D', // theme.palette.success.main,
-  '#FFC107', // theme.palette.warning.main,
-  '#FF4842', // theme.palette.error.main
-  '#04297A', // theme.palette.info.darker
-  '#7A0C2E' // theme.palette.error.darker
-];
-
 const EVENT_TYPE_OPTIONS: string[] = ['koperasi', 'peternakan'];
-
-const EVENT_COLOR = {
-  koperasi: COLOR_OPTIONS[0],
-  peternakan: COLOR_OPTIONS[3]
-};
 
 const getInitialValues = (event: EventInput, range: { start: Date; end: Date } | null) => {
   // eslint-disable-next-line no-underscore-dangle
@@ -52,9 +40,10 @@ const getInitialValues = (event: EventInput, range: { start: Date; end: Date } |
     type: 'koperasi',
     textColor: EVENT_COLOR.koperasi,
     allDay: false,
-    pushNotification: false,
+    includeNotification: false,
     start: range ? new Date(range.start) : new Date(),
-    end: range ? new Date(range.end) : new Date()
+    end: range ? new Date(range.end) : new Date(),
+    invitedUsersEmail: []
   };
 
   if (event || range) {
@@ -91,14 +80,14 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       try {
         const newEvent = {
-          title: values.title,
+          name: values.title,
           description: values.description,
           type: values.type,
-          textColor: EVENT_COLOR[values.type as keyof typeof EVENT_COLOR],
           allDay: values.allDay,
-          pushNotification: values.pushNotification,
-          start: values.start,
-          end: values.end
+          includeNotification: values.includeNotification,
+          startAt: values.start,
+          endAt: values.end,
+          invitedUsersEmail: values.invitedUsersEmail
         };
         if (event.id) {
           dispatch(updateEvent(event.id, newEvent));
@@ -173,30 +162,6 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
             </Select>
           </FormControl>
 
-          <MobileDateTimePicker
-            label="Start date"
-            value={values.start}
-            inputFormat="dd/MM/yyyy hh:mm a"
-            onChange={(date) => setFieldValue('start', date)}
-            renderInput={(params) => <TextField {...params} fullWidth sx={{ mb: 3 }} />}
-          />
-
-          <MobileDateTimePicker
-            label="End date"
-            value={values.end}
-            inputFormat="dd/MM/yyyy hh:mm a"
-            onChange={(date) => setFieldValue('end', date)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                fullWidth
-                error={Boolean(isDateError)}
-                helperText={isDateError && 'End date must be later than start date'}
-                sx={{ mb: 3 }}
-              />
-            )}
-          />
-
           <FormControlLabel
             control={<Switch checked={values.allDay} {...getFieldProps('allDay')} />}
             label="All Day"
@@ -205,10 +170,59 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
 
           <FormControlLabel
             control={
-              <Switch checked={values.pushNotification} {...getFieldProps('pushNotification')} />
+              <Switch
+                checked={values.includeNotification}
+                {...getFieldProps('includeNotification')}
+              />
             }
             label="Push Notification"
             sx={{ mb: 3 }}
+          />
+
+          {!values.allDay && (
+            <>
+              <MobileDateTimePicker
+                label="Start date"
+                value={values.start}
+                inputFormat="dd/MM/yyyy hh:mm a"
+                onChange={(date) => setFieldValue('start', date)}
+                renderInput={(params) => <TextField {...params} fullWidth sx={{ mb: 3 }} />}
+              />
+
+              <MobileDateTimePicker
+                label="End date"
+                value={values.end}
+                inputFormat="dd/MM/yyyy hh:mm a"
+                onChange={(date) => setFieldValue('end', date)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    error={Boolean(isDateError)}
+                    helperText={isDateError && 'End date must be later than start date'}
+                    sx={{ mb: 3 }}
+                  />
+                )}
+              />
+            </>
+          )}
+
+          <Autocomplete
+            multiple
+            options={[]}
+            filterSelectedOptions
+            freeSolo
+            onChange={(_, value) => setFieldValue('invitedUsersEmail', value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                fullWidth
+                label="Invited User(s)"
+                error={Boolean(touched.invitedUsersEmail && errors.invitedUsersEmail)}
+                helperText={touched.invitedUsersEmail && errors.invitedUsersEmail}
+                sx={{ mb: 3 }}
+              />
+            )}
           />
         </DialogContent>
 

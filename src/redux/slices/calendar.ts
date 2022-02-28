@@ -3,9 +3,11 @@ import { createSlice } from '@reduxjs/toolkit';
 import { EventInput } from '@fullcalendar/common';
 import { dispatch } from '../store';
 // utils
-import axios from '../../utils/axiosMock';
+import axios from '../../utils/axios';
+// import axiosMock from '../../utils/axiosMock';
 //
-import { CalendarState } from '../../@types/calendar';
+import { CalendarApiEvent, CalendarState } from '../../@types/calendar';
+import { toCalendarEvent } from 'utils/calendar';
 
 // ----------------------------------------------------------------------
 
@@ -107,8 +109,12 @@ export function getEvents() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/calendar/events');
-      dispatch(slice.actions.getEventsSuccess(response.data.events));
+      const response = await axios.get('activities');
+      dispatch(
+        slice.actions.getEventsSuccess(
+          response.data.payload.map((event: CalendarApiEvent) => toCalendarEvent(event))
+        )
+      );
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -121,8 +127,8 @@ export function createEvent(newEvent: Omit<EventInput, 'id'>) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/api/calendar/events/new', newEvent);
-      dispatch(slice.actions.createEventSuccess(response.data.event));
+      const response = await axios.post('activities', newEvent);
+      dispatch(slice.actions.createEventSuccess(toCalendarEvent(response.data.payload)));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
