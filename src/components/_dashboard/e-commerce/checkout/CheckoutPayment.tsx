@@ -33,6 +33,7 @@ import CheckoutPaymentMethods from './CheckoutPaymentMethods';
 import { handleCreateOrder, handleEditOrder, handleGetOrder } from 'utils/financeOrder';
 import { handleCreateTransaction } from 'utils/financeTransaction';
 import { PATH_DASHBOARD } from 'routes/paths';
+import useAuth from 'hooks/useAuth';
 
 type transaction_details = {
   order_id: number;
@@ -88,7 +89,11 @@ const CARDS_OPTIONS: CardOption[] = [
 export default function CheckoutPayment() {
   const { enqueueSnackbar } = useSnackbar();
 
-  const userId = 2;
+  const { user } = useAuth();
+  const userId = user?.id;
+
+  const shopOwnerId = 1; //TODO: replace using user id of shop owner
+
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
   console.log(checkout);
   const dispatch = useDispatch();
@@ -166,7 +171,7 @@ export default function CheckoutPayment() {
 
   const fetchData = async () => {
     if (!orderId) {
-      const createdOrder = await handleCreateOrder(userId, Math.floor(total));
+      const createdOrder = await handleCreateOrder(userId, Math.floor(total), shopOwnerId);
       dispatch(addCheckoutOrder(createdOrder.id));
       return createdOrder;
     } else {

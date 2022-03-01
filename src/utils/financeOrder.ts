@@ -1,10 +1,11 @@
 import axios from './axios';
 
-export async function handleCreateOrder(userId: number, grossAmount: number) {
+export async function handleCreateOrder(userId: number, grossAmount: number, shopOwnerId?: number) {
   try {
     const response = await axios.post('order/create', {
       user_id: userId,
-      total_cost: grossAmount
+      total_cost: grossAmount,
+      dest_user_id: shopOwnerId
     });
     return response.data.payload;
   } catch (e) {
