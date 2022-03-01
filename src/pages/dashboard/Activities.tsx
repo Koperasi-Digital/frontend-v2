@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { useEffect } from 'react';
 // material
-import { Button, Container, DialogTitle } from '@mui/material';
+import { Button, Container } from '@mui/material';
 // redux
 import { RootState, useDispatch, useSelector } from '../../redux/store';
 import { getEvents, openModal, closeModal } from '../../redux/slices/calendar';
@@ -61,8 +61,6 @@ export default function Activities() {
         <CalendarComponent />
 
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
-          <DialogTitle>{selectedEvent ? 'Edit Activity' : 'Add Activity'}</DialogTitle>
-
           <CalendarForm
             event={selectedEvent || {}}
             range={selectedRange}

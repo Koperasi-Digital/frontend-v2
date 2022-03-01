@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import * as Yup from 'yup';
 import { isEmpty, merge, startCase } from 'lodash';
 import { isBefore } from 'date-fns';
 import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack';
 import trash2Fill from '@iconify/icons-eva/trash-2-fill';
+import edit2Fill from '@iconify/icons-eva/edit-2-fill';
 import { useFormik, Form, FormikProvider } from 'formik';
 import {
   Box,
@@ -14,17 +16,28 @@ import {
   TextField,
   IconButton,
   InputLabel,
+  DialogTitle,
   DialogContent,
   DialogActions,
   FormControl,
   FormControlLabel,
-  Autocomplete
+  Autocomplete,
+  Stack
 } from '@mui/material';
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 import { EventInput } from '@fullcalendar/common';
+// hooks
+import useAuth from 'hooks/useAuth';
+// types
+import { User } from '../../../@types/account';
 // redux
 import { useDispatch } from '../../../redux/store';
-import { createEvent, updateEvent, deleteEvent } from '../../../redux/slices/calendar';
+import {
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  deleteUserFromEvent
+} from '../../../redux/slices/calendar';
 // utils
 import { EVENT_COLOR } from 'utils/calendar';
 
@@ -43,7 +56,7 @@ const getInitialValues = (event: EventInput, range: { start: Date; end: Date } |
     includeNotification: false,
     start: range ? new Date(range.start) : new Date(),
     end: range ? new Date(range.end) : new Date(),
-    invitedUsersEmail: []
+    invitedUsersEmail: event && event.users ? event.users.map((user: User) => user.email) : []
   };
 
   if (event || range) {
@@ -65,9 +78,12 @@ type CalendarFormProps = {
 };
 
 export default function CalendarForm({ event, range, onCancel }: CalendarFormProps) {
+  const { user } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const isCreating = !event || isEmpty(event);
+  const isOrganizer = isCreating || user?.id === event.createdBy.id;
+  const [isReadOnly, setIsReadOnly] = useState(!isCreating);
 
   const EventSchema = Yup.object().shape({
     title: Yup.string().max(255).required('Title is required'),
@@ -112,7 +128,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
     if (!event.id) return;
     try {
       onCancel();
-      dispatch(deleteEvent(event.id));
+      dispatch(isOrganizer ? deleteEvent(event.id) : deleteUserFromEvent(event.id));
       enqueueSnackbar('Delete activity success', { variant: 'success' });
     } catch (error) {
       console.error(error);
@@ -121,8 +137,24 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
 
   const isDateError = isBefore(new Date(values.end), new Date(values.start));
 
+  const renderTitle = () => {
+    if (event && !isEmpty(event)) {
+      return isReadOnly ? 'Detail Activity' : 'Edit Activity';
+    }
+    return 'Add Activity';
+  };
+
+  const handleClickCancelButton = () => {
+    if (!isCreating && !isReadOnly) {
+      setIsReadOnly(true);
+    } else {
+      onCancel();
+    }
+  };
+
   return (
     <FormikProvider value={formik}>
+      <DialogTitle>{renderTitle()}</DialogTitle>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <DialogContent sx={{ pb: 0, overflowY: 'unset' }}>
           <TextField
@@ -132,6 +164,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
             error={Boolean(touched.title && errors.title)}
             helperText={touched.title && errors.title}
             sx={{ mb: 3 }}
+            disabled={isReadOnly}
           />
 
           <TextField
@@ -143,9 +176,10 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
             error={Boolean(touched.description && errors.description)}
             helperText={touched.description && errors.description}
             sx={{ mb: 3 }}
+            disabled={isReadOnly}
           />
 
-          <FormControl fullWidth>
+          <FormControl fullWidth disabled={isReadOnly}>
             <InputLabel>Type</InputLabel>
             <Select
               label="Type"
@@ -166,6 +200,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
             control={<Switch checked={values.allDay} {...getFieldProps('allDay')} />}
             label="All Day"
             sx={{ mb: 3 }}
+            disabled={isReadOnly}
           />
 
           <FormControlLabel
@@ -177,16 +212,18 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
             }
             label="Push Notification"
             sx={{ mb: 3 }}
+            disabled={isReadOnly}
           />
 
           {!values.allDay && (
-            <>
+            <Stack direction="row" spacing={1}>
               <MobileDateTimePicker
                 label="Start date"
                 value={values.start}
                 inputFormat="dd/MM/yyyy hh:mm a"
                 onChange={(date) => setFieldValue('start', date)}
-                renderInput={(params) => <TextField {...params} fullWidth sx={{ mb: 3 }} />}
+                renderInput={(params) => <TextField {...params} sx={{ mb: 3 }} />}
+                disabled={isReadOnly}
               />
 
               <MobileDateTimePicker
@@ -197,14 +234,14 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    fullWidth
                     error={Boolean(isDateError)}
                     helperText={isDateError && 'End date must be later than start date'}
                     sx={{ mb: 3 }}
                   />
                 )}
+                disabled={isReadOnly}
               />
-            </>
+            </Stack>
           )}
 
           <Autocomplete
@@ -213,39 +250,68 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
             filterSelectedOptions
             freeSolo
             onChange={(_, value) => setFieldValue('invitedUsersEmail', value)}
+            value={values.invitedUsersEmail}
             renderInput={(params) => (
               <TextField
                 {...params}
                 fullWidth
-                label="Invited User(s)"
+                label="Guest(s)"
                 error={Boolean(touched.invitedUsersEmail && errors.invitedUsersEmail)}
                 helperText={touched.invitedUsersEmail && errors.invitedUsersEmail}
                 sx={{ mb: 3 }}
               />
             )}
+            disabled={isReadOnly}
           />
+
+          {event && event.createdBy && (
+            <TextField
+              fullWidth
+              disabled
+              label="Organizer"
+              value={`${event.createdBy.displayName} (${event.createdBy.email})`}
+              sx={{ mb: 3 }}
+            />
+          )}
         </DialogContent>
 
         <DialogActions>
-          {!isCreating && (
-            <Tooltip title="Delete Activity">
-              <IconButton onClick={handleDelete}>
-                <Icon icon={trash2Fill} width={20} height={20} />
-              </IconButton>
-            </Tooltip>
+          {!isCreating && isReadOnly && (
+            <>
+              <Tooltip title={isOrganizer ? 'Delete Activity' : 'Remove Myself'}>
+                <IconButton onClick={handleDelete}>
+                  <Icon icon={trash2Fill} width={20} height={20} />
+                </IconButton>
+              </Tooltip>
+              {isOrganizer && (
+                <Tooltip title="Edit Activity">
+                  <IconButton onClick={() => setIsReadOnly(false)}>
+                    <Icon icon={edit2Fill} width={20} height={20} />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </>
           )}
           <Box sx={{ flexGrow: 1 }} />
-          <Button type="button" variant="outlined" color="inherit" onClick={onCancel}>
-            Cancel
-          </Button>
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-            loadingIndicator="Loading..."
+          <Button
+            type="button"
+            variant="outlined"
+            color="inherit"
+            onClick={handleClickCancelButton}
           >
-            Add
-          </LoadingButton>
+            {isReadOnly ? 'Close' : 'Cancel'}
+          </Button>
+          {!isReadOnly && (
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              loading={isSubmitting}
+              loadingIndicator="Loading..."
+              disabled={isReadOnly}
+            >
+              {isCreating ? 'Add' : 'Edit'}
+            </LoadingButton>
+          )}
         </DialogActions>
       </Form>
     </FormikProvider>

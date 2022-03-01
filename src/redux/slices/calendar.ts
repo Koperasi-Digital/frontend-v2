@@ -148,11 +148,8 @@ export function updateEvent(
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/api/calendar/events/update', {
-        eventId,
-        updateEvent
-      });
-      dispatch(slice.actions.updateEventSuccess(response.data.event));
+      const response = await axios.patch(`activities/${eventId}`, updateEvent);
+      dispatch(slice.actions.updateEventSuccess(toCalendarEvent(response.data.payload)));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -166,6 +163,20 @@ export function deleteEvent(eventId: string) {
     dispatch(slice.actions.startLoading());
     try {
       await axios.delete(`activities/${eventId}`);
+      dispatch(slice.actions.deleteEventSuccess({ eventId }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function deleteUserFromEvent(eventId: string) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.post(`activities/${eventId}/remove-user`);
       dispatch(slice.actions.deleteEventSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
