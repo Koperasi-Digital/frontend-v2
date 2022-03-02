@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import * as Yup from 'yup';
 import { isEmpty, merge, startCase } from 'lodash';
-import { isBefore } from 'date-fns';
+import { isBefore, format } from 'date-fns';
 import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack';
 import trash2Fill from '@iconify/icons-eva/trash-2-fill';
@@ -22,7 +22,9 @@ import {
   FormControl,
   FormControlLabel,
   Autocomplete,
-  Stack
+  Stack,
+  Typography,
+  Grid
 } from '@mui/material';
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 import { EventInput } from '@fullcalendar/common';
@@ -152,96 +154,171 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
     }
   };
 
+  const Field = ({ name, value, field }: { name: string; value: string; field: JSX.Element }) =>
+    isReadOnly ? (
+      <Grid container xs={12} sx={{ mb: 2 }}>
+        <Grid
+          item
+          xs={12}
+          sm={3}
+          component={Typography}
+          variant="body1"
+          sx={{ fontWeight: 'bold' }}
+        >
+          {name}
+        </Grid>
+        <Grid item xs={12} sm={9} component={Typography} variant="body1">
+          {value}
+        </Grid>
+      </Grid>
+    ) : (
+      <>{field}</>
+    );
+
   return (
     <FormikProvider value={formik}>
       <DialogTitle>{renderTitle()}</DialogTitle>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <DialogContent sx={{ pb: 0, overflowY: 'unset' }}>
-          <TextField
-            fullWidth
-            label="Title"
-            {...getFieldProps('title')}
-            error={Boolean(touched.title && errors.title)}
-            helperText={touched.title && errors.title}
-            sx={{ mb: 3 }}
-            disabled={isReadOnly}
-          />
-
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            label="Description"
-            {...getFieldProps('description')}
-            error={Boolean(touched.description && errors.description)}
-            helperText={touched.description && errors.description}
-            sx={{ mb: 3 }}
-            disabled={isReadOnly}
-          />
-
-          <FormControl fullWidth disabled={isReadOnly}>
-            <InputLabel>Type</InputLabel>
-            <Select
-              label="Type"
-              native
-              {...getFieldProps('type')}
-              value={values.type}
-              sx={{ mb: 3 }}
-            >
-              {EVENT_TYPE_OPTIONS.map((eventType) => (
-                <option key={eventType} value={eventType}>
-                  {startCase(eventType)}
-                </option>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControlLabel
-            control={<Switch checked={values.allDay} {...getFieldProps('allDay')} />}
-            label="All Day"
-            sx={{ mb: 3 }}
-            disabled={isReadOnly}
-          />
-
-          <FormControlLabel
-            control={
-              <Switch
-                checked={values.includeNotification}
-                {...getFieldProps('includeNotification')}
+          <Field
+            name="Title"
+            value={values.title}
+            field={
+              <TextField
+                fullWidth
+                label="Title"
+                {...getFieldProps('title')}
+                error={Boolean(touched.title && errors.title)}
+                helperText={touched.title && errors.title}
+                sx={{ mb: 3 }}
               />
             }
-            label="Push Notification"
-            sx={{ mb: 3 }}
-            disabled={isReadOnly}
+          />
+
+          <Field
+            name="Description"
+            value={values.description || '-'}
+            field={
+              <TextField
+                fullWidth
+                multiline
+                rows={4}
+                label="Description"
+                {...getFieldProps('description')}
+                error={Boolean(touched.description && errors.description)}
+                helperText={touched.description && errors.description}
+                sx={{ mb: 3 }}
+                disabled={isReadOnly}
+              />
+            }
+          />
+
+          <Field
+            name="Type"
+            value={startCase(values.type)}
+            field={
+              <FormControl fullWidth disabled={isReadOnly}>
+                <InputLabel>Type</InputLabel>
+                <Select
+                  label="Type"
+                  native
+                  {...getFieldProps('type')}
+                  value={values.type}
+                  sx={{ mb: 3 }}
+                >
+                  {EVENT_TYPE_OPTIONS.map((eventType) => (
+                    <option key={eventType} value={eventType}>
+                      {startCase(eventType)}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+            }
+          />
+
+          <Field
+            name="Include Notification"
+            value={values.includeNotification ? 'Yes' : 'No'}
+            field={
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={values.includeNotification}
+                    {...getFieldProps('includeNotification')}
+                  />
+                }
+                label="Push Notification"
+                sx={{ mb: 3 }}
+                disabled={isReadOnly}
+              />
+            }
+          />
+
+          <Field
+            name="All Day"
+            value={values.allDay ? 'Yes' : 'No'}
+            field={
+              <FormControlLabel
+                control={<Switch checked={values.allDay} {...getFieldProps('allDay')} />}
+                label="All Day"
+                sx={{ mb: 3 }}
+                disabled={isReadOnly}
+              />
+            }
           />
 
           {!values.allDay && (
-            <Stack direction="row" spacing={1}>
-              <MobileDateTimePicker
-                label="Start date"
-                value={values.start}
-                inputFormat="dd/MM/yyyy hh:mm a"
-                onChange={(date) => setFieldValue('start', date)}
-                renderInput={(params) => <TextField {...params} sx={{ mb: 3 }} />}
-                disabled={isReadOnly}
-              />
-
-              <MobileDateTimePicker
-                label="End date"
-                value={values.end}
-                inputFormat="dd/MM/yyyy hh:mm a"
-                onChange={(date) => setFieldValue('end', date)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    error={Boolean(isDateError)}
-                    helperText={isDateError && 'End date must be later than start date'}
-                    sx={{ mb: 3 }}
+            <Field
+              name="Datetime"
+              value={`${format(new Date(values.start), 'dd/MM/yyyy hh:mm a')} - ${format(
+                new Date(values.end),
+                'dd/MM/yyyy hh:mm a'
+              )}`}
+              field={
+                <Stack direction="row" spacing={1}>
+                  <MobileDateTimePicker
+                    label="Start date"
+                    value={values.start}
+                    inputFormat="dd/MM/yyyy hh:mm a"
+                    onChange={(date) => setFieldValue('start', date)}
+                    renderInput={(params) => <TextField {...params} sx={{ mb: 3 }} />}
+                    disabled={isReadOnly}
                   />
-                )}
-                disabled={isReadOnly}
-              />
-            </Stack>
+
+                  <MobileDateTimePicker
+                    label="End date"
+                    value={values.end}
+                    inputFormat="dd/MM/yyyy hh:mm a"
+                    onChange={(date) => setFieldValue('end', date)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        error={Boolean(isDateError)}
+                        helperText={isDateError && 'End date must be later than start date'}
+                        sx={{ mb: 3 }}
+                      />
+                    )}
+                    disabled={isReadOnly}
+                  />
+                </Stack>
+              }
+            />
+          )}
+
+          {event && event.createdBy && (
+            <Field
+              name="Organizer"
+              value={`${event.createdBy.displayName} (${event.createdBy.email})`}
+              field={
+                <TextField
+                  fullWidth
+                  disabled
+                  label="Organizer"
+                  value={`${event.createdBy.displayName} (${event.createdBy.email})`}
+                  sx={{ mb: 3 }}
+                />
+              }
+            />
           )}
 
           <Autocomplete
@@ -258,21 +335,11 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
                 label="Guest(s)"
                 error={Boolean(touched.invitedUsersEmail && errors.invitedUsersEmail)}
                 helperText={touched.invitedUsersEmail && errors.invitedUsersEmail}
-                sx={{ mb: 3 }}
+                sx={{ mb: 3, mt: isReadOnly ? 1 : 'auto' }}
               />
             )}
             disabled={isReadOnly}
           />
-
-          {event && event.createdBy && (
-            <TextField
-              fullWidth
-              disabled
-              label="Organizer"
-              value={`${event.createdBy.displayName} (${event.createdBy.email})`}
-              sx={{ mb: 3 }}
-            />
-          )}
         </DialogContent>
 
         <DialogActions>
