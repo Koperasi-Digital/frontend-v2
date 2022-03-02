@@ -1,11 +1,12 @@
+import { useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
-import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 // material
 import { Button, Container } from '@mui/material';
 // redux
 import { RootState, useDispatch, useSelector } from '../../redux/store';
-import { getEvents, openModal, closeModal } from '../../redux/slices/calendar';
+import { getEvents, openModal, closeModal, selectEvent } from '../../redux/slices/calendar';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -16,18 +17,34 @@ import { CalendarForm, Calendar as CalendarComponent } from '../../components/_d
 
 // ----------------------------------------------------------------------
 
-const selectedEventSelector = (state: RootState) => {
-  const { events, selectedEventId } = state.calendar;
-  if (selectedEventId) {
-    return events.find((_event) => _event.id === selectedEventId);
-  }
-  return null;
-};
-
 export default function Activities() {
   const dispatch = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const selectedEventSelector = (state: RootState) => {
+    const { events, selectedEventId } = state.calendar;
+    if (selectedEventId) {
+      const selectedEvent = events.find((_event) => _event.id === selectedEventId);
+      if (selectedEvent) {
+        return selectedEvent;
+      }
+    }
+    return null;
+  };
+
   const selectedEvent = useSelector(selectedEventSelector);
   const { isOpenModal, selectedRange } = useSelector((state: RootState) => state.calendar);
+
+  useEffect(() => {
+    setSearchParams(selectedEvent && selectedEvent.id ? { id: selectedEvent.id } : {});
+  }, [setSearchParams, selectedEvent]);
+
+  useEffect(() => {
+    const id = searchParams.get('id');
+    if (id) {
+      dispatch(selectEvent(id));
+    }
+  }, [searchParams, dispatch, isOpenModal]);
 
   useEffect(() => {
     dispatch(getEvents());
@@ -39,6 +56,7 @@ export default function Activities() {
 
   const handleCloseModal = () => {
     dispatch(closeModal());
+    searchParams.delete('id');
   };
 
   return (

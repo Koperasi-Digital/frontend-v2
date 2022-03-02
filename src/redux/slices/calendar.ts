@@ -141,8 +141,8 @@ export function updateEvent(
   eventId: string,
   updateEvent: Partial<{
     allDay: boolean;
-    start: Date | null;
-    end: Date | null;
+    startAt: Date | null;
+    endAt: Date | null;
   }>
 ) {
   return async () => {
