@@ -20,9 +20,6 @@ export default function OrderDetailsSummary({ order }: OrderDetailsSummaryProps)
     order;
   return (
     <Container>
-      <Typography variant="h4" sx={{ mb: 2 }}>
-        Order Details #{order_id}
-      </Typography>
       <Grid container>
         <Grid item xs={12} md={4}>
           <Card sx={{ mx: 2, px: 2, py: 2, maxHeight: '300px' }}>
