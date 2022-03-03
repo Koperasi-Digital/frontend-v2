@@ -101,6 +101,8 @@ export default function Router() {
             { element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
             { path: 'shop', element: <EcommerceShop /> },
             { path: 'seller', element: <EcommerceSellerCenter /> },
+            { path: 'general-ecommerce', element: <GeneralEcommerce /> },
+            { path: 'general-analytics', element: <GeneralAnalytics /> },
             { path: 'order/:id', element: <EcommerceOrderDetails /> },
             { path: 'order-list', element: <EcommerceOrderList /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
@@ -170,8 +172,8 @@ const ResetPassword = Loadable(lazy(() => import('../pages/authentication/ResetP
 const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCode')));
 // Dashboard
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
-// const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));
-// const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
+const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));
+const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
 // const GeneralBanking = Loadable(lazy(() => import('../pages/dashboard/GeneralBanking')));
 // const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
 const EcommerceOrderList = Loadable(lazy(() => import('../pages/dashboard/EcommerceOrderList')));

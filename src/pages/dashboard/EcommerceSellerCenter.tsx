@@ -1,14 +1,17 @@
-import { addIcon } from '@iconify/react';
-import { Button, Box, Grid, Container, Typography, styled, Icon } from '@mui/material';
+import { Box, Grid, Container, Typography, styled } from '@mui/material';
 // components
 import Page from '../../components/Page';
 import {
   AppNewUsers,
   AppBugReports,
-  AppItemOrders,
+  InfoDeliveringOrders,
   AppWeeklySales,
   RecentSold,
-  BestProduct
+  LatestProducts,
+  AllTimeProducts,
+  MonthlySales,
+  TotalBalance,
+  CurrentBalance
 } from '../../components/_dashboard/e-commerce/seller';
 
 // ----------------------------------------------------------------------
@@ -36,24 +39,25 @@ export default function SellerCenter() {
             <AppNewUsers />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppItemOrders />
+            <InfoDeliveringOrders />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <AppBugReports />
           </Grid>
-          <Grid item xs={12} sm={12} md={8}>
-            <RecentSold />
+          <Grid item xs={12} md={6} lg={8}>
+            <MonthlySales />
           </Grid>
-          <Grid item xs={12} sm={12} md={4}>
-            <BestProduct />
-            <Button
-              sx={{ mx: 2, my: 2 }}
-              variant="contained"
-              href="/ecommerce/new-product"
-              startIcon={addIcon}
-            >
-              Add New Product
-            </Button>
+          <Grid item xs={12} md={6} lg={4}>
+            <div style={{ marginBottom: 20 }}>
+              <TotalBalance />
+            </div>
+            <CurrentBalance />
+          </Grid>
+          <Grid item xs={12} md={6} lg={8}>
+            <AllTimeProducts />
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <LatestProducts />
           </Grid>
         </Grid>
       </Container>
