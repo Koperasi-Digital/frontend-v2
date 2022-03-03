@@ -77,6 +77,7 @@ const sidebarConfig = [
         icon: ICONS.cart,
         children: [
           { title: 'seller', path: PATH_DASHBOARD.eCommerce.seller },
+          { title: 'order list', path: PATH_DASHBOARD.eCommerce.orderList },
           { title: 'list', path: PATH_DASHBOARD.eCommerce.list },
           { title: 'create', path: PATH_DASHBOARD.eCommerce.newProduct },
           { title: 'edit', path: PATH_DASHBOARD.eCommerce.editById }

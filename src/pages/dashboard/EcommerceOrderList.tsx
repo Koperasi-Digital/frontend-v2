@@ -1,7 +1,7 @@
 import { filter } from 'lodash';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import { paramCase, sentenceCase } from 'change-case';
+import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 // material
@@ -11,7 +11,6 @@ import {
   Card,
   Table,
   TableRow,
-  Checkbox,
   TableBody,
   TableCell,
   Container,
@@ -21,30 +20,26 @@ import {
   TablePagination
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
-import { getProducts } from '../../redux/slices/product';
+import { useDispatch } from '../../redux/store';
 // utils
 import { fCurrency } from '../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // @types
-import { Product, ProductState } from '../../@types/products';
 // components
 import Page from '../../components/Page';
 import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import {
-  ProductListHead,
-  ProductListToolbar
-} from '../../components/_dashboard/e-commerce/product-list';
+import { OrderListHead, OrderListToolbar } from '../../components/_dashboard/e-commerce/order-list';
 import getOrders from 'utils/orders';
-import { fDate, fDateTime } from 'utils/formatTime';
+import { fDateTime } from 'utils/formatTime';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'order_id', label: 'ID', alignRight: false },
   { id: 'product_name', label: 'Produk', alignRight: false },
   { id: 'user_name', label: 'Pembeli', alignRight: false },
   { id: 'timestamp', label: 'Tanggal', alignRight: false },
@@ -93,7 +88,7 @@ function applySortFilter(array: any[], comparator: (a: any, b: any) => number, q
   if (query) {
     return filter(
       array,
-      (_product) => _product.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_product) => _product.order_id.toString().toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
 
@@ -104,7 +99,6 @@ function applySortFilter(array: any[], comparator: (a: any, b: any) => number, q
 
 export default function EcommerceProductList() {
   const theme = useTheme();
-  const dispatch = useDispatch();
 
   const linkTo = `${PATH_DASHBOARD.eCommerce.root}/order/`;
   const [orders, setOrders] = useState([]);
@@ -131,33 +125,6 @@ export default function EcommerceProductList() {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (checked: boolean) => {
-    // if (checked) {
-    //   const selected = orders.map((n) => n.product_name);
-    //   setSelected(selected);
-    //   return;
-    // }
-    setSelected([]);
-  };
-
-  const handleClick = (name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: string[] = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -171,7 +138,7 @@ export default function EcommerceProductList() {
 
   const filteredOrders = applySortFilter(orders, getComparator(order, orderBy), filterName);
 
-  const isProductNotFound = orders.length === 0;
+  const isProductNotFound = filteredOrders.length === 0;
 
   return (
     <Page title="Ecommerce: Order List | CoopChick">
@@ -189,7 +156,7 @@ export default function EcommerceProductList() {
         />
 
         <Card>
-          <ProductListToolbar
+          <OrderListToolbar
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
@@ -198,14 +165,13 @@ export default function EcommerceProductList() {
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <ProductListHead
+                <OrderListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={orders.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {!isLoading &&
@@ -218,27 +184,14 @@ export default function EcommerceProductList() {
                           timestamp,
                           product_name,
                           cover,
-                          product_price,
                           quantity,
                           subtotal,
                           status
                         } = row;
 
-                        const isItemSelected = selected.indexOf(product_name) !== -1;
-
                         return (
-                          <TableRow
-                            hover
-                            key={order_id}
-                            tabIndex={-1}
-                            role="checkbox"
-                            selected={isItemSelected}
-                            aria-checked={isItemSelected}
-                            onClick={() => handleClick(user_name)}
-                          >
-                            <TableCell padding="checkbox">
-                              <Checkbox checked={isItemSelected} />
-                            </TableCell>
+                          <TableRow hover key={order_id} tabIndex={-1} role="checkbox">
+                            <TableCell style={{ minWidth: 50 }}>{order_id}</TableCell>
                             <TableCell component="th" scope="row" padding="none">
                               <Box
                                 sx={{
@@ -260,17 +213,18 @@ export default function EcommerceProductList() {
                             <TableCell style={{ minWidth: 100 }}>
                               <Label
                                 variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                                color={(status === 'Dalam Pengiriman' && 'warning') || 'success'}
+                                color={
+                                  (status === 'Dalam Pengiriman' && 'warning') ||
+                                  (status === 'Pending' && 'error') ||
+                                  'success'
+                                }
                               >
                                 {status ? sentenceCase(status) : ''}
                               </Label>
                             </TableCell>
                             <TableCell align="right">
                               <IconButton>
-                                <Link
-                                  to={linkTo + paramCase(product_name) + '/edit'}
-                                  color="inherit"
-                                >
+                                <Link to={linkTo + order_id} color="inherit">
                                   <Icon icon={moreVerticalFill} width={20} height={20} />
                                 </Link>
                               </IconButton>

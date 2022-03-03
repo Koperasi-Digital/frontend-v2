@@ -26,11 +26,12 @@ const ORDER_STATUS = ['Pending', 'Dalam Pengiriman', 'Delivered'];
 // ----------------------------------------------------------------------
 
 const orders = [...Array(12)].map((_, index) => ({
-  order_id: mockData.id(index),
-  user_id: mockData.id(index),
+  order_id: random(9000),
+  user_id: 2,
   shipment_id: mockData.id(index),
   timestamp: mockData.time(index),
   shipment_price: mockData.number.price(index) * 500,
+  seller_name: 'PT Futuristik Ayam',
   product_name: PRODUCT_NAME[index],
   user_name: 'Michael Hans',
   product_price: mockData.number.price(index) * 1000,
@@ -49,7 +50,8 @@ mock.onGet('/api/orders').reply(200, { orders });
 mock.onGet('/api/orders/order').reply((config) => {
   try {
     const { order_id } = config.params;
-    const order = orders.find((_order) => paramCase(_order.order_id) === order_id);
+    console.log(order_id);
+    const order = orders.find((_order) => _order.order_id == order_id);
 
     if (!order) {
       return [404, { message: 'order not found' }];

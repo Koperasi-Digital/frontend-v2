@@ -101,7 +101,7 @@ export default function Router() {
             { element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
             { path: 'shop', element: <EcommerceShop /> },
             { path: 'seller', element: <EcommerceSellerCenter /> },
-            { path: 'order', element: <EcommerceOrderDetails /> },
+            { path: 'order/:id', element: <EcommerceOrderDetails /> },
             { path: 'order-list', element: <EcommerceOrderList /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'list', element: <EcommerceProductList /> },
