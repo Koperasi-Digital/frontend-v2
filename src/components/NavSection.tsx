@@ -16,6 +16,7 @@ import {
   ListItemButton,
   ListItemButtonProps
 } from '@mui/material';
+import useAuth from 'hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -71,6 +72,7 @@ type NavItemProps = {
   path: string;
   icon?: JSX.Element;
   info?: JSX.Element;
+  accessibleRoles?: string[];
   children?: {
     title: string;
     path: string;
@@ -199,6 +201,7 @@ interface NavSectionProps extends BoxProps {
 }
 
 export default function NavSection({ navConfig, isShow = true, ...other }: NavSectionProps) {
+  const { user } = useAuth();
   return (
     <Box {...other}>
       {navConfig.map((list) => {
@@ -206,9 +209,15 @@ export default function NavSection({ navConfig, isShow = true, ...other }: NavSe
         return (
           <List key={subheader} disablePadding>
             {isShow && <ListSubheaderStyle>{subheader}</ListSubheaderStyle>}
-            {items.map((item: NavItemProps) => (
-              <NavItem key={item.title} item={item} isShow={isShow} />
-            ))}
+            {items
+              .filter(
+                (item: NavItemProps) =>
+                  item.accessibleRoles === undefined ||
+                  (item.accessibleRoles && item.accessibleRoles.includes(user?.role.name))
+              )
+              .map((item: NavItemProps) => (
+                <NavItem key={item.title} item={item} isShow={isShow} />
+              ))}
           </List>
         );
       })}
