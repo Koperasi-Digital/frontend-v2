@@ -54,6 +54,9 @@ export const PATH_DASHBOARD = {
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
     shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
+    seller: path(ROOTS_DASHBOARD, '/e-commerce/seller'),
+    orderById: path(ROOTS_DASHBOARD, '/e-commerce/order'),
+    orderList: path(ROOTS_DASHBOARD, '/e-commerce/order-list'),
     product: path(ROOTS_DASHBOARD, '/e-commerce/product/:name'),
     productById: path(ROOTS_DASHBOARD, '/e-commerce/product/itik-ayam'),
     list: path(ROOTS_DASHBOARD, '/e-commerce/list'),
