@@ -3,7 +3,6 @@ import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
 import { Icon, IconifyIcon } from '@iconify/react';
 import bookFill from '@iconify/icons-eva/book-fill';
-import heartFill from '@iconify/icons-eva/heart-fill';
 import shareFill from '@iconify/icons-eva/share-fill';
 import printerFill from '@iconify/icons-eva/printer-fill';
 import downloadFill from '@iconify/icons-eva/download-fill';
@@ -49,67 +48,29 @@ import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
-// ----------------------------------------------------------------------
-
-const TRANSACTIONS = [
-  {
-    id: '1b0fc8a1-cd68-41f6-899e-d0e0676c90bb',
-    avatar: '/static/mock-images/avatars/avatar_8.jpg',
-    category: 'Annette Black',
-    timestamp: 1627556358365,
-    status: 'success',
-    gross_amount: 200000,
-    type: 'Income'
-  },
-  {
-    id: '1b0fc8a1-cd72-41f6-899e-d0e0676c90bb',
-    avatar: '/static/mock-images/avatars/avatar_8.jpg',
-    category: 'Courtney Henry',
-    timestamp: 1627554444465,
-    status: 'pending',
-    gross_amount: 150000,
-    type: 'Expenses'
-  },
-  {
-    id: '1b0fc8a1-cd72-41f6-8777-d0e0676c90bb',
-    avatar: '/static/mock-images/avatars/avatar_8.jpg',
-    category: 'Beth White',
-    timestamp: 1627554444465,
-    status: 'success',
-    gross_amount: 170000,
-    type: 'Income'
-  },
-  {
-    id: '1b0fc8a1-cd54-41f6-899e-d0e0676c90bb',
-    avatar: '/static/mock-images/avatars/avatar_8.jpg',
-    category: 'Anne Henry',
-    timestamp: 1621116358365,
-    status: 'fail',
-    gross_amount: 15000,
-    type: 'Expenses'
-  },
-  {
-    id: 'b7846c12-662c-465a-8e81-8a35df7531ef',
-    avatar: null,
-    category: 'Sisa hasil usaha',
-    timestamp: 1627556329022,
-    status: 'success',
-    gross_amount: 20000,
-    type: 'Income'
-  },
-  {
-    id: 'b7846c12-555q-465a-8e81-8a35df7531ef',
-    avatar: null,
-    category: 'Simpanan pokok',
-    timestamp: 2427556329038,
-    status: 'fail',
-    gross_amount: 1000000,
-    type: 'Expenses'
-  }
-];
+import { handleListTransaction } from 'utils/financeTransaction';
+import useAuth from 'hooks/useAuth';
 
 type AvatarIconProps = {
   icon: IconifyIcon;
+};
+
+type Transaction = {
+  id: string;
+  order_id: number;
+  time: string;
+  type: string;
+  payment_type: string;
+  total_cost: number;
+  status: string;
+  simpananpokok_id: number;
+  simpananwajib_id: number;
+  firstuser_id: number;
+  firstuser_display_name: string;
+  firstuser_photoURL: string;
+  seller_id: number;
+  seller_display_name: string;
+  seller_photoURL: string;
 };
 
 function AvatarIcon({ icon }: AvatarIconProps) {
@@ -127,30 +88,20 @@ function AvatarIcon({ icon }: AvatarIconProps) {
   );
 }
 
-type TransactionsProps = {
-  id: string;
-  avatar: string | null;
-  category: string;
-  timestamp: string | number | Date;
-  status: string;
-  gross_amount: number | string;
-  type: 'Expenses' | 'Income' | string;
-};
-
-function renderAvatar(transitions: TransactionsProps) {
-  if (transitions.category === 'Simpanan pokok') {
+function renderAvatar(transaction: Transaction) {
+  if (transaction.simpananpokok_id) {
     return <AvatarIcon icon={bookFill} />;
+  } else if (transaction.simpananwajib_id) {
+    return <AvatarIcon icon={bookFill} />;
+  } else {
+    return transaction.seller_photoURL ? (
+      <Avatar
+        alt={transaction.seller_display_name}
+        src={transaction.seller_photoURL}
+        sx={{ width: 48, height: 48, boxShadow: (theme) => theme.customShadows.z8 }}
+      />
+    ) : null;
   }
-  if (transitions.category === 'Sisa hasil usaha') {
-    return <AvatarIcon icon={heartFill} />;
-  }
-  return transitions.avatar ? (
-    <Avatar
-      alt={transitions.category}
-      src={transitions.avatar}
-      sx={{ width: 48, height: 48, boxShadow: (theme) => theme.customShadows.z8 }}
-    />
-  ) : null;
 }
 
 type MoreMenuButtonProps = {
@@ -225,8 +176,10 @@ export default function BankingTransactionsReport() {
   const filterDropdownRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [filterMode, setFilterMode] = useState<string>('All');
-  const [allTransactionData, setAllTransactionData] = useState<TransactionsProps[]>([]);
-  const [filteredTransactionData, setFilteredTransactionData] = useState<TransactionsProps[]>([]);
+  const [allTransactionData, setAllTransactionData] = useState<Transaction[]>([]);
+  const [filteredTransactionData, setFilteredTransactionData] = useState<Transaction[]>([]);
+  const { user } = useAuth();
+  const userId = user?.id;
   const handleOpen = () => {
     setOpen(true);
   };
@@ -240,19 +193,33 @@ export default function BankingTransactionsReport() {
 
     if (filterName === 'All') {
       setFilteredTransactionData(allTransactionData);
-    } else {
+    } else if (filterName === 'income') {
       let result = [];
       result = allTransactionData.filter((data) => {
-        return data.type === filterName;
+        return data.firstuser_id !== userId;
+      });
+      setFilteredTransactionData(result);
+    } else if (filterName === 'outcome') {
+      let result = [];
+      result = allTransactionData.filter((data) => {
+        return data.firstuser_id === userId;
       });
       setFilteredTransactionData(result);
     }
   };
 
   useEffect(() => {
-    setAllTransactionData(TRANSACTIONS);
-    setFilteredTransactionData(TRANSACTIONS);
-  }, []);
+    const fetchData = async () => {
+      const fetchedTransactionList = await handleListTransaction(userId);
+      setAllTransactionData(fetchedTransactionList);
+      setFilteredTransactionData(fetchedTransactionList);
+    };
+    fetchData();
+  }, [userId]);
+
+  console.log('Fetched transaction list data');
+  console.log(allTransactionData);
+  console.log('User ID: ', userId);
 
   //Table Pagination
   const [page, setPage] = useState(0);
@@ -348,16 +315,16 @@ export default function BankingTransactionsReport() {
                     All
                   </MenuItem>
                   <MenuItem
-                    onClick={() => handleSearch('Income')}
+                    onClick={() => handleSearch('income')}
                     sx={{ typography: 'body2', py: 1, px: 2.5 }}
                   >
                     Income
                   </MenuItem>
                   <MenuItem
-                    onClick={() => handleSearch('Expenses')}
+                    onClick={() => handleSearch('outcome')}
                     sx={{ typography: 'body2', py: 1, px: 2.5 }}
                   >
-                    Expenses
+                    Outcome
                   </MenuItem>
                 </MenuPopover>
               </Box>
@@ -400,18 +367,18 @@ export default function BankingTransactionsReport() {
                               position: 'absolute',
                               alignItems: 'center',
                               color: 'common.white',
-                              bgcolor: 'error.main',
+                              bgcolor: 'success.main',
                               justifyContent: 'center',
-                              ...(row.type === 'Income' && {
-                                bgcolor: 'success.main'
+                              ...(row.firstuser_id === userId && {
+                                bgcolor: 'error.main'
                               })
                             }}
                           >
                             <Icon
                               icon={
-                                row.type === 'Income'
-                                  ? diagonalArrowLeftDownFill
-                                  : diagonalArrowRightUpFill
+                                row.firstuser_id === userId
+                                  ? diagonalArrowRightUpFill
+                                  : diagonalArrowLeftDownFill
                               }
                               width={16}
                               height={16}
@@ -420,23 +387,37 @@ export default function BankingTransactionsReport() {
                         </Box>
                         <Box sx={{ ml: 2 }}>
                           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            {row.category}
+                            {row.simpananpokok_id
+                              ? 'Simpanan Pokok'
+                              : row.simpananwajib_id
+                              ? 'Simpanan Wajib'
+                              : row.firstuser_id === userId
+                              ? row.seller_display_name
+                              : row.firstuser_display_name}
                           </Typography>
-                          <Typography variant="subtitle2"> {row.category}</Typography>
+                          <Typography variant="subtitle2">
+                            {row.simpananpokok_id
+                              ? 'Simpanan Pokok'
+                              : row.simpananwajib_id
+                              ? 'Simpanan Wajib'
+                              : row.firstuser_id === userId
+                              ? row.seller_display_name
+                              : row.firstuser_display_name}
+                          </Typography>
                         </Box>
                       </Box>
                     </TableCell>
 
                     <TableCell>
                       <Typography variant="subtitle2">
-                        {format(new Date(row.timestamp), 'dd MMM yyyy')}
+                        {format(new Date(row.time), 'dd MMM yyyy')}
                       </Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        {format(new Date(row.timestamp), 'p')}
+                        {format(new Date(row.time), 'p')}
                       </Typography>
                     </TableCell>
 
-                    <TableCell>{fCurrency(row.gross_amount)}</TableCell>
+                    <TableCell>{fCurrency(row.total_cost)}</TableCell>
 
                     <TableCell>
                       <Label
