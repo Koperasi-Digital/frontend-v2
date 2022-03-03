@@ -92,7 +92,7 @@ export default function CheckoutPayment() {
   const { user } = useAuth();
   const userId = user?.id;
 
-  const shopOwnerId = 1; //TODO: replace using user id of shop owner
+  const sellerId = 1; //TODO: replace using user id of shop owner
 
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
   console.log(checkout);
@@ -171,7 +171,7 @@ export default function CheckoutPayment() {
 
   const fetchData = async () => {
     if (!orderId) {
-      const createdOrder = await handleCreateOrder(userId, Math.floor(total), shopOwnerId);
+      const createdOrder = await handleCreateOrder(userId, Math.floor(total), sellerId);
       dispatch(addCheckoutOrder(createdOrder.id));
       return createdOrder;
     } else {

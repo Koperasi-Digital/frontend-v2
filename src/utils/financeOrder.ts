@@ -5,7 +5,7 @@ export async function handleCreateOrder(userId: number, grossAmount: number, sho
     const response = await axios.post('order/create', {
       user_id: userId,
       total_cost: grossAmount,
-      dest_user_id: shopOwnerId
+      seller_id: shopOwnerId
     });
     return response.data.payload;
   } catch (e) {
