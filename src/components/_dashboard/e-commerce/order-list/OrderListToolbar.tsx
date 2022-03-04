@@ -1,16 +1,8 @@
 import { Icon } from '@iconify/react';
 import searchFill from '@iconify/icons-eva/search-fill';
 // material
-import { useTheme, styled } from '@mui/material/styles';
-import {
-  Box,
-  Toolbar,
-  Tooltip,
-  IconButton,
-  Typography,
-  InputAdornment,
-  OutlinedInput
-} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Box, Toolbar, InputAdornment, OutlinedInput } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -37,19 +29,11 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 type ProductListToolbarProps = {
-  numSelected: number;
   filterName: string;
   onFilterName: (value: string) => void;
 };
 
-export default function ProductListToolbar({
-  numSelected,
-  filterName,
-  onFilterName
-}: ProductListToolbarProps) {
-  const theme = useTheme();
-  const isLight = theme.palette.mode === 'light';
-
+export default function ProductListToolbar({ filterName, onFilterName }: ProductListToolbarProps) {
   return (
     <RootStyle>
       <SearchStyle

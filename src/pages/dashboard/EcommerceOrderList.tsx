@@ -19,8 +19,6 @@ import {
   TableContainer,
   TablePagination
 } from '@mui/material';
-// redux
-import { useDispatch } from '../../redux/store';
 // utils
 import { fCurrency } from '../../utils/formatNumber';
 // routes
@@ -104,7 +102,6 @@ export default function EcommerceProductList() {
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-  const [selected, setSelected] = useState<string[]>([]);
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [orderBy, setOrderBy] = useState('createdAt');
@@ -156,11 +153,7 @@ export default function EcommerceProductList() {
         />
 
         <Card>
-          <OrderListToolbar
-            numSelected={selected.length}
-            filterName={filterName}
-            onFilterName={handleFilterByName}
-          />
+          <OrderListToolbar filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -169,8 +162,6 @@ export default function EcommerceProductList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={orders.length}
-                  numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>

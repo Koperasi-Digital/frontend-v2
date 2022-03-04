@@ -1,24 +1,20 @@
 // material
 import { visuallyHidden } from '@mui/utils';
-import { Box, Checkbox, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
+import { Box, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
 type OrderListHeadProps = {
   order: 'asc' | 'desc';
   orderBy: string;
-  rowCount: number;
   headLabel: any[];
-  numSelected: number;
   onRequestSort: (property: string) => void;
 };
 
 export default function OrderListHead({
   order,
   orderBy,
-  rowCount,
   headLabel,
-  numSelected,
   onRequestSort
 }: OrderListHeadProps) {
   return (

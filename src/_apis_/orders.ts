@@ -1,5 +1,4 @@
 import { random, sample } from 'lodash';
-import { paramCase } from 'change-case';
 // utils
 import mock from './mock';
 import mockData from '../utils/mock-data';
@@ -51,7 +50,7 @@ mock.onGet('/api/orders/order').reply((config) => {
   try {
     const { order_id } = config.params;
     console.log(order_id);
-    const order = orders.find((_order) => _order.order_id == order_id);
+    const order = orders.find((_order) => _order.order_id === order_id);
 
     if (!order) {
       return [404, { message: 'order not found' }];

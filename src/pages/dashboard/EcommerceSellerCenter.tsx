@@ -1,12 +1,13 @@
-import { Box, Grid, Container, Typography, styled } from '@mui/material';
+import { Grid, Container } from '@mui/material';
+import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
+import { PATH_DASHBOARD } from 'routes/paths';
 // components
 import Page from '../../components/Page';
 import {
-  AppNewUsers,
-  AppBugReports,
+  InfoFinishedOrders,
+  InfoNewOrders,
   InfoDeliveringOrders,
-  AppWeeklySales,
-  RecentSold,
+  ProductSold,
   LatestProducts,
   AllTimeProducts,
   MonthlySales,
@@ -15,34 +16,33 @@ import {
 } from '../../components/_dashboard/e-commerce/seller';
 
 // ----------------------------------------------------------------------
-
-const ProductImgStyle = styled('img')({
-  top: 0,
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-  position: 'absolute'
-});
-
 export default function SellerCenter() {
   return (
     <Page title="Seller Center">
       <Container maxWidth="xl">
-        <Box sx={{ pb: 5 }}>
-          <Typography variant="h4">Hi, Welcome back</Typography>
-        </Box>
+        <HeaderBreadcrumbs
+          heading="Seller Center"
+          links={[
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            {
+              name: 'E-Commerce',
+              href: PATH_DASHBOARD.eCommerce.root
+            },
+            { name: 'Seller Center' }
+          ]}
+        />
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWeeklySales />
+          <Grid item xs={12} sm={6} md={2}>
+            <InfoNewOrders />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppNewUsers />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={2}>
             <InfoDeliveringOrders />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppBugReports />
+          <Grid item xs={12} sm={6} md={2}>
+            <InfoFinishedOrders />
+          </Grid>
+          <Grid item xs={12} sm={6} md={6}>
+            <CurrentBalance />
           </Grid>
           <Grid item xs={12} md={6} lg={8}>
             <MonthlySales />
@@ -51,7 +51,7 @@ export default function SellerCenter() {
             <div style={{ marginBottom: 20 }}>
               <TotalBalance />
             </div>
-            <CurrentBalance />
+            <ProductSold />
           </Grid>
           <Grid item xs={12} md={6} lg={8}>
             <AllTimeProducts />

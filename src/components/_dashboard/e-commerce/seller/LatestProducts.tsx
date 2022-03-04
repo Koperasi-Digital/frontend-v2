@@ -11,23 +11,18 @@ import Scrollbar from '../../../Scrollbar';
 // ----------------------------------------------------------------------
 
 const PRODUCT_NAME = [
-  'Small Granite Computer',
-  'Small Rubber Mouse',
-  'Awesome Rubber Hat',
-  'Sleek Cotton Sausages',
-  'Rustic Wooden Chicken'
+  'Ayam Petelur Daging',
+  'Telur Ayam Kampung',
+  'Daging Ayam',
+  'Itik Ayam',
+  'Vaksin Ayam'
 ];
 
 const MOCK_PRODUCTS = [...Array(5)].map((_, index) => ({
   id: mockData.id(index),
   name: PRODUCT_NAME[index],
   image: mockData.image.product(index),
-  price: mockData.number.price(index),
-  priceSale: index === 0 || index === 3 ? 0 : mockData.number.price(index),
-  colors: (index === 0 && ['#2EC4B6', '#E71D36', '#FF9F1C', '#011627']) ||
-    (index === 1 && ['#92140C', '#FFCF99']) ||
-    (index === 2 && ['#0CECDD', '#FFF338', '#FF67E7', '#C400FF', '#52006A', '#046582']) ||
-    (index === 3 && ['#845EC2', '#E4007C', '#2A1A5E']) || ['#090088']
+  price: mockData.number.price(index) * 1000
 }));
 
 const ThumbImgStyle = styled('img')(({ theme }) => ({
@@ -45,14 +40,11 @@ type ProductItemProps = {
     name: string;
     image: string;
     price: number;
-    priceSale: number;
-    colors: string[];
   };
 };
 
 function ProductItem({ product }: ProductItemProps) {
-  const { name, image, price, priceSale } = product;
-  const hasSale = priceSale > 0;
+  const { name, image, price } = product;
 
   return (
     <Stack direction="row" spacing={2}>
@@ -69,8 +61,6 @@ function ProductItem({ product }: ProductItemProps) {
           </Typography>
         </Stack>
       </Box>
-
-      {/* <ColorPreview limit={3} colors={product.colors} sx={{ minWidth: 72, pr: 3 }} /> */}
     </Stack>
   );
 }
@@ -78,7 +68,7 @@ function ProductItem({ product }: ProductItemProps) {
 export default function EcommerceLatestProducts() {
   return (
     <Card>
-      <CardHeader title="Latest Products" />
+      <CardHeader title="Penjualan Terakhir" />
       <Scrollbar>
         <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
           {MOCK_PRODUCTS.map((product) => (

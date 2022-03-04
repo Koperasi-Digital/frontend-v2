@@ -6,7 +6,7 @@ import { OrderDetailsSummary } from 'components/_dashboard/e-commerce/order-deta
 import { Order } from '../../@types/order';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
 import { PATH_DASHBOARD } from 'routes/paths';
-import { Container, Typography } from '@mui/material';
+import { Container } from '@mui/material';
 
 export default function EcommerceOrderDetails() {
   const { id = '' } = useParams();
@@ -21,7 +21,7 @@ export default function EcommerceOrderDetails() {
       setIsLoading(false);
     }
     fetchOrder();
-  }, []);
+  }, [id]);
 
   return (
     <Page title="Detail Transaction">

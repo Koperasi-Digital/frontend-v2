@@ -1,7 +1,7 @@
-export { default as AppBugReports } from './AppBugReports';
+export { default as InfoNewOrders } from './InfoNewOrders';
 export { default as InfoDeliveringOrders } from './InfoDeliveringOrders';
-export { default as AppNewUsers } from './AppNewUsers';
-export { default as AppWeeklySales } from './AppWeeklySales';
+export { default as InfoFinishedOrders } from './InfoFinishedOrders';
+export { default as ProductSold } from './ProductSold';
 export { default as RecentSold } from './RecentSold';
 export { default as LatestProducts } from './LatestProducts';
 export { default as AllTimeProducts } from './AllTimeProducts';
