@@ -59,16 +59,20 @@ const sidebarConfig = [
       // MANAGEMENT : FINANCE
       {
         title: 'finance',
-        path: PATH_DASHBOARD.finance.root,
+        path: PATH_DASHBOARD.managementFinance.root,
         icon: ICONS.banking,
         children: [
           {
+            title: 'home',
+            path: PATH_DASHBOARD.managementFinance.home
+          },
+          {
             title: 'disbursement approval',
-            path: PATH_DASHBOARD.finance.disbursementApproval
+            path: PATH_DASHBOARD.managementFinance.disbursementApproval
           },
           {
             title: 'disbursement request list',
-            path: PATH_DASHBOARD.finance.disbursementRequestList
+            path: PATH_DASHBOARD.managementFinance.disbursementRequestList
           }
         ]
       },
@@ -94,14 +98,29 @@ const sidebarConfig = [
   },
   {
     subheader: 'finance',
-    accessibleRoles: ['ADMIN'],
     items: [
-      { title: 'home', path: PATH_DASHBOARD.finance.home, icon: ICONS.banking },
-      { title: 'report', path: PATH_DASHBOARD.finance.report, icon: ICONS.banking },
-      { title: 'member report', path: PATH_DASHBOARD.finance.memberReport, icon: ICONS.banking },
+      {
+        title: 'home',
+        path: PATH_DASHBOARD.finance.home,
+        accessibleRoles: ['MEMBER'],
+        icon: ICONS.banking
+      },
+      {
+        title: 'report',
+        path: PATH_DASHBOARD.finance.report,
+        accessibleRoles: ['CUSTOMER'],
+        icon: ICONS.banking
+      },
+      {
+        title: 'member report',
+        path: PATH_DASHBOARD.finance.memberReport,
+        accessibleRoles: ['MEMBER'],
+        icon: ICONS.banking
+      },
       {
         title: 'disbursement request',
         path: PATH_DASHBOARD.finance.disbursementRequest,
+        accessibleRoles: ['CUSTOMER'],
         icon: ICONS.banking
       }
     ]

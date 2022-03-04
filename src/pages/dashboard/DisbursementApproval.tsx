@@ -29,7 +29,7 @@ export default function DisbursementApproval() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Finance',
-              href: PATH_DASHBOARD.finance.root
+              href: PATH_DASHBOARD.managementFinance.root
             },
             { name: 'Disbursement Approval' }
           ]}
