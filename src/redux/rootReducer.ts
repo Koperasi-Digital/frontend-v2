@@ -8,7 +8,6 @@ import userReducer from './slices/user';
 import productReducer from './slices/product';
 import calendarReducer from './slices/calendar';
 import financeReportReducer from './slices/financeReport';
-import financeEMoneyReducer from './slices/financeEmoney';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +31,6 @@ const rootReducer = combineReducers({
   user: userReducer,
   calendar: calendarReducer,
   financeReport: financeReportReducer,
-  financeEMoney: financeEMoneyReducer,
   product: persistReducer(productPersistConfig, productReducer)
 });
 

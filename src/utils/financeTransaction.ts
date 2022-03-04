@@ -5,6 +5,16 @@ type transaction_details = {
   gross_amount: number;
 };
 
+export async function handleListTransaction(userId: number) {
+  try {
+    const response = await axios.get('transaction/list/' + userId);
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 export async function handleCreateTransaction(
   user_id: number,
   transaction_details: transaction_details
