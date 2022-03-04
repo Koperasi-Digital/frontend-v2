@@ -86,16 +86,16 @@ const CARDS_OPTIONS: CardOption[] = [
   { value: 'MasterCard', label: '**** **** **** 4545 - Cole Armstrong' }
 ];
 
+const SELLERID = 1; //TODO: replace using user id of shop owner
+
 export default function CheckoutPayment() {
   const { enqueueSnackbar } = useSnackbar();
 
   const { user } = useAuth();
   const userId = user?.id;
 
-  const sellerId = 1; //TODO: replace using user id of shop owner
-
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
-  console.log(checkout);
+
   const dispatch = useDispatch();
   const { total, discount, subtotal, shipping, orderId } = checkout;
 
@@ -171,7 +171,7 @@ export default function CheckoutPayment() {
 
   const fetchData = async () => {
     if (!orderId) {
-      const createdOrder = await handleCreateOrder(userId, Math.floor(total), sellerId);
+      const createdOrder = await handleCreateOrder(userId, Math.floor(total), SELLERID);
       dispatch(addCheckoutOrder(createdOrder.id));
       return createdOrder;
     } else {
