@@ -28,7 +28,6 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  CardHeader,
   Typography,
   TableContainer,
   TablePagination,
@@ -281,8 +280,7 @@ export default function BankingTransactionsReport() {
 
   return (
     <>
-      <Card>
-        <CardHeader title="Transactions Report" sx={{ mb: 3 }} />
+      <Card sx={{ padding: 5 }}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <Grid
             container

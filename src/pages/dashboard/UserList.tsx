@@ -77,6 +77,7 @@ function applySortFilter(
 }
 
 export default function UserList() {
+  // const theme = useTheme();
   const dispatch = useDispatch();
 
   const { userList } = useSelector((state: RootState) => state.user);

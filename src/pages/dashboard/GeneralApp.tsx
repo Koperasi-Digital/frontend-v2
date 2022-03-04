@@ -11,6 +11,7 @@ import { Calendar } from 'components/_dashboard/calendar';
 import { AppWelcome, AppTotalActive, RecentUsers } from 'components/_dashboard/general-app';
 import {
   BankingSavings,
+  BankingSaldo,
   BankingEMoney,
   BankingMemberSimpananPokok,
   BankingMemberSimpananWajib
@@ -34,7 +35,7 @@ function AdminDashboard() {
   );
 }
 
-function UserDashboard() {
+function MemberDashboard() {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={4}>
@@ -44,6 +45,21 @@ function UserDashboard() {
         <BankingSavings />
       </Grid>
       <Grid item xs={12} md={4}>
+        <BankingSaldo />
+        <BankingEMoney />
+      </Grid>
+    </Grid>
+  );
+}
+
+function CustomerDashboard() {
+  return (
+    <Grid container spacing={3}>
+      <Grid item xs={12} md={6}>
+        <AppTotalActive />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <BankingSaldo />
         <BankingEMoney />
       </Grid>
     </Grid>
@@ -75,7 +91,13 @@ export default function GeneralApp() {
             </Link>
           </Grid>
         </Grid>
-        {role === 'ADMIN' ? <AdminDashboard /> : <UserDashboard />}
+        {role === 'ADMIN' ? (
+          <AdminDashboard />
+        ) : role === 'MEMBER' ? (
+          <MemberDashboard />
+        ) : (
+          <CustomerDashboard />
+        )}
       </Container>
     </Page>
   );
