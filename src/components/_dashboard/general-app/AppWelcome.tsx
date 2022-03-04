@@ -1,13 +1,18 @@
-import { Link as RouterLink } from 'react-router-dom';
+// import { Link as RouterLink } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import { Typography, Button, Card, CardContent, CardProps } from '@mui/material';
+import {
+  Typography,
+  // Button,
+  Card,
+  CardContent,
+  CardProps
+} from '@mui/material';
 import { SeoIllustration } from '../../../assets';
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Card)(({ theme }) => ({
-  boxShadow: 'none',
   textAlign: 'center',
   backgroundColor: theme.palette.primary.lighter,
   [theme.breakpoints.up('md')]: {
@@ -44,9 +49,9 @@ export default function AppWelcome({ displayName }: AppWelcomeProps) {
           If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything
         </Typography>
 
-        <Button variant="contained" to="#" component={RouterLink}>
+        {/* <Button variant="contained" to="#" component={RouterLink}>
           Go Now
-        </Button>
+        </Button> */}
       </CardContent>
 
       <SeoIllustration

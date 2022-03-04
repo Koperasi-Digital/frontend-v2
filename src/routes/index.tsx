@@ -80,8 +80,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <GeneralApp /> },
-        { path: 'activities', element: <Calendar /> },
-        { path: 'activities/:id', element: <BlogPost /> },
+        { path: 'activities', element: <Activities /> },
         {
           path: 'blogs',
           element: (
@@ -95,6 +94,8 @@ export default function Router() {
         { path: 'blog/verification', element: <BlogVerification /> },
         { path: 'faq', element: <FAQ /> },
         { path: 'faq/:number', element: <FAQPost /> },
+        { path: 'forum', element: <Forum /> },
+        { path: 'forum/own', element: <MyForum /> },
         {
           path: 'e-commerce',
           children: [
@@ -142,8 +143,7 @@ export default function Router() {
             { path: 'new', element: <Chat /> },
             { path: ':conversationKey', element: <Chat /> }
           ]
-        },
-        { path: 'calendar', element: <Calendar /> }
+        }
       ]
     },
 
@@ -202,11 +202,13 @@ const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')
 const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
 const FAQ = Loadable(lazy(() => import('../pages/dashboard/FAQ')));
 const FAQPost = Loadable(lazy(() => import('../pages/dashboard/FAQPost')));
+const Forum = Loadable(lazy(() => import('../pages/dashboard/Forum')));
+const MyForum = Loadable(lazy(() => import('../pages/dashboard/MyForum')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
-const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
+const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
 const TransactionsReport = Loadable(lazy(() => import('../pages/dashboard/TransactionsReport')));
 const MemberReport = Loadable(lazy(() => import('../pages/dashboard/MemberReport')));

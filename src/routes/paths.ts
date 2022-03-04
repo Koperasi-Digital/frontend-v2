@@ -37,14 +37,15 @@ export const PATH_DASHBOARD = {
     newBlog: path(ROOTS_DASHBOARD, '/blogs/new'),
     blogVerification: path(ROOTS_DASHBOARD, '/blog/verification'),
     faq: path(ROOTS_DASHBOARD, '/faq'),
-    faqPost: path(ROOTS_DASHBOARD, '/faq/:number')
+    faqPost: path(ROOTS_DASHBOARD, '/faq/:number'),
+    forum: path(ROOTS_DASHBOARD, '/forum'),
+    myforum: path(ROOTS_DASHBOARD, '/forum/own')
   },
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),
     new: path(ROOTS_DASHBOARD, '/chat/new'),
     conversation: path(ROOTS_DASHBOARD, '/chat/:conversationKey')
   },
-  calendar: path(ROOTS_DASHBOARD, '/calendar'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
     list: path(ROOTS_DASHBOARD, '/user/list'),

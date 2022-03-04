@@ -3,8 +3,8 @@
 export const title = [
   'Apply These 7 Secret Techniques To Improve the Health of Chicken',
   'Believing These 7 Myths About Event Keeps Chicken From Growing',
-  "Don't Waste Time! 7 Facts Until You Reach Your Event",
-  'How 7 Things Will Change The Way You Approach Event',
+  "Don't Waste Time! 7 Facts About Chicken",
+  'How 7 Things Will Change The Way You Build A Chicken Farm',
   "Event Awards: 7 Reasons Why They Don't Work & What You Can Do About It",
   "Event Doesn't Have To Be Hard. Read These 7 Tips",
   'Event Is Your Worst Enemy. 7 Ways To Defeat It',

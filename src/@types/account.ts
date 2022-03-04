@@ -3,10 +3,9 @@
 import { Role } from './role';
 
 export type User = {
-  id: string;
+  id: number;
   displayName: string;
   email: string;
-  password: string;
   photoURL: File | any;
   phoneNumber: string | null;
   country: string | null;
@@ -14,7 +13,5 @@ export type User = {
   state: string | null;
   city: string | null;
   zipCode: string | null;
-  about: string | null;
   role: Role;
-  isPublic: boolean;
 };
