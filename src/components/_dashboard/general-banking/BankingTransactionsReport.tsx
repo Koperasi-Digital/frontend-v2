@@ -216,10 +216,6 @@ export default function BankingTransactionsReport() {
     fetchData();
   }, [userId]);
 
-  console.log('Fetched transaction list data');
-  console.log(allTransactionData);
-  console.log('User ID: ', userId);
-
   //Table Pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
