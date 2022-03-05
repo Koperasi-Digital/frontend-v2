@@ -72,7 +72,13 @@ export const PATH_DASHBOARD = {
     report: path(ROOTS_DASHBOARD, '/finance/report'),
     memberReport: path(ROOTS_DASHBOARD, '/finance/member-report'),
     disbursementApproval: path(ROOTS_DASHBOARD, '/finance/disbursement-approval'),
-    disbursementRequest: path(ROOTS_DASHBOARD, '/finance/disbursement-request'),
+    disbursementRequest: path(ROOTS_DASHBOARD, '/finance/create-disbursement-request'),
     disbursementRequestList: path(ROOTS_DASHBOARD, '/finance/disbursement-request-list')
+  },
+  managementFinance: {
+    root: path(ROOTS_DASHBOARD, '/management-finance'),
+    home: path(ROOTS_DASHBOARD, '/management-finance/home'),
+    disbursementApproval: path(ROOTS_DASHBOARD, '/management-finance/disbursement-approval'),
+    disbursementRequestList: path(ROOTS_DASHBOARD, '/management-finance/disbursement-request-list')
   }
 };

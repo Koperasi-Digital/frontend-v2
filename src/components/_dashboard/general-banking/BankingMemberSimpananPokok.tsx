@@ -38,23 +38,24 @@ import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
 // fetch backend data
-import { handleGetSimpananPokok } from 'utils/financeSimpanan';
+import { handleListSimpananPokok } from 'utils/financeSimpanan';
 
 type SimpananPokokProps = {
   id: number;
-  status: string;
   amount: number;
   userId: number;
+  orderId: number;
   user: {
     id: number;
     email: string;
-    password: string;
-    username: string;
-    name: string;
-    role: string;
-    language: string;
-    created_at: string;
-    updated_at: string;
+    displayName: string;
+  };
+  order: {
+    id: number;
+    user_id: number;
+    timestamp: string;
+    total_cost: number;
+    status: string;
   };
 };
 
@@ -143,7 +144,6 @@ export default function BankingMemberSimpananPokok() {
 
   const handleSearch = (filterName: string) => {
     handleClose();
-
     setFilterMode(filterName);
 
     if (filterName === 'All') {
@@ -151,7 +151,11 @@ export default function BankingMemberSimpananPokok() {
     } else {
       let result = [];
       result = allSimpananPokokData.filter((data) => {
-        return data.status === filterName;
+        if (filterName !== 'LUNAS') {
+          return data.order.status !== 'success';
+        } else {
+          return data.order.status === 'success';
+        }
       });
       setFilteredSimpananPokokData(result);
     }
@@ -159,7 +163,7 @@ export default function BankingMemberSimpananPokok() {
 
   useEffect(() => {
     const fetchSimpananPokokData = async () => {
-      const allSimpananPokok = await handleGetSimpananPokok();
+      const allSimpananPokok = await handleListSimpananPokok();
       setAllSimpananPokokData(allSimpananPokok);
       setFilteredSimpananPokokData(allSimpananPokok);
     };
@@ -256,7 +260,7 @@ export default function BankingMemberSimpananPokok() {
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Box sx={{ ml: 2 }}>
-                          <Typography variant="subtitle2">{row.user.name}</Typography>
+                          <Typography variant="subtitle2">{row.user.displayName}</Typography>
                         </Box>
                       </Box>
                     </TableCell>
@@ -268,9 +272,9 @@ export default function BankingMemberSimpananPokok() {
                     <TableCell>
                       <Label
                         variant={isLight ? 'ghost' : 'filled'}
-                        color={(row.status === 'LUNAS' && 'success') || 'error'}
+                        color={(row.order.status === 'success' && 'success') || 'error'}
                       >
-                        {sentenceCase(row.status)}
+                        {sentenceCase(row.order.status === 'success' ? 'LUNAS' : 'BELUM DIBAYAR')}
                       </Label>
                     </TableCell>
 

@@ -6,4 +6,4 @@ import './calendar';
 import './products';
 import './orders';
 import './finance';
-import './simpanan';
+import './financeSimpanan';

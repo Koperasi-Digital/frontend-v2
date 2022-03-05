@@ -22,6 +22,7 @@ const initialState: ProductState = {
     rating: ''
   },
   checkout: {
+    orderId: 0,
     activeStep: 0,
     cart: [],
     subtotal: 0,
@@ -110,6 +111,11 @@ const slice = createSlice({
       state.checkout.cart = uniqBy([...state.checkout.cart, product], 'id');
     },
 
+    addCheckoutOrder(state, action) {
+      const orderId = action.payload;
+      state.checkout.orderId = orderId;
+    },
+
     deleteCart(state, action) {
       const updateCart = filter(state.checkout.cart, (item) => item.id !== action.payload);
 
@@ -117,6 +123,7 @@ const slice = createSlice({
     },
 
     resetCart(state) {
+      state.checkout.orderId = 0;
       state.checkout.activeStep = 0;
       state.checkout.cart = [];
       state.checkout.total = 0;
@@ -194,6 +201,7 @@ export default slice.reducer;
 export const {
   getCart,
   addCart,
+  addCheckoutOrder,
   resetCart,
   onGotoStep,
   onBackStep,

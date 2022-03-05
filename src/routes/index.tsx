@@ -118,12 +118,56 @@ export default function Router() {
           path: 'finance',
           children: [
             { element: <Navigate to="/dashboard/finance/home" replace /> },
-            { path: 'home', element: <Finance /> },
+            {
+              path: 'home',
+              element: (
+                <RoleBasedGuard accessibleRoles={['MEMBER']}>
+                  <Finance />
+                </RoleBasedGuard>
+              )
+            },
             { path: 'report', element: <TransactionsReport /> },
-            { path: 'member-report', element: <MemberReport /> },
-            { path: 'disbursement-approval', element: <DisbursementApproval /> },
-            { path: 'disbursement-request', element: <DisbursementRequest /> },
-            { path: 'disbursement-request-list', element: <DisbursementRequestList /> }
+            {
+              path: 'member-report',
+              element: (
+                <RoleBasedGuard accessibleRoles={['MEMBER']}>
+                  <MemberReport />
+                </RoleBasedGuard>
+              )
+            },
+            { path: 'create-disbursement-request', element: <DisbursementRequest /> }
+          ]
+        },
+        {
+          path: 'management-finance',
+          children: [
+            {
+              element: <Navigate to="/dashboard/management-finance/home" replace />
+            },
+            {
+              path: 'home',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <AdminFinance />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'disbursement-approval',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DisbursementApproval />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'disbursement-request-list',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DisbursementRequestList />
+                </RoleBasedGuard>
+              )
+            }
           ]
         },
         {
@@ -210,6 +254,7 @@ const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')))
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
+const AdminFinance = Loadable(lazy(() => import('../pages/dashboard/AdminFinance')));
 const TransactionsReport = Loadable(lazy(() => import('../pages/dashboard/TransactionsReport')));
 const MemberReport = Loadable(lazy(() => import('../pages/dashboard/MemberReport')));
 const DisbursementApproval = Loadable(

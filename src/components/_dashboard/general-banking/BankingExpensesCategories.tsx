@@ -1,10 +1,13 @@
 import { merge } from 'lodash';
+import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 // material
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Card, Stack, Divider, CardHeader, Typography, useMediaQuery } from '@mui/material';
+import { Box, Card, Divider, CardHeader, useMediaQuery } from '@mui/material';
 //
 import { BaseOptionChart } from '../../charts';
+
+import { handleGetLabaRugiInfo } from '../../../utils/financeReport';
 
 // ----------------------------------------------------------------------
 
@@ -23,29 +26,16 @@ const RootStyle = styled(Card)(({ theme }) => ({
   }
 }));
 
-// ----------------------------------------------------------------------
-
-const CHART_DATA = {
-  labels: [
-    'Category 1',
-    'Category 2',
-    'Category 3',
-    'Category 4',
-    'Category 5',
-    'Category 6',
-    'Category 7',
-    'Category 8',
-    'Category 9'
-  ],
-  data: [14, 23, 21, 17, 15, 10, 12, 17, 21]
-};
-
 export default function BankingExpensesCategories() {
+  const [chartData, setChartData] = useState<{ labels: string[]; data: number[] }>({
+    labels: ['Biaya Produksi Produk Terjual', 'Biaya Operasi'],
+    data: []
+  });
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const chartOptions = merge(BaseOptionChart(), {
-    labels: CHART_DATA.labels,
+    labels: chartData.labels,
     colors: [
       theme.palette.primary.main,
       theme.palette.info.darker,
@@ -81,6 +71,24 @@ export default function BankingExpensesCategories() {
     ]
   });
 
+  useEffect(() => {
+    const handleSetChartData = async () => {
+      const temp: { labels: string[]; data: number[] } = {
+        labels: ['Biaya Produksi Produk Terjual', 'Biaya Operasi'],
+        data: []
+      };
+      let tempData = [];
+      const date = new Date();
+      const labaRugiInfo = await handleGetLabaRugiInfo(date);
+      tempData.push(labaRugiInfo.biayaProduksiProdukTerjual);
+      tempData.push(labaRugiInfo.biayaOperasi);
+      temp.data = tempData;
+      setChartData(temp);
+    };
+
+    handleSetChartData();
+  }, []);
+
   return (
     <RootStyle>
       <CardHeader title="Expenses Categories" />
@@ -88,29 +96,13 @@ export default function BankingExpensesCategories() {
       <Box sx={{ my: 5 }} dir="ltr">
         <ReactApexChart
           type="polarArea"
-          series={CHART_DATA.data}
+          series={chartData.data}
           options={chartOptions}
           height={isMobile ? 360 : 240}
         />
       </Box>
 
       <Divider />
-
-      <Stack direction="row" divider={<Divider orientation="vertical" flexItem />}>
-        <Box sx={{ py: 2, width: 1, textAlign: 'center' }}>
-          <Typography sx={{ mb: 1, typography: 'body2', color: 'text.secondary' }}>
-            Categories
-          </Typography>
-          <Typography sx={{ typography: 'h4' }}>9</Typography>
-        </Box>
-
-        <Box sx={{ py: 2, width: 1, textAlign: 'center' }}>
-          <Typography sx={{ mb: 1, typography: 'body2', color: 'text.secondary' }}>
-            Categories
-          </Typography>
-          <Typography sx={{ typography: 'h4' }}>$18,765</Typography>
-        </Box>
-      </Stack>
     </RootStyle>
   );
 }

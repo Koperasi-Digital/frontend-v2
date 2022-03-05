@@ -52,7 +52,6 @@ type ProductItemProps = {
 
 function ProductItem({ product }: ProductItemProps) {
   const { name, image, price } = product;
-
   return (
     <Stack direction="row" spacing={2}>
       <ThumbImgStyle alt={name} src={image} />
