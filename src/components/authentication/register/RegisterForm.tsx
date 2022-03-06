@@ -7,7 +7,18 @@ import eyeFill from '@iconify/icons-eva/eye-fill';
 import closeFill from '@iconify/icons-eva/close-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 // material
-import { Stack, TextField, IconButton, InputAdornment, Alert } from '@mui/material';
+import {
+  Stack,
+  TextField,
+  IconButton,
+  InputAdornment,
+  Alert,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  RadioGroup,
+  Radio
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // hooks
 import useAuth from '../../../hooks/useAuth';
@@ -23,6 +34,7 @@ type InitialValues = {
   passwordConfirm: string;
   firstName: string;
   lastName: string;
+  registerAsMember: 'yes' | 'no';
   afterSubmit?: string;
 };
 
@@ -50,7 +62,8 @@ export default function RegisterForm() {
       lastName: '',
       email: '',
       password: '',
-      passwordConfirm: ''
+      passwordConfirm: '',
+      registerAsMember: 'yes'
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
@@ -60,7 +73,8 @@ export default function RegisterForm() {
           values.password,
           values.passwordConfirm,
           values.firstName,
-          values.lastName
+          values.lastName,
+          values.registerAsMember === 'yes'
         );
         enqueueSnackbar('Register success', {
           variant: 'success',
@@ -73,7 +87,7 @@ export default function RegisterForm() {
         if (isMountedRef.current) {
           setSubmitting(false);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
         if (isMountedRef.current) {
           setErrors({ afterSubmit: error.message });
@@ -155,6 +169,24 @@ export default function RegisterForm() {
             error={Boolean(touched.passwordConfirm && errors.passwordConfirm)}
             helperText={touched.passwordConfirm && errors.passwordConfirm}
           />
+
+          <FormControl>
+            <FormLabel id="registerAsMember">
+              Apakah Anda ingin mendaftar sebagai Anggota Koperasi?
+            </FormLabel>
+            <RadioGroup row {...getFieldProps('registerAsMember')}>
+              <FormControlLabel value="yes" control={<Radio />} label="Ya" />
+              <FormControlLabel
+                value="no"
+                control={<Radio />}
+                label={
+                  <>
+                    Tidak, saya hanya ingin menjadi <i>customer</i> dari <i>E-Commerce</i>
+                  </>
+                }
+              />
+            </RadioGroup>
+          </FormControl>
 
           <LoadingButton
             fullWidth

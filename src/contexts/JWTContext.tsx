@@ -136,13 +136,15 @@ function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     passwordConfirm: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    isMember: boolean
   ) => {
     const response = await axios.post('auth/register', {
       email,
       password,
       passwordConfirm,
-      displayName: firstName.concat(' ', lastName)
+      displayName: firstName.concat(' ', lastName),
+      isMember
     });
     const { accessToken, refreshToken, user } = response.data.payload;
 
