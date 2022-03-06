@@ -50,7 +50,7 @@ export default function AccountGeneral() {
     validationSchema: UpdateUserSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        updateProfile?.();
+        updateProfile(values);
         enqueueSnackbar('Update success', { variant: 'success' });
         if (isMountedRef.current) {
           setSubmitting(false);
@@ -122,15 +122,6 @@ export default function AccountGeneral() {
                   <TextField fullWidth label="City" {...getFieldProps('city')} />
                   <TextField fullWidth label="Zip/Code" {...getFieldProps('zipCode')} />
                 </Stack>
-
-                <TextField
-                  {...getFieldProps('about')}
-                  fullWidth
-                  multiline
-                  minRows={4}
-                  maxRows={4}
-                  label="About"
-                />
               </Stack>
 
               <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>

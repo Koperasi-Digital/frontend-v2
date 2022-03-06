@@ -1,4 +1,5 @@
 import firebase from 'firebase/app';
+import { User } from './account';
 import { Role } from './role';
 
 // ----------------------------------------------------------------------
@@ -40,8 +41,9 @@ export type JWTContextType = {
     isMember: boolean
   ) => Promise<void>;
   logout: () => Promise<void>;
+  changePassword: (oldPassword: string, newPassword: string, confirmNewPassword: string) => void;
   resetPassword: (email: string) => void;
-  updateProfile: VoidFunction;
+  updateProfile: (newData: Partial<User>) => void;
   setCurrentRole: (roleId: number) => void;
 };
 

@@ -12,6 +12,7 @@ import {
   JWTContextType
 } from '../@types/authentication';
 import { Role } from '../@types/role';
+import { User } from '../@types/account';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +21,7 @@ enum Types {
   Login = 'LOGIN',
   Logout = 'LOGOUT',
   Register = 'REGISTER',
+  Update = 'UPDATE',
   SetRole = 'SET_ROLE'
 }
 
@@ -37,6 +39,9 @@ type JWTAuthPayload = {
   [Types.Register]: {
     user: AuthUser;
     currentRole: CurrentRole;
+  };
+  [Types.Update]: {
+    user: AuthUser;
   };
   [Types.SetRole]: {
     currentRole: CurrentRole;
@@ -81,6 +86,11 @@ const JWTReducer = (state: AuthState, action: JWTActions) => {
         isAuthenticated: true,
         user: action.payload.user,
         currentRole: action.payload.currentRole
+      };
+    case Types.Update:
+      return {
+        ...state,
+        user: action.payload.user
       };
     case Types.SetRole:
       return {
@@ -187,16 +197,32 @@ function AuthProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const logout = async () => {
-    await axios.post('auth/invalidate-token');
-    setSession(null, null);
-    setCurrentRole(null);
-    dispatch({ type: Types.Logout });
-  };
+  const logout = () =>
+    axios.post('auth/invalidate-token').then(() => {
+      setSession(null, null);
+      setCurrentRole(null);
+      dispatch({ type: Types.Logout });
+    });
+
+  const changePassword = (oldPassword: string, newPassword: string, confirmNewPassword: string) =>
+    axios.post(`auth/change-password`, {
+      oldPassword,
+      newPassword,
+      confirmNewPassword
+    });
 
   const resetPassword = (email: string) => console.log(email);
 
-  const updateProfile = () => {};
+  const updateProfile = (newData: Partial<User>) =>
+    axios.patch(`/users/${newData.id}`, newData).then((response) => {
+      const user = response.data.payload;
+      dispatch({
+        type: Types.Update,
+        payload: {
+          user
+        }
+      });
+    });
 
   const getCurrentRole = (ownedRoles?: Role[]) => {
     if (ownedRoles && ownedRoles.length) {
@@ -239,6 +265,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         register,
+        changePassword,
         resetPassword,
         updateProfile,
         setCurrentRole
