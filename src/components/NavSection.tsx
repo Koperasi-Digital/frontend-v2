@@ -202,14 +202,14 @@ interface NavSectionProps extends BoxProps {
 }
 
 export default function NavSection({ navConfig, isShow = true, ...other }: NavSectionProps) {
-  const { user } = useAuth();
+  const { currentRole } = useAuth();
   return (
     <Box {...other}>
       {navConfig.map((list) => {
         const { subheader, accessibleRoles, items } = list;
         if (
           accessibleRoles === undefined ||
-          (accessibleRoles && accessibleRoles.includes(user?.role.name))
+          (accessibleRoles && currentRole && accessibleRoles.includes(currentRole.name))
         ) {
           return (
             <List key={subheader} disablePadding>
@@ -218,7 +218,9 @@ export default function NavSection({ navConfig, isShow = true, ...other }: NavSe
                 .filter(
                   (item: NavItemProps) =>
                     item.accessibleRoles === undefined ||
-                    (item.accessibleRoles && item.accessibleRoles.includes(user?.role.name))
+                    (item.accessibleRoles &&
+                      currentRole &&
+                      item.accessibleRoles.includes(currentRole.name))
                 )
                 .map((item: NavItemProps) => (
                   <NavItem key={item.title} item={item} isShow={isShow} />

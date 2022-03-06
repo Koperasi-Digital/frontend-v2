@@ -4,7 +4,14 @@ import { setSession } from 'utils/jwt';
 import axios from 'utils/axios';
 // import axiosMock from 'utils/axiosMock';
 // @types
-import { ActionMap, AuthState, AuthUser, JWTContextType } from '../@types/authentication';
+import {
+  ActionMap,
+  AuthState,
+  AuthUser,
+  CurrentRole,
+  JWTContextType
+} from '../@types/authentication';
+import { Role } from '../@types/role';
 
 // ----------------------------------------------------------------------
 
@@ -12,20 +19,27 @@ enum Types {
   Initial = 'INITIALIZE',
   Login = 'LOGIN',
   Logout = 'LOGOUT',
-  Register = 'REGISTER'
+  Register = 'REGISTER',
+  SetRole = 'SET_ROLE'
 }
 
 type JWTAuthPayload = {
   [Types.Initial]: {
     isAuthenticated: boolean;
     user: AuthUser;
+    currentRole: CurrentRole;
   };
   [Types.Login]: {
     user: AuthUser;
+    currentRole: CurrentRole;
   };
   [Types.Logout]: undefined;
   [Types.Register]: {
     user: AuthUser;
+    currentRole: CurrentRole;
+  };
+  [Types.SetRole]: {
+    currentRole: CurrentRole;
   };
 };
 
@@ -34,37 +48,45 @@ export type JWTActions = ActionMap<JWTAuthPayload>[keyof ActionMap<JWTAuthPayloa
 const initialState: AuthState = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null
+  user: null,
+  currentRole: null
 };
 
 const JWTReducer = (state: AuthState, action: JWTActions) => {
   switch (action.type) {
-    case 'INITIALIZE':
+    case Types.Initial:
       return {
         isAuthenticated: action.payload.isAuthenticated,
         isInitialized: true,
-        user: action.payload.user
+        user: action.payload.user,
+        currentRole: action.payload.currentRole
       };
-    case 'LOGIN':
+    case Types.Login:
       return {
         ...state,
         isAuthenticated: true,
-        user: action.payload.user
+        user: action.payload.user,
+        currentRole: action.payload.currentRole
       };
-    case 'LOGOUT':
+    case Types.Logout:
       return {
         ...state,
         isAuthenticated: false,
-        user: null
+        user: null,
+        currentRole: null
       };
-
-    case 'REGISTER':
+    case Types.Register:
       return {
         ...state,
         isAuthenticated: true,
-        user: action.payload.user
+        user: action.payload.user,
+        currentRole: action.payload.currentRole
       };
-
+    case Types.SetRole:
+      return {
+        ...state,
+        currentRole: action.payload.currentRole
+      };
     default:
       return state;
   }
@@ -83,12 +105,14 @@ function AuthProvider({ children }: { children: ReactNode }) {
           await setSession(accessToken, null /* token still valid */);
           const response = await axios.get('auth/my-account');
           const { user } = response.data.payload;
+          const currentRole = getCurrentRole(user.roles);
 
           dispatch({
             type: Types.Initial,
             payload: {
               isAuthenticated: true,
-              user
+              user,
+              currentRole
             }
           });
         } else {
@@ -96,7 +120,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
             type: Types.Initial,
             payload: {
               isAuthenticated: false,
-              user: null
+              user: null,
+              currentRole: null
             }
           });
         }
@@ -106,7 +131,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
           type: Types.Initial,
           payload: {
             isAuthenticated: false,
-            user: null
+            user: null,
+            currentRole: null
           }
         });
       }
@@ -121,12 +147,14 @@ function AuthProvider({ children }: { children: ReactNode }) {
       password
     });
     const { accessToken, refreshToken, user } = response.data.payload;
+    const currentRole = getCurrentRole(user.roles);
 
     setSession(accessToken, refreshToken);
     dispatch({
       type: Types.Login,
       payload: {
-        user
+        user,
+        currentRole
       }
     });
   };
@@ -147,12 +175,14 @@ function AuthProvider({ children }: { children: ReactNode }) {
       isMember
     });
     const { accessToken, refreshToken, user } = response.data.payload;
+    const currentRole = getCurrentRole(user.roles);
 
     setSession(accessToken, refreshToken);
     dispatch({
       type: Types.Register,
       payload: {
-        user
+        user,
+        currentRole
       }
     });
   };
@@ -160,12 +190,46 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     await axios.post('auth/invalidate-token');
     setSession(null, null);
+    setCurrentRole(null);
     dispatch({ type: Types.Logout });
   };
 
   const resetPassword = (email: string) => console.log(email);
 
   const updateProfile = () => {};
+
+  const getCurrentRole = (ownedRoles?: Role[]) => {
+    if (ownedRoles && ownedRoles.length) {
+      const currentRoleId = window.localStorage.getItem('currentRoleId');
+      if (currentRoleId) {
+        const selectedRole = ownedRoles?.filter(
+          (ownedRole) => ownedRole.id === Number(currentRoleId)
+        );
+        if (selectedRole.length) {
+          return selectedRole[0];
+        }
+      }
+      // use first item in user roles array as default role
+      const defaultRole = ownedRoles[0];
+      localStorage.setItem('currentRoleId', defaultRole.id.toString());
+      return defaultRole;
+    }
+    return null;
+  };
+
+  const setCurrentRole = (roleId: number | null) => {
+    let currentRole: Role | null = null;
+    if (roleId) {
+      localStorage.setItem('currentRoleId', roleId.toString());
+      currentRole = getCurrentRole(state.user?.roles);
+    }
+    dispatch({
+      type: Types.SetRole,
+      payload: {
+        currentRole
+      }
+    });
+  };
 
   return (
     <AuthContext.Provider
@@ -176,7 +240,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
         logout,
         register,
         resetPassword,
-        updateProfile
+        updateProfile,
+        setCurrentRole
       }}
     >
       {children}

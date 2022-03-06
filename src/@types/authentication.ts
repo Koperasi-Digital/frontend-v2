@@ -1,4 +1,5 @@
 import firebase from 'firebase/app';
+import { Role } from './role';
 
 // ----------------------------------------------------------------------
 
@@ -14,17 +15,20 @@ export type ActionMap<M extends { [index: string]: any }> = {
 };
 
 export type AuthUser = null | Record<string, any>;
+export type CurrentRole = null | Role;
 
 export type AuthState = {
   isAuthenticated: boolean;
   isInitialized: boolean;
   user: AuthUser;
+  currentRole: CurrentRole;
 };
 
 export type JWTContextType = {
   isAuthenticated: boolean;
   isInitialized: boolean;
   user: AuthUser;
+  currentRole: CurrentRole;
   method: 'jwt';
   login: (email: string, password: string) => Promise<void>;
   register: (
@@ -38,6 +42,7 @@ export type JWTContextType = {
   logout: () => Promise<void>;
   resetPassword: (email: string) => void;
   updateProfile: VoidFunction;
+  setCurrentRole: (roleId: number) => void;
 };
 
 export type FirebaseContextType = {

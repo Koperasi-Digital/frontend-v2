@@ -44,7 +44,7 @@ export default function AccountGeneral() {
       state: user?.state,
       city: user?.city,
       zipCode: user?.zipCode,
-      role: user?.role
+      roles: user?.roles
     },
 
     validationSchema: UpdateUserSchema,
@@ -55,7 +55,7 @@ export default function AccountGeneral() {
         if (isMountedRef.current) {
           setSubmitting(false);
         }
-      } catch (error) {
+      } catch (error: any) {
         if (isMountedRef.current) {
           setErrors({ afterSubmit: error.code });
           setSubmitting(false);
@@ -121,10 +121,6 @@ export default function AccountGeneral() {
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
                   <TextField fullWidth label="City" {...getFieldProps('city')} />
                   <TextField fullWidth label="Zip/Code" {...getFieldProps('zipCode')} />
-                </Stack>
-
-                <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                  <TextField fullWidth label="Role" {...getFieldProps('role')} disabled />
                 </Stack>
 
                 <TextField

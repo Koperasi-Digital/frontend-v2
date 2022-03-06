@@ -51,8 +51,8 @@ function UserDashboard() {
 }
 
 export default function GeneralApp() {
-  const { user } = useAuth();
-  const role = user?.role.name;
+  const { user, currentRole } = useAuth();
+  const role = currentRole?.name;
 
   return (
     <Page title="Dashboard | CoopChick">
