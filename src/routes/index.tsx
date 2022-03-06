@@ -84,7 +84,7 @@ export default function Router() {
         {
           path: 'blogs',
           element: (
-            <RoleBasedGuard accessibleRoles={['CUSTOMER']}>
+            <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
               <BlogPosts />
             </RoleBasedGuard>
           )
