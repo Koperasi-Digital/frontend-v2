@@ -82,9 +82,9 @@ const sidebarConfig = [
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.cart,
         children: [
-          { title: 'list', path: PATH_DASHBOARD.eCommerce.list },
-          { title: 'create', path: PATH_DASHBOARD.eCommerce.newProduct },
-          { title: 'edit', path: PATH_DASHBOARD.eCommerce.editById }
+          { title: 'seller', path: PATH_DASHBOARD.eCommerce.seller },
+          { title: 'manage orders', path: PATH_DASHBOARD.eCommerce.orderList },
+          { title: 'manage products', path: PATH_DASHBOARD.eCommerce.list }
         ]
       },
       // MANAGEMENT: KNOWLEDGE
@@ -131,7 +131,6 @@ const sidebarConfig = [
     accessibleRoles: ['CUSTOMER'],
     items: [
       { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop, icon: ICONS.cart },
-      { title: 'product', path: PATH_DASHBOARD.eCommerce.productById, icon: ICONS.cart },
       { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout, icon: ICONS.cart },
       { title: 'invoice', path: PATH_DASHBOARD.eCommerce.invoice, icon: ICONS.cart }
     ]
