@@ -2,7 +2,8 @@ import { map, filter } from 'lodash';
 import { createSlice } from '@reduxjs/toolkit';
 import { dispatch } from '../store';
 // utils
-import axios from '../../utils/axiosMock';
+import axios from '../../utils/axios';
+import axiosMock from '../../utils/axiosMock';
 import {
   Friend,
   Gallery,
@@ -169,7 +170,7 @@ export function getProfile() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/profile');
+      const response = await axiosMock.get('/api/user/profile');
       dispatch(slice.actions.getProfileSuccess(response.data.profile));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -183,7 +184,7 @@ export function getPosts() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/posts');
+      const response = await axiosMock.get('/api/user/posts');
       dispatch(slice.actions.getPostsSuccess(response.data.posts));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -197,7 +198,7 @@ export function getFollowers() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/social/followers');
+      const response = await axiosMock.get('/api/user/social/followers');
       dispatch(slice.actions.getFollowersSuccess(response.data.followers));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -211,7 +212,7 @@ export function getFriends() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/social/friends');
+      const response = await axiosMock.get('/api/user/social/friends');
       dispatch(slice.actions.getFriendsSuccess(response.data.friends));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -225,7 +226,7 @@ export function getGallery() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/social/gallery');
+      const response = await axiosMock.get('/api/user/social/gallery');
       dispatch(slice.actions.getGallerySuccess(response.data.gallery));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -239,8 +240,8 @@ export function getUserList() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/manage-users');
-      dispatch(slice.actions.getUserListSuccess(response.data.users));
+      const response = await axios.get('users');
+      dispatch(slice.actions.getUserListSuccess(response.data.payload));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -253,7 +254,7 @@ export function getCards() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/account/cards');
+      const response = await axiosMock.get('/api/user/account/cards');
       dispatch(slice.actions.getCardsSuccess(response.data.cards));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -267,7 +268,7 @@ export function getAddressBook() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/account/address-book');
+      const response = await axiosMock.get('/api/user/account/address-book');
       dispatch(slice.actions.getAddressBookSuccess(response.data.addressBook));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -281,7 +282,7 @@ export function getInvoices() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/account/invoices');
+      const response = await axiosMock.get('/api/user/account/invoices');
       dispatch(slice.actions.getInvoicesSuccess(response.data.invoices));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -295,7 +296,7 @@ export function getNotifications() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/account/notifications-settings');
+      const response = await axiosMock.get('/api/user/account/notifications-settings');
       dispatch(slice.actions.getNotificationsSuccess(response.data.notifications));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -309,7 +310,7 @@ export function getUsers() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/all');
+      const response = await axiosMock.get('/api/user/all');
       dispatch(slice.actions.getUsersSuccess(response.data.users));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

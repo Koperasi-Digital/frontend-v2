@@ -1,6 +1,7 @@
 // ----------------------------------------------------------------------
 
 import { FormikProps } from 'formik';
+import { Role } from './role';
 
 export type UserInvoice = {
   id: string;
@@ -60,19 +61,18 @@ export type Profile = {
 
 export type UserManager = {
   id: string;
-  avatarUrl: string;
-  name: string;
+  displayName: string;
   email: string;
+  photoURL: string;
   phoneNumber: string;
-  address: string;
   country: string;
+  address: string;
   state: string;
   city: string;
   zipCode: string;
-  company: string;
-  isVerified: boolean;
-  status: string;
-  role: string;
+  roles: Role[];
+  created_at: string;
+  updated_at: string;
 };
 
 export type UserData = {
