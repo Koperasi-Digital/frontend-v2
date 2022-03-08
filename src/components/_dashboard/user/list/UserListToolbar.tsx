@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import searchFill from '@iconify/icons-eva/search-fill';
 import trash2Fill from '@iconify/icons-eva/trash-2-fill';
@@ -18,9 +18,9 @@ import {
   MenuItem,
   Select
 } from '@mui/material';
-import useIsMountedRef from 'hooks/useIsMountedRef';
-import axios from 'utils/axios';
-import { Role } from '../../../../@types/role';
+// redux
+import { useDispatch, useSelector, RootState } from '../../../../redux/store';
+import { getRoles } from '../../../../redux/slices/role';
 
 // ----------------------------------------------------------------------
 
@@ -80,23 +80,13 @@ export default function UserListToolbar({
 }: UserListToolbarProps) {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
-  const isMountedRef = useIsMountedRef();
-  const [roles, setRoles] = useState<Role[]>([]);
 
-  const getRoles = useCallback(async () => {
-    try {
-      const response = await axios.get('roles');
-      if (isMountedRef.current) {
-        setRoles(response.data.payload);
-      }
-    } catch (err) {
-      //
-    }
-  }, [isMountedRef]);
+  const dispatch = useDispatch();
+  const { roles } = useSelector((state: RootState) => state.role);
 
   useEffect(() => {
-    getRoles();
-  }, [getRoles]);
+    dispatch(getRoles());
+  }, [dispatch]);
 
   return (
     <RootStyle
@@ -114,9 +104,9 @@ export default function UserListToolbar({
       ) : (
         <FilterContainer>
           <RoleFormControlStyle>
-            <InputLabel id="role-filter">Role</InputLabel>
+            <InputLabel id="role-filter-label">Role</InputLabel>
             <Select
-              labelId="role-filter"
+              labelId="role-filter-label"
               id="role-filter"
               label="Role"
               value={filterRole}
