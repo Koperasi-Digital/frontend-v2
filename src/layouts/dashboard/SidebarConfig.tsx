@@ -51,10 +51,7 @@ const sidebarConfig = [
         title: 'user',
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
-        children: [
-          { title: 'list', path: PATH_DASHBOARD.user.list },
-          { title: 'edit', path: PATH_DASHBOARD.user.editById }
-        ]
+        children: [{ title: 'list', path: PATH_DASHBOARD.user.list }]
       },
       // MANAGEMENT : FINANCE
       {

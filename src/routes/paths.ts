@@ -49,7 +49,7 @@ export const PATH_DASHBOARD = {
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
     list: path(ROOTS_DASHBOARD, '/user/list'),
-    editById: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
+    editById: path(ROOTS_DASHBOARD, `/user/:name/edit`),
     account: path(ROOTS_DASHBOARD, '/user/account')
   },
   eCommerce: {
