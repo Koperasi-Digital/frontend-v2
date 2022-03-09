@@ -28,7 +28,11 @@ export default function UserCreate() {
   }, [dispatch]);
 
   return (
-    <Page title="User: Create a new user | CoopChick">
+    <Page
+      title={`User: ${
+        isEdit ? `Edit user - ${currentUser?.displayName}` : `Create a new user`
+      } | CoopChick`}
+    >
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading={!isEdit ? 'Create a new user' : 'Edit user'}
