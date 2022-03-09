@@ -79,6 +79,30 @@ type CalendarFormProps = {
   onCancel: VoidFunction;
 };
 
+const Field = ({
+  name,
+  value,
+  field,
+  isReadOnly
+}: {
+  name: string;
+  value: string;
+  field: JSX.Element;
+  isReadOnly: boolean;
+}) =>
+  isReadOnly ? (
+    <Grid container xs={12} sx={{ mb: 2 }}>
+      <Grid item xs={12} sm={3} component={Typography} variant="body1" sx={{ fontWeight: 'bold' }}>
+        {name}
+      </Grid>
+      <Grid item xs={12} sm={9} component={Typography} variant="body1">
+        {value}
+      </Grid>
+    </Grid>
+  ) : (
+    <>{field}</>
+  );
+
 export default function CalendarForm({ event, range, onCancel }: CalendarFormProps) {
   const { user } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
@@ -154,27 +178,6 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
     }
   };
 
-  const Field = ({ name, value, field }: { name: string; value: string; field: JSX.Element }) =>
-    isReadOnly ? (
-      <Grid container xs={12} sx={{ mb: 2 }}>
-        <Grid
-          item
-          xs={12}
-          sm={3}
-          component={Typography}
-          variant="body1"
-          sx={{ fontWeight: 'bold' }}
-        >
-          {name}
-        </Grid>
-        <Grid item xs={12} sm={9} component={Typography} variant="body1">
-          {value}
-        </Grid>
-      </Grid>
-    ) : (
-      <>{field}</>
-    );
-
   return (
     <FormikProvider value={formik}>
       <DialogTitle>{renderTitle()}</DialogTitle>
@@ -183,6 +186,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           <Field
             name="Title"
             value={values.title}
+            isReadOnly={isReadOnly}
             field={
               <TextField
                 fullWidth
@@ -198,6 +202,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           <Field
             name="Description"
             value={values.description || '-'}
+            isReadOnly={isReadOnly}
             field={
               <TextField
                 fullWidth
@@ -216,6 +221,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           <Field
             name="Type"
             value={startCase(values.type)}
+            isReadOnly={isReadOnly}
             field={
               <FormControl fullWidth disabled={isReadOnly}>
                 <InputLabel>Type</InputLabel>
@@ -239,6 +245,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           <Field
             name="Include Notification"
             value={values.includeNotification ? 'Yes' : 'No'}
+            isReadOnly={isReadOnly}
             field={
               <FormControlLabel
                 control={
@@ -257,6 +264,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           <Field
             name="All Day"
             value={values.allDay ? 'Yes' : 'No'}
+            isReadOnly={isReadOnly}
             field={
               <FormControlLabel
                 control={<Switch checked={values.allDay} {...getFieldProps('allDay')} />}
@@ -274,6 +282,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
                 new Date(values.end),
                 'dd/MM/yyyy hh:mm a'
               )}`}
+              isReadOnly={isReadOnly}
               field={
                 <Stack direction="row" spacing={1}>
                   <MobileDateTimePicker
@@ -309,6 +318,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
             <Field
               name="Organizer"
               value={`${event.createdBy.displayName} (${event.createdBy.email})`}
+              isReadOnly={isReadOnly}
               field={
                 <TextField
                   fullWidth
