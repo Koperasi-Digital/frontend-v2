@@ -91,6 +91,13 @@ const slice = createSlice({
       state.userList = deleteUser;
     },
 
+    // EDIT USER
+    editUser(state, action) {
+      state.userList = state.userList.map((user) =>
+        user.id === action.payload.id ? { ...action.payload, ...user } : user
+      );
+    },
+
     // GET FOLLOWERS
     getFollowersSuccess(state, action) {
       state.isLoading = false;
@@ -162,7 +169,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { onToggleFollow, deleteUser } = slice.actions;
+export const { onToggleFollow } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -316,4 +323,26 @@ export function getUsers() {
       dispatch(slice.actions.hasError(error));
     }
   };
+}
+
+export async function editUser(userId: string, data: Partial<UserManager>) {
+  dispatch(slice.actions.startLoading());
+  try {
+    const response = await axios.patch(`users/${userId}`, data);
+    dispatch(slice.actions.editUser(response.data.payload));
+  } catch (error) {
+    console.log(error);
+    dispatch(slice.actions.hasError(error));
+  }
+}
+
+export async function deleteUser(userId: string) {
+  dispatch(slice.actions.startLoading());
+  try {
+    await axios.delete(`users/${userId}`);
+    dispatch(slice.actions.deleteUser(userId));
+  } catch (error) {
+    console.log(error);
+    dispatch(slice.actions.hasError(error));
+  }
 }

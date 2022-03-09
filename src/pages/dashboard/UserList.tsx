@@ -13,6 +13,7 @@ import {
   TableContainer,
   TablePagination
 } from '@mui/material';
+import { useSnackbar } from 'notistack';
 // redux
 import { RootState, useDispatch, useSelector } from '../../redux/store';
 import { getUserList, deleteUser } from '../../redux/slices/user';
@@ -89,6 +90,7 @@ function applySortFilter(
 
 export default function UserList() {
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { userList } = useSelector((state: RootState) => state.user);
   const [page, setPage] = useState(0);
@@ -149,8 +151,13 @@ export default function UserList() {
     setFilterRole(filterRole);
   };
 
-  const handleDeleteUser = (userId: string) => {
-    dispatch(deleteUser(userId));
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      await deleteUser(userId);
+      enqueueSnackbar(`Delete User ID: ${userId} success`, { variant: 'success' });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
@@ -223,7 +230,7 @@ export default function UserList() {
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <MAvatar
-                                src={photoURL}
+                                src={photoURL || undefined}
                                 alt={displayName}
                                 color={photoURL ? 'default' : defaultAvatar!.color}
                               >

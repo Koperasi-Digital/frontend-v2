@@ -63,7 +63,7 @@ export type UserManager = {
   id: string;
   displayName: string;
   email: string;
-  photoURL: string;
+  photoURL: string | null;
   phoneNumber: string;
   country: string;
   address: string;
