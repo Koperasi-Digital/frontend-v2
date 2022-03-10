@@ -44,7 +44,8 @@ export default function AccountGeneral() {
       state: user?.state,
       city: user?.city,
       zipCode: user?.zipCode,
-      roles: user?.roles
+      roles: user?.roles,
+      storeName: user?.storeName
     },
 
     validationSchema: UpdateUserSchema,

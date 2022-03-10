@@ -23,6 +23,7 @@ const users: User[] = [
     state: 'West Java',
     city: 'Bandung',
     zipCode: '40132',
+    storeName: null,
     roles: [
       {
         id: 1,
@@ -47,6 +48,7 @@ const users: User[] = [
     state: null,
     city: null,
     zipCode: null,
+    storeName: null,
     roles: [
       {
         id: 2,
@@ -106,6 +108,7 @@ mock.onPost('/api/account/register').reply(async (config) => {
       state: null,
       city: null,
       zipCode: null,
+      storeName: null,
       roles: [
         {
           id: 2,
