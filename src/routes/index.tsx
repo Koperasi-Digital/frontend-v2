@@ -137,6 +137,14 @@ export default function Router() {
                 </RoleBasedGuard>
               )
             },
+            {
+              path: ':name/detail',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <UserDetail />
+                </RoleBasedGuard>
+              )
+            },
             { path: 'account', element: <UserAccount /> }
           ]
         },
@@ -203,6 +211,7 @@ const MyForum = Loadable(lazy(() => import('../pages/dashboard/MyForum')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
+const UserDetail = Loadable(lazy(() => import('../pages/dashboard/UserDetail')));
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
