@@ -5,9 +5,9 @@ type transaction_details = {
   gross_amount: number;
 };
 
-export async function handleListTransaction(userId: number) {
+export async function handleShowTransaction(userId: number) {
   try {
-    const response = await axios.get('transaction/list/' + userId);
+    const response = await axios.get('transaction/show/' + userId);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -15,14 +15,21 @@ export async function handleListTransaction(userId: number) {
   }
 }
 
-export async function handleCreateTransaction(
-  user_id: number,
-  transaction_details: transaction_details
-) {
+export async function handleCreateTransaction(transaction_details: transaction_details) {
   try {
     const response = await axios.post('payment/create', {
       transaction_details: transaction_details
     });
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+export async function handleShowCoopTransaction(destUserId: number) {
+  try {
+    const response = await axios.get('coopTransaction/show/' + destUserId);
     return response.data.payload;
   } catch (e) {
     console.log(e);

@@ -5,24 +5,14 @@ import { Form, FormikProvider, useFormik } from 'formik';
 // material
 import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
-import {
-  Card,
-  Grid,
-  Stack,
-  Select,
-  TextField,
-  InputLabel,
-  Typography,
-  FormControl,
-  FormHelperText
-} from '@mui/material';
+import { Card, Grid, Stack, TextField, Typography, FormHelperText } from '@mui/material';
 // utils
-import fakeRequest from '../../../utils/fakeRequest';
 import { UploadMultiFile } from '../../upload';
 
-// ----------------------------------------------------------------------
+import { handleEditReimbursement, handleShowOneReimbursement } from 'utils/financeReimbursement';
+import { handleEditSaldo } from 'utils/financeSaldo';
 
-const CATEGORY_OPTION = ['Saldo', 'Sharing'];
+// ----------------------------------------------------------------------
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -42,16 +32,29 @@ export default function DisbursementApprovalForm() {
     enableReinitialize: true,
     initialValues: {
       disbursementRequestId: '',
-      category: CATEGORY_OPTION[0],
       images: []
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        await fakeRequest(500);
+        const reimbursement = await handleShowOneReimbursement(values.disbursementRequestId);
+        const editedReimbursement = await handleEditReimbursement(
+          values.disbursementRequestId,
+          'success',
+          undefined
+        );
+        const editedSaldo = await handleEditSaldo(
+          reimbursement.userId,
+          reimbursement.total_cost,
+          0
+        );
         resetForm();
         setSubmitting(false);
-        enqueueSnackbar('Create success', { variant: 'success' });
+        if (editedReimbursement && editedSaldo) {
+          enqueueSnackbar('Create success', { variant: 'success' });
+        } else {
+          enqueueSnackbar('Create fail', { variant: 'error' });
+        }
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -100,21 +103,6 @@ export default function DisbursementApprovalForm() {
                   error={Boolean(touched.disbursementRequestId && errors.disbursementRequestId)}
                   helperText={touched.disbursementRequestId && errors.disbursementRequestId}
                 />
-                <FormControl fullWidth>
-                  <InputLabel>Category</InputLabel>
-                  <Select
-                    label="Category"
-                    native
-                    {...getFieldProps('category')}
-                    value={values.category}
-                  >
-                    {CATEGORY_OPTION.map((category) => (
-                      <option key={category} value={category}>
-                        {category}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
                 <div>
                   <LabelStyle>Add Images</LabelStyle>
                   <UploadMultiFile
@@ -144,7 +132,7 @@ export default function DisbursementApprovalForm() {
               size="large"
               loading={isSubmitting}
             >
-              {'Create Product'}
+              Create Disbursement Approval
             </LoadingButton>
           </Grid>
         </Grid>

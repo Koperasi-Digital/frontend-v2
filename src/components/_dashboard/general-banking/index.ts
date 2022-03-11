@@ -11,8 +11,7 @@ export { default as BankingExpensesCategories } from './BankingExpensesCategorie
 export { default as BankingSavings } from './BankingSavings';
 export { default as Transactions } from './Transactions';
 export { default as DisbursementApprovalForm } from './DisbursementApprovalForm';
-export { default as SaldoDisbursementRequestList } from './SaldoDisbursementRequestList';
-export { default as ShareDisbursementRequestList } from './ShareDisbursementRequestList';
+export { default as DisbursementRequestList } from './DisbursementRequestListTable';
 export { default as PaymentCreation } from './PaymentCreation';
 export { default as BankingBalance } from './BankingBalance';
 export { default as BankingReport } from './BankingReport';
