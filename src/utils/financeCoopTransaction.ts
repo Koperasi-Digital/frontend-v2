@@ -14,3 +14,19 @@ export async function handleCreateCoopTransaction(param: {
     return undefined;
   }
 }
+
+export async function handleShowCoopTransaction(
+  destUserId: number,
+  fromDate: string,
+  toDate: string
+) {
+  try {
+    const response = await axios.get(
+      'coopTransaction/show/' + destUserId + '/' + fromDate + '/' + toDate
+    );
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}

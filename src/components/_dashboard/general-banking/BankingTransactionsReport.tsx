@@ -47,7 +47,8 @@ import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
-import { handleShowTransaction, handleShowCoopTransaction } from 'utils/financeTransaction';
+import { handleShowTransaction } from 'utils/financeTransaction';
+import { handleShowCoopTransaction } from 'utils/financeCoopTransaction';
 import useAuth from 'hooks/useAuth';
 
 type AvatarIconProps = {
@@ -211,16 +212,6 @@ export default function BankingTransactionsReport() {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const fetchedTransactionList = await handleShowTransaction(userId);
-      const fetchedCoopTransactionList = await handleShowCoopTransaction(userId);
-      setAllTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
-      setFilteredTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
-    };
-    fetchData();
-  }, [userId]);
-
   //Table Pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -245,6 +236,32 @@ export default function BankingTransactionsReport() {
   const handleClickPrint = () => {};
   const handleClickShare = () => {};
   const handleClickDelete = () => {};
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (userId && fromDateValue && toDateValue) {
+        const fromDateString = `${fromDateValue.getFullYear()}-${
+          fromDateValue.getMonth() + 1
+        }-${fromDateValue.getDate()} 0:0:0`;
+        const toDateString = `${toDateValue.getFullYear()}-${
+          toDateValue.getMonth() + 1
+        }-${toDateValue.getDate()} 23:59:59`;
+        const fetchedTransactionList = await handleShowTransaction(
+          userId,
+          fromDateString,
+          toDateString
+        );
+        const fetchedCoopTransactionList = await handleShowCoopTransaction(
+          userId,
+          fromDateString,
+          toDateString
+        );
+        setAllTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+        setFilteredTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+      }
+    };
+    fetchData();
+  }, [userId, fromDateValue, toDateValue]);
 
   return (
     <>
