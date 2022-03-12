@@ -1,17 +1,24 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useSnackbar } from 'notistack';
-import { Link as RouterLink } from 'react-router-dom';
+// import { Link as RouterLink } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import closeFill from '@iconify/icons-eva/close-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 // material
-import { Link, Stack, Alert, TextField, IconButton, InputAdornment } from '@mui/material';
+import {
+  // Link,
+  Stack,
+  Alert,
+  TextField,
+  IconButton,
+  InputAdornment
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
-import { PATH_AUTH } from '../../../routes/paths';
+// import { PATH_AUTH } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
@@ -55,12 +62,12 @@ export default function LoginForm() {
         if (isMountedRef.current) {
           setSubmitting(false);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
         resetForm();
         if (isMountedRef.current) {
           setSubmitting(false);
-          setErrors({ afterSubmit: error.message });
+          setErrors({ afterSubmit: error.errors.join('\n') });
         }
       }
     }
@@ -109,9 +116,9 @@ export default function LoginForm() {
         </Stack>
 
         <Stack direction="row" alignItems="center" sx={{ my: 2 }}>
-          <Link component={RouterLink} variant="subtitle2" to={PATH_AUTH.resetPassword}>
+          {/* <Link component={RouterLink} variant="subtitle2" to={PATH_AUTH.resetPassword}>
             Forgot password?
-          </Link>
+          </Link> */}
         </Stack>
 
         <LoadingButton
