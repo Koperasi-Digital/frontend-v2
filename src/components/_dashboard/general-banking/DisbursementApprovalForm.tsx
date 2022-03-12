@@ -10,6 +10,7 @@ import { Card, Grid, Stack, TextField, Typography, FormHelperText } from '@mui/m
 import { UploadMultiFile } from '../../upload';
 
 import { handleEditReimbursement, handleShowOneReimbursement } from 'utils/financeReimbursement';
+import { handleCreateCoopTransaction } from 'utils/financeCoopTransaction';
 import { handleEditSaldo } from 'utils/financeSaldo';
 
 // ----------------------------------------------------------------------
@@ -48,9 +49,15 @@ export default function DisbursementApprovalForm() {
           reimbursement.total_cost,
           0
         );
+        const createdCoopTransaction = await handleCreateCoopTransaction({
+          sisaHasilUsahaId: undefined,
+          reimbursementId: reimbursement.id,
+          paymentType: 'Transfer Bank BCA',
+          status: 'success'
+        });
         resetForm();
         setSubmitting(false);
-        if (editedReimbursement && editedSaldo) {
+        if (editedReimbursement && editedSaldo && createdCoopTransaction) {
           enqueueSnackbar('Create success', { variant: 'success' });
         } else {
           enqueueSnackbar('Create fail', { variant: 'error' });
