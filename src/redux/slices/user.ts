@@ -14,8 +14,7 @@ import {
   CreditCard,
   UserInvoice,
   UserManager,
-  UserAddressBook,
-  NotificationSettings
+  UserAddressBook
 } from '../../@types/user';
 
 // ----------------------------------------------------------------------
@@ -33,7 +32,6 @@ type UserState = {
   cards: CreditCard[] | null;
   addressBook: UserAddressBook[];
   invoices: UserInvoice[];
-  notifications: NotificationSettings | null;
 };
 
 const initialState: UserState = {
@@ -48,8 +46,7 @@ const initialState: UserState = {
   gallery: [],
   cards: null,
   addressBook: [],
-  invoices: [],
-  notifications: null
+  invoices: []
 };
 
 const slice = createSlice({
@@ -155,12 +152,6 @@ const slice = createSlice({
     getInvoicesSuccess(state, action) {
       state.isLoading = false;
       state.invoices = action.payload;
-    },
-
-    // GET NOTIFICATIONS
-    getNotificationsSuccess(state, action) {
-      state.isLoading = false;
-      state.notifications = action.payload;
     }
   }
 });
@@ -291,20 +282,6 @@ export function getInvoices() {
     try {
       const response = await axiosMock.get('/api/user/account/invoices');
       dispatch(slice.actions.getInvoicesSuccess(response.data.invoices));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
-
-// ----------------------------------------------------------------------
-
-export function getNotifications() {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axiosMock.get('/api/user/account/notifications-settings');
-      dispatch(slice.actions.getNotificationsSuccess(response.data.notifications));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

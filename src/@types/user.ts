@@ -87,15 +87,6 @@ export type UserData = {
   position: string;
 };
 
-export type NotificationSettings = {
-  activityComments: boolean;
-  activityAnswers: boolean;
-  activityFollows: boolean;
-  applicationNews: boolean;
-  applicationProduct: boolean;
-  applicationBlog: boolean;
-};
-
 export type Friend = {
   id: string;
   avatarUrl: string;

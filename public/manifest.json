@@ -5,6 +5,7 @@
   "start_url": "/",
   "theme_color": "#000000",
   "background_color": "#ffffff",
+  "gcm_sender_id": 903260437227,
   "icons": [{
       "src": "favicon/android-icon-36x36.png",
       "sizes": "36x36",

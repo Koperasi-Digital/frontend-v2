@@ -7,13 +7,7 @@ import roundAccountBox from '@iconify/icons-ic/round-account-box';
 import { Container, Tab, Box, Tabs } from '@mui/material';
 // redux
 import { RootState, useDispatch, useSelector } from '../../redux/store';
-import {
-  getCards,
-  getProfile,
-  getInvoices,
-  getAddressBook,
-  getNotifications
-} from '../../redux/slices/user';
+import { getCards, getProfile, getInvoices, getAddressBook } from '../../redux/slices/user';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -28,9 +22,8 @@ export default function UserAccount() {
   const {
     cards,
     // invoices,
-    myProfile,
+    myProfile
     // addressBook,
-    notifications
   } = useSelector((state: RootState) => state.user);
 
   const [currentTab, setCurrentTab] = useState('general');
@@ -39,7 +32,6 @@ export default function UserAccount() {
     dispatch(getCards());
     dispatch(getAddressBook());
     dispatch(getInvoices());
-    dispatch(getNotifications());
     dispatch(getProfile());
   }, [dispatch]);
 
@@ -48,10 +40,6 @@ export default function UserAccount() {
   }
 
   if (!cards) {
-    return null;
-  }
-
-  if (!notifications) {
     return null;
   }
 

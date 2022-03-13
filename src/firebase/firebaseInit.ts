@@ -1,5 +1,5 @@
-// Import the functions you need from the SDKs you need
 import firebase from 'firebase/app';
+import 'firebase/messaging';
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
@@ -18,4 +18,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-export const cloudMessaging = firebase.messaging();
+// MESSAGING
+
+export const messaging = firebase.messaging();
