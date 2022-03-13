@@ -17,7 +17,6 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import {
   BlogPostHero,
   BlogPostTags,
-  // BlogPostRecent,
   BlogPostCommentList
   // BlogPostCommentForm
 } from '../../components/_dashboard/blog';
@@ -41,7 +40,6 @@ const SkeletonLoad = (
 export default function BlogPost() {
   const dispatch = useDispatch();
   const { title = '' } = useParams();
-  // const { post, error, recentPosts } = useSelector((state: { blog: BlogState }) => state.blog);
   const { post, error } = useSelector((state: { blog: BlogState }) => state.blog);
 
   useEffect(() => {
@@ -102,8 +100,6 @@ export default function BlogPost() {
         {!post && SkeletonLoad}
 
         {error && <Typography variant="h6">404 Post not found</Typography>}
-
-        {/* {recentPosts.length > 0 && <BlogPostRecent posts={recentPosts} />} */}
       </Container>
     </Page>
   );

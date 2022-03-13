@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Container, Typography } from '@mui/material';
 // redux
 import { RootState, useDispatch, useSelector } from '../../redux/store';
-import { getPosts } from '../../redux/slices/user';
+import { getOwnPosts } from '../../redux/slices/forum';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -16,11 +16,11 @@ import { MyForumPost } from '../../components/_dashboard/forum';
 export default function MyForum() {
   const { user } = useAuth();
   const dispatch = useDispatch();
-  const { posts } = useSelector((state: RootState) => state.user);
+  const { posts } = useSelector((state: RootState) => state.forum);
 
   useEffect(() => {
-    dispatch(getPosts());
-  }, [dispatch]);
+    dispatch(getOwnPosts(user?.id));
+  }, [dispatch, user]);
 
   return (
     <Page title="My Forum | CoopChick">

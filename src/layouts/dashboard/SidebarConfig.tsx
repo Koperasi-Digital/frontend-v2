@@ -35,8 +35,7 @@ const sidebarConfig = [
       {
         title: 'blogs',
         path: PATH_DASHBOARD.general.blogs,
-        icon: ICONS.blog,
-        accessibleRoles: ['CUSTOMER']
+        icon: ICONS.blog
       },
       { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq }
     ]
