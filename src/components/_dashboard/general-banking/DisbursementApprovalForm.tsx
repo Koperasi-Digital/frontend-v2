@@ -7,13 +7,20 @@ import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, TextField, Typography, FormHelperText } from '@mui/material';
 // utils
-import { UploadMultiFile } from '../../upload';
+import { UploadSingleFile } from '../../upload';
 
 import { handleEditReimbursement, handleShowOneReimbursement } from 'utils/financeReimbursement';
 import { handleCreateCoopTransaction } from 'utils/financeCoopTransaction';
 import { handleEditSaldo } from 'utils/financeSaldo';
 
+import { handleUploadFile } from 'utils/bucket';
+
 // ----------------------------------------------------------------------
+
+type DisbursementApprovalValues = {
+  disbursementRequestId: string;
+  receipt: File | any;
+};
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -26,14 +33,13 @@ export default function DisbursementApprovalForm() {
 
   const NewProductSchema = Yup.object().shape({
     disbursementRequestId: Yup.string().required(),
-    images: Yup.array().min(1, 'Images is required')
+    receipt: Yup.mixed().required('Receipt is required')
   });
 
-  const formik = useFormik({
-    enableReinitialize: true,
+  const formik = useFormik<DisbursementApprovalValues>({
     initialValues: {
       disbursementRequestId: '',
-      images: []
+      receipt: null
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -49,15 +55,23 @@ export default function DisbursementApprovalForm() {
           reimbursement.total_cost,
           0
         );
+
         const createdCoopTransaction = await handleCreateCoopTransaction({
           sisaHasilUsahaId: undefined,
           reimbursementId: reimbursement.id,
           paymentType: 'Transfer Bank BCA',
           status: 'success'
         });
+
+        const uploadFileMessage = await handleUploadFile(
+          values.receipt,
+          'disbursement',
+          values.disbursementRequestId + '.png'
+        );
+
         resetForm();
         setSubmitting(false);
-        if (editedReimbursement && editedSaldo && createdCoopTransaction) {
+        if (editedReimbursement && editedSaldo && createdCoopTransaction && uploadFileMessage) {
           enqueueSnackbar('Create success', { variant: 'success' });
         } else {
           enqueueSnackbar('Create fail', { variant: 'error' });
@@ -75,26 +89,13 @@ export default function DisbursementApprovalForm() {
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
-      setFieldValue(
-        'images',
-        acceptedFiles.map((file: File | string) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file)
-          })
-        )
-      );
+      const file = acceptedFiles[0];
+      if (file) {
+        setFieldValue('receipt', Object.assign(file, { preview: URL.createObjectURL(file) }));
+      }
     },
     [setFieldValue]
   );
-
-  const handleRemoveAll = () => {
-    setFieldValue('images', []);
-  };
-
-  const handleRemove = (file: File | string) => {
-    const filteredItems = values.images.filter((_file) => _file !== file);
-    setFieldValue('images', filteredItems);
-  };
 
   return (
     <FormikProvider value={formik}>
@@ -111,20 +112,17 @@ export default function DisbursementApprovalForm() {
                   helperText={touched.disbursementRequestId && errors.disbursementRequestId}
                 />
                 <div>
-                  <LabelStyle>Add Images</LabelStyle>
-                  <UploadMultiFile
-                    showPreview
+                  <LabelStyle>Upload Receipt</LabelStyle>
+                  <UploadSingleFile
                     maxSize={3145728}
                     accept="image/*"
-                    files={values.images}
+                    file={values.receipt}
                     onDrop={handleDrop}
-                    onRemove={handleRemove}
-                    onRemoveAll={handleRemoveAll}
-                    error={Boolean(touched.images && errors.images)}
+                    error={Boolean(touched.receipt && errors.receipt)}
                   />
-                  {touched.images && errors.images && (
+                  {touched.receipt && errors.receipt && (
                     <FormHelperText error sx={{ px: 2 }}>
-                      {touched.images && errors.images}
+                      {touched.receipt && errors.receipt}
                     </FormHelperText>
                   )}
                 </div>
