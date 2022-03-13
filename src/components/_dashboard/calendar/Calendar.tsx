@@ -110,8 +110,8 @@ export default function Calendar({
       dispatch(
         updateEvent(event.id, {
           allDay: event.allDay,
-          start: event.start,
-          end: event.end
+          startAt: event.start,
+          endAt: event.end
         })
       );
       enqueueSnackbar('Update event success', { variant: 'success' });
@@ -125,8 +125,8 @@ export default function Calendar({
       dispatch(
         updateEvent(event.id, {
           allDay: event.allDay,
-          start: event.start,
-          end: event.end
+          startAt: event.start,
+          endAt: event.end
         })
       );
       enqueueSnackbar('Update event success', {
