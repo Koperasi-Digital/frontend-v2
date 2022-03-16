@@ -1,4 +1,5 @@
 import { FormikProps } from 'formik';
+import { User } from './account';
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +40,7 @@ export type Product = {
   cover: string;
   images: string[];
   description: string;
-  seller_id: string;
+  seller: User;
   status: ProductInventoryType;
   createdAt: Date | string | number;
 };
@@ -52,6 +53,10 @@ export type CartItem = {
   price: number;
   quantity: number;
   subtotal: number;
+  seller_id: number;
+  store_name: string;
+  shipment_id: number | null;
+  shipment_price: number | null;
 };
 
 export type BillingAddress = {

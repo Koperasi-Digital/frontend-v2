@@ -71,7 +71,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
         currentProduct?.cover || 'http://localhost:3000/static/mock-images/products/product_2.jpg',
       description: currentProduct?.description || '',
       status: currentProduct?.status || 'Active',
-      seller_id: currentProduct?.seller_id || 'Michael Hans',
+      seller: currentProduct?.seller,
       images: currentProduct?.images || []
     },
     validationSchema: NewProductSchema,
