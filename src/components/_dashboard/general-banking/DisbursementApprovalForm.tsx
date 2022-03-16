@@ -51,7 +51,7 @@ export default function DisbursementApprovalForm() {
           undefined
         );
         const editedSaldo = await handleEditSaldo(
-          reimbursement.userId,
+          reimbursement.user.id,
           reimbursement.total_cost,
           0
         );
