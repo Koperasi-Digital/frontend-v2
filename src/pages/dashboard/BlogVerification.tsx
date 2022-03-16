@@ -168,7 +168,7 @@ export default function BlogVerification() {
   };
 
   const handleDeleteUser = (userId: string) => {
-    dispatch(deleteUser(userId));
+    deleteUser(userId);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;

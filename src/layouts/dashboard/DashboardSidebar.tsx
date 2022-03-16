@@ -91,7 +91,7 @@ type DashboardSidebarProps = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: DashboardSidebarProps) {
   const { pathname } = useLocation();
-  const { user } = useAuth();
+  const { user, currentRole } = useAuth();
 
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
@@ -165,7 +165,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
                   {user?.displayName}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  {capitalize(user?.role.name)}
+                  {capitalize(currentRole?.name)}
                 </Typography>
               </Box>
             </AccountStyle>

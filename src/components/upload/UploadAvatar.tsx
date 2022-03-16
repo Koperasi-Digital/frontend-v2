@@ -105,6 +105,21 @@ export default function UploadAvatar({ error, file, caption, sx, ...other }: Upl
     </Paper>
   );
 
+  const InfoText = () => {
+    if (!other.disabled) {
+      return (
+        <>
+          <Box component={Icon} icon={roundAddAPhoto} sx={{ width: 24, height: 24, mb: 1 }} />
+          <Typography variant="caption">{file ? 'Update photo' : 'Upload photo'}</Typography>
+        </>
+      );
+    }
+    if (!file) {
+      return <Typography variant="caption">{'No photo'}</Typography>;
+    }
+    return null;
+  };
+
   return (
     <>
       <RootStyle sx={sx}>
@@ -141,8 +156,7 @@ export default function UploadAvatar({ error, file, caption, sx, ...other }: Upl
               })
             }}
           >
-            <Box component={Icon} icon={roundAddAPhoto} sx={{ width: 24, height: 24, mb: 1 }} />
-            <Typography variant="caption">{file ? 'Update photo' : 'Upload photo'}</Typography>
+            <InfoText />
           </PlaceholderStyle>
         </DropZoneStyle>
       </RootStyle>

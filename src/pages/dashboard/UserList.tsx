@@ -1,10 +1,9 @@
-import { filter, sample } from 'lodash';
+import { capitalize, filter } from 'lodash';
 import { useState, useEffect } from 'react';
 import {
   Card,
   Table,
   Stack,
-  Avatar,
   Checkbox,
   TableRow,
   TableBody,
@@ -14,6 +13,7 @@ import {
   TableContainer,
   TablePagination
 } from '@mui/material';
+import { useSnackbar } from 'notistack';
 // redux
 import { RootState, useDispatch, useSelector } from '../../redux/store';
 import { getUserList, deleteUser } from '../../redux/slices/user';
@@ -22,19 +22,21 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // @types
 import { UserManager } from '../../@types/user';
 // components
-import Page from '../../components/Page';
-import Scrollbar from '../../components/Scrollbar';
-import SearchNotFound from '../../components/SearchNotFound';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user/list';
+import Page from 'components/Page';
+import Scrollbar from 'components/Scrollbar';
+import SearchNotFound from 'components/SearchNotFound';
+import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
+import { MAvatar } from 'components/@material-extend';
+import { UserListHead, UserListToolbar, UserMoreMenu } from 'components/_dashboard/user/list';
 import { fDateTime } from 'utils/formatTime';
+import createAvatar from 'utils/createAvatar';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
+  { id: 'role', label: 'Role', alignRight: false, disableSort: true },
   { id: 'createdAt', label: 'Joined At', alignRight: false },
   { id: '' }
 ];
@@ -62,23 +64,34 @@ function getComparator(order: string, orderBy: string) {
 function applySortFilter(
   array: UserManager[],
   comparator: (a: any, b: any) => number,
-  query: string
+  query?: string,
+  role?: string
 ) {
+  if (role) {
+    array = filter(array, (_user) => _user.roles.map((_role) => _role.name).includes(role || ''));
+  }
+  if (query) {
+    query = query.toLowerCase();
+    return filter(
+      array,
+      (_user) =>
+        _user.displayName.toLowerCase().indexOf(query!) !== -1 ||
+        _user.email.toLowerCase().indexOf(query!) !== -1
+    );
+  }
   const stabilizedThis = array.map((el, index) => [el, index] as const);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-  }
   return stabilizedThis.map((el) => el[0]);
 }
 
 export default function UserList() {
   // const theme = useTheme();
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { userList } = useSelector((state: RootState) => state.user);
   const [page, setPage] = useState(0);
@@ -86,6 +99,7 @@ export default function UserList() {
   const [selected, setSelected] = useState<string[]>([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
+  const [filterRole, setFilterRole] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
@@ -100,7 +114,7 @@ export default function UserList() {
 
   const handleSelectAllClick = (checked: boolean) => {
     if (checked) {
-      const newSelecteds = userList.map((n) => n.name);
+      const newSelecteds = userList.map((n) => n.displayName);
       setSelected(newSelecteds);
       return;
     }
@@ -134,13 +148,27 @@ export default function UserList() {
     setFilterName(filterName);
   };
 
-  const handleDeleteUser = (userId: string) => {
-    dispatch(deleteUser(userId));
+  const handleFilterByRole = (filterRole: string) => {
+    setFilterRole(filterRole);
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      await deleteUser(userId);
+      enqueueSnackbar(`Delete User ID: ${userId} success`, { variant: 'success' });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
 
-  const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(
+    userList,
+    getComparator(order, orderBy),
+    filterName,
+    filterRole
+  );
 
   const isUserNotFound = filteredUsers.length === 0;
 
@@ -160,7 +188,9 @@ export default function UserList() {
           <UserListToolbar
             numSelected={selected.length}
             filterName={filterName}
+            filterRole={filterRole}
             onFilterName={handleFilterByName}
+            onFilterRole={handleFilterByRole}
           />
 
           <Scrollbar>
@@ -179,8 +209,9 @@ export default function UserList() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, name, role, email, avatarUrl } = row;
-                      const isItemSelected = selected.indexOf(name) !== -1;
+                      const { id, displayName, roles, email, photoURL, created_at } = row;
+                      const isItemSelected = selected.indexOf(displayName) !== -1;
+                      const defaultAvatar = photoURL ? null : createAvatar(displayName);
 
                       return (
                         <TableRow
@@ -192,30 +223,36 @@ export default function UserList() {
                           aria-checked={isItemSelected}
                         >
                           <TableCell padding="checkbox">
-                            <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
+                            <Checkbox
+                              checked={isItemSelected}
+                              onClick={() => handleClick(displayName)}
+                            />
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={name} src={avatarUrl} />
+                              <MAvatar
+                                src={photoURL || undefined}
+                                alt={displayName}
+                                color={photoURL ? 'default' : defaultAvatar!.color}
+                              >
+                                {defaultAvatar?.name}
+                              </MAvatar>
                               <Typography variant="subtitle2" noWrap>
-                                {name}
+                                {displayName}
                               </Typography>
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{email}</TableCell>
-                          <TableCell align="left">{role}</TableCell>
                           <TableCell align="left">
-                            {fDateTime(
-                              sample([
-                                new Date(1592452800000),
-                                new Date(1592742800000),
-                                new Date(1602732800000)
-                              ])!
-                            )}
+                            {roles.map((role) => capitalize(role.name)).join(', ')}
                           </TableCell>
+                          <TableCell align="left">{fDateTime(new Date(created_at))}</TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                            <UserMoreMenu
+                              onDelete={() => handleDeleteUser(id)}
+                              userName={displayName}
+                            />
                           </TableCell>
                         </TableRow>
                       );
@@ -242,11 +279,11 @@ export default function UserList() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={userList.length}
+            count={filteredUsers.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={(e, page) => setPage(page)}
-            onRowsPerPageChange={(e) => handleChangeRowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
       </Container>

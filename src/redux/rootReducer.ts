@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import chatReducer from './slices/chat';
 import blogReducer from './slices/blog';
 import userReducer from './slices/user';
+import roleReducer from './slices/role';
 import productReducer from './slices/product';
 import calendarReducer from './slices/calendar';
 import financeReportReducer from './slices/financeReport';
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   chat: chatReducer,
   blog: blogReducer,
   user: userReducer,
+  role: roleReducer,
   calendar: calendarReducer,
   financeReport: financeReportReducer,
   product: persistReducer(productPersistConfig, productReducer)

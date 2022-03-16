@@ -1,14 +1,33 @@
 import * as Yup from 'yup';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormikProvider, useFormik } from 'formik';
+import { capitalize } from 'lodash';
 // material
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, TextField, Typography, FormHelperText } from '@mui/material';
+import {
+  Box,
+  Card,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+  FormHelperText,
+  Checkbox,
+  FormControl,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  SelectChangeEvent
+} from '@mui/material';
+// redux
+import { useDispatch, useSelector, RootState } from '../../../redux/store';
+import { getRoles } from '../../../redux/slices/role';
 // utils
 import { fData } from '../../../utils/formatNumber';
-import fakeRequest from '../../../utils/fakeRequest';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
@@ -16,6 +35,8 @@ import { UserManager } from '../../../@types/user';
 //
 import { UploadAvatar } from '../../upload';
 import countries from './countries';
+import useAuth from 'hooks/useAuth';
+import { editUser } from 'redux/slices/user';
 
 // ----------------------------------------------------------------------
 
@@ -28,23 +49,29 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
+  const dispatch = useDispatch();
+  const { user: loggedInUser } = useAuth();
+  const { roles } = useSelector((state: RootState) => state.role);
+
+  useEffect(() => {
+    dispatch(getRoles());
+  }, [dispatch]);
+
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
+    displayName: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email(),
     phoneNumber: Yup.string().required('Phone number is required'),
     address: Yup.string().required('Address is required'),
     country: Yup.string().required('country is required'),
-    company: Yup.string().required('Company is required'),
     state: Yup.string().required('State is required'),
     city: Yup.string().required('City is required'),
-    role: Yup.string().required('Role Number is required'),
-    avatarUrl: Yup.mixed().required('Avatar is required')
+    roles: Yup.array().required('Assigned Roles is required')
   });
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: currentUser?.name || '',
+      displayName: currentUser?.displayName || '',
       email: currentUser?.email || '',
       phoneNumber: currentUser?.phoneNumber || '',
       address: currentUser?.address || '',
@@ -52,16 +79,18 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
       state: currentUser?.state || '',
       city: currentUser?.city || '',
       zipCode: currentUser?.zipCode || '',
-      avatarUrl: currentUser?.avatarUrl || null,
-      isVerified: currentUser?.isVerified || true,
-      status: currentUser?.status,
-      company: currentUser?.company || '',
-      role: currentUser?.role || ''
+      photoURL: currentUser?.photoURL || null,
+      roles: currentUser?.roles.map((role) => role.name) || []
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        await fakeRequest(500);
+        if (isEdit) {
+          await editUser(currentUser!.id, {
+            ...values,
+            roles: roles.filter((_role) => values.roles.includes(_role.name))
+          });
+        }
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
@@ -90,6 +119,13 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
     [setFieldValue]
   );
 
+  const handleChangeAssignedRole = (event: SelectChangeEvent<typeof values.roles>) => {
+    const {
+      target: { value }
+    } = event;
+    setFieldValue('roles', typeof value === 'string' ? value.split(',') : value);
+  };
+
   return (
     <FormikProvider value={formik}>
       <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
@@ -99,10 +135,10 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
               <Box sx={{ mb: 5 }}>
                 <UploadAvatar
                   accept="image/*"
-                  file={values.avatarUrl}
+                  file={values.photoURL}
                   maxSize={3145728}
                   onDrop={handleDrop}
-                  error={Boolean(touched.avatarUrl && errors.avatarUrl)}
+                  error={Boolean(touched.photoURL && errors.photoURL)}
                   caption={
                     <Typography
                       variant="caption"
@@ -120,7 +156,7 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
                   }
                 />
                 <FormHelperText error sx={{ px: 2, textAlign: 'center' }}>
-                  {touched.avatarUrl && errors.avatarUrl}
+                  {touched.photoURL && errors.photoURL}
                 </FormHelperText>
               </Box>
             </Card>
@@ -132,10 +168,10 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
                     fullWidth
-                    label="Full Name"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    label="Name"
+                    {...getFieldProps('displayName')}
+                    error={Boolean(touched.displayName && errors.displayName)}
+                    helperText={touched.displayName && errors.displayName}
                   />
                   <TextField
                     fullWidth
@@ -201,22 +237,26 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
                   <TextField fullWidth label="Zip/Code" {...getFieldProps('zipCode')} />
                 </Stack>
 
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Company"
-                    {...getFieldProps('company')}
-                    error={Boolean(touched.company && errors.company)}
-                    helperText={touched.company && errors.company}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Role"
-                    {...getFieldProps('role')}
-                    error={Boolean(touched.role && errors.role)}
-                    helperText={touched.role && errors.role}
-                  />
-                </Stack>
+                <FormControl>
+                  <InputLabel id="assigned-roles-label">Assigned Roles</InputLabel>
+                  <Select
+                    labelId="assigned-roles-label"
+                    id="assigned-roles"
+                    multiple
+                    value={values.roles}
+                    onChange={handleChangeAssignedRole}
+                    input={<OutlinedInput label="Assigned Roles" />}
+                    renderValue={(selected) => selected.map(capitalize).join(', ')}
+                    disabled={currentUser?.id === loggedInUser?.id}
+                  >
+                    {roles.map(({ name }) => (
+                      <MenuItem key={name} value={name}>
+                        <Checkbox checked={values.roles.indexOf(name) > -1} />
+                        <ListItemText primary={capitalize(name)} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
 
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
