@@ -3,4 +3,5 @@ export type Notification = {
   title: string;
   description: string;
   isUnread: boolean;
+  created_at: string;
 };

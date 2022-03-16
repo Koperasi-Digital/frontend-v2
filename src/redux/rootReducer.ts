@@ -8,6 +8,7 @@ import userReducer from './slices/user';
 import roleReducer from './slices/role';
 import productReducer from './slices/product';
 import calendarReducer from './slices/calendar';
+import notificationReducer from './slices/notification';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   role: roleReducer,
   calendar: calendarReducer,
+  notification: notificationReducer,
   product: persistReducer(productPersistConfig, productReducer)
 });
 

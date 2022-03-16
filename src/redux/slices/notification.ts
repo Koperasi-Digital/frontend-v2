@@ -42,12 +42,21 @@ const slice = createSlice({
 
     // READ NOTIFICATION
     readNotificationSuccess(state, action) {
+      state.isLoading = false;
       const index = state.notifications.findIndex(
         (notification) => notification.id === action.payload
       );
       if (index !== -1) {
         state.notifications[index].isUnread = false;
       }
+    },
+
+    // DELETE NOTIFICATION
+    deleteNotificationSuccess(state, action) {
+      state.isLoading = false;
+      state.notifications = state.notifications.filter(
+        (notification) => notification.id !== action.payload
+      );
     }
   }
 });
@@ -69,16 +78,14 @@ export function getNotifications() {
   };
 }
 
-export function readNotification(id: number) {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      await axios.post(`notifications/${id}/read`);
-      dispatch(slice.actions.getNotificationsSuccess(id));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
+export async function readNotification(id: number) {
+  dispatch(slice.actions.startLoading());
+  try {
+    await axios.post(`notifications/${id}/read`);
+    dispatch(slice.actions.readNotificationSuccess(id));
+  } catch (error) {
+    dispatch(slice.actions.hasError(error));
+  }
 }
 
 export async function addMessagingToken(token: string) {
@@ -94,6 +101,16 @@ export async function createNotification(title: string, description: string) {
   dispatch(slice.actions.startLoading());
   try {
     await axios.post('notifications', { title, description });
+  } catch (error) {
+    dispatch(slice.actions.hasError(error));
+  }
+}
+
+export async function deleteNotification(id: number) {
+  dispatch(slice.actions.startLoading());
+  try {
+    await axios.delete(`notifications/${id}`);
+    dispatch(slice.actions.deleteNotificationSuccess(id));
   } catch (error) {
     dispatch(slice.actions.hasError(error));
   }
