@@ -47,7 +47,8 @@ import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
-import { handleListTransaction } from 'utils/financeTransaction';
+import { handleShowTransaction } from 'utils/financeTransaction';
+import { handleShowCoopTransaction } from 'utils/financeCoopTransaction';
 import useAuth from 'hooks/useAuth';
 
 type AvatarIconProps = {
@@ -64,12 +65,16 @@ type Transaction = {
   status: string;
   simpananpokok_id: number;
   simpananwajib_id: number;
+  sisahasilusaha_id: string;
+  reimbursement_id: string;
+  sisahasilusaha_total_cost: number;
+  reimbursement_total_cost: number;
   firstuser_id: number;
   firstuser_display_name: string;
-  firstuser_photoURL: string;
-  seller_id: number;
-  seller_display_name: string;
-  seller_photoURL: string;
+  firstuser_photo_url: string;
+  destuser_id: number;
+  destuser_display_name: string;
+  destuser_photo_url: string;
 };
 
 function AvatarIcon({ icon }: AvatarIconProps) {
@@ -93,10 +98,10 @@ function renderAvatar(transaction: Transaction) {
   } else if (transaction.simpananwajib_id) {
     return <AvatarIcon icon={bookFill} />;
   } else {
-    return transaction.seller_photoURL ? (
+    return transaction.destuser_photo_url ? (
       <Avatar
-        alt={transaction.seller_display_name}
-        src={transaction.seller_photoURL}
+        alt={transaction.destuser_display_name}
+        src={transaction.destuser_photo_url}
         sx={{ width: 48, height: 48, boxShadow: (theme) => theme.customShadows.z8 }}
       />
     ) : null;
@@ -207,15 +212,6 @@ export default function BankingTransactionsReport() {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const fetchedTransactionList = await handleListTransaction(userId);
-      setAllTransactionData(fetchedTransactionList);
-      setFilteredTransactionData(fetchedTransactionList);
-    };
-    fetchData();
-  }, [userId]);
-
   //Table Pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -240,6 +236,32 @@ export default function BankingTransactionsReport() {
   const handleClickPrint = () => {};
   const handleClickShare = () => {};
   const handleClickDelete = () => {};
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (userId && fromDateValue && toDateValue) {
+        const fromDateString = `${fromDateValue.getFullYear()}-${
+          fromDateValue.getMonth() + 1
+        }-${fromDateValue.getDate()} 0:0:0`;
+        const toDateString = `${toDateValue.getFullYear()}-${
+          toDateValue.getMonth() + 1
+        }-${toDateValue.getDate()} 23:59:59`;
+        const fetchedTransactionList = await handleShowTransaction(
+          userId,
+          fromDateString,
+          toDateString
+        );
+        const fetchedCoopTransactionList = await handleShowCoopTransaction(
+          userId,
+          fromDateString,
+          toDateString
+        );
+        setAllTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+        setFilteredTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+      }
+    };
+    fetchData();
+  }, [userId, fromDateValue, toDateValue]);
 
   return (
     <>
@@ -381,21 +403,29 @@ export default function BankingTransactionsReport() {
                         </Box>
                         <Box sx={{ ml: 2 }}>
                           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            {row.simpananpokok_id
+                            {row.sisahasilusaha_id
+                              ? 'Sisa Hasil Usaha'
+                              : row.reimbursement_id
+                              ? 'Reimbursement'
+                              : row.simpananpokok_id
                               ? 'Simpanan Pokok'
                               : row.simpananwajib_id
                               ? 'Simpanan Wajib'
                               : row.firstuser_id === userId
-                              ? row.seller_display_name
+                              ? row.destuser_display_name
                               : row.firstuser_display_name}
                           </Typography>
                           <Typography variant="subtitle2">
-                            {row.simpananpokok_id
+                            {row.sisahasilusaha_id
+                              ? 'Sisa Hasil Usaha'
+                              : row.reimbursement_id
+                              ? 'Reimbursement'
+                              : row.simpananpokok_id
                               ? 'Simpanan Pokok'
                               : row.simpananwajib_id
                               ? 'Simpanan Wajib'
                               : row.firstuser_id === userId
-                              ? row.seller_display_name
+                              ? row.destuser_display_name
                               : row.firstuser_display_name}
                           </Typography>
                         </Box>
@@ -411,7 +441,13 @@ export default function BankingTransactionsReport() {
                       </Typography>
                     </TableCell>
 
-                    <TableCell>{fCurrency(row.total_cost)}</TableCell>
+                    <TableCell>
+                      {row.total_cost
+                        ? fCurrency(row.total_cost)
+                        : row.sisahasilusaha_total_cost
+                        ? fCurrency(row.sisahasilusaha_total_cost)
+                        : fCurrency(row.reimbursement_total_cost)}
+                    </TableCell>
 
                     <TableCell>
                       <Label

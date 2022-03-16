@@ -95,7 +95,7 @@ export default function BankingExpensesCategories() {
 
       <Box sx={{ my: 5 }} dir="ltr">
         <ReactApexChart
-          type="polarArea"
+          type="pie"
           series={chartData.data}
           options={chartOptions}
           height={isMobile ? 360 : 240}

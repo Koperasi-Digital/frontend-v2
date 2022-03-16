@@ -2,14 +2,12 @@
 import { Container, Grid } from '@mui/material';
 // components
 import Page from '../../components/Page';
-import {
-  SaldoDisbursementRequestList,
-  ShareDisbursementRequestList
-} from '../../components/_dashboard/general-banking';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
+
+import DisbursementRequestListTable from 'components/_dashboard/general-banking/DisbursementRequestListTable';
 
 export default function DisbursementRequestList() {
   return (
@@ -28,10 +26,7 @@ export default function DisbursementRequestList() {
         />
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <SaldoDisbursementRequestList />
-          </Grid>
-          <Grid item xs={12}>
-            <ShareDisbursementRequestList />
+            <DisbursementRequestListTable />
           </Grid>
         </Grid>
       </Container>

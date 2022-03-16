@@ -136,7 +136,7 @@ export default function CheckoutPayment() {
     const handleCheckOrderStatus = async () => {
       if (orderId) {
         const order = await handleGetOrder(orderId);
-        if (order.status === 'success') {
+        if (order.status === 'LUNAS') {
           handleNextStep();
         }
       }
@@ -165,7 +165,7 @@ export default function CheckoutPayment() {
       onClose: function () {}
     };
 
-    const tokenName = await handleCreateTransaction(user_id, transaction_details);
+    const tokenName = await handleCreateTransaction(transaction_details);
     window.snap.pay(tokenName, snapOptions);
   };
 

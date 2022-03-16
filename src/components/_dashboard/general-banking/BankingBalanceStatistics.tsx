@@ -51,15 +51,17 @@ export default function BankingBalanceStatistics() {
       { name: 'Expense', data: [] }
     ];
     let date = new Date();
-    let i = 0;
+    let stop = false;
     let incomeArray: number[] = [];
     let expenseArray: number[] = [];
-    while (date.getMonth() !== 0) {
-      date.setMonth(date.getMonth() - i);
+    while (!stop) {
+      if (date.getMonth() === 0) {
+        stop = true;
+      }
+      date.setMonth(date.getMonth() - 1);
       const labaRugiInfo = await handleGetLabaRugiInfo(date);
       incomeArray.unshift(labaRugiInfo.jumlahPenjualan);
       expenseArray.unshift(labaRugiInfo.biayaProduksiProdukTerjual + labaRugiInfo.biayaOperasi);
-      i += 1;
     }
     const paddingNumber = 12 - incomeArray.length;
     for (let i = 0; i < paddingNumber; i++) {

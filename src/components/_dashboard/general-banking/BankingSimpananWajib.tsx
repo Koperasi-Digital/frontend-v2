@@ -39,10 +39,9 @@ export default function BankingSimpananWajib() {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedSimpananWajib = await handleGetSimpananWajib(userId, new Date());
-      if (fetchedSimpananWajib.orderId === null) {
+      if (fetchedSimpananWajib.order === null) {
         const createdOrder = await handleCreateOrder(userId, fetchedSimpananWajib.amount);
         const temp = await handleAddOrderSimpananWajib(userId, new Date(), createdOrder.id);
-        fetchedSimpananWajib.orderId = temp.orderId;
         fetchedSimpananWajib.order = temp.order;
       }
       setSimpananWajib(fetchedSimpananWajib);
@@ -60,7 +59,7 @@ export default function BankingSimpananWajib() {
             Pembayaran Simpanan Wajib
           </Typography>
           {simpananWajib ? (
-            simpananWajib.order.status !== 'success' ? (
+            simpananWajib.order.status !== 'LUNAS' ? (
               <PaymentButton
                 user_id={2}
                 buttonName="Bayar"

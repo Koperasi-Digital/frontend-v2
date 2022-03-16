@@ -59,7 +59,7 @@ const PaymentCreation = ({ user_id, buttonName, transaction_details }: PaymentCr
       onClose: function () {}
     };
 
-    const tokenName = await handleCreateTransaction(user_id, transaction_details);
+    const tokenName = await handleCreateTransaction(transaction_details);
     window.snap.pay(tokenName, snapOptions);
   };
 
