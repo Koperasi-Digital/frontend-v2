@@ -54,7 +54,7 @@ export type CartItem = {
   quantity: number;
   subtotal: number;
   seller_id: number;
-  store_name: string;
+  store_name: string | null;
   shipment_id: number | null;
   shipment_price: number | null;
 };

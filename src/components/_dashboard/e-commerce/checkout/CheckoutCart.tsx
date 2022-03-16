@@ -30,7 +30,6 @@ export default function CheckoutCart() {
   const dispatch = useDispatch();
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
   const { cart, total, discount, subtotal } = checkout;
-  console.log(cart);
   const isEmptyCart = cart.length === 0;
 
   const handleDeleteCart = (productId: string) => {

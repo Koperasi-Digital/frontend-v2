@@ -128,8 +128,8 @@ export default function ProductDetailsSummary({
           onAddCart({
             ...values,
             subtotal: values.price * values.quantity,
-            seller_id: 1,
-            store_name: 'PT Jaya Baya',
+            seller_id: seller.id,
+            store_name: storeName,
             shipment_id: null,
             shipment_price: null
           });
@@ -150,8 +150,8 @@ export default function ProductDetailsSummary({
       onAddCart({
         ...values,
         subtotal: values.price * values.quantity,
-        seller_id: 1,
-        store_name: 'PT Jaya Baya',
+        seller_id: seller.id,
+        store_name: storeName,
         shipment_id: null,
         shipment_price: null
       });

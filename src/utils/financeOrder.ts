@@ -1,11 +1,13 @@
+import { CartItem } from '../@types/products';
 import axios from './axios';
 
-export async function handleCreateOrder(userId: number, grossAmount: number, shopOwnerId?: number) {
+export async function handleCreateOrder(userId: number, grossAmount: number, cart?: CartItem[]) {
   try {
+    console.log(cart);
     const response = await axios.post('order/create', {
       user_id: userId,
       total_cost: grossAmount,
-      seller_id: shopOwnerId
+      cart: cart
     });
     return response.data.payload;
   } catch (e) {
