@@ -25,7 +25,7 @@ const ORDER_STATUS = ['Pending', 'Dalam Pengiriman', 'Delivered'];
 // ----------------------------------------------------------------------
 
 const orders = [...Array(12)].map((_, index) => ({
-  order_id: random(9000),
+  order_id: random(9000).toString(),
   user_id: 2,
   shipment_id: mockData.id(index),
   timestamp: mockData.time(index),

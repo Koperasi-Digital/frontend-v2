@@ -44,18 +44,19 @@ export default function AccountGeneral() {
       state: user?.state,
       city: user?.city,
       zipCode: user?.zipCode,
-      role: user?.role
+      roles: user?.roles,
+      storeName: user?.storeName
     },
 
     validationSchema: UpdateUserSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        updateProfile?.();
+        updateProfile(values);
         enqueueSnackbar('Update success', { variant: 'success' });
         if (isMountedRef.current) {
           setSubmitting(false);
         }
-      } catch (error) {
+      } catch (error: any) {
         if (isMountedRef.current) {
           setErrors({ afterSubmit: error.code });
           setSubmitting(false);
@@ -122,19 +123,6 @@ export default function AccountGeneral() {
                   <TextField fullWidth label="City" {...getFieldProps('city')} />
                   <TextField fullWidth label="Zip/Code" {...getFieldProps('zipCode')} />
                 </Stack>
-
-                <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                  <TextField fullWidth label="Role" {...getFieldProps('role')} disabled />
-                </Stack>
-
-                <TextField
-                  {...getFieldProps('about')}
-                  fullWidth
-                  multiline
-                  minRows={4}
-                  maxRows={4}
-                  label="About"
-                />
               </Stack>
 
               <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>

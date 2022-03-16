@@ -16,6 +16,7 @@ import useIsMountedRef from '../../hooks/useIsMountedRef';
 import { MIconButton } from '../../components/@material-extend';
 import MyAvatar from '../../components/MyAvatar';
 import MenuPopover from '../../components/MenuPopover';
+import CurrentRoleSwitch from './CurrentRoleSwitch';
 
 // ----------------------------------------------------------------------
 
@@ -104,6 +105,12 @@ export default function AccountPopover() {
 
         <Divider sx={{ my: 1 }} />
 
+        <Box sx={{ p: 2, pt: 1.5 }}>
+          <CurrentRoleSwitch />
+        </Box>
+
+        <Divider sx={{ my: 1 }} />
+
         {MENU_OPTIONS.map((option) => (
           <MenuItem
             key={option.label}
@@ -125,6 +132,8 @@ export default function AccountPopover() {
             {option.label}
           </MenuItem>
         ))}
+
+        <Divider sx={{ my: 1 }} />
 
         <Box sx={{ p: 2, pt: 1.5 }}>
           <Button fullWidth color="inherit" variant="outlined" onClick={handleLogout}>

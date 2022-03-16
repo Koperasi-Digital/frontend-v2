@@ -83,11 +83,7 @@ export default function Router() {
         { path: 'activities', element: <Activities /> },
         {
           path: 'blogs',
-          element: (
-            <RoleBasedGuard accessibleRoles={['CUSTOMER']}>
-              <BlogPosts />
-            </RoleBasedGuard>
-          )
+          element: <BlogPosts />
         },
         { path: 'blogs/:title', element: <BlogPost /> },
         { path: 'blogs/new', element: <BlogNewPost /> },
@@ -173,10 +169,31 @@ export default function Router() {
         {
           path: 'user',
           children: [
-            { element: <Navigate to="/dashboard/user/profile" replace /> },
-            { path: 'profile', element: <UserProfile /> },
-            { path: 'list', element: <UserList /> },
-            { path: ':name/edit', element: <UserCreate /> },
+            { element: <Navigate to="/dashboard/user/account" replace /> },
+            {
+              path: 'list',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <UserList />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: ':name/edit',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <UserCreate />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: ':name/detail',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <UserDetail />
+                </RoleBasedGuard>
+              )
+            },
             { path: 'account', element: <UserAccount /> }
           ]
         },
@@ -242,7 +259,6 @@ const EcommerceInvoice = Loadable(lazy(() => import('../pages/dashboard/Ecommerc
 const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
 const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
-const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
 const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
 const FAQ = Loadable(lazy(() => import('../pages/dashboard/FAQ')));
 const FAQPost = Loadable(lazy(() => import('../pages/dashboard/FAQPost')));
@@ -251,6 +267,7 @@ const MyForum = Loadable(lazy(() => import('../pages/dashboard/MyForum')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
+const UserDetail = Loadable(lazy(() => import('../pages/dashboard/UserDetail')));
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));

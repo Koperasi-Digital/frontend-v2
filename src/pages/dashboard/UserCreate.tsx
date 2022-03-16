@@ -21,14 +21,18 @@ export default function UserCreate() {
   const { name = '' } = useParams();
   const { userList } = useSelector((state: RootState) => state.user);
   const isEdit = pathname.includes('edit');
-  const currentUser = userList.find((user) => paramCase(user.name) === name);
+  const currentUser = userList.find((user) => paramCase(user.displayName) === name);
 
   useEffect(() => {
     dispatch(getUserList());
   }, [dispatch]);
 
   return (
-    <Page title="User: Create a new user | CoopChick">
+    <Page
+      title={`User: ${
+        isEdit ? `Edit user - ${currentUser?.displayName}` : `Create a new user`
+      } | CoopChick`}
+    >
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading={!isEdit ? 'Create a new user' : 'Edit user'}

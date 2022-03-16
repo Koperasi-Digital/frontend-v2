@@ -20,7 +20,8 @@ if (!firebase.apps.length) {
 const initialState: AuthState = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null
+  user: null,
+  currentRole: null
 };
 
 enum Types {
