@@ -1,23 +1,17 @@
-import { noCase } from 'change-case';
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
 import bellFill from '@iconify/icons-eva/bell-fill';
 import clockFill from '@iconify/icons-eva/clock-fill';
-import doneAllFill from '@iconify/icons-eva/done-all-fill';
-import outlineMailOutline from '@iconify/icons-ic/outline-mail-outline';
-import outlineMarkEmailUnread from '@iconify/icons-ic/outline-mark-email-unread';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 // material
 import {
   Box,
   List,
   Badge,
-  Avatar,
   Tooltip,
   Divider,
   Typography,
   ListItemText,
-  ListItemAvatar,
   ListItemButton,
   IconButton,
   ListItem
@@ -34,34 +28,22 @@ import { fToNow } from '../../utils/formatTime';
 // types
 import { Notification } from '../../@types/notification';
 // components
+import { onMessageListener } from '../../firebase';
 import Scrollbar from '../../components/Scrollbar';
 import MenuPopover from '../../components/MenuPopover';
 import { MIconButton } from '../../components/@material-extend';
 
 // ----------------------------------------------------------------------
 
-function renderContent(notification: Notification) {
-  const avatar = (
-    <Icon icon={notification.isUnread ? outlineMarkEmailUnread : outlineMailOutline} />
-  );
-
-  const title = (
-    <Typography variant="subtitle2">
-      {notification.title}
-      <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-        &nbsp; {noCase(notification.description)}
-      </Typography>
-    </Typography>
-  );
-
-  return {
-    avatar,
-    title
-  };
-}
-
 function NotificationItem({ notification }: { notification: Notification }) {
-  const { avatar, title } = renderContent(notification);
+  const title = (
+    <>
+      <Typography variant="subtitle2">{notification.title}</Typography>
+      <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
+        {notification.description}
+      </Typography>
+    </>
+  );
 
   const handleMarkAsRead = () => {
     if (notification.isUnread) {
@@ -83,6 +65,7 @@ function NotificationItem({ notification }: { notification: Notification }) {
           </IconButton>
         </Tooltip>
       }
+      divider
     >
       <ListItemButton
         onClick={handleMarkAsRead}
@@ -95,9 +78,6 @@ function NotificationItem({ notification }: { notification: Notification }) {
           })
         }}
       >
-        <ListItemAvatar>
-          <Avatar sx={{ bgcolor: 'background.neutral' }}>{avatar}</Avatar>
-        </ListItemAvatar>
         <ListItemText
           primary={title}
           secondary={
@@ -121,16 +101,18 @@ function NotificationItem({ notification }: { notification: Notification }) {
 }
 
 export default function NotificationsPopover() {
+  const dispatch = useDispatch();
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
-  // const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
-
-  const dispatch = useDispatch();
   const { notifications } = useSelector((state: RootState) => state.notification);
 
   useEffect(() => {
     dispatch(getNotifications());
   }, [dispatch]);
+
+  onMessageListener().then((payload) => {
+    dispatch(getNotifications());
+  });
 
   const totalUnread = notifications.filter((item) => item.isUnread === true).length;
 
@@ -140,15 +122,6 @@ export default function NotificationsPopover() {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleMarkAllAsRead = () => {
-    // setNotifications(
-    //   notifications.map((notification) => ({
-    //     ...notification,
-    //     isUnRead: false
-    //   }))
-    // );
   };
 
   return (
@@ -177,14 +150,6 @@ export default function NotificationsPopover() {
               You have {totalUnread} unread messages
             </Typography>
           </Box>
-
-          {totalUnread > 0 && (
-            <Tooltip title=" Mark all as read">
-              <MIconButton color="primary" onClick={handleMarkAllAsRead}>
-                <Icon icon={doneAllFill} width={20} height={20} />
-              </MIconButton>
-            </Tooltip>
-          )}
         </Box>
 
         <Divider />
