@@ -31,7 +31,9 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
     const fetchData = async () => {
       if (user) {
         const saldo = await handleGetSaldo(user.id);
-        setSaldo(saldo.amount);
+        if (saldo) {
+          setSaldo(saldo.amount);
+        }
       }
     };
     fetchData();

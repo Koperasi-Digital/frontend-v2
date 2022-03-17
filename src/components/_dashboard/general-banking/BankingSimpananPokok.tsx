@@ -38,7 +38,7 @@ export default function BankingSimpananPokok() {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedSimpananPokok = await handleGetSimpananPokok(userId);
-      if (fetchedSimpananPokok.order === null) {
+      if (fetchedSimpananPokok && fetchedSimpananPokok.order === null) {
         const createdOrder = await handleCreateOrder(userId, fetchedSimpananPokok.amount);
         const temp = await handleAddOrderSimpananPokok(userId, createdOrder.id);
         fetchedSimpananPokok.order = temp.order;
