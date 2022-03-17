@@ -16,7 +16,7 @@ export async function handleCreateOrder(userId: number, grossAmount: number, sho
 
 export async function handleEditOrder(orderId: number, total_cost: number) {
   try {
-    const response = await axios.post('order/editTotalCost', {
+    const response = await axios.post('order/edit-total-cost', {
       id: orderId,
       total_cost: total_cost
     });

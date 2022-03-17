@@ -2,7 +2,7 @@ import axios from './axiosMock';
 
 export async function handleCreateNeracaReport(user_id: number, periode: string) {
   try {
-    const response = await axios.post('laporanNeraca/create', {
+    const response = await axios.post('laporan-neraca/create', {
       user_id: user_id,
       periode: periode
     });
@@ -18,7 +18,7 @@ export async function handleGetNeracaInfo(dateValue: Date) {
     let periodeString = dateValue
       ? dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1'
       : '';
-    const response = await axios.get('laporanNeraca/' + user_id + '/' + periodeString);
+    const response = await axios.get('laporan-neraca/' + user_id + '/' + periodeString);
     console.log(response);
     return response.data.payload;
   } catch (e) {
@@ -29,7 +29,7 @@ export async function handleGetNeracaInfo(dateValue: Date) {
 
 export async function handleAwalPeriodeNeraca(user_id: number, periode: string, kasAwal: number) {
   try {
-    const response1 = await axios.post('laporanNeraca/edit', {
+    const response1 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'kas',
@@ -37,7 +37,7 @@ export async function handleAwalPeriodeNeraca(user_id: number, periode: string, 
       amount: kasAwal
     });
     console.log(response1);
-    const response2 = await axios.post('laporanNeraca/edit', {
+    const response2 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'modal',
@@ -57,7 +57,7 @@ export async function handleBeliBahanBakuNeraca(
   tax: number
 ) {
   try {
-    const response1 = await axios.post('laporanNeraca/edit', {
+    const response1 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'persediaan',
@@ -65,7 +65,7 @@ export async function handleBeliBahanBakuNeraca(
       amount: price
     });
     console.log(response1);
-    const response2 = await axios.post('laporanNeraca/edit', {
+    const response2 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'beban',
@@ -73,7 +73,7 @@ export async function handleBeliBahanBakuNeraca(
       amount: tax
     });
     console.log(response2);
-    const response3 = await axios.post('laporanNeraca/edit', {
+    const response3 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'modal',
@@ -81,7 +81,7 @@ export async function handleBeliBahanBakuNeraca(
       amount: price
     });
     console.log(response3);
-    const response4 = await axios.post('laporanNeraca/edit', {
+    const response4 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'modal',
@@ -101,7 +101,7 @@ export async function handleJualProdukNeraca(
   serviceTax: number
 ) {
   try {
-    const response1 = await axios.post('laporanNeraca/edit', {
+    const response1 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'kas',
@@ -109,7 +109,7 @@ export async function handleJualProdukNeraca(
       amount: price
     });
     console.log(response1);
-    const response2 = await axios.post('laporanNeraca/edit', {
+    const response2 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'kas',
@@ -117,7 +117,7 @@ export async function handleJualProdukNeraca(
       amount: serviceTax
     });
     console.log(response2);
-    const response3 = await axios.post('laporanNeraca/edit', {
+    const response3 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'persediaan',
@@ -125,7 +125,7 @@ export async function handleJualProdukNeraca(
       amount: price
     });
     console.log(response3);
-    const response4 = await axios.post('laporanNeraca/edit', {
+    const response4 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'beban',
@@ -140,7 +140,7 @@ export async function handleJualProdukNeraca(
 
 export async function handlePencairanSaldoNeraca(user_id: number, periode: string, amount: number) {
   try {
-    const response1 = await axios.post('laporanNeraca/edit', {
+    const response1 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'kas',
@@ -148,7 +148,7 @@ export async function handlePencairanSaldoNeraca(user_id: number, periode: strin
       amount: amount
     });
     console.log(response1);
-    const response2 = await axios.post('laporanNeraca/edit', {
+    const response2 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'prive',
@@ -163,7 +163,7 @@ export async function handlePencairanSaldoNeraca(user_id: number, periode: strin
 
 export async function handleBeliPeralatanNeraca(user_id: number, periode: string, amount: number) {
   try {
-    const response1 = await axios.post('laporanNeraca/edit', {
+    const response1 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'asetTetap',
@@ -171,7 +171,7 @@ export async function handleBeliPeralatanNeraca(user_id: number, periode: string
       amount: amount
     });
     console.log(response1);
-    const response2 = await axios.post('laporanNeraca/edit', {
+    const response2 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'modal',
@@ -186,7 +186,7 @@ export async function handleBeliPeralatanNeraca(user_id: number, periode: string
 
 export async function handleKerusakanAlatNeraca(user_id: number, periode: string, amount: number) {
   try {
-    const response1 = await axios.post('laporanNeraca/edit', {
+    const response1 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'beban',
@@ -194,7 +194,7 @@ export async function handleKerusakanAlatNeraca(user_id: number, periode: string
       amount: amount
     });
     console.log(response1);
-    const response2 = await axios.post('laporanNeraca/edit', {
+    const response2 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'modal',
@@ -213,7 +213,7 @@ export async function handleKerusakanBahanBakuNeraca(
   amount: number
 ) {
   try {
-    const response1 = await axios.post('laporanNeraca/edit', {
+    const response1 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'beban',
@@ -221,7 +221,7 @@ export async function handleKerusakanBahanBakuNeraca(
       amount: amount
     });
     console.log(response1);
-    const response2 = await axios.post('laporanNeraca/edit', {
+    const response2 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'modal',
@@ -236,7 +236,7 @@ export async function handleKerusakanBahanBakuNeraca(
 
 export async function handleCreateLabaRugiReport(user_id: number, periode: string) {
   try {
-    const response = await axios.post('laporanLabaRugi/create', {
+    const response = await axios.post('laporan-laba-rugi/create', {
       user_id: user_id,
       periode: periode
     });
@@ -252,7 +252,7 @@ export async function handleGetLabaRugiInfo(dateValue: Date) {
     let periodeString = dateValue
       ? dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1'
       : '';
-    const response = await axios.get('laporanLabaRugi/' + user_id + '/' + periodeString);
+    const response = await axios.get('laporan-laba-rugi/' + user_id + '/' + periodeString);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -268,7 +268,7 @@ export async function handleJualProdukLabaRugi(
   biayaProduksi: number
 ) {
   try {
-    const response1 = await axios.post('laporanNeraca/edit', {
+    const response1 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'jumlahPenjualan',
@@ -276,7 +276,7 @@ export async function handleJualProdukLabaRugi(
       amount: price - serviceTax
     });
     console.log(response1);
-    const response2 = await axios.post('laporanNeraca/edit', {
+    const response2 = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'biayaProduksiProdukTerjual',
@@ -295,7 +295,7 @@ export async function handleKerusakanAlatLabaRugi(
   amount: number
 ) {
   try {
-    const response = await axios.post('laporanNeraca/edit', {
+    const response = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'biayaOperasi',
@@ -314,7 +314,7 @@ export async function handleKerusakanBahanLabaRugi(
   amount: number
 ) {
   try {
-    const response = await axios.post('laporanNeraca/edit', {
+    const response = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'biayaOperasi',
@@ -329,7 +329,7 @@ export async function handleKerusakanBahanLabaRugi(
 
 export async function handleCreateArusKasReport(user_id: number, periode: string) {
   try {
-    const response = await axios.post('laporanArusKas/create', {
+    const response = await axios.post('laporan-arus-kas/create', {
       user_id: user_id,
       periode: periode
     });
@@ -346,7 +346,7 @@ export async function handleGetArusKasInfo(dateValue: Date) {
       ? dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1'
       : '';
     console.log(periodeString);
-    const response = await axios.get('laporanArusKas/' + user_id + '/' + periodeString);
+    const response = await axios.get('laporan-arus-kas/' + user_id + '/' + periodeString);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -356,7 +356,7 @@ export async function handleGetArusKasInfo(dateValue: Date) {
 
 export async function handleAwalPeriodeArusKas(user_id: number, periode: string, kasAwal: number) {
   try {
-    const response = await axios.post('laporanNeraca/edit', {
+    const response = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'jumlahKasAwal',
@@ -376,7 +376,7 @@ export async function handleJualProdukArusKas(
   serviceTax: number
 ) {
   try {
-    const response = await axios.post('laporanNeraca/edit', {
+    const response = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'kasMasuk',
@@ -395,7 +395,7 @@ export async function handlePencairanSaldoArusKas(
   amount: number
 ) {
   try {
-    const response = await axios.post('laporanNeraca/edit', {
+    const response = await axios.post('laporan-neraca/edit', {
       user_id: user_id,
       periode: periode,
       field: 'kasCair',
