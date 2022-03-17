@@ -7,7 +7,7 @@ export async function handleCreateCoopTransaction(param: {
   status: string;
 }) {
   try {
-    const response = await axios.post('coopTransaction/create', param);
+    const response = await axios.post('coop-transaction/create', param);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -22,7 +22,7 @@ export async function handleShowCoopTransaction(
 ) {
   try {
     const response = await axios.get(
-      'coopTransaction/show/' + destUserId + '/' + fromDate + '/' + toDate
+      'coop-transaction/show/' + destUserId + '/' + fromDate + '/' + toDate
     );
     return response.data.payload;
   } catch (e) {

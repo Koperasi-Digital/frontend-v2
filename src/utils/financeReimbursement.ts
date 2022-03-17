@@ -43,7 +43,7 @@ export async function handleEditReimbursement(
 
 export async function handleShowOneReimbursement(reimbursementId: string) {
   try {
-    const response = await axios.get('reimbursement/showOne/' + reimbursementId);
+    const response = await axios.get('reimbursement/show-one/' + reimbursementId);
     return response.data.payload;
   } catch (e) {
     console.log(e);

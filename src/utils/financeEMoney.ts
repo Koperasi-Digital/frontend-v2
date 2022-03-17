@@ -2,7 +2,7 @@ import axios from './axiosMock';
 
 export async function handleGetPayAccountInfo(account_id: string) {
   try {
-    const response = await axios.get('emoney/getPayAccount/' + account_id);
+    const response = await axios.get('emoney/get-pay-account/' + account_id);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -17,7 +17,7 @@ export async function handleRegister(
   country_code: string
 ) {
   try {
-    const response = await axios.post('emoney/createPayAccount', {
+    const response = await axios.post('emoney/create-pay-account', {
       user_id: user_id,
       payment_type: payment_type,
       gopay_partner: {
@@ -36,7 +36,7 @@ export async function handleRegister(
 
 export async function handleUnbindPayAccount(account_id: string) {
   try {
-    const response = await axios.post('emoney/unbindPayAccount/' + account_id);
+    const response = await axios.post('emoney/unbind-pay-account/' + account_id);
     return response.data.payload;
   } catch (e) {
     console.log(e);

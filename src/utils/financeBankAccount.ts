@@ -7,7 +7,7 @@ export async function handleCreateBankAccount(
   bankName: string
 ) {
   try {
-    const response = await axios.post('bankAccount/create', {
+    const response = await axios.post('bank-account/create', {
       userId: userId,
       accountNumber: accountNumber,
       accountName: accountName,
@@ -27,7 +27,7 @@ export async function handleEditBankAccount(
   bankName: string
 ) {
   try {
-    const response = await axios.post('bankAccount/edit', {
+    const response = await axios.post('bank-account/edit', {
       userId: userId,
       accountNumber: accountNumber,
       accountName: accountName,
@@ -42,7 +42,7 @@ export async function handleEditBankAccount(
 
 export async function handleGetBankAccount(userId: number) {
   try {
-    const response = await axios.get('bankAccount/show/' + userId);
+    const response = await axios.get('bank-account/show/' + userId);
     return response.data.payload;
   } catch (e) {
     console.log(e);
