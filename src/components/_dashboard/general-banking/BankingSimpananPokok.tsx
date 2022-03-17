@@ -38,11 +38,9 @@ export default function BankingSimpananPokok() {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedSimpananPokok = await handleGetSimpananPokok(userId);
-      console.log(fetchedSimpananPokok);
-      if (fetchedSimpananPokok.orderId === null) {
+      if (fetchedSimpananPokok.order === null) {
         const createdOrder = await handleCreateOrder(userId, fetchedSimpananPokok.amount);
         const temp = await handleAddOrderSimpananPokok(userId, createdOrder.id);
-        fetchedSimpananPokok.orderId = temp.orderId;
         fetchedSimpananPokok.order = temp.order;
       }
       setSimpananPokok(fetchedSimpananPokok);
@@ -58,7 +56,7 @@ export default function BankingSimpananPokok() {
             Pembayaran Simpanan Pokok
           </Typography>
           {simpananPokok ? (
-            simpananPokok.order.status !== 'success' ? (
+            simpananPokok.order.status !== 'LUNAS' ? (
               <PaymentButton
                 user_id={2}
                 buttonName="Bayar"

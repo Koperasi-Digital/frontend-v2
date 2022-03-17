@@ -1,8 +1,8 @@
-import axios from './axiosMock';
+import axios from './axios';
 
 export async function handleListSimpananPokok() {
   try {
-    const response = await axios.get('simpananPokok/list');
+    const response = await axios.get('simpanan-pokok/list');
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -12,7 +12,7 @@ export async function handleListSimpananPokok() {
 
 export async function handleGetSimpananPokok(userId: number) {
   try {
-    const response = await axios.get('simpananPokok/show/' + userId);
+    const response = await axios.get('simpanan-pokok/show/' + userId);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -22,7 +22,7 @@ export async function handleGetSimpananPokok(userId: number) {
 
 export async function handleAddOrderSimpananPokok(userId: number, orderId: number) {
   try {
-    const response = await axios.post('simpananPokok/createOrder', {
+    const response = await axios.post('simpanan-pokok/create-order', {
       userId: userId,
       orderId: orderId
     });
@@ -38,7 +38,7 @@ export async function handleListSimpananWajib(dateValue: Date) {
     const periodeString = dateValue
       ? dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1'
       : '';
-    const response = await axios.get('simpananWajib/list/' + periodeString);
+    const response = await axios.get('simpanan-wajib/list/' + periodeString);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -51,7 +51,7 @@ export async function handleGetSimpananWajib(userId: number, dateValue: Date) {
     const periodeString = dateValue
       ? dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1'
       : '';
-    const response = await axios.get('simpananWajib/show/' + userId + '/' + periodeString);
+    const response = await axios.get('simpanan-wajib/show/' + userId + '/' + periodeString);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -68,7 +68,7 @@ export async function handleAddOrderSimpananWajib(
     const periodeString = dateValue
       ? dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1'
       : '';
-    const response = await axios.post('simpananWajib/createOrder', {
+    const response = await axios.post('simpanan-wajib/create-order', {
       userId: userId,
       period: periodeString,
       orderId: orderId
