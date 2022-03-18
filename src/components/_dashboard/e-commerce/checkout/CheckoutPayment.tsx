@@ -136,7 +136,7 @@ export default function CheckoutPayment() {
     const handleCheckOrderStatus = async () => {
       if (orderId) {
         const order = await handleGetOrder(orderId);
-        if (order.status === 'LUNAS') {
+        if (order && order.status === 'LUNAS') {
           handleNextStep();
         }
       }
