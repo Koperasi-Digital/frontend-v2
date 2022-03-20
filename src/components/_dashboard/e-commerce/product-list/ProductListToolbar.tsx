@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import searchFill from '@iconify/icons-eva/search-fill';
 import trash2Fill from '@iconify/icons-eva/trash-2-fill';
+import plusFill from '@iconify/icons-eva/plus-fill';
 import roundFilterList from '@iconify/icons-ic/round-filter-list';
 // material
 import { useTheme, styled } from '@mui/material/styles';
@@ -11,8 +13,10 @@ import {
   IconButton,
   Typography,
   InputAdornment,
-  OutlinedInput
+  OutlinedInput,
+  Button
 } from '@mui/material';
+import { PATH_DASHBOARD } from 'routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -49,6 +53,7 @@ export default function ProductListToolbar({
   filterName,
   onFilterName
 }: ProductListToolbarProps) {
+  const linkTo = `${PATH_DASHBOARD.eCommerce.root}/product/new`;
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
 
@@ -77,6 +82,12 @@ export default function ProductListToolbar({
           }
         />
       )}
+
+      <Link to={linkTo} color="inherit" style={{ textDecoration: 'none' }}>
+        <Button size="medium" variant="contained" startIcon={<Icon icon={plusFill} />}>
+          Add New Product
+        </Button>
+      </Link>
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">

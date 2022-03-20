@@ -89,6 +89,7 @@ function applySortFilter(
 }
 
 export default function UserList() {
+  // const theme = useTheme();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 

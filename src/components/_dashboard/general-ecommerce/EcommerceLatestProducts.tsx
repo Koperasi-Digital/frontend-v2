@@ -7,7 +7,6 @@ import { fCurrency } from '../../../utils/formatNumber';
 import mockData from '../../../utils/mock-data';
 //
 import Scrollbar from '../../Scrollbar';
-import ColorPreview from '../../ColorPreview';
 
 // ----------------------------------------------------------------------
 
@@ -52,9 +51,7 @@ type ProductItemProps = {
 };
 
 function ProductItem({ product }: ProductItemProps) {
-  const { name, image, price, priceSale } = product;
-  const hasSale = priceSale > 0;
-
+  const { name, image, price } = product;
   return (
     <Stack direction="row" spacing={2}>
       <ThumbImgStyle alt={name} src={image} />

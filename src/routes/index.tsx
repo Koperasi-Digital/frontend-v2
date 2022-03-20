@@ -97,6 +97,11 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
             { path: 'shop', element: <EcommerceShop /> },
+            { path: 'seller', element: <EcommerceSellerCenter /> },
+            { path: 'general-ecommerce', element: <GeneralEcommerce /> },
+            { path: 'general-analytics', element: <GeneralAnalytics /> },
+            { path: 'order/:id', element: <EcommerceOrderDetails /> },
+            { path: 'order-list', element: <EcommerceOrderList /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'list', element: <EcommerceProductList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
@@ -109,12 +114,56 @@ export default function Router() {
           path: 'finance',
           children: [
             { element: <Navigate to="/dashboard/finance/home" replace /> },
-            { path: 'home', element: <Finance /> },
+            {
+              path: 'home',
+              element: (
+                <RoleBasedGuard accessibleRoles={['MEMBER']}>
+                  <Finance />
+                </RoleBasedGuard>
+              )
+            },
             { path: 'report', element: <TransactionsReport /> },
-            { path: 'member-report', element: <MemberReport /> },
-            { path: 'disbursement-approval', element: <DisbursementApproval /> },
-            { path: 'disbursement-request', element: <DisbursementRequest /> },
-            { path: 'disbursement-request-list', element: <DisbursementRequestList /> }
+            {
+              path: 'member-report',
+              element: (
+                <RoleBasedGuard accessibleRoles={['MEMBER']}>
+                  <MemberReport />
+                </RoleBasedGuard>
+              )
+            },
+            { path: 'create-disbursement-request', element: <DisbursementRequest /> }
+          ]
+        },
+        {
+          path: 'management-finance',
+          children: [
+            {
+              element: <Navigate to="/dashboard/management-finance/home" replace />
+            },
+            {
+              path: 'home',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <AdminFinance />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'disbursement-approval',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DisbursementApproval />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'disbursement-request-list',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DisbursementRequestList />
+                </RoleBasedGuard>
+              )
+            }
           ]
         },
         {
@@ -184,10 +233,17 @@ const ResetPassword = Loadable(lazy(() => import('../pages/authentication/ResetP
 const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCode')));
 // Dashboard
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
-// const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));
-// const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
+const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));
+const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
 // const GeneralBanking = Loadable(lazy(() => import('../pages/dashboard/GeneralBanking')));
 // const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
+const EcommerceOrderList = Loadable(lazy(() => import('../pages/dashboard/EcommerceOrderList')));
+const EcommerceOrderDetails = Loadable(
+  lazy(() => import('../pages/dashboard/EcommerceOrderDetails'))
+);
+const EcommerceSellerCenter = Loadable(
+  lazy(() => import('../pages/dashboard/EcommerceSellerCenter'))
+);
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
 const EcommerceProductDetails = Loadable(
   lazy(() => import('../pages/dashboard/EcommerceProductDetails'))
@@ -215,6 +271,7 @@ const UserDetail = Loadable(lazy(() => import('../pages/dashboard/UserDetail')))
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
+const AdminFinance = Loadable(lazy(() => import('../pages/dashboard/AdminFinance')));
 const TransactionsReport = Loadable(lazy(() => import('../pages/dashboard/TransactionsReport')));
 const MemberReport = Loadable(lazy(() => import('../pages/dashboard/MemberReport')));
 const DisbursementApproval = Loadable(
