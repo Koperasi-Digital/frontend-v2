@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { sentenceCase } from 'change-case';
 import { useParams } from 'react-router-dom';
 // material
-import { Box, Card, Divider, Skeleton, Container, Typography } from '@mui/material';
+import { Box, Card, Skeleton, Container, Typography, Pagination } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getPost, getRecentPosts } from '../../redux/slices/blog';
@@ -14,11 +14,7 @@ import { BlogState } from '../../@types/blog';
 import Page from '../../components/Page';
 import Markdown from '../../components/Markdown';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import {
-  BlogPostHero,
-  BlogPostTags
-  // BlogPostCommentForm
-} from '../../components/_dashboard/blog';
+import { BlogPostHero } from '../../components/_dashboard/blog';
 
 // ----------------------------------------------------------------------
 
@@ -36,9 +32,9 @@ const SkeletonLoad = (
   </>
 );
 
-export default function BlogPost() {
+export default function CoursePage() {
   const dispatch = useDispatch();
-  const { title = '' } = useParams();
+  const { title = '', page = '' } = useParams();
   const { post, error } = useSelector((state: { blog: BlogState }) => state.blog);
 
   useEffect(() => {
@@ -47,17 +43,20 @@ export default function BlogPost() {
   }, [dispatch, title]);
 
   return (
-    <Page title="Blog Details | CoopChick">
+    <Page title="Course Page | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Blog Details"
+          heading="Course"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Blogs',
-              href: PATH_DASHBOARD.general.blogs
+              name: 'Course',
+              href: PATH_DASHBOARD.general.course
             },
-            { name: sentenceCase(title) }
+            { name: sentenceCase(title), href: `${PATH_DASHBOARD.general.course}/${title}` },
+            {
+              name: page
+            }
           ]}
         />
 
@@ -71,27 +70,9 @@ export default function BlogPost() {
               </Typography>
 
               <Markdown children={post.body} />
-
-              <Box sx={{ my: 5 }}>
-                <Divider />
-                <BlogPostTags post={post} />
-                {/* <Divider /> */}
+              <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+                <Pagination count={3} color="primary" />
               </Box>
-
-              {/* <Box sx={{ display: 'flex', mb: 2 }}>
-                <Typography variant="h4">Comments</Typography>
-                <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-                  ({post.comments.length})
-                </Typography>
-              </Box> */}
-
-              {/* <BlogPostCommentList post={post} /> */}
-
-              {/* <Box sx={{ mb: 5, mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-                <Pagination count={8} color="primary" />
-              </Box> */}
-
-              {/* <BlogPostCommentForm /> */}
             </Box>
           </Card>
         )}

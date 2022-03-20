@@ -87,11 +87,15 @@ export default function Router() {
         },
         { path: 'blogs/:title', element: <BlogPost /> },
         { path: 'blogs/new', element: <BlogNewPost /> },
-        { path: 'blog/verification', element: <BlogVerification /> },
+        { path: 'blogs/own', element: <MyBlog /> },
+        { path: 'blogs/verification', element: <BlogVerification /> },
         { path: 'faq', element: <FAQ /> },
         { path: 'faq/:number', element: <FAQPost /> },
         { path: 'forum', element: <Forum /> },
         { path: 'forum/own', element: <MyForum /> },
+        { path: 'course', element: <Course /> },
+        { path: 'course/:title', element: <CourseDetail /> },
+        { path: 'course/:title/:page', element: <CoursePage /> },
         {
           path: 'e-commerce',
           children: [
@@ -182,6 +186,10 @@ const EcommerceInvoice = Loadable(lazy(() => import('../pages/dashboard/Ecommerc
 const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
 const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
+const MyBlog = Loadable(lazy(() => import('../pages/dashboard/MyBlog')));
+const Course = Loadable(lazy(() => import('../pages/dashboard/Course')));
+const CourseDetail = Loadable(lazy(() => import('../pages/dashboard/CourseDetail')));
+const CoursePage = Loadable(lazy(() => import('../pages/dashboard/CoursePage')));
 const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
 const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
 const FAQ = Loadable(lazy(() => import('../pages/dashboard/FAQ')));

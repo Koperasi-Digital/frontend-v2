@@ -2,9 +2,11 @@ import { findIndex } from 'lodash';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
+import { Link as RouterLink } from 'react-router-dom';
+import { paramCase } from 'change-case';
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Grid, Card, IconButton, Typography, CardContent } from '@mui/material';
+import { Box, Grid, Card, IconButton, Typography, CardContent, Button } from '@mui/material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 import LightboxModal from '../../../LightboxModal';
@@ -53,12 +55,12 @@ function GalleryItem({ image, onOpenLightbox }: GalleryItemProps) {
       />
 
       <CaptionStyle>
-        <div>
+        <Button component={RouterLink} to={paramCase(title)}>
           <Typography variant="subtitle1">{title}</Typography>
           <Typography variant="body2" sx={{ opacity: 0.72 }}>
             {fDate(postAt)}
           </Typography>
-        </div>
+        </Button>
         <IconButton color="inherit">
           <Icon icon={moreVerticalFill} width={20} height={20} />
         </IconButton>
@@ -83,9 +85,9 @@ export default function ProfileGallery({ gallery }: ProfileGalleryProps) {
   };
   return (
     <Box sx={{ mt: 5 }}>
-      <Typography variant="h4" sx={{ mb: 3 }}>
+      {/* <Typography variant="h4" sx={{ mb: 3 }}>
         Gallery
-      </Typography>
+      </Typography> */}
 
       <Card sx={{ p: 3 }}>
         <Grid container spacing={3}>

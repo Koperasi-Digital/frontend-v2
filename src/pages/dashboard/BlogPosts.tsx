@@ -1,6 +1,7 @@
 import { orderBy } from 'lodash';
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
+import roundAccountBox from '@iconify/icons-ic/round-account-box';
 import { Link as RouterLink } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useEffect, useCallback, useState } from 'react';
@@ -80,14 +81,25 @@ export default function BlogPosts() {
           heading="Blogs"
           links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Blogs' }]}
           action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.general.newBlog}
-              startIcon={<Icon icon={plusFill} />}
-            >
-              New Blog
-            </Button>
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Button
+                variant="contained"
+                component={RouterLink}
+                to={PATH_DASHBOARD.general.newBlog}
+                startIcon={<Icon icon={plusFill} />}
+              >
+                New Blog
+              </Button>
+              <Button
+                sx={{ ml: 1 }}
+                variant="contained"
+                component={RouterLink}
+                to={PATH_DASHBOARD.general.myBlog}
+                startIcon={<Icon icon={roundAccountBox} />}
+              >
+                My Blog
+              </Button>
+            </Stack>
           }
         />
 
