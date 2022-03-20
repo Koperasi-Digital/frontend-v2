@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 import bellFill from '@iconify/icons-eva/bell-fill';
 import clockFill from '@iconify/icons-eva/clock-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
+import { SnackbarKey, useSnackbar } from 'notistack';
 // material
 import {
   Box,
@@ -14,7 +15,8 @@ import {
   ListItemText,
   ListItemButton,
   IconButton,
-  ListItem
+  ListItem,
+  Button
 } from '@mui/material';
 // redux
 import { RootState, useDispatch, useSelector } from '../../redux/store';
@@ -105,12 +107,26 @@ export default function NotificationsPopover() {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   const { notifications } = useSelector((state: RootState) => state.notification);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   useEffect(() => {
     dispatch(getNotifications());
   }, [dispatch]);
 
-  onMessageListener().then((payload) => {
+  const handleClickNotification = (key: SnackbarKey) => {
+    closeSnackbar(key);
+    setOpen(true);
+  };
+
+  onMessageListener().then(() => {
+    enqueueSnackbar('New Notification!', {
+      variant: 'info',
+      action: (key) => (
+        <Button color="info" onClick={() => handleClickNotification(key)}>
+          Open
+        </Button>
+      )
+    });
     dispatch(getNotifications());
   });
 
