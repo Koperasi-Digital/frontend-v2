@@ -29,17 +29,17 @@ export default function MyBlog() {
   }, [dispatch]);
 
   return (
-    <Page title="My Blog | CoopChick">
+    <Page title="Blogku | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="My Blog"
+          heading="Blogku"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Blogs',
               href: PATH_DASHBOARD.general.blogs
             },
-            { name: 'My Blog' }
+            { name: 'Blogku' }
           ]}
           action={
             <Button
@@ -48,7 +48,7 @@ export default function MyBlog() {
               to={PATH_DASHBOARD.general.newBlog}
               startIcon={<Icon icon={plusFill} />}
             >
-              New Blog
+              Buat Blog
             </Button>
           }
         />

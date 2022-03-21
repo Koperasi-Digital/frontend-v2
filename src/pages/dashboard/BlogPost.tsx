@@ -47,10 +47,10 @@ export default function BlogPost() {
   }, [dispatch, title]);
 
   return (
-    <Page title="Blog Details | CoopChick">
+    <Page title="Blog Detail | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Blog Details"
+          heading="Blog Detail"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {

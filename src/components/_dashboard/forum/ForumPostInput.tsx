@@ -24,7 +24,7 @@ export default function ForumPostInput() {
         rows={1}
         value={topic}
         onChange={(e) => setTopic(e.target.value)}
-        placeholder="Input your topic here..."
+        placeholder="Tulis topik di sini..."
         sx={{
           '& fieldset': {
             borderWidth: `1px !important`,
@@ -38,7 +38,7 @@ export default function ForumPostInput() {
         rows={4}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Share what you are thinking here..."
+        placeholder="Tulis apa yang ingin dibagikan di sini..."
         sx={{
           mt: 2,
           '& fieldset': {

@@ -105,11 +105,11 @@ export default function UploadSingleFile({
 
         <Box sx={{ p: 3, ml: { md: 2 } }}>
           <Typography gutterBottom variant="h5">
-            Drop or Select file
+            Drop atau Pilih File
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Drop files here or click&nbsp;
+            Drop file di sini atau klik&nbsp;
             <Typography
               variant="body2"
               component="span"
@@ -117,7 +117,7 @@ export default function UploadSingleFile({
             >
               browse
             </Typography>
-            &nbsp;thorough your machine
+            &nbsp;mesin anda
           </Typography>
         </Box>
 

@@ -46,7 +46,7 @@ export default function Course() {
         <SearchStyle
           value={filterCourse}
           onChange={(e) => setFilterCourse(e.target.value)}
-          placeholder="Search course..."
+          placeholder="Cari course..."
           startAdornment={
             <InputAdornment position="start">
               <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />

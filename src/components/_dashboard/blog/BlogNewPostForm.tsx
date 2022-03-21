@@ -10,13 +10,13 @@ import {
   Card,
   Chip,
   Stack,
-  Switch,
+  // Switch,
   Button,
   TextField,
   Typography,
   Autocomplete,
-  FormHelperText,
-  FormControlLabel
+  FormHelperText
+  // FormControlLabel
 } from '@mui/material';
 // utils
 import fakeRequest from '../../../utils/fakeRequest';
@@ -121,12 +121,12 @@ export default function BlogNewPostForm() {
       <FormikProvider value={formik}>
         <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={12}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
                   <TextField
                     fullWidth
-                    label="Blog Title"
+                    label="Judul Blog"
                     {...getFieldProps('title')}
                     error={Boolean(touched.title && errors.title)}
                     helperText={touched.title && errors.title}
@@ -137,14 +137,14 @@ export default function BlogNewPostForm() {
                     multiline
                     minRows={3}
                     maxRows={5}
-                    label="Description"
+                    label="Deskripsi"
                     {...getFieldProps('description')}
                     error={Boolean(touched.description && errors.description)}
                     helperText={touched.description && errors.description}
                   />
 
                   <div>
-                    <LabelStyle>Content</LabelStyle>
+                    <LabelStyle>Konten Blog</LabelStyle>
                     <QuillEditor
                       id="post-content"
                       value={values.content}
@@ -173,11 +173,54 @@ export default function BlogNewPostForm() {
                       </FormHelperText>
                     )}
                   </div>
+
+                  <Autocomplete
+                    multiple
+                    freeSolo
+                    value={values.tags}
+                    onChange={(event, newValue) => {
+                      setFieldValue('tags', newValue);
+                    }}
+                    options={TAGS_OPTION.map((option) => option)}
+                    renderTags={(value, getTagProps) =>
+                      value.map((option, index) => (
+                        <Chip
+                          {...getTagProps({ index })}
+                          key={option}
+                          size="small"
+                          label={option}
+                        />
+                      ))
+                    }
+                    renderInput={(params) => <TextField {...params} label="Tags" />}
+                  />
+                </Stack>
+                <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
+                  <Button
+                    fullWidth
+                    type="button"
+                    color="inherit"
+                    variant="outlined"
+                    size="large"
+                    onClick={handleOpenPreview}
+                    sx={{ mr: 1.5 }}
+                  >
+                    Preview
+                  </Button>
+                  <LoadingButton
+                    fullWidth
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    loading={isSubmitting}
+                  >
+                    Post
+                  </LoadingButton>
                 </Stack>
               </Card>
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            {/* <Grid item xs={12} md={4}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
                   <div>
@@ -217,7 +260,7 @@ export default function BlogNewPostForm() {
                     renderInput={(params) => <TextField {...params} label="Tags" />}
                   />
 
-                  {/* <TextField fullWidth label="Meta title" {...getFieldProps('metaTitle')} />
+                  <TextField fullWidth label="Meta title" {...getFieldProps('metaTitle')} />
 
                   <TextField
                     fullWidth
@@ -247,7 +290,7 @@ export default function BlogNewPostForm() {
                       ))
                     }
                     renderInput={(params) => <TextField {...params} label="Meta keywords" />}
-                  /> */}
+                  />
                 </Stack>
               </Card>
 
@@ -273,7 +316,7 @@ export default function BlogNewPostForm() {
                   Post
                 </LoadingButton>
               </Stack>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Form>
       </FormikProvider>

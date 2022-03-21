@@ -49,7 +49,7 @@ export default function Forum() {
     <Page title="Forum | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Forum Discussion"
+          heading="Forum Diskusi"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Forum', href: PATH_DASHBOARD.general.forum }
@@ -61,14 +61,14 @@ export default function Forum() {
               to={PATH_DASHBOARD.general.myforum}
               startIcon={<Icon icon={roundAccountBox} />}
             >
-              My Forum
+              Forumku
             </Button>
           }
         />
         <SearchStyle
           value={filterTopic}
           onChange={(e) => setFilterTopic(e.target.value)}
-          placeholder="Search topic..."
+          placeholder="Cari topik..."
           startAdornment={
             <InputAdornment position="start">
               <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />

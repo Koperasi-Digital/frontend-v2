@@ -22,9 +22,9 @@ import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../../components/_
 // ----------------------------------------------------------------------
 
 const SORT_OPTIONS = [
-  { value: 'latest', label: 'Latest' },
-  { value: 'popular', label: 'Popular' },
-  { value: 'oldest', label: 'Oldest' }
+  { value: 'latest', label: 'Terbaru' },
+  { value: 'popular', label: 'Populer' },
+  { value: 'oldest', label: 'Terlama' }
 ];
 
 // ----------------------------------------------------------------------
@@ -88,7 +88,7 @@ export default function BlogPosts() {
                 to={PATH_DASHBOARD.general.newBlog}
                 startIcon={<Icon icon={plusFill} />}
               >
-                New Blog
+                Buat Blog
               </Button>
               <Button
                 sx={{ ml: 1 }}
@@ -97,7 +97,7 @@ export default function BlogPosts() {
                 to={PATH_DASHBOARD.general.myBlog}
                 startIcon={<Icon icon={roundAccountBox} />}
               >
-                My Blog
+                Blogku
               </Button>
             </Stack>
           }

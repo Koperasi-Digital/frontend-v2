@@ -23,10 +23,10 @@ export default function MyForum() {
   }, [dispatch, user]);
 
   return (
-    <Page title="My Forum | CoopChick">
+    <Page title="Forumku | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="My Forum"
+          heading="Forumku"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Forum', href: PATH_DASHBOARD.general.forum },
@@ -36,7 +36,7 @@ export default function MyForum() {
         {posts.length > 0 ? (
           <MyForumPost posts={posts} />
         ) : (
-          <Typography variant="h6">You never post anything in the Forum</Typography>
+          <Typography variant="h6">Anda tidak pernah memposting apa pun di forum</Typography>
         )}
       </Container>
     </Page>

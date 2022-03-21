@@ -114,7 +114,7 @@ export default function ForumPostCard({ post }: PostCardProps) {
             fullWidth
             size="small"
             value={message}
-            placeholder="Write a comment…"
+            placeholder="Tulis komen di sini…"
             onChange={(event) => handleChangeMessage(event.target.value)}
             sx={{
               ml: 2,
