@@ -86,8 +86,6 @@ const CARDS_OPTIONS: CardOption[] = [
   { value: 'MasterCard', label: '**** **** **** 4545 - Cole Armstrong' }
 ];
 
-const SELLERID = 1; //TODO: replace using user id of shop owner
-
 export default function CheckoutPayment() {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -97,7 +95,19 @@ export default function CheckoutPayment() {
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
 
   const dispatch = useDispatch();
-  const { total, discount, subtotal, shipping, orderId } = checkout;
+  const { total, discount, subtotal, shipping, orderId, cart } = checkout;
+
+  //TODO: Ubah data" ini langsung ada di reduxnya (soalnya aku liat di BE ada field" ini tp di FEnya blm dikasih field" ini)
+
+  const cartTemp = JSON.parse(JSON.stringify(cart));
+  for (let i = 0; i < cartTemp.length; i++) {
+    cartTemp[i].seller_id = 1;
+    cartTemp[i].PRODUCT_ID = 1;
+    cartTemp[i].SHIPMENT_ID = 1;
+    cartTemp[i].shipment_price = 10000;
+  }
+
+  //END OF TODO
 
   const handleBackStep = () => {
     dispatch(onBackStep());
@@ -171,7 +181,7 @@ export default function CheckoutPayment() {
 
   const fetchData = async () => {
     if (!orderId) {
-      const createdOrder = await handleCreateOrder(userId, Math.floor(total), SELLERID);
+      const createdOrder = await handleCreateOrder(userId, Math.floor(total), cartTemp);
       dispatch(addCheckoutOrder(createdOrder.id));
       return createdOrder;
     } else {
