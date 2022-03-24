@@ -93,6 +93,7 @@ const sidebarConfig = [
       }
     ]
   },
+  // FINANCE
   {
     subheader: 'finance',
     items: [
@@ -117,6 +118,12 @@ const sidebarConfig = [
       {
         title: 'disbursement request',
         path: PATH_DASHBOARD.finance.disbursementRequest,
+        accessibleRoles: ['CUSTOMER'],
+        icon: ICONS.banking
+      },
+      {
+        title: 'deprecation register',
+        path: PATH_DASHBOARD.finance.deprecationRegister,
         accessibleRoles: ['CUSTOMER'],
         icon: ICONS.banking
       }

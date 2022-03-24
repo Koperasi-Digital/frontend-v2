@@ -280,7 +280,7 @@ export async function handleJualProdukLabaRugi(
 
 export async function handleKerusakanAlatLabaRugi(userId: number, periode: string, amount: number) {
   try {
-    const response = await axios.post('laporan-neraca/edit', {
+    const response = await axios.post('laporan-laba-rugi/edit', {
       userId: userId,
       periode: periode,
       field: 'biayaOperasi',
@@ -300,7 +300,7 @@ export async function handleKerusakanBahanBakuLabaRugi(
   amount: number
 ) {
   try {
-    const response = await axios.post('laporan-neraca/edit', {
+    const response = await axios.post('laporan-laba-rugi/edit', {
       userId: userId,
       periode: periode,
       field: 'biayaOperasi',

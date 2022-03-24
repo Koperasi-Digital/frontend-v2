@@ -131,7 +131,8 @@ export default function Router() {
                 </RoleBasedGuard>
               )
             },
-            { path: 'create-disbursement-request', element: <DisbursementRequest /> }
+            { path: 'create-disbursement-request', element: <DisbursementRequest /> },
+            { path: 'register-deprecation', element: <DeprecationRegister /> }
           ]
         },
         {
@@ -281,6 +282,7 @@ const DisbursementRequestList = Loadable(
   lazy(() => import('../pages/dashboard/DisbursementRequestList'))
 );
 const DisbursementRequest = Loadable(lazy(() => import('../pages/dashboard/DisbursementRequest')));
+const DeprecationRegister = Loadable(lazy(() => import('../pages/dashboard/DeprecationRegister')));
 // Main
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
