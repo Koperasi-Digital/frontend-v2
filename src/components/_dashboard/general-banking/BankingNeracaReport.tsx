@@ -33,6 +33,9 @@ import {
 import closeFill from '@iconify/icons-eva/close-fill';
 import { fCurrency } from '../../../utils/formatNumber';
 
+// hooks
+import useAuth from 'hooks/useAuth';
+
 type BankingNeracaReportProps = {
   dateValue: Date;
 };
@@ -40,6 +43,8 @@ type BankingNeracaReportProps = {
 export default function BankingNeracaReport({ dateValue }: BankingNeracaReportProps) {
   const dispatch = useDispatch();
   const { isOpenModalNeraca } = useSelector((state: RootState) => state.financeReport);
+
+  const { user } = useAuth();
 
   interface INeracaData {
     asetTetap: number;
@@ -65,7 +70,11 @@ export default function BankingNeracaReport({ dateValue }: BankingNeracaReportPr
   }));
 
   const handleOpenModalNeraca = async () => {
-    setNeracaData(await handleGetNeracaInfo(dateValue));
+    let periodeString = dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1';
+    if (user) {
+      setNeracaData(await handleGetNeracaInfo(user.id, periodeString));
+    }
+
     dispatch(openModalNeraca());
   };
 

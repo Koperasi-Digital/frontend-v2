@@ -10,11 +10,16 @@ import { fCurrency } from '../../../utils/formatNumber';
 
 import { handleGetLabaRugiInfo } from '../../../utils/financeReport';
 
+// hooks
+import useAuth from 'hooks/useAuth';
+
 export default function BankingBalanceStatistics() {
   const [chartData, setChartData] = useState<{ name: string; data: number[] }[]>([
     { name: 'Income', data: [] },
     { name: 'Expense', data: [] }
   ]);
+
+  const { user } = useAuth();
 
   const chartOptions = merge(BaseOptionChart(), {
     stroke: {
@@ -45,37 +50,39 @@ export default function BankingBalanceStatistics() {
     }
   });
 
-  const handleSetChartData = async () => {
-    const temp: { name: string; data: number[] }[] = [
-      { name: 'Income', data: [] },
-      { name: 'Expense', data: [] }
-    ];
-    let date = new Date();
-    let stop = false;
-    let incomeArray: number[] = [];
-    let expenseArray: number[] = [];
-    while (!stop) {
-      if (date.getMonth() === 0) {
-        stop = true;
-      }
-      date.setMonth(date.getMonth() - 1);
-      const labaRugiInfo = await handleGetLabaRugiInfo(date);
-      incomeArray.unshift(labaRugiInfo.jumlahPenjualan);
-      expenseArray.unshift(labaRugiInfo.biayaProduksiProdukTerjual + labaRugiInfo.biayaOperasi);
-    }
-    const paddingNumber = 12 - incomeArray.length;
-    for (let i = 0; i < paddingNumber; i++) {
-      incomeArray.push(0);
-      expenseArray.push(0);
-    }
-    temp[0].data = incomeArray;
-    temp[1].data = expenseArray;
-    setChartData(temp);
-  };
-
   useEffect(() => {
+    const handleSetChartData = async () => {
+      const temp: { name: string; data: number[] }[] = [
+        { name: 'Income', data: [] },
+        { name: 'Expense', data: [] }
+      ];
+      let date = new Date();
+      let stop = false;
+      let incomeArray: number[] = [];
+      let expenseArray: number[] = [];
+      while (!stop) {
+        if (date.getMonth() === 0) {
+          stop = true;
+        }
+        date.setMonth(date.getMonth() - 1);
+        if (user) {
+          let periodeString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-1';
+          const labaRugiInfo = await handleGetLabaRugiInfo(user.id, periodeString);
+          incomeArray.unshift(labaRugiInfo.jumlahPenjualan);
+          expenseArray.unshift(labaRugiInfo.biayaProduksiProdukTerjual + labaRugiInfo.biayaOperasi);
+        }
+      }
+      const paddingNumber = 12 - incomeArray.length;
+      for (let i = 0; i < paddingNumber; i++) {
+        incomeArray.push(0);
+        expenseArray.push(0);
+      }
+      temp[0].data = incomeArray;
+      temp[1].data = expenseArray;
+      setChartData(temp);
+    };
     handleSetChartData();
-  }, []);
+  }, [user]);
 
   return (
     <Card>
