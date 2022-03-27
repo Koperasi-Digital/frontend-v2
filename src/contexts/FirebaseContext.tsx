@@ -21,7 +21,8 @@ const initialState: AuthState = {
   isAuthenticated: false,
   isInitialized: false,
   user: null,
-  currentRole: null
+  currentRole: null,
+  isSeller: false
 };
 
 enum Types {

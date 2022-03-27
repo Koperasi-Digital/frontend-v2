@@ -13,6 +13,7 @@ import {
 } from '../@types/authentication';
 import { Role } from '../@types/role';
 import { User } from '../@types/account';
+import { isEmpty } from 'lodash';
 
 // ----------------------------------------------------------------------
 
@@ -30,15 +31,18 @@ type JWTAuthPayload = {
     isAuthenticated: boolean;
     user: AuthUser;
     currentRole: CurrentRole;
+    isSeller: boolean;
   };
   [Types.Login]: {
     user: AuthUser;
     currentRole: CurrentRole;
+    isSeller: boolean;
   };
   [Types.Logout]: undefined;
   [Types.Register]: {
     user: AuthUser;
     currentRole: CurrentRole;
+    isSeller: boolean;
   };
   [Types.Update]: {
     user: AuthUser;
@@ -54,7 +58,8 @@ const initialState: AuthState = {
   isAuthenticated: false,
   isInitialized: false,
   user: null,
-  currentRole: null
+  currentRole: null,
+  isSeller: false
 };
 
 const JWTReducer = (state: AuthState, action: JWTActions) => {
@@ -64,7 +69,8 @@ const JWTReducer = (state: AuthState, action: JWTActions) => {
         isAuthenticated: action.payload.isAuthenticated,
         isInitialized: true,
         user: action.payload.user,
-        currentRole: action.payload.currentRole
+        currentRole: action.payload.currentRole,
+        isSeller: action.payload.isSeller
       };
     case Types.Login:
       return {
@@ -122,7 +128,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
             payload: {
               isAuthenticated: true,
               user,
-              currentRole
+              currentRole,
+              isSeller: !isEmpty(user.storeName)
             }
           });
         } else {
@@ -131,7 +138,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
             payload: {
               isAuthenticated: false,
               user: null,
-              currentRole: null
+              currentRole: null,
+              isSeller: false
             }
           });
         }
@@ -142,7 +150,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
           payload: {
             isAuthenticated: false,
             user: null,
-            currentRole: null
+            currentRole: null,
+            isSeller: false
           }
         });
       }
@@ -164,7 +173,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
       type: Types.Login,
       payload: {
         user,
-        currentRole
+        currentRole,
+        isSeller: !isEmpty(user.storeName)
       }
     });
   };
@@ -192,7 +202,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
       type: Types.Register,
       payload: {
         user,
-        currentRole
+        currentRole,
+        isSeller: !isEmpty(user.storeName)
       }
     });
   };
