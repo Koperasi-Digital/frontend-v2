@@ -81,17 +81,17 @@ export default function AddSimpananSukarelaForm() {
     const snapOptions = {
       onSuccess: function (result: any) {
         //TODO: PUSH NOTIFICATION
-        window.location.href = PATH_DASHBOARD.eCommerce.checkout;
+        window.location.href = PATH_DASHBOARD.finance.addSimpananSukarela;
         enqueueSnackbar('Payment success', { variant: 'success' });
       },
       onPending: function (result: any) {
         //TODO: PUSH NOTIFICATION
-        window.location.href = PATH_DASHBOARD.eCommerce.checkout;
+        window.location.href = PATH_DASHBOARD.finance.addSimpananSukarela;
         enqueueSnackbar('Payment pending', { variant: 'warning' });
       },
       onError: function (result: any) {
         //TODO: PUSH NOTIFICATION
-        window.location.href = PATH_DASHBOARD.eCommerce.checkout;
+        window.location.href = PATH_DASHBOARD.finance.addSimpananSukarela;
         enqueueSnackbar('Payment error', { variant: 'error' });
       },
       onClose: function () {}
