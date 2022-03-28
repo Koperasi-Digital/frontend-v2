@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { dispatch } from '../store';
+// types
+import { Role } from '../../@types/role';
 // utils
 import axios from '../../utils/axios';
-import { Role } from '../../@types/role';
 
 // ----------------------------------------------------------------------
 
