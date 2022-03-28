@@ -66,6 +66,7 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
     },
     validationSchema: DisbursementRequestSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+      console.log(values);
       try {
         if (user && props.bankAccount) {
           if (await handleCreateReimbursement(user.id, Number(values.amount), values.disbType)) {
@@ -114,9 +115,9 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
                   <FormControl>
                     <FormLabel id="type-radio-buttons-group-label">Type</FormLabel>
                     <RadioGroup
+                      {...getFieldProps('disbType')}
                       aria-labelledby="type-radio-buttons-group-label"
-                      defaultValue="saldo"
-                      name="type"
+                      name="disbType"
                     >
                       <FormControlLabel value="saldo" control={<Radio />} label="Saldo" />
                       <FormControlLabel
