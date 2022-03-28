@@ -4,7 +4,18 @@ import { useState, useEffect } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 // material
 import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Stack, TextField, Typography } from '@mui/material';
+import {
+  Card,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  Stack,
+  TextField,
+  Typography
+} from '@mui/material';
 // hooks
 import useAuth from 'hooks/useAuth';
 
@@ -43,19 +54,21 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
     amount: Yup.number()
       .required()
       .min(0, 'Min value 0.')
-      .max(saldo ? saldo : 0, `Max value ${fCurrency(saldo ? saldo : 0)}`)
+      .max(saldo ? saldo : 0, `Max value ${fCurrency(saldo ? saldo : 0)}`),
+    disbType: Yup.string().required('Disbursement Type required')
   });
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      amount: ''
+      amount: '',
+      disbType: 'saldo'
     },
     validationSchema: DisbursementRequestSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         if (user && props.bankAccount) {
-          if (await handleCreateReimbursement(user.id, Number(values.amount))) {
+          if (await handleCreateReimbursement(user.id, Number(values.amount), values.disbType)) {
             enqueueSnackbar('Create success', { variant: 'success' });
           } else {
             enqueueSnackbar('Create fail', { variant: 'error' });
@@ -96,6 +109,23 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
                       ? `Sisa saldo ${fCurrency(saldo)} / Maksimal pencairan ${fCurrency(saldo)}`
                       : ``}
                   </Typography>
+                </Stack>
+                <Stack spacing={1}>
+                  <FormControl>
+                    <FormLabel id="type-radio-buttons-group-label">Type</FormLabel>
+                    <RadioGroup
+                      aria-labelledby="type-radio-buttons-group-label"
+                      defaultValue="saldo"
+                      name="type"
+                    >
+                      <FormControlLabel value="saldo" control={<Radio />} label="Saldo" />
+                      <FormControlLabel
+                        value="simpanan-sukarela"
+                        control={<Radio />}
+                        label="Simpanan Sukarela"
+                      />
+                    </RadioGroup>
+                  </FormControl>
                 </Stack>
               </Stack>
             </Card>
