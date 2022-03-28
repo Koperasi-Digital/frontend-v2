@@ -117,7 +117,7 @@ const sidebarConfig = [
       {
         title: 'disbursement request',
         path: PATH_DASHBOARD.finance.disbursementRequest,
-        accessibleRoles: ['CUSTOMER'],
+        accessibleRoles: ['MEMBER'],
         icon: ICONS.banking
       },
       {

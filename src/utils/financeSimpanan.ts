@@ -79,3 +79,13 @@ export async function handleAddOrderSimpananWajib(
     return null;
   }
 }
+
+export async function handleGetSimpananSukarela(userId: number) {
+  try {
+    const response = await axios.get('simpanan-sukarela/show/' + userId);
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
