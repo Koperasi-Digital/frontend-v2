@@ -89,3 +89,17 @@ export async function handleGetSimpananSukarela(userId: number) {
     return null;
   }
 }
+
+export async function handleEditSimpananSukarela(userId: number, amount: number, isAdd: number) {
+  try {
+    const response = await axios.post('simpanan-sukarela/edit', {
+      userId: userId,
+      amount: amount,
+      isAdd: isAdd
+    });
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}

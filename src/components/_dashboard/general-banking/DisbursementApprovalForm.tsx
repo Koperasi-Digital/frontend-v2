@@ -12,6 +12,7 @@ import { UploadSingleFile } from '../../upload';
 import { handleEditReimbursement, handleShowOneReimbursement } from 'utils/financeReimbursement';
 import { handleCreateCoopTransaction } from 'utils/financeCoopTransaction';
 import { handleEditSaldo } from 'utils/financeSaldo';
+import { handleEditSimpananSukarela } from 'utils/financeSimpanan';
 
 import { handleUploadFile } from 'utils/bucket';
 
@@ -50,11 +51,17 @@ export default function DisbursementApprovalForm() {
           'success',
           undefined
         );
-        const editedSaldo = await handleEditSaldo(
-          reimbursement.user.id,
-          reimbursement.total_cost,
-          0
-        );
+        let editedSaldo;
+        let editedSimpananSukarela;
+        if (reimbursement.type === 'saldo') {
+          editedSaldo = await handleEditSaldo(reimbursement.user.id, reimbursement.total_cost, 0);
+        } else {
+          editedSimpananSukarela = await handleEditSimpananSukarela(
+            reimbursement.user.id,
+            reimbursement.total_cost,
+            0
+          );
+        }
 
         const createdCoopTransaction = await handleCreateCoopTransaction({
           sisaHasilUsahaId: undefined,
@@ -71,7 +78,12 @@ export default function DisbursementApprovalForm() {
 
         resetForm();
         setSubmitting(false);
-        if (editedReimbursement && editedSaldo && createdCoopTransaction && uploadFileMessage) {
+        if (
+          editedReimbursement &&
+          (editedSaldo || editedSimpananSukarela) &&
+          createdCoopTransaction &&
+          uploadFileMessage
+        ) {
           enqueueSnackbar('Create success', { variant: 'success' });
         } else {
           enqueueSnackbar('Create fail', { variant: 'error' });
