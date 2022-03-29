@@ -9,8 +9,14 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Card, Typography, Stack } from '@mui/material';
 // utils
 import { fCurrency, fPercent } from '../../../utils/formatNumber';
+import { useEffect, useState } from 'react';
 //
 import BaseOptionChart from '../../charts/BaseOptionChart';
+
+import { handleGetLabaRugiInfo } from '../../../utils/financeReport';
+
+// hooks
+import useAuth from 'hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -36,14 +42,14 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.warning.dark
 }));
 
-// ----------------------------------------------------------------------
-
-const TOTAL = 8938;
-const PERCENT = -0.5;
-const CHART_DATA = [{ data: [76, 20, 84, 135, 56, 134, 122, 49] }];
-
 export default function BankingExpenses() {
+  const [total, setTotal] = useState<number>();
+  const [percent, setPercent] = useState<number>();
+  const [chartData, setChartData] = useState<{ data: number[] }[]>();
+
   const theme = useTheme();
+
+  const { user } = useAuth();
 
   const chartOptions = merge(BaseOptionChart(), {
     colors: [theme.palette.warning.main],
@@ -65,6 +71,32 @@ export default function BankingExpenses() {
     fill: { gradient: { opacityFrom: 0.56, opacityTo: 0.56 } }
   });
 
+  useEffect(() => {
+    const handleSetTotalPercent = async () => {
+      const currentDate = new Date();
+      const prevMonthDate = new Date();
+      prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
+      const currentPeriodeString = currentDate
+        ? currentDate.getFullYear() + '-' + (currentDate.getMonth() + 1) + '-1'
+        : '';
+      const prevPeriodeString = prevMonthDate
+        ? prevMonthDate.getFullYear() + '-' + (prevMonthDate.getMonth() + 1) + '-1'
+        : '';
+      if (user) {
+        const currentLabaRugi = await handleGetLabaRugiInfo(user.id, currentPeriodeString);
+        const prevLabaRugi = await handleGetLabaRugiInfo(user.id, prevPeriodeString);
+        const currentExpense =
+          currentLabaRugi.biayaProduksiProdukTerjual + currentLabaRugi.biayaOperasi;
+        const prevExpense = prevLabaRugi.biayaProduksiProdukTerjual + prevLabaRugi.biayaOperasi;
+        setTotal(currentExpense);
+        setPercent(((currentExpense - prevExpense) / currentExpense) * 100);
+        setChartData([{ data: [prevExpense, currentExpense] }]);
+      }
+    };
+
+    handleSetTotalPercent();
+  }, [user]);
+
   return (
     <RootStyle>
       <IconWrapperStyle>
@@ -73,20 +105,34 @@ export default function BankingExpenses() {
 
       <Stack spacing={1} sx={{ p: 3 }}>
         <Typography sx={{ typography: 'subtitle2' }}>Expenses</Typography>
-        <Typography sx={{ typography: 'h3' }}>{fCurrency(TOTAL)}</Typography>
+        <Typography sx={{ typography: 'h3' }}>{total ? fCurrency(total) : 'Loading...'}</Typography>
         <Stack direction="row" alignItems="center" flexWrap="wrap">
-          <Icon width={20} height={20} icon={PERCENT >= 0 ? trendingUpFill : trendingDownFill} />
-          <Typography variant="subtitle2" component="span" sx={{ ml: 0.5 }}>
-            {PERCENT > 0 && '+'}
-            {fPercent(PERCENT)}
-          </Typography>
-          <Typography variant="body2" component="span" sx={{ opacity: 0.72 }}>
-            &nbsp;than last month
-          </Typography>
+          {percent ? (
+            <>
+              <Icon
+                width={20}
+                height={20}
+                icon={percent >= 0 ? trendingUpFill : trendingDownFill}
+              />
+              <Typography variant="subtitle2" component="span" sx={{ ml: 0.5 }}>
+                {percent > 0 && '+'}
+                {fPercent(percent)}
+              </Typography>
+              <Typography variant="body2" component="span" sx={{ opacity: 0.72 }}>
+                &nbsp;than last month
+              </Typography>
+            </>
+          ) : (
+            'Loading...'
+          )}
         </Stack>
       </Stack>
 
-      <ReactApexChart type="area" series={CHART_DATA} options={chartOptions} height={120} />
+      {chartData ? (
+        <ReactApexChart type="area" series={chartData} options={chartOptions} height={120} />
+      ) : (
+        'Loading...'
+      )}
     </RootStyle>
   );
 }

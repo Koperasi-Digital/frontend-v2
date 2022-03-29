@@ -2,9 +2,13 @@ import * as Yup from 'yup';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import arrowIosBackFill from '@iconify/icons-eva/arrow-ios-back-fill';
+import { useEffect } from 'react';
 // material
 import { Grid, Button } from '@mui/material';
+import { useSnackbar } from 'notistack';
+
 import { LoadingButton } from '@mui/lab';
+
 // @types
 import {
   DeliveryOption,
@@ -18,15 +22,29 @@ import {
   onGotoStep,
   onBackStep,
   onNextStep,
-  applyShipping
+  applyShipping,
+  addCheckoutOrder
 } from '../../../../redux/slices/product';
 //
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
+import { handleCreateOrder, handleEditOrder, handleGetOrder } from 'utils/financeOrder';
+import { handleCreateTransaction } from 'utils/financeTransaction';
+import { PATH_DASHBOARD } from 'routes/paths';
+import useAuth from 'hooks/useAuth';
 
-// ----------------------------------------------------------------------
+type transaction_details = {
+  order_id: number;
+  gross_amount: number;
+};
+
+declare global {
+  interface Window {
+    snap: any;
+  }
+}
 
 const DELIVERY_OPTIONS: DeliveryOption[] = [
   {
@@ -69,13 +87,27 @@ const CARDS_OPTIONS: CardOption[] = [
 ];
 
 export default function CheckoutPayment() {
-  const { checkout } = useSelector((state: { product: ProductState }) => state.product);
-  const dispatch = useDispatch();
-  const { total, discount, subtotal, shipping } = checkout;
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleNextStep = () => {
-    dispatch(onNextStep());
-  };
+  const { user } = useAuth();
+  const userId = user?.id;
+
+  const { checkout } = useSelector((state: { product: ProductState }) => state.product);
+
+  const dispatch = useDispatch();
+  const { total, discount, subtotal, shipping, orderId, cart } = checkout;
+
+  //TODO: Ubah data" ini langsung ada di reduxnya (soalnya aku liat di BE ada field" ini tp di FEnya blm dikasih field" ini)
+
+  const cartTemp = JSON.parse(JSON.stringify(cart));
+  for (let i = 0; i < cartTemp.length; i++) {
+    cartTemp[i].seller_id = 1;
+    cartTemp[i].PRODUCT_ID = 1;
+    cartTemp[i].SHIPMENT_ID = 1;
+    cartTemp[i].shipment_price = 10000;
+  }
+
+  //END OF TODO
 
   const handleBackStep = () => {
     dispatch(onBackStep());
@@ -87,6 +119,76 @@ export default function CheckoutPayment() {
 
   const handleApplyShipping = (value: number) => {
     dispatch(applyShipping(value));
+  };
+
+  useEffect(() => {
+    //for payment
+    const snapSrcUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
+    const myMidtransClientKey = 'SB-Mid-client-hGP5UBKXCE-VIit4'; //change this according to your client-key
+
+    const script = document.createElement('script');
+    script.src = snapSrcUrl;
+    script.setAttribute('data-client-key', myMidtransClientKey);
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleNextStep = () => {
+      dispatch(onNextStep());
+    };
+
+    const handleCheckOrderStatus = async () => {
+      if (orderId) {
+        const order = await handleGetOrder(orderId);
+        if (order && order.status === 'LUNAS') {
+          handleNextStep();
+        }
+      }
+    };
+
+    handleCheckOrderStatus();
+  }, [dispatch, orderId]);
+
+  const paymentFunction = async (user_id: number, transaction_details: transaction_details) => {
+    const snapOptions = {
+      onSuccess: function (result: any) {
+        //TODO: PUSH NOTIFICATION
+        window.location.href = PATH_DASHBOARD.eCommerce.checkout;
+        enqueueSnackbar('Payment success', { variant: 'success' });
+      },
+      onPending: function (result: any) {
+        //TODO: PUSH NOTIFICATION
+        window.location.href = PATH_DASHBOARD.eCommerce.checkout;
+        enqueueSnackbar('Payment pending', { variant: 'warning' });
+      },
+      onError: function (result: any) {
+        //TODO: PUSH NOTIFICATION
+        window.location.href = PATH_DASHBOARD.eCommerce.checkout;
+        enqueueSnackbar('Payment error', { variant: 'error' });
+      },
+      onClose: function () {}
+    };
+
+    const tokenName = await handleCreateTransaction(transaction_details);
+    window.snap.pay(tokenName, snapOptions);
+  };
+
+  const fetchData = async () => {
+    if (!orderId) {
+      const createdOrder = await handleCreateOrder(userId, Math.floor(total), cartTemp);
+      dispatch(addCheckoutOrder(createdOrder.id));
+      return createdOrder;
+    } else {
+      const editedOrder = await handleEditOrder(orderId, Math.floor(total));
+      return editedOrder;
+    }
+    //TODO: INSERT ORDER DETAIL TO DB
   };
 
   const PaymentSchema = Yup.object().shape({
@@ -101,7 +203,12 @@ export default function CheckoutPayment() {
     validationSchema: PaymentSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        handleNextStep();
+        const order = await fetchData();
+        await paymentFunction(userId, {
+          order_id: order.id,
+          gross_amount: order.total_cost
+        });
+        // handleNextStep();
       } catch (error) {
         console.error(error);
         setSubmitting(false);

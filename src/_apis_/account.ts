@@ -23,11 +23,19 @@ const users: User[] = [
     state: 'West Java',
     city: 'Bandung',
     zipCode: '40132',
-    role: {
-      id: 1,
-      name: 'ADMIN',
-      description: 'Admin Koperasi'
-    }
+    storeName: null,
+    roles: [
+      {
+        id: 1,
+        name: 'ADMIN',
+        description: 'Admin Koperasi'
+      },
+      {
+        id: 3,
+        name: 'Member',
+        description: 'Anggota Koperasi'
+      }
+    ]
   },
   {
     id: 2,
@@ -40,11 +48,14 @@ const users: User[] = [
     state: null,
     city: null,
     zipCode: null,
-    role: {
-      id: 2,
-      name: 'CUSTOMER',
-      description: 'E-Commerce Customer'
-    }
+    storeName: null,
+    roles: [
+      {
+        id: 2,
+        name: 'CUSTOMER',
+        description: 'E-Commerce Customer'
+      }
+    ]
   }
 ];
 
@@ -97,11 +108,14 @@ mock.onPost('/api/account/register').reply(async (config) => {
       state: null,
       city: null,
       zipCode: null,
-      role: {
-        id: 2,
-        name: 'CUSTOMER',
-        description: 'E-Commerce Customer'
-      }
+      storeName: null,
+      roles: [
+        {
+          id: 2,
+          name: 'CUSTOMER',
+          description: 'E-Commerce Customer'
+        }
+      ]
     };
 
     const accessToken = sign({ userId: user.id }, JWT_SECRET, {

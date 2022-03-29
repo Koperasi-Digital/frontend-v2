@@ -53,12 +53,15 @@ export const PATH_DASHBOARD = {
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
     list: path(ROOTS_DASHBOARD, '/user/list'),
-    editById: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
+    editById: path(ROOTS_DASHBOARD, `/user/:name/edit`),
     account: path(ROOTS_DASHBOARD, '/user/account')
   },
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
     shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
+    seller: path(ROOTS_DASHBOARD, '/e-commerce/seller'),
+    orderById: path(ROOTS_DASHBOARD, '/e-commerce/order/:id'),
+    orderList: path(ROOTS_DASHBOARD, '/e-commerce/order-list'),
     product: path(ROOTS_DASHBOARD, '/e-commerce/product/:name'),
     productById: path(ROOTS_DASHBOARD, '/e-commerce/product/itik-ayam'),
     list: path(ROOTS_DASHBOARD, '/e-commerce/list'),
@@ -72,8 +75,16 @@ export const PATH_DASHBOARD = {
     home: path(ROOTS_DASHBOARD, '/finance/home'),
     report: path(ROOTS_DASHBOARD, '/finance/report'),
     memberReport: path(ROOTS_DASHBOARD, '/finance/member-report'),
+    addSimpananSukarela: path(ROOTS_DASHBOARD, '/finance/add-simpanan-sukarela'),
     disbursementApproval: path(ROOTS_DASHBOARD, '/finance/disbursement-approval'),
-    disbursementRequest: path(ROOTS_DASHBOARD, '/finance/disbursement-request'),
-    disbursementRequestList: path(ROOTS_DASHBOARD, '/finance/disbursement-request-list')
+    disbursementRequest: path(ROOTS_DASHBOARD, '/finance/create-disbursement-request'),
+    disbursementRequestList: path(ROOTS_DASHBOARD, '/finance/disbursement-request-list'),
+    deprecationRegister: path(ROOTS_DASHBOARD, '/finance/register-deprecation')
+  },
+  managementFinance: {
+    root: path(ROOTS_DASHBOARD, '/management-finance'),
+    home: path(ROOTS_DASHBOARD, '/management-finance/home'),
+    disbursementApproval: path(ROOTS_DASHBOARD, '/management-finance/disbursement-approval'),
+    disbursementRequestList: path(ROOTS_DASHBOARD, '/management-finance/disbursement-request-list')
   }
 };

@@ -56,24 +56,25 @@ const sidebarConfig = [
         title: 'user',
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
-        children: [
-          { title: 'list', path: PATH_DASHBOARD.user.list },
-          { title: 'edit', path: PATH_DASHBOARD.user.editById }
-        ]
+        children: [{ title: 'list', path: PATH_DASHBOARD.user.list }]
       },
       // MANAGEMENT : FINANCE
       {
         title: 'finance',
-        path: PATH_DASHBOARD.finance.root,
+        path: PATH_DASHBOARD.managementFinance.root,
         icon: ICONS.banking,
         children: [
           {
+            title: 'home',
+            path: PATH_DASHBOARD.managementFinance.home
+          },
+          {
             title: 'disbursement approval',
-            path: PATH_DASHBOARD.finance.disbursementApproval
+            path: PATH_DASHBOARD.managementFinance.disbursementApproval
           },
           {
             title: 'disbursement request list',
-            path: PATH_DASHBOARD.finance.disbursementRequestList
+            path: PATH_DASHBOARD.managementFinance.disbursementRequestList
           }
         ]
       },
@@ -83,9 +84,9 @@ const sidebarConfig = [
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.cart,
         children: [
-          { title: 'list', path: PATH_DASHBOARD.eCommerce.list },
-          { title: 'create', path: PATH_DASHBOARD.eCommerce.newProduct },
-          { title: 'edit', path: PATH_DASHBOARD.eCommerce.editById }
+          { title: 'seller', path: PATH_DASHBOARD.eCommerce.seller },
+          { title: 'manage orders', path: PATH_DASHBOARD.eCommerce.orderList },
+          { title: 'manage products', path: PATH_DASHBOARD.eCommerce.list }
         ]
       },
       // MANAGEMENT: KNOWLEDGE
@@ -97,16 +98,44 @@ const sidebarConfig = [
       }
     ]
   },
+  // FINANCE
   {
     subheader: 'finance',
-    accessibleRoles: ['ADMIN'],
     items: [
-      { title: 'home', path: PATH_DASHBOARD.finance.home, icon: ICONS.banking },
-      { title: 'report', path: PATH_DASHBOARD.finance.report, icon: ICONS.banking },
-      { title: 'member report', path: PATH_DASHBOARD.finance.memberReport, icon: ICONS.banking },
+      {
+        title: 'home',
+        path: PATH_DASHBOARD.finance.home,
+        accessibleRoles: ['MEMBER'],
+        icon: ICONS.banking
+      },
+      {
+        title: 'report',
+        path: PATH_DASHBOARD.finance.report,
+        accessibleRoles: ['CUSTOMER'],
+        icon: ICONS.banking
+      },
+      {
+        title: 'member report',
+        path: PATH_DASHBOARD.finance.memberReport,
+        accessibleRoles: ['MEMBER'],
+        icon: ICONS.banking
+      },
       {
         title: 'disbursement request',
         path: PATH_DASHBOARD.finance.disbursementRequest,
+        accessibleRoles: ['MEMBER'],
+        icon: ICONS.banking
+      },
+      {
+        title: 'add simpanan sukarela',
+        path: PATH_DASHBOARD.finance.addSimpananSukarela,
+        accessibleRoles: ['MEMBER'],
+        icon: ICONS.banking
+      },
+      {
+        title: 'deprecation register',
+        path: PATH_DASHBOARD.finance.deprecationRegister,
+        accessibleRoles: ['CUSTOMER'],
         icon: ICONS.banking
       }
     ]
@@ -117,7 +146,6 @@ const sidebarConfig = [
     accessibleRoles: ['CUSTOMER'],
     items: [
       { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop, icon: ICONS.cart },
-      { title: 'product', path: PATH_DASHBOARD.eCommerce.productById, icon: ICONS.cart },
       { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout, icon: ICONS.cart },
       { title: 'invoice', path: PATH_DASHBOARD.eCommerce.invoice, icon: ICONS.cart }
     ]

@@ -1,154 +1,136 @@
-import { noCase } from 'change-case';
-import { useRef, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
 import bellFill from '@iconify/icons-eva/bell-fill';
 import clockFill from '@iconify/icons-eva/clock-fill';
-import doneAllFill from '@iconify/icons-eva/done-all-fill';
+import trash2Outline from '@iconify/icons-eva/trash-2-outline';
+import { SnackbarKey, useSnackbar } from 'notistack';
 // material
 import {
   Box,
   List,
   Badge,
-  Button,
-  Avatar,
   Tooltip,
   Divider,
   Typography,
   ListItemText,
-  ListItemAvatar,
-  ListItemButton
+  ListItemButton,
+  IconButton,
+  ListItem,
+  Button
 } from '@mui/material';
+// redux
+import { RootState, useDispatch, useSelector } from '../../redux/store';
+import {
+  deleteNotification,
+  getNotifications,
+  readNotification
+} from '../../redux/slices/notification';
 // utils
 import { fToNow } from '../../utils/formatTime';
-import mockData from '../../utils/mock-data';
+// types
+import { Notification } from '../../@types/notification';
 // components
+import { onMessageListener } from '../../firebase';
 import Scrollbar from '../../components/Scrollbar';
 import MenuPopover from '../../components/MenuPopover';
 import { MIconButton } from '../../components/@material-extend';
 
 // ----------------------------------------------------------------------
 
-const TITLES = ['Vaksinasi DOC', 'Rapat Anggota Koperasi'];
-
-const DESCRIPTIONS = [
-  'akan berlangsung pada tanggal 9 Januari pada Pukul 14.00',
-  'akan berlangsung pada tanggal 8 Januari pada Pukul 16.00'
-];
-
-const TYPES = ['friend_interactive', 'friend_interactive'];
-
-const AVATARS = [null, null];
-
-const UNREADS = [true, false];
-
-const MOCK_NOTIFICATIONS = [...Array(2)].map((_, index) => ({
-  id: mockData.id(index),
-  title: TITLES[index],
-  description: DESCRIPTIONS[index],
-  avatar: AVATARS[index],
-  type: TYPES[index],
-  createdAt: mockData.time(index),
-  isUnRead: UNREADS[index]
-}));
-
-// ----------------------------------------------------------------------
-
-type TNotificationPopover = {
-  id: string;
-  title: string;
-  description: string;
-  avatar: string | null;
-  type: string;
-  createdAt: Date;
-  isUnRead: boolean;
-};
-
-function renderContent(notification: TNotificationPopover) {
+function NotificationItem({ notification }: { notification: Notification }) {
   const title = (
-    <Typography variant="subtitle2">
-      {notification.title}
+    <>
+      <Typography variant="subtitle2">{notification.title}</Typography>
       <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-        &nbsp; {noCase(notification.description)}
+        {notification.description}
       </Typography>
-    </Typography>
+    </>
   );
 
-  if (notification.type === 'order_placed') {
-    return {
-      avatar: <img alt={notification.title} src="/static/icons/ic_notification_package.svg" />,
-      title
-    };
-  }
-  if (notification.type === 'order_shipped') {
-    return {
-      avatar: <img alt={notification.title} src="/static/icons/ic_notification_shipping.svg" />,
-      title
-    };
-  }
-  if (notification.type === 'mail') {
-    return {
-      avatar: <img alt={notification.title} src="/static/icons/ic_notification_mail.svg" />,
-      title
-    };
-  }
-  if (notification.type === 'chat_message') {
-    return {
-      avatar: <img alt={notification.title} src="/static/icons/ic_notification_chat.svg" />,
-      title
-    };
-  }
-  return {
-    avatar: notification.avatar ? <img alt={notification.title} src={notification.avatar} /> : null,
-    title
+  const handleMarkAsRead = () => {
+    if (notification.isUnread) {
+      readNotification(notification.id);
+    }
   };
-}
 
-function NotificationItem({ notification }: { notification: TNotificationPopover }) {
-  const { avatar, title } = renderContent(notification);
+  const handleDelete = () => {
+    deleteNotification(notification.id);
+  };
 
   return (
-    <ListItemButton
-      to="#"
-      component={RouterLink}
-      sx={{
-        py: 1.5,
-        px: 2.5,
-        mt: '1px',
-        ...(notification.isUnRead && {
-          bgcolor: 'action.selected'
-        })
-      }}
+    <ListItem
+      disablePadding
+      secondaryAction={
+        <Tooltip title="Delete" arrow>
+          <IconButton onClick={handleDelete}>
+            <Icon icon={trash2Outline} width={20} height={20} />
+          </IconButton>
+        </Tooltip>
+      }
+      divider
     >
-      <ListItemAvatar>
-        <Avatar sx={{ bgcolor: 'background.neutral' }}>{avatar}</Avatar>
-      </ListItemAvatar>
-      <ListItemText
-        primary={title}
-        secondary={
-          <Typography
-            variant="caption"
-            sx={{
-              mt: 0.5,
-              display: 'flex',
-              alignItems: 'center',
-              color: 'text.disabled'
-            }}
-          >
-            <Box component={Icon} icon={clockFill} sx={{ mr: 0.5, width: 16, height: 16 }} />
-            {fToNow(notification.createdAt)}
-          </Typography>
-        }
-      />
-    </ListItemButton>
+      <ListItemButton
+        onClick={handleMarkAsRead}
+        sx={{
+          py: 1.5,
+          px: 2.5,
+          mt: '1px',
+          ...(notification.isUnread && {
+            bgcolor: 'action.selected'
+          })
+        }}
+      >
+        <ListItemText
+          primary={title}
+          secondary={
+            <Typography
+              variant="caption"
+              sx={{
+                mt: 0.5,
+                display: 'flex',
+                alignItems: 'center',
+                color: 'text.disabled'
+              }}
+            >
+              <Box component={Icon} icon={clockFill} sx={{ mr: 0.5, width: 16, height: 16 }} />
+              {fToNow(notification.created_at)}
+            </Typography>
+          }
+        />
+      </ListItemButton>
+    </ListItem>
   );
 }
 
 export default function NotificationsPopover() {
+  const dispatch = useDispatch();
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+  const { notifications } = useSelector((state: RootState) => state.notification);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    dispatch(getNotifications());
+  }, [dispatch]);
+
+  const handleClickNotification = (key: SnackbarKey) => {
+    closeSnackbar(key);
+    setOpen(true);
+  };
+
+  onMessageListener().then(() => {
+    enqueueSnackbar('New Notification!', {
+      variant: 'info',
+      action: (key) => (
+        <Button color="info" onClick={() => handleClickNotification(key)}>
+          Open
+        </Button>
+      )
+    });
+    dispatch(getNotifications());
+  });
+
+  const totalUnread = notifications.filter((item) => item.isUnread === true).length;
 
   const handleOpen = () => {
     setOpen(true);
@@ -156,15 +138,6 @@ export default function NotificationsPopover() {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleMarkAllAsRead = () => {
-    setNotifications(
-      notifications.map((notification) => ({
-        ...notification,
-        isUnRead: false
-      }))
-    );
   };
 
   return (
@@ -175,7 +148,7 @@ export default function NotificationsPopover() {
         color={open ? 'primary' : 'default'}
         onClick={handleOpen}
       >
-        <Badge badgeContent={totalUnRead} color="error">
+        <Badge badgeContent={totalUnread} color="error">
           <Icon icon={bellFill} width={20} height={20} />
         </Badge>
       </MIconButton>
@@ -190,36 +163,20 @@ export default function NotificationsPopover() {
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="subtitle1">Notifications</Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              You have {totalUnRead} unread messages
+              You have {totalUnread} unread messages
             </Typography>
           </Box>
-
-          {totalUnRead > 0 && (
-            <Tooltip title=" Mark all as read">
-              <MIconButton color="primary" onClick={handleMarkAllAsRead}>
-                <Icon icon={doneAllFill} width={20} height={20} />
-              </MIconButton>
-            </Tooltip>
-          )}
         </Box>
 
         <Divider />
 
-        <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
+        <Scrollbar sx={{ maxHeight: 340 }}>
           <List disablePadding>
             {notifications.map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
           </List>
         </Scrollbar>
-
-        <Divider />
-
-        <Box sx={{ p: 1 }}>
-          <Button fullWidth disableRipple component={RouterLink} to="#">
-            View All
-          </Button>
-        </Box>
       </MenuPopover>
     </>
   );

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { paramCase, sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
-import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
+import editFill from '@iconify/icons-eva/edit-fill';
 // material
 import { useTheme, styled } from '@mui/material/styles';
 import {
@@ -44,9 +44,10 @@ import {
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Product', alignRight: false },
+  { id: 'id', label: 'SKU', alignRight: false },
   { id: 'available', label: 'Available', alignRight: false },
+  { id: 'price', label: 'Price', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
-  { id: 'price', label: 'Price', alignRight: true },
   { id: '' }
 ];
 
@@ -232,20 +233,25 @@ export default function EcommerceProductList() {
                               </Typography>
                             </Box>
                           </TableCell>
-                          <TableCell style={{ minWidth: 160 }}>{available}</TableCell>
-                          <TableCell style={{ minWidth: 160 }}>
+                          <TableCell style={{ minWidth: 100 }}>{id}</TableCell>
+                          <TableCell style={{ minWidth: 100 }}>{available}</TableCell>
+                          <TableCell style={{ minWidth: 160 }}>{fCurrency(price)}</TableCell>
+                          <TableCell style={{ minWidth: 100 }}>
                             <Label
                               variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                              color={(status === 'Inactive' && 'error') || 'success'}
+                              color={
+                                (status === 'Inactive' && 'error') ||
+                                (status === 'Low Stock' && 'warning') ||
+                                'success'
+                              }
                             >
                               {status ? sentenceCase(status) : ''}
                             </Label>
                           </TableCell>
-                          <TableCell align="right">{fCurrency(price)}</TableCell>
                           <TableCell align="right">
                             <IconButton>
                               <Link to={linkTo + paramCase(name) + '/edit'} color="inherit">
-                                <Icon icon={moreVerticalFill} width={20} height={20} />
+                                <Icon icon={editFill} width={20} height={20} />
                               </Link>
                             </IconButton>
                           </TableCell>

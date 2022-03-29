@@ -1,7 +1,8 @@
+import { useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import searchFill from '@iconify/icons-eva/search-fill';
 import trash2Fill from '@iconify/icons-eva/trash-2-fill';
-import roundFilterList from '@iconify/icons-ic/round-filter-list';
+import { capitalize } from 'lodash';
 // material
 import { useTheme, styled } from '@mui/material/styles';
 import {
@@ -11,28 +12,52 @@ import {
   IconButton,
   Typography,
   OutlinedInput,
-  InputAdornment
+  InputAdornment,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select
 } from '@mui/material';
+// redux
+import { useDispatch, useSelector, RootState } from '../../../../redux/store';
+import { getRoles } from '../../../../redux/slices/role';
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Toolbar)(({ theme }) => ({
-  height: 96,
+  // height: 96,
   display: 'flex',
   justifyContent: 'space-between',
-  padding: theme.spacing(0, 1, 0, 3)
+  padding: theme.spacing(2, 3, 2, 3)
 }));
 
 const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
-  width: 240,
+  width: '100%',
   transition: theme.transitions.create(['box-shadow', 'width'], {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.shorter
   }),
-  '&.Mui-focused': { width: 320, boxShadow: theme.customShadows.z8 },
+  '&.Mui-focused': { boxShadow: theme.customShadows.z8 },
   '& fieldset': {
     borderWidth: `1px !important`,
     borderColor: `${theme.palette.grey[500_32]} !important`
+  }
+}));
+
+const RoleFormControlStyle = styled(FormControl)(({ theme }) => ({
+  width: 210,
+  marginRight: 12,
+  [theme.breakpoints.down('lg')]: {
+    width: '100%'
+  }
+}));
+
+const FilterContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  [theme.breakpoints.down('lg')]: {
+    flexDirection: 'column',
+    rowGap: 12
   }
 }));
 
@@ -41,16 +66,27 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 type UserListToolbarProps = {
   numSelected: number;
   filterName: string;
+  filterRole: string;
   onFilterName: (value: string) => void;
+  onFilterRole: (value: string) => void;
 };
 
 export default function UserListToolbar({
   numSelected,
   filterName,
-  onFilterName
+  filterRole,
+  onFilterName,
+  onFilterRole
 }: UserListToolbarProps) {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
+
+  const dispatch = useDispatch();
+  const { roles } = useSelector((state: RootState) => state.role);
+
+  useEffect(() => {
+    dispatch(getRoles());
+  }, [dispatch]);
 
   return (
     <RootStyle
@@ -66,28 +102,43 @@ export default function UserListToolbar({
           {numSelected} selected
         </Typography>
       ) : (
-        <SearchStyle
-          value={filterName}
-          onChange={(e) => onFilterName(e.target.value)}
-          placeholder="Search user..."
-          startAdornment={
-            <InputAdornment position="start">
-              <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
-            </InputAdornment>
-          }
-        />
+        <FilterContainer>
+          <RoleFormControlStyle>
+            <InputLabel id="role-filter-label">Role</InputLabel>
+            <Select
+              labelId="role-filter-label"
+              id="role-filter"
+              label="Role"
+              value={filterRole}
+              onChange={(e) => onFilterRole(e.target.value)}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {roles.map(({ id, name }) => (
+                <MenuItem key={id} value={name}>
+                  {capitalize(name)}
+                </MenuItem>
+              ))}
+            </Select>
+          </RoleFormControlStyle>
+          <SearchStyle
+            value={filterName}
+            onChange={(e) => onFilterName(e.target.value)}
+            placeholder="Search name or email..."
+            startAdornment={
+              <InputAdornment position="start">
+                <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
+              </InputAdornment>
+            }
+          />
+        </FilterContainer>
       )}
 
-      {numSelected > 0 ? (
+      {numSelected > 0 && (
         <Tooltip title="Delete">
           <IconButton>
             <Icon icon={trash2Fill} />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Icon icon={roundFilterList} />
           </IconButton>
         </Tooltip>
       )}

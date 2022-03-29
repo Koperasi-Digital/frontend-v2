@@ -4,7 +4,7 @@ import { FormikProps } from 'formik';
 
 export type PaymentType = 'paypal' | 'credit_card' | 'cash';
 
-export type ProductInventoryType = 'Active' | 'Inactive';
+export type ProductInventoryType = 'Active' | 'Inactive' | 'Low Stock';
 
 export type ProductCategory = 'Ayam' | 'Infrastruktur' | 'Kandang';
 
@@ -76,6 +76,7 @@ export type ProductState = {
     rating: string;
   };
   checkout: {
+    orderId: number;
     activeStep: number;
     cart: CartItem[];
     subtotal: number;

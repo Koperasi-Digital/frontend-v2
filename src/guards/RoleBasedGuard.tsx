@@ -10,10 +10,9 @@ type RoleBasedGuardProp = {
 };
 
 const useCurrentRole = (): string | undefined => {
-  const { user } = useAuth();
-  if (user) {
-    const { role } = user;
-    return role.name;
+  const { currentRole } = useAuth();
+  if (currentRole) {
+    return currentRole.name;
   }
 };
 

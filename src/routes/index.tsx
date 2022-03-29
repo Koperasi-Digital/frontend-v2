@@ -9,6 +9,7 @@ import AuthGuard from '../guards/AuthGuard';
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import RoleBasedGuard from 'guards/RoleBasedGuard';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component: React.ElementType) => (props: any) => {
@@ -101,6 +102,11 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
             { path: 'shop', element: <EcommerceShop /> },
+            { path: 'seller', element: <EcommerceSellerCenter /> },
+            { path: 'general-ecommerce', element: <GeneralEcommerce /> },
+            { path: 'general-analytics', element: <GeneralAnalytics /> },
+            { path: 'order/:id', element: <EcommerceOrderDetails /> },
+            { path: 'order-list', element: <EcommerceOrderList /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'list', element: <EcommerceProductList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
@@ -113,21 +119,91 @@ export default function Router() {
           path: 'finance',
           children: [
             { element: <Navigate to="/dashboard/finance/home" replace /> },
-            { path: 'home', element: <Finance /> },
+            {
+              path: 'home',
+              element: (
+                <RoleBasedGuard accessibleRoles={['MEMBER']}>
+                  <Finance />
+                </RoleBasedGuard>
+              )
+            },
             { path: 'report', element: <TransactionsReport /> },
-            { path: 'member-report', element: <MemberReport /> },
-            { path: 'disbursement-approval', element: <DisbursementApproval /> },
-            { path: 'disbursement-request', element: <DisbursementRequest /> },
-            { path: 'disbursement-request-list', element: <DisbursementRequestList /> }
+            {
+              path: 'member-report',
+              element: (
+                <RoleBasedGuard accessibleRoles={['MEMBER']}>
+                  <MemberReport />
+                </RoleBasedGuard>
+              )
+            },
+            { path: 'create-disbursement-request', element: <DisbursementRequest /> },
+            { path: 'register-deprecation', element: <DeprecationRegister /> },
+            {
+              path: 'add-simpanan-sukarela',
+              element: <AddSimpananSukarela />
+            }
+          ]
+        },
+        {
+          path: 'management-finance',
+          children: [
+            {
+              element: <Navigate to="/dashboard/management-finance/home" replace />
+            },
+            {
+              path: 'home',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <AdminFinance />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'disbursement-approval',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DisbursementApproval />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'disbursement-request-list',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DisbursementRequestList />
+                </RoleBasedGuard>
+              )
+            }
           ]
         },
         {
           path: 'user',
           children: [
-            { element: <Navigate to="/dashboard/user/profile" replace /> },
-            { path: 'profile', element: <UserProfile /> },
-            { path: 'list', element: <UserList /> },
-            { path: ':name/edit', element: <UserCreate /> },
+            { element: <Navigate to="/dashboard/user/account" replace /> },
+            {
+              path: 'list',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <UserList />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: ':name/edit',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <UserCreate />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: ':name/detail',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <UserDetail />
+                </RoleBasedGuard>
+              )
+            },
             { path: 'account', element: <UserAccount /> }
           ]
         },
@@ -167,10 +243,17 @@ const ResetPassword = Loadable(lazy(() => import('../pages/authentication/ResetP
 const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCode')));
 // Dashboard
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
-// const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));
-// const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
+const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));
+const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
 // const GeneralBanking = Loadable(lazy(() => import('../pages/dashboard/GeneralBanking')));
 // const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
+const EcommerceOrderList = Loadable(lazy(() => import('../pages/dashboard/EcommerceOrderList')));
+const EcommerceOrderDetails = Loadable(
+  lazy(() => import('../pages/dashboard/EcommerceOrderDetails'))
+);
+const EcommerceSellerCenter = Loadable(
+  lazy(() => import('../pages/dashboard/EcommerceSellerCenter'))
+);
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
 const EcommerceProductDetails = Loadable(
   lazy(() => import('../pages/dashboard/EcommerceProductDetails'))
@@ -190,7 +273,6 @@ const MyBlog = Loadable(lazy(() => import('../pages/dashboard/MyBlog')));
 const Course = Loadable(lazy(() => import('../pages/dashboard/Course')));
 const CourseDetail = Loadable(lazy(() => import('../pages/dashboard/CourseDetail')));
 const CoursePage = Loadable(lazy(() => import('../pages/dashboard/CoursePage')));
-const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
 const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
 const FAQ = Loadable(lazy(() => import('../pages/dashboard/FAQ')));
 const FAQPost = Loadable(lazy(() => import('../pages/dashboard/FAQPost')));
@@ -199,9 +281,11 @@ const MyForum = Loadable(lazy(() => import('../pages/dashboard/MyForum')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
+const UserDetail = Loadable(lazy(() => import('../pages/dashboard/UserDetail')));
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
+const AdminFinance = Loadable(lazy(() => import('../pages/dashboard/AdminFinance')));
 const TransactionsReport = Loadable(lazy(() => import('../pages/dashboard/TransactionsReport')));
 const MemberReport = Loadable(lazy(() => import('../pages/dashboard/MemberReport')));
 const DisbursementApproval = Loadable(
@@ -211,6 +295,8 @@ const DisbursementRequestList = Loadable(
   lazy(() => import('../pages/dashboard/DisbursementRequestList'))
 );
 const DisbursementRequest = Loadable(lazy(() => import('../pages/dashboard/DisbursementRequest')));
+const DeprecationRegister = Loadable(lazy(() => import('../pages/dashboard/DeprecationRegister')));
+const AddSimpananSukarela = Loadable(lazy(() => import('../pages/dashboard/AddSimpananSukarela')));
 // Main
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));

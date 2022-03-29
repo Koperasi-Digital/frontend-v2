@@ -2,9 +2,17 @@ import { createContext, ReactNode, useEffect, useReducer } from 'react';
 // utils
 import { setSession } from 'utils/jwt';
 import axios from 'utils/axios';
-import axiosMock from 'utils/axiosMock';
+// import axiosMock from 'utils/axiosMock';
 // @types
-import { ActionMap, AuthState, AuthUser, JWTContextType } from '../@types/authentication';
+import {
+  ActionMap,
+  AuthState,
+  AuthUser,
+  CurrentRole,
+  JWTContextType
+} from '../@types/authentication';
+import { Role } from '../@types/role';
+import { User } from '../@types/account';
 
 // ----------------------------------------------------------------------
 
@@ -12,20 +20,31 @@ enum Types {
   Initial = 'INITIALIZE',
   Login = 'LOGIN',
   Logout = 'LOGOUT',
-  Register = 'REGISTER'
+  Register = 'REGISTER',
+  Update = 'UPDATE',
+  SetRole = 'SET_ROLE'
 }
 
 type JWTAuthPayload = {
   [Types.Initial]: {
     isAuthenticated: boolean;
     user: AuthUser;
+    currentRole: CurrentRole;
   };
   [Types.Login]: {
     user: AuthUser;
+    currentRole: CurrentRole;
   };
   [Types.Logout]: undefined;
   [Types.Register]: {
     user: AuthUser;
+    currentRole: CurrentRole;
+  };
+  [Types.Update]: {
+    user: AuthUser;
+  };
+  [Types.SetRole]: {
+    currentRole: CurrentRole;
   };
 };
 
@@ -34,37 +53,50 @@ export type JWTActions = ActionMap<JWTAuthPayload>[keyof ActionMap<JWTAuthPayloa
 const initialState: AuthState = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null
+  user: null,
+  currentRole: null
 };
 
 const JWTReducer = (state: AuthState, action: JWTActions) => {
   switch (action.type) {
-    case 'INITIALIZE':
+    case Types.Initial:
       return {
         isAuthenticated: action.payload.isAuthenticated,
         isInitialized: true,
-        user: action.payload.user
+        user: action.payload.user,
+        currentRole: action.payload.currentRole
       };
-    case 'LOGIN':
+    case Types.Login:
       return {
         ...state,
         isAuthenticated: true,
-        user: action.payload.user
+        user: action.payload.user,
+        currentRole: action.payload.currentRole
       };
-    case 'LOGOUT':
+    case Types.Logout:
       return {
         ...state,
         isAuthenticated: false,
-        user: null
+        user: null,
+        currentRole: null
       };
-
-    case 'REGISTER':
+    case Types.Register:
       return {
         ...state,
         isAuthenticated: true,
+        user: action.payload.user,
+        currentRole: action.payload.currentRole
+      };
+    case Types.Update:
+      return {
+        ...state,
         user: action.payload.user
       };
-
+    case Types.SetRole:
+      return {
+        ...state,
+        currentRole: action.payload.currentRole
+      };
     default:
       return state;
   }
@@ -81,14 +113,16 @@ function AuthProvider({ children }: { children: ReactNode }) {
         const accessToken = window.localStorage.getItem('accessToken');
         if (accessToken) {
           await setSession(accessToken, null /* token still valid */);
-          const response = await axiosMock.get('auth/my-account');
+          const response = await axios.get('auth/my-account');
           const { user } = response.data.payload;
+          const currentRole = getCurrentRole(user.roles);
 
           dispatch({
             type: Types.Initial,
             payload: {
               isAuthenticated: true,
-              user
+              user,
+              currentRole
             }
           });
         } else {
@@ -96,7 +130,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
             type: Types.Initial,
             payload: {
               isAuthenticated: false,
-              user: null
+              user: null,
+              currentRole: null
             }
           });
         }
@@ -106,7 +141,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
           type: Types.Initial,
           payload: {
             isAuthenticated: false,
-            user: null
+            user: null,
+            currentRole: null
           }
         });
       }
@@ -116,17 +152,19 @@ function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await axiosMock.post('auth/login', {
+    const response = await axios.post('auth/login', {
       email,
       password
     });
     const { accessToken, refreshToken, user } = response.data.payload;
+    const currentRole = getCurrentRole(user.roles);
 
     setSession(accessToken, refreshToken);
     dispatch({
       type: Types.Login,
       payload: {
-        user
+        user,
+        currentRole
       }
     });
   };
@@ -136,34 +174,88 @@ function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     passwordConfirm: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    isMember: boolean
   ) => {
     const response = await axios.post('auth/register', {
       email,
       password,
       passwordConfirm,
-      displayName: firstName.concat(' ', lastName)
+      displayName: firstName.concat(' ', lastName),
+      isMember
     });
     const { accessToken, refreshToken, user } = response.data.payload;
+    const currentRole = getCurrentRole(user.roles);
 
     setSession(accessToken, refreshToken);
     dispatch({
       type: Types.Register,
       payload: {
-        user
+        user,
+        currentRole
       }
     });
   };
 
-  const logout = async () => {
-    await axiosMock.post('auth/invalidate-token');
-    setSession(null, null);
-    dispatch({ type: Types.Logout });
-  };
+  const logout = () =>
+    axios.post('auth/invalidate-token').then(() => {
+      setSession(null, null);
+      setCurrentRole(null);
+      dispatch({ type: Types.Logout });
+    });
+
+  const changePassword = (oldPassword: string, newPassword: string, confirmNewPassword: string) =>
+    axios.post(`auth/change-password`, {
+      oldPassword,
+      newPassword,
+      confirmNewPassword
+    });
 
   const resetPassword = (email: string) => console.log(email);
 
-  const updateProfile = () => {};
+  const updateProfile = (newData: Partial<User>) =>
+    axios.patch(`/users/${newData.id}`, newData).then((response) => {
+      const user = response.data.payload;
+      dispatch({
+        type: Types.Update,
+        payload: {
+          user
+        }
+      });
+    });
+
+  const getCurrentRole = (ownedRoles?: Role[]) => {
+    if (ownedRoles && ownedRoles.length) {
+      const currentRoleId = window.localStorage.getItem('currentRoleId');
+      if (currentRoleId) {
+        const selectedRole = ownedRoles?.filter(
+          (ownedRole) => ownedRole.id === Number(currentRoleId)
+        );
+        if (selectedRole.length) {
+          return selectedRole[0];
+        }
+      }
+      // use first item in user roles array as default role
+      const defaultRole = ownedRoles[0];
+      localStorage.setItem('currentRoleId', defaultRole.id.toString());
+      return defaultRole;
+    }
+    return null;
+  };
+
+  const setCurrentRole = (roleId: number | null) => {
+    let currentRole: Role | null = null;
+    if (roleId) {
+      localStorage.setItem('currentRoleId', roleId.toString());
+      currentRole = getCurrentRole(state.user?.roles);
+    }
+    dispatch({
+      type: Types.SetRole,
+      payload: {
+        currentRole
+      }
+    });
+  };
 
   return (
     <AuthContext.Provider
@@ -173,8 +265,10 @@ function AuthProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         register,
+        changePassword,
         resetPassword,
-        updateProfile
+        updateProfile,
+        setCurrentRole
       }}
     >
       {children}

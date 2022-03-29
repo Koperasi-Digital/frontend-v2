@@ -13,5 +13,6 @@ export type User = {
   state: string | null;
   city: string | null;
   zipCode: string | null;
-  role: Role;
+  storeName: string | null;
+  roles: Role[];
 };

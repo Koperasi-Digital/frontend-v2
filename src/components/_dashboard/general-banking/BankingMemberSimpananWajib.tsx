@@ -44,24 +44,26 @@ import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
 // fetch backend data
-import { handleGetSimpananWajib } from 'utils/financeSimpanan';
+import { handleListSimpananWajib } from 'utils/financeSimpanan';
 
 type SimpananWajibProps = {
   id: number;
-  status: string;
   amount: number;
   userId: number;
+  orderId: number;
   period: string;
   user: {
     id: number;
     email: string;
     password: string;
-    username: string;
-    name: string;
-    role: string;
-    language: string;
-    created_at: string;
-    updated_at: string;
+    displayName: string;
+  };
+  order: {
+    id: number;
+    user_id: number;
+    timestamp: string;
+    total_cost: number;
+    status: string;
   };
 };
 
@@ -160,7 +162,11 @@ export default function BankingMemberSimpananWajib() {
     } else {
       let result = [];
       result = allSimpananWajibData.filter((data) => {
-        return data.status === filterName;
+        if (filterName !== 'LUNAS') {
+          return !data.order || data.order.status !== 'success';
+        } else {
+          return data.order && data.order.status === 'success';
+        }
       });
       setFilteredSimpananWajibData(result);
     }
@@ -168,7 +174,7 @@ export default function BankingMemberSimpananWajib() {
 
   useEffect(() => {
     const fetchSimpananWajibData = async () => {
-      const allSimpananWajib = await handleGetSimpananWajib(dateValue ? dateValue : new Date());
+      const allSimpananWajib = await handleListSimpananWajib(dateValue ? dateValue : new Date());
       setAllSimpananWajibData(allSimpananWajib);
       setFilteredSimpananWajibData(allSimpananWajib);
     };
@@ -280,7 +286,9 @@ export default function BankingMemberSimpananWajib() {
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Box sx={{ ml: 2 }}>
-                          <Typography variant="subtitle2">{row.user.name}</Typography>
+                          <Typography variant="subtitle2">
+                            {row.user ? row.user.displayName : 'No user data'}
+                          </Typography>
                         </Box>
                       </Box>
                     </TableCell>
@@ -292,9 +300,17 @@ export default function BankingMemberSimpananWajib() {
                     <TableCell>
                       <Label
                         variant={isLight ? 'ghost' : 'filled'}
-                        color={(row.status === 'LUNAS' && 'success') || 'error'}
+                        color={
+                          (row.order && row.order.status === 'success' && 'success') || 'error'
+                        }
                       >
-                        {sentenceCase(row.status)}
+                        {sentenceCase(
+                          row.order
+                            ? row.order.status === 'success'
+                              ? 'LUNAS'
+                              : 'BELUM DIBAYAR'
+                            : 'No order data'
+                        )}
                       </Label>
                     </TableCell>
 

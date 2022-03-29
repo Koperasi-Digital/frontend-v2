@@ -11,9 +11,11 @@ import {
 import { fCurrency } from '../../../utils/formatNumber';
 
 import { DialogAnimate } from '../../animate';
+import useAuth from 'hooks/useAuth';
 
 export default function BankingEMoney() {
-  const user_id = 3;
+  const { user } = useAuth();
+  const userId = user?.id;
 
   const [saldo, setSaldo] = useState<number>();
   const [openModalEMoney, setOpenModalEMoney] = useState<boolean>(false);
@@ -22,7 +24,7 @@ export default function BankingEMoney() {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleRegisterEMoney = async (
-    user_id: number,
+    userId: number,
     payment_type: string,
     phone_number: string,
     country_code: string
@@ -35,7 +37,7 @@ export default function BankingEMoney() {
         country_code: country_code
       })
     );
-    const response = await handleRegister(user_id, payment_type, phone_number, country_code);
+    const response = await handleRegister(userId, payment_type, phone_number, country_code);
     if (response.actions) {
       const activationURL = response.actions[0].url;
       window.location.href = activationURL;
@@ -49,7 +51,7 @@ export default function BankingEMoney() {
     const fetchedRegisterData = window.localStorage.getItem('registerData');
     if (fetchedRegisterData) {
       const { payment_type, phone_number, country_code } = JSON.parse(fetchedRegisterData);
-      const response1 = await handleRegister(user_id, payment_type, phone_number, country_code);
+      const response1 = await handleRegister(userId, payment_type, phone_number, country_code);
       const response2 = await handleUnbindPayAccount(response1.account_id);
       if (!response2.mock) {
         window.localStorage.removeItem('registerData');
@@ -67,11 +69,11 @@ export default function BankingEMoney() {
       const fetchedRegisterData = window.localStorage.getItem('registerData');
       if (fetchedRegisterData) {
         const { payment_type, phone_number, country_code } = JSON.parse(fetchedRegisterData);
-        const response = await handleRegister(user_id, payment_type, phone_number, country_code);
-        console.log(response.account_status);
+        const response = await handleRegister(userId, payment_type, phone_number, country_code);
+        console.log(response);
         if (response.account_status === 'ENABLED') {
           setDoesExist(true);
-          const response1 = await handleRegister(user_id, payment_type, phone_number, country_code);
+          const response1 = await handleRegister(userId, payment_type, phone_number, country_code);
           const response2 = await handleGetPayAccountInfo(response1.account_id);
           setSaldo(response2.metadata.payment_options[0].balance.value);
           if (window.localStorage.getItem('isRegisterJustNow')) {
@@ -83,7 +85,7 @@ export default function BankingEMoney() {
     };
 
     handleCheckEMoney();
-  }, [enqueueSnackbar]);
+  }, [userId, enqueueSnackbar]);
 
   return (
     <>

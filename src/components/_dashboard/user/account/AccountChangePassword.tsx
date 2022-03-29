@@ -5,12 +5,13 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import { Stack, Card, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // utils
-import fakeRequest from '../../../../utils/fakeRequest';
+import useAuth from 'hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
 export default function AccountChangePassword() {
   const { enqueueSnackbar } = useSnackbar();
+  const { changePassword } = useAuth();
 
   const ChangePassWordSchema = Yup.object().shape({
     oldPassword: Yup.string().required('Old Password is required'),
@@ -28,9 +29,8 @@ export default function AccountChangePassword() {
     },
     validationSchema: ChangePassWordSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      await fakeRequest(500);
+      await changePassword(values.oldPassword, values.newPassword, values.confirmNewPassword);
       setSubmitting(false);
-      alert(JSON.stringify(values, null, 2));
       enqueueSnackbar('Save success', { variant: 'success' });
     }
   });

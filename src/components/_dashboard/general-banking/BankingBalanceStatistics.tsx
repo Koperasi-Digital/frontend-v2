@@ -1,43 +1,25 @@
 import { merge } from 'lodash';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 // material
-import { Card, CardHeader, Box, TextField } from '@mui/material';
+import { Card, CardHeader, Box } from '@mui/material';
 //
 import { BaseOptionChart } from '../../charts';
+// utils
+import { fCurrency } from '../../../utils/formatNumber';
 
-// ----------------------------------------------------------------------
+import { handleGetLabaRugiInfo } from '../../../utils/financeReport';
 
-const CHART_DATA = [
-  {
-    year: 'Week',
-    data: [
-      { name: 'Income', data: [10, 41, 35, 151, 49, 62, 69, 91, 48] },
-      { name: 'Expenses', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] }
-    ]
-  },
-  {
-    year: 'Month',
-    data: [
-      { name: 'Income', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
-      { name: 'Expenses', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] }
-    ]
-  },
-  {
-    year: 'Year',
-    data: [
-      { name: 'Income', data: [76, 42, 29, 41, 27, 138, 117, 86, 63] },
-      { name: 'Expenses', data: [80, 55, 34, 114, 80, 130, 15, 28, 55] }
-    ]
-  }
-];
+// hooks
+import useAuth from 'hooks/useAuth';
 
 export default function BankingBalanceStatistics() {
-  const [seriesData, setSeriesData] = useState('Year');
+  const [chartData, setChartData] = useState<{ name: string; data: number[] }[]>([
+    { name: 'Income', data: [] },
+    { name: 'Expense', data: [] }
+  ]);
 
-  const handleChangeSeriesData = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSeriesData(event.target.value);
-  };
+  const { user } = useAuth();
 
   const chartOptions = merge(BaseOptionChart(), {
     stroke: {
@@ -46,50 +28,71 @@ export default function BankingBalanceStatistics() {
       colors: ['transparent']
     },
     xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+      categories: [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Okt',
+        'Nov',
+        'Des'
+      ]
     },
     tooltip: {
       y: {
-        formatter: (val: number) => `$${val}`
+        formatter: (val: number) => fCurrency(val)
       }
     }
   });
+
+  useEffect(() => {
+    const handleSetChartData = async () => {
+      const temp: { name: string; data: number[] }[] = [
+        { name: 'Income', data: [] },
+        { name: 'Expense', data: [] }
+      ];
+      let date = new Date();
+      let stop = false;
+      let incomeArray: number[] = [];
+      let expenseArray: number[] = [];
+      while (!stop) {
+        if (date.getMonth() === 0) {
+          stop = true;
+        }
+        date.setMonth(date.getMonth() - 1);
+        if (user) {
+          let periodeString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-1';
+          const labaRugiInfo = await handleGetLabaRugiInfo(user.id, periodeString);
+          incomeArray.unshift(labaRugiInfo.jumlahPenjualan);
+          expenseArray.unshift(labaRugiInfo.biayaProduksiProdukTerjual + labaRugiInfo.biayaOperasi);
+        }
+      }
+      const paddingNumber = 12 - incomeArray.length;
+      for (let i = 0; i < paddingNumber; i++) {
+        incomeArray.push(0);
+        expenseArray.push(0);
+      }
+      temp[0].data = incomeArray;
+      temp[1].data = expenseArray;
+      setChartData(temp);
+    };
+    handleSetChartData();
+  }, [user]);
 
   return (
     <Card>
       <CardHeader
         title="Balance Statistics"
         subheader="(+43% Income | +12% Expense) than last year"
-        action={
-          <TextField
-            select
-            fullWidth
-            value={seriesData}
-            SelectProps={{ native: true }}
-            onChange={handleChangeSeriesData}
-            sx={{
-              '& fieldset': { border: '0 !important' },
-              '& select': { pl: 1, py: 0.5, pr: '24px !important', typography: 'subtitle2' },
-              '& .MuiOutlinedInput-root': { borderRadius: 0.75, bgcolor: 'background.neutral' },
-              '& .MuiNativeSelect-icon': { top: 4, right: 0, width: 20, height: 20 }
-            }}
-          >
-            {CHART_DATA.map((option) => (
-              <option key={option.year} value={option.year}>
-                {option.year}
-              </option>
-            ))}
-          </TextField>
-        }
       />
-
-      {CHART_DATA.map((item) => (
-        <Box key={item.year} sx={{ mt: 3, mx: 3 }} dir="ltr">
-          {item.year === seriesData && (
-            <ReactApexChart type="bar" series={item.data} options={chartOptions} height={364} />
-          )}
-        </Box>
-      ))}
+      <Box sx={{ mt: 3, mx: 3 }} dir="ltr">
+        <ReactApexChart type="bar" series={chartData} options={chartOptions} height={364} />
+      </Box>
     </Card>
   );
 }

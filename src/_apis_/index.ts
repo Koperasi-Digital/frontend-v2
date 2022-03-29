@@ -4,5 +4,6 @@ import './user';
 import './account';
 import './calendar';
 import './products';
+import './orders';
 import './finance';
-import './simpanan';
+import './financeSimpanan';

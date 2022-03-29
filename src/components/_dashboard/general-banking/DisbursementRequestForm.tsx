@@ -1,36 +1,94 @@
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
+import { useState, useEffect } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 // material
 import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Stack, TextField, Typography } from '@mui/material';
-// utils
-import fakeRequest from '../../../utils/fakeRequest';
+import {
+  Card,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  Stack,
+  TextField,
+  Typography
+} from '@mui/material';
+// hooks
+import useAuth from 'hooks/useAuth';
+
+import { handleGetSaldo } from 'utils/financeSaldo';
+import { handleCreateReimbursement } from 'utils/financeReimbursement';
+import { handleGetSimpananSukarela } from 'utils/financeSimpanan';
+import { fCurrency } from 'utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
-export default function DisbursementRequestForm() {
+type BankAccount = {
+  accountNumber: string;
+  accountName: string;
+  bankName: string;
+};
+
+export default function DisbursementRequestForm(props: { bankAccount: BankAccount | undefined }) {
   const { enqueueSnackbar } = useSnackbar();
 
-  const NewProductSchema = Yup.object().shape({
-    amount: Yup.number().required(),
-    bankNumber: Yup.string().required()
+  const [saldo, setSaldo] = useState<number>();
+  const [simpananSukarelaAmount, setSimpananSukarelaAmount] = useState<number>();
+  const [maxDisbursement, setMaxDisbursement] = useState<number>();
+
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (user) {
+        const saldo = await handleGetSaldo(user.id);
+        if (saldo) {
+          setSaldo(saldo.amount);
+        }
+        const simpananSukarela = await handleGetSimpananSukarela(user.id);
+        if (simpananSukarela) {
+          setSimpananSukarelaAmount(simpananSukarela.amount);
+        }
+      }
+    };
+    fetchData();
+  }, [user]);
+
+  const DisbursementRequestSchema = Yup.object().shape({
+    amount: Yup.number()
+      .required()
+      .min(0, 'Min value 0.')
+      .max(
+        maxDisbursement ? maxDisbursement : 0,
+        `Max value ${fCurrency(maxDisbursement ? maxDisbursement : 0)}`
+      ),
+    disbType: Yup.string().required('Disbursement Type required')
   });
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       amount: '',
-      bankNumber: '',
-      images: []
+      disbType: 'saldo'
     },
-    validationSchema: NewProductSchema,
+    validationSchema: DisbursementRequestSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        await fakeRequest(500);
+        if (user && props.bankAccount) {
+          if (await handleCreateReimbursement(user.id, Number(values.amount), values.disbType)) {
+            enqueueSnackbar('Create success', { variant: 'success' });
+          } else {
+            enqueueSnackbar('Create fail', { variant: 'error' });
+          }
+        }
+        if (!props.bankAccount) {
+          enqueueSnackbar('Create bank account first', { variant: 'error' });
+        }
         resetForm();
         setSubmitting(false);
-        enqueueSnackbar('Create success', { variant: 'success' });
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -39,7 +97,19 @@ export default function DisbursementRequestForm() {
     }
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, values, setFieldValue } =
+    formik;
+
+  const handleChange = (event: any) => {
+    setFieldValue('disbType', event.target.value);
+    setMaxDisbursement(
+      event.target.value === 'saldo' && saldo
+        ? saldo
+        : event.target.value === 'simpanan-sukarela' && simpananSukarelaAmount
+        ? simpananSukarelaAmount
+        : 0
+    );
+  };
 
   return (
     <FormikProvider value={formik}>
@@ -57,16 +127,34 @@ export default function DisbursementRequestForm() {
                     helperText={touched.amount && errors.amount}
                   />
                   <Typography variant="body2" sx={{ mb: 10 }}>
-                    Sisa saldo Rp100.000,00 / Maksimal pencairan Rp100.000,00
+                    {values.disbType === 'saldo' && saldo
+                      ? `Sisa saldo ${fCurrency(saldo)} / Maksimal pencairan ${fCurrency(saldo)}`
+                      : ``}
+                    {values.disbType === 'simpanan-sukarela' && simpananSukarelaAmount
+                      ? `Sisa simpanan sukarela ${fCurrency(
+                          simpananSukarelaAmount
+                        )} / Maksimal pencairan ${fCurrency(simpananSukarelaAmount)}`
+                      : ``}
                   </Typography>
                 </Stack>
-                <TextField
-                  fullWidth
-                  label="Bank Number"
-                  {...getFieldProps('bankNumber')}
-                  error={Boolean(touched.bankNumber && errors.bankNumber)}
-                  helperText={touched.bankNumber && errors.bankNumber}
-                />
+                <Stack spacing={1}>
+                  <FormControl>
+                    <FormLabel id="type-radio-buttons-group-label">Type</FormLabel>
+                    <RadioGroup
+                      aria-labelledby="type-radio-buttons-group-label"
+                      name="disbType"
+                      value={values.disbType}
+                      onChange={handleChange}
+                    >
+                      <FormControlLabel value="saldo" control={<Radio />} label="Saldo" />
+                      <FormControlLabel
+                        value="simpanan-sukarela"
+                        control={<Radio />}
+                        label="Simpanan Sukarela"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Stack>
               </Stack>
             </Card>
           </Grid>
@@ -77,8 +165,9 @@ export default function DisbursementRequestForm() {
               variant="contained"
               size="large"
               loading={isSubmitting}
+              disabled={!user}
             >
-              {'Create Disbursement Request'}
+              {user ? 'Create Disbursement Request' : 'Loading'}
             </LoadingButton>
           </Grid>
         </Grid>
