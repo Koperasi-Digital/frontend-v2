@@ -8,10 +8,10 @@ import { paramCase } from 'change-case';
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Grid, Card, IconButton, Typography, CardContent, Button } from '@mui/material';
 // utils
-import { fDate } from '../../../../utils/formatTime';
-import LightboxModal from '../../../LightboxModal';
+import { fDate } from '../../../utils/formatTime';
+import LightboxModal from '../../LightboxModal';
 // @types
-import { Gallery } from '../../../../@types/user';
+import { Gallery } from '../../../@types/user';
 // ----------------------------------------------------------------------
 
 const CaptionStyle = styled(CardContent)(({ theme }) => ({
