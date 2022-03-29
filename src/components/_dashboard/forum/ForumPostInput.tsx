@@ -1,13 +1,17 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
 import roundAddPhotoAlternate from '@iconify/icons-ic/round-add-photo-alternate';
 // material
 import { Box, Card, Button, TextField, IconButton } from '@mui/material';
+// import useAuth from '../../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
 export default function ForumPostInput() {
+  // const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [topic, setTopic] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleAttach = () => {
     fileInputRef.current?.click();
@@ -18,7 +22,9 @@ export default function ForumPostInput() {
       <TextField
         fullWidth
         rows={1}
-        placeholder="Input your topic here..."
+        value={topic}
+        onChange={(e) => setTopic(e.target.value)}
+        placeholder="Tulis topik di sini..."
         sx={{
           '& fieldset': {
             borderWidth: `1px !important`,
@@ -30,7 +36,9 @@ export default function ForumPostInput() {
         multiline
         fullWidth
         rows={4}
-        placeholder="Share what you are thinking here..."
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Tulis apa yang ingin dibagikan di sini..."
         sx={{
           mt: 2,
           '& fieldset': {

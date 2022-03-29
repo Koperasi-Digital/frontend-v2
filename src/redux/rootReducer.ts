@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 // slices
 import chatReducer from './slices/chat';
 import blogReducer from './slices/blog';
+import forumReducer from './slices/forum';
 import userReducer from './slices/user';
 import roleReducer from './slices/role';
 import productReducer from './slices/product';
@@ -30,6 +31,7 @@ const productPersistConfig = {
 const rootReducer = combineReducers({
   chat: chatReducer,
   blog: blogReducer,
+  forum: forumReducer,
   user: userReducer,
   role: roleReducer,
   calendar: calendarReducer,

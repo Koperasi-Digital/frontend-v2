@@ -1,10 +1,8 @@
 import { Icon } from '@iconify/react';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import roundSend from '@iconify/icons-ic/round-send';
-import heartFill from '@iconify/icons-eva/heart-fill';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
-import roundAddPhotoAlternate from '@iconify/icons-ic/round-add-photo-alternate';
 // material
 import {
   Box,
@@ -13,57 +11,34 @@ import {
   Stack,
   Paper,
   Avatar,
-  Checkbox,
   TextField,
   CardProps,
   Typography,
   CardHeader,
-  IconButton,
-  InputAdornment,
-  FormControlLabel
+  IconButton
 } from '@mui/material';
 // @types
-import { UserPost } from '../../../@types/user';
+import { ForumPostType } from '../../../@types/forum';
 // hooks
-import useAuth from '../../../hooks/useAuth';
+// import useAuth from '../../../hooks/useAuth';
 // utils
 import { fDate } from '../../../utils/formatTime';
-import { fShortenNumber } from '../../../utils/formatNumber';
 //
 import MyAvatar from '../../MyAvatar';
-import EmojiPicker from '../../EmojiPicker';
 
 // ----------------------------------------------------------------------
 
 interface PostCardProps extends CardProps {
-  post: UserPost;
+  post: ForumPostType;
 }
 
 export default function ForumPostCard({ post }: PostCardProps) {
-  const { user } = useAuth();
-  const commentInputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isLiked, setLiked] = useState(post.isLiked);
-  const [likes, setLikes] = useState(post.personLikes.length);
+  // const { user } = useAuth();
   const [message, setMessage] = useState('');
   const hasComments = post.comments.length > 0;
 
-  const handleLike = () => {
-    setLiked(true);
-    setLikes((prevLikes) => prevLikes + 1);
-  };
-
-  const handleUnlike = () => {
-    setLiked(false);
-    setLikes((prevLikes) => prevLikes - 1);
-  };
-
   const handleChangeMessage = (value: string) => {
     setMessage(value);
-  };
-
-  const handleClickAttach = () => {
-    fileInputRef.current?.click();
   };
 
   return (
@@ -73,7 +48,7 @@ export default function ForumPostCard({ post }: PostCardProps) {
         avatar={<MyAvatar />}
         title={
           <Link to="#" variant="subtitle2" color="text.primary" component={RouterLink}>
-            {user?.displayName}
+            {post.author.name}
           </Link>
         }
         subheader={
@@ -107,23 +82,6 @@ export default function ForumPostCard({ post }: PostCardProps) {
           />
         </Box>
 
-        <Stack direction="row" alignItems="center">
-          <FormControlLabel
-            control={
-              <Checkbox
-                size="small"
-                color="error"
-                checked={isLiked}
-                icon={<Icon icon={heartFill} />}
-                checkedIcon={<Icon icon={heartFill} />}
-                onChange={isLiked ? handleUnlike : handleLike}
-              />
-            }
-            label={fShortenNumber(likes)}
-            sx={{ minWidth: 72, mr: 0 }}
-          />
-        </Stack>
-
         {hasComments && (
           <Stack spacing={1.5}>
             {post.comments.map((comment) => (
@@ -156,19 +114,8 @@ export default function ForumPostCard({ post }: PostCardProps) {
             fullWidth
             size="small"
             value={message}
-            inputRef={commentInputRef}
-            placeholder="Write a comment…"
+            placeholder="Tulis komen di sini…"
             onChange={(event) => handleChangeMessage(event.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton size="small" onClick={handleClickAttach}>
-                    <Icon icon={roundAddPhotoAlternate} width={24} height={24} />
-                  </IconButton>
-                  <EmojiPicker alignRight value={message} setValue={setMessage} />
-                </InputAdornment>
-              )
-            }}
             sx={{
               ml: 2,
               mr: 1,
@@ -181,12 +128,6 @@ export default function ForumPostCard({ post }: PostCardProps) {
           <IconButton>
             <Icon icon={roundSend} width={24} height={24} />
           </IconButton>
-          <input
-            type="file"
-            ref={fileInputRef}
-            accept="image/png, image/jpeg"
-            style={{ display: 'none' }}
-          />
         </Stack>
       </Stack>
     </Card>

@@ -1,17 +1,17 @@
-import { Icon } from '@iconify/react';
-import heartFill from '@iconify/icons-eva/heart-fill';
+// import { Icon } from '@iconify/react';
+// import heartFill from '@iconify/icons-eva/heart-fill';
 // material
 import {
   Box,
   Chip,
-  Avatar,
-  BoxProps,
-  Checkbox,
-  AvatarGroup,
-  FormControlLabel
+  // Avatar,
+  BoxProps
+  // Checkbox,
+  // AvatarGroup,
+  // FormControlLabel
 } from '@mui/material';
 // utils
-import { fShortenNumber } from '../../../utils/formatNumber';
+// import { fShortenNumber } from '../../../utils/formatNumber';
 // @types
 import { Post } from '../../../@types/blog';
 
@@ -22,7 +22,7 @@ interface BlogPostTagsProps extends BoxProps {
 }
 
 export default function BlogPostTags({ post, sx }: BlogPostTagsProps) {
-  const { favorite, tags, favoritePerson } = post;
+  const { tags } = post;
 
   return (
     <Box sx={{ py: 3, ...sx }}>
@@ -30,7 +30,7 @@ export default function BlogPostTags({ post, sx }: BlogPostTagsProps) {
         <Chip key={tag} label={tag} sx={{ m: 0.5 }} />
       ))}
 
-      <Box sx={{ display: 'flex', alignItems: 'center', mt: 3 }}>
+      {/* <Box sx={{ display: 'flex', alignItems: 'center', mt: 3 }}>
         <FormControlLabel
           control={
             <Checkbox
@@ -53,7 +53,7 @@ export default function BlogPostTags({ post, sx }: BlogPostTagsProps) {
             <Avatar key={person.name} alt={person.name} src={person.avatarUrl} />
           ))}
         </AvatarGroup>
-      </Box>
+      </Box> */}
     </Box>
   );
 }
