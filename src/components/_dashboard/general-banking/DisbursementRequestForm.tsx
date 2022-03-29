@@ -4,12 +4,24 @@ import { useState, useEffect } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 // material
 import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Stack, TextField, Typography } from '@mui/material';
+import {
+  Card,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  Stack,
+  TextField,
+  Typography
+} from '@mui/material';
 // hooks
 import useAuth from 'hooks/useAuth';
 
 import { handleGetSaldo } from 'utils/financeSaldo';
 import { handleCreateReimbursement } from 'utils/financeReimbursement';
+import { handleGetSimpananSukarela } from 'utils/financeSimpanan';
 import { fCurrency } from 'utils/formatNumber';
 
 // ----------------------------------------------------------------------
@@ -24,6 +36,8 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
   const { enqueueSnackbar } = useSnackbar();
 
   const [saldo, setSaldo] = useState<number>();
+  const [simpananSukarelaAmount, setSimpananSukarelaAmount] = useState<number>();
+  const [maxDisbursement, setMaxDisbursement] = useState<number>();
 
   const { user } = useAuth();
 
@@ -34,6 +48,10 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
         if (saldo) {
           setSaldo(saldo.amount);
         }
+        const simpananSukarela = await handleGetSimpananSukarela(user.id);
+        if (simpananSukarela) {
+          setSimpananSukarelaAmount(simpananSukarela.amount);
+        }
       }
     };
     fetchData();
@@ -43,19 +61,24 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
     amount: Yup.number()
       .required()
       .min(0, 'Min value 0.')
-      .max(saldo ? saldo : 0, `Max value ${fCurrency(saldo ? saldo : 0)}`)
+      .max(
+        maxDisbursement ? maxDisbursement : 0,
+        `Max value ${fCurrency(maxDisbursement ? maxDisbursement : 0)}`
+      ),
+    disbType: Yup.string().required('Disbursement Type required')
   });
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      amount: ''
+      amount: '',
+      disbType: 'saldo'
     },
     validationSchema: DisbursementRequestSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         if (user && props.bankAccount) {
-          if (await handleCreateReimbursement(user.id, Number(values.amount))) {
+          if (await handleCreateReimbursement(user.id, Number(values.amount), values.disbType)) {
             enqueueSnackbar('Create success', { variant: 'success' });
           } else {
             enqueueSnackbar('Create fail', { variant: 'error' });
@@ -74,7 +97,19 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
     }
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, values, setFieldValue } =
+    formik;
+
+  const handleChange = (event: any) => {
+    setFieldValue('disbType', event.target.value);
+    setMaxDisbursement(
+      event.target.value === 'saldo' && saldo
+        ? saldo
+        : event.target.value === 'simpanan-sukarela' && simpananSukarelaAmount
+        ? simpananSukarelaAmount
+        : 0
+    );
+  };
 
   return (
     <FormikProvider value={formik}>
@@ -92,10 +127,33 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
                     helperText={touched.amount && errors.amount}
                   />
                   <Typography variant="body2" sx={{ mb: 10 }}>
-                    {saldo
+                    {values.disbType === 'saldo' && saldo
                       ? `Sisa saldo ${fCurrency(saldo)} / Maksimal pencairan ${fCurrency(saldo)}`
                       : ``}
+                    {values.disbType === 'simpanan-sukarela' && simpananSukarelaAmount
+                      ? `Sisa simpanan sukarela ${fCurrency(
+                          simpananSukarelaAmount
+                        )} / Maksimal pencairan ${fCurrency(simpananSukarelaAmount)}`
+                      : ``}
                   </Typography>
+                </Stack>
+                <Stack spacing={1}>
+                  <FormControl>
+                    <FormLabel id="type-radio-buttons-group-label">Type</FormLabel>
+                    <RadioGroup
+                      aria-labelledby="type-radio-buttons-group-label"
+                      name="disbType"
+                      value={values.disbType}
+                      onChange={handleChange}
+                    >
+                      <FormControlLabel value="saldo" control={<Radio />} label="Saldo" />
+                      <FormControlLabel
+                        value="simpanan-sukarela"
+                        control={<Radio />}
+                        label="Simpanan Sukarela"
+                      />
+                    </RadioGroup>
+                  </FormControl>
                 </Stack>
               </Stack>
             </Card>

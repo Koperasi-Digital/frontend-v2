@@ -131,6 +131,10 @@ export default function Router() {
                 </RoleBasedGuard>
               )
             },
+            {
+              path: 'add-simpanan-sukarela',
+              element: <AddSimpananSukarela />
+            },
             { path: 'create-disbursement-request', element: <DisbursementRequest /> }
           ]
         },
@@ -281,6 +285,7 @@ const DisbursementRequestList = Loadable(
   lazy(() => import('../pages/dashboard/DisbursementRequestList'))
 );
 const DisbursementRequest = Loadable(lazy(() => import('../pages/dashboard/DisbursementRequest')));
+const AddSimpananSukarela = Loadable(lazy(() => import('../pages/dashboard/AddSimpananSukarela')));
 // Main
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
