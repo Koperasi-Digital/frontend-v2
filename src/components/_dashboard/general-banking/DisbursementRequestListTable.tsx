@@ -42,6 +42,7 @@ type Reimbursement = {
   id: string;
   userId: number;
   time: string;
+  type: string;
   total_cost: number;
   status: string;
   account_number: string;
@@ -195,6 +196,7 @@ export default function DisbursementRequestListTable() {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
+                  <TableCell>Type</TableCell>
                   <TableCell>User</TableCell>
                   <TableCell>Date</TableCell>
                   <TableCell>Account Number</TableCell>
@@ -211,6 +213,7 @@ export default function DisbursementRequestListTable() {
                 ).map((row) => (
                   <TableRow key={row.id}>
                     <TableCell>{row.id}</TableCell>
+                    <TableCell>{row.type}</TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Box sx={{ position: 'relative' }}>{renderAvatar(row)}</Box>

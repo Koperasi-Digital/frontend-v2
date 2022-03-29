@@ -118,7 +118,13 @@ const sidebarConfig = [
       {
         title: 'disbursement request',
         path: PATH_DASHBOARD.finance.disbursementRequest,
-        accessibleRoles: ['CUSTOMER'],
+        accessibleRoles: ['MEMBER'],
+        icon: ICONS.banking
+      },
+      {
+        title: 'add simpanan sukarela',
+        path: PATH_DASHBOARD.finance.addSimpananSukarela,
+        accessibleRoles: ['MEMBER'],
         icon: ICONS.banking
       },
       {

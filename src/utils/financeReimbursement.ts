@@ -1,10 +1,11 @@
 import axios from './axios';
 
-export async function handleCreateReimbursement(userId: number, total_cost: number) {
+export async function handleCreateReimbursement(userId: number, total_cost: number, type: string) {
   try {
     const response = await axios.post('reimbursement/create', {
       userId: userId,
-      total_cost: total_cost
+      total_cost: total_cost,
+      type: type
     });
     return response.data.payload;
   } catch (e) {

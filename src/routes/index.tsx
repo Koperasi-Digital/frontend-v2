@@ -132,7 +132,11 @@ export default function Router() {
               )
             },
             { path: 'create-disbursement-request', element: <DisbursementRequest /> },
-            { path: 'register-deprecation', element: <DeprecationRegister /> }
+            { path: 'register-deprecation', element: <DeprecationRegister /> },
+            {
+              path: 'add-simpanan-sukarela',
+              element: <AddSimpananSukarela />
+            }
           ]
         },
         {
@@ -283,6 +287,7 @@ const DisbursementRequestList = Loadable(
 );
 const DisbursementRequest = Loadable(lazy(() => import('../pages/dashboard/DisbursementRequest')));
 const DeprecationRegister = Loadable(lazy(() => import('../pages/dashboard/DeprecationRegister')));
+const AddSimpananSukarela = Loadable(lazy(() => import('../pages/dashboard/AddSimpananSukarela')));
 // Main
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
