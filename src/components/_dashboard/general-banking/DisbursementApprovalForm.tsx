@@ -16,6 +16,8 @@ import { handleEditSimpananSukarela } from 'utils/financeSimpanan';
 
 import { handleUploadFile } from 'utils/bucket';
 
+import { handlePencairanSaldoNeraca, handlePencairanSaldoArusKas } from 'utils/financeReport';
+
 // ----------------------------------------------------------------------
 
 type DisbursementApprovalValues = {
@@ -76,13 +78,26 @@ export default function DisbursementApprovalForm() {
           values.disbursementRequestId + '.png'
         );
 
+        const currentPeriode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
+        const neracaReportEdited = await handlePencairanSaldoNeraca(
+          reimbursement.user.id,
+          currentPeriode,
+          reimbursement.total_cost
+        );
+        const arusKasReportEdited = await handlePencairanSaldoArusKas(
+          reimbursement.user.id,
+          currentPeriode,
+          reimbursement.total_cost
+        );
         resetForm();
         setSubmitting(false);
         if (
           editedReimbursement &&
           (editedSaldo || editedSimpananSukarela) &&
           createdCoopTransaction &&
-          uploadFileMessage
+          uploadFileMessage &&
+          neracaReportEdited &&
+          arusKasReportEdited
         ) {
           enqueueSnackbar('Create success', { variant: 'success' });
         } else {

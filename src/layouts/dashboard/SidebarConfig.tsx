@@ -93,6 +93,7 @@ const sidebarConfig = [
       }
     ]
   },
+  // FINANCE
   {
     subheader: 'finance',
     items: [
@@ -124,6 +125,12 @@ const sidebarConfig = [
         title: 'add simpanan sukarela',
         path: PATH_DASHBOARD.finance.addSimpananSukarela,
         accessibleRoles: ['MEMBER'],
+        icon: ICONS.banking
+      },
+      {
+        title: 'deprecation register',
+        path: PATH_DASHBOARD.finance.deprecationRegister,
+        accessibleRoles: ['CUSTOMER'],
         icon: ICONS.banking
       }
     ]

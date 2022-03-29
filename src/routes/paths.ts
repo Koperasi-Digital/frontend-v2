@@ -74,7 +74,8 @@ export const PATH_DASHBOARD = {
     addSimpananSukarela: path(ROOTS_DASHBOARD, '/finance/add-simpanan-sukarela'),
     disbursementApproval: path(ROOTS_DASHBOARD, '/finance/disbursement-approval'),
     disbursementRequest: path(ROOTS_DASHBOARD, '/finance/create-disbursement-request'),
-    disbursementRequestList: path(ROOTS_DASHBOARD, '/finance/disbursement-request-list')
+    disbursementRequestList: path(ROOTS_DASHBOARD, '/finance/disbursement-request-list'),
+    deprecationRegister: path(ROOTS_DASHBOARD, '/finance/register-deprecation')
   },
   managementFinance: {
     root: path(ROOTS_DASHBOARD, '/management-finance'),

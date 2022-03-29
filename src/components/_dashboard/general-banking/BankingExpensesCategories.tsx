@@ -11,6 +11,9 @@ import { handleGetLabaRugiInfo } from '../../../utils/financeReport';
 
 // ----------------------------------------------------------------------
 
+// hooks
+import useAuth from 'hooks/useAuth';
+
 const RootStyle = styled(Card)(({ theme }) => ({
   '& .apexcharts-legend': {
     width: 240,
@@ -33,6 +36,8 @@ export default function BankingExpensesCategories() {
   });
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const { user } = useAuth();
 
   const chartOptions = merge(BaseOptionChart(), {
     labels: chartData.labels,
@@ -79,15 +84,18 @@ export default function BankingExpensesCategories() {
       };
       let tempData = [];
       const date = new Date();
-      const labaRugiInfo = await handleGetLabaRugiInfo(date);
-      tempData.push(labaRugiInfo.biayaProduksiProdukTerjual);
-      tempData.push(labaRugiInfo.biayaOperasi);
-      temp.data = tempData;
-      setChartData(temp);
+      let periodeString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-1';
+      if (user) {
+        const labaRugiInfo = await handleGetLabaRugiInfo(user.id, periodeString);
+        tempData.push(labaRugiInfo.biayaProduksiProdukTerjual);
+        tempData.push(labaRugiInfo.biayaOperasi);
+        temp.data = tempData;
+        setChartData(temp);
+      }
     };
 
     handleSetChartData();
-  }, []);
+  }, [user]);
 
   return (
     <RootStyle>

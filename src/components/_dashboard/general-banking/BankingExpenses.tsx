@@ -15,6 +15,9 @@ import BaseOptionChart from '../../charts/BaseOptionChart';
 
 import { handleGetLabaRugiInfo } from '../../../utils/financeReport';
 
+// hooks
+import useAuth from 'hooks/useAuth';
+
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Card)(({ theme }) => ({
@@ -46,6 +49,8 @@ export default function BankingExpenses() {
 
   const theme = useTheme();
 
+  const { user } = useAuth();
+
   const chartOptions = merge(BaseOptionChart(), {
     colors: [theme.palette.warning.main],
     chart: { sparkline: { enabled: true } },
@@ -66,23 +71,31 @@ export default function BankingExpenses() {
     fill: { gradient: { opacityFrom: 0.56, opacityTo: 0.56 } }
   });
 
-  const handleSetTotalPercent = async () => {
-    const currentDate = new Date();
-    const prevMonthDate = new Date();
-    prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
-    const currentLabaRugi = await handleGetLabaRugiInfo(currentDate);
-    const prevLabaRugi = await handleGetLabaRugiInfo(prevMonthDate);
-    const currentExpense =
-      currentLabaRugi.biayaProduksiProdukTerjual + currentLabaRugi.biayaOperasi;
-    const prevExpense = prevLabaRugi.biayaProduksiProdukTerjual + prevLabaRugi.biayaOperasi;
-    setTotal(currentExpense);
-    setPercent(((currentExpense - prevExpense) / currentExpense) * 100);
-    setChartData([{ data: [prevExpense, currentExpense] }]);
-  };
-
   useEffect(() => {
+    const handleSetTotalPercent = async () => {
+      const currentDate = new Date();
+      const prevMonthDate = new Date();
+      prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
+      const currentPeriodeString = currentDate
+        ? currentDate.getFullYear() + '-' + (currentDate.getMonth() + 1) + '-1'
+        : '';
+      const prevPeriodeString = prevMonthDate
+        ? prevMonthDate.getFullYear() + '-' + (prevMonthDate.getMonth() + 1) + '-1'
+        : '';
+      if (user) {
+        const currentLabaRugi = await handleGetLabaRugiInfo(user.id, currentPeriodeString);
+        const prevLabaRugi = await handleGetLabaRugiInfo(user.id, prevPeriodeString);
+        const currentExpense =
+          currentLabaRugi.biayaProduksiProdukTerjual + currentLabaRugi.biayaOperasi;
+        const prevExpense = prevLabaRugi.biayaProduksiProdukTerjual + prevLabaRugi.biayaOperasi;
+        setTotal(currentExpense);
+        setPercent(((currentExpense - prevExpense) / currentExpense) * 100);
+        setChartData([{ data: [prevExpense, currentExpense] }]);
+      }
+    };
+
     handleSetTotalPercent();
-  }, []);
+  }, [user]);
 
   return (
     <RootStyle>
