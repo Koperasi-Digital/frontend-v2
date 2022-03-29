@@ -12,7 +12,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { ProfileGallery } from '../../components/_dashboard/user/profile';
+// import { ProfileGallery } from '../../components/_dashboard/user/profile';
 
 const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
   width: 240,
@@ -31,7 +31,7 @@ export default function Course() {
   const dispatch = useDispatch();
   const [filterCourse, setFilterCourse] = useState('');
   const { gallery } = useSelector((state: RootState) => state.user);
-
+  console.log(gallery);
   useEffect(() => {
     dispatch(getGallery());
   }, [dispatch]);
@@ -54,7 +54,7 @@ export default function Course() {
           }
           sx={{ mb: 1 }}
         />
-        <ProfileGallery gallery={gallery} />
+        {/* <ProfileGallery gallery={gallery} /> */}
       </Container>
     </Page>
   );

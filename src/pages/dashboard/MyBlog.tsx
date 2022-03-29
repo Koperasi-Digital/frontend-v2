@@ -16,14 +16,14 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../../components/_dashboard/blog';
-import { ProfileGallery } from '../../components/_dashboard/user/profile';
+// import { ProfileGallery } from '../../components/_dashboard/user/profile';
 
 // ----------------------------------------------------------------------
 
 export default function MyBlog() {
   const dispatch = useDispatch();
   const { gallery } = useSelector((state: RootState) => state.user);
-
+  console.log(gallery);
   useEffect(() => {
     dispatch(getGallery());
   }, [dispatch]);
@@ -52,7 +52,7 @@ export default function MyBlog() {
             </Button>
           }
         />
-        <ProfileGallery gallery={gallery} />
+        {/* <ProfileGallery gallery={gallery} /> */}
       </Container>
     </Page>
   );
