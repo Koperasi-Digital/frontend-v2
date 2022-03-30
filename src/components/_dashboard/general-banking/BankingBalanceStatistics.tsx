@@ -61,15 +61,19 @@ export default function BankingBalanceStatistics() {
       let incomeArray: number[] = [];
       let expenseArray: number[] = [];
       while (!stop) {
-        if (date.getMonth() === 0) {
+        if (date.getMonth() === 1) {
           stop = true;
         }
         date.setMonth(date.getMonth() - 1);
         if (user) {
           let periodeString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-1';
           const labaRugiInfo = await handleGetLabaRugiInfo(user.id, periodeString);
-          incomeArray.unshift(labaRugiInfo.jumlahPenjualan);
-          expenseArray.unshift(labaRugiInfo.biayaProduksiProdukTerjual + labaRugiInfo.biayaOperasi);
+          if (labaRugiInfo) {
+            incomeArray.unshift(labaRugiInfo.jumlahPenjualan);
+            expenseArray.unshift(
+              labaRugiInfo.biayaProduksiProdukTerjual + labaRugiInfo.biayaOperasi
+            );
+          }
         }
       }
       const paddingNumber = 12 - incomeArray.length;

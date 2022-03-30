@@ -14,6 +14,8 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 
+import { LaporanLabaRugiToolbar } from 'components/_dashboard/general-banking/laporanLabaRugi';
+
 export default function Finance() {
   return (
     <Page title="General: Finance | CoopChick">
@@ -42,6 +44,7 @@ export default function Finance() {
               <BankingReport />
               <BankingIncome />
               <BankingExpenses />
+              <LaporanLabaRugiToolbar />
             </Stack>
           </Grid>
         </Grid>

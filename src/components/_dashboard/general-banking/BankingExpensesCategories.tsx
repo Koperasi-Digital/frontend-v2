@@ -87,8 +87,10 @@ export default function BankingExpensesCategories() {
       let periodeString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-1';
       if (user) {
         const labaRugiInfo = await handleGetLabaRugiInfo(user.id, periodeString);
-        tempData.push(labaRugiInfo.biayaProduksiProdukTerjual);
-        tempData.push(labaRugiInfo.biayaOperasi);
+        if (labaRugiInfo) {
+          tempData.push(labaRugiInfo.biayaProduksiProdukTerjual);
+          tempData.push(labaRugiInfo.biayaOperasi);
+        }
         temp.data = tempData;
         setChartData(temp);
       }

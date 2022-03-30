@@ -43,9 +43,9 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function BankingExpenses() {
-  const [total, setTotal] = useState<number>();
-  const [percent, setPercent] = useState<number>();
-  const [chartData, setChartData] = useState<{ data: number[] }[]>();
+  const [percent, setPercent] = useState<number>(0);
+  const [currentLabaRugi, setCurrentLabaRugi] = useState<any>();
+  const [prevLabaRugi, setPrevLabaRugi] = useState<any>();
 
   const theme = useTheme();
 
@@ -53,7 +53,7 @@ export default function BankingExpenses() {
 
   const chartOptions = merge(BaseOptionChart(), {
     colors: [theme.palette.warning.main],
-    chart: { sparkline: { enabled: true } },
+    chart: { id: 'banking-expense-chart', sparkline: { enabled: true } },
     xaxis: { labels: { show: false } },
     yaxis: { labels: { show: false } },
     stroke: { width: 4 },
@@ -73,42 +73,44 @@ export default function BankingExpenses() {
 
   useEffect(() => {
     const handleSetTotalPercent = async () => {
-      const currentDate = new Date();
-      const prevMonthDate = new Date();
-      prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
-      const currentPeriodeString = currentDate
-        ? currentDate.getFullYear() + '-' + (currentDate.getMonth() + 1) + '-1'
-        : '';
-      const prevPeriodeString = prevMonthDate
-        ? prevMonthDate.getFullYear() + '-' + (prevMonthDate.getMonth() + 1) + '-1'
-        : '';
+      const date = new Date();
+      let currentPeriodeString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-1';
+      let previousPeriodeString = date.getFullYear() + '-' + date.getMonth() + '-1';
       if (user) {
         const currentLabaRugi = await handleGetLabaRugiInfo(user.id, currentPeriodeString);
-        const prevLabaRugi = await handleGetLabaRugiInfo(user.id, prevPeriodeString);
-        const currentExpense =
-          currentLabaRugi.biayaProduksiProdukTerjual + currentLabaRugi.biayaOperasi;
-        const prevExpense = prevLabaRugi.biayaProduksiProdukTerjual + prevLabaRugi.biayaOperasi;
-        setTotal(currentExpense);
-        setPercent(((currentExpense - prevExpense) / currentExpense) * 100);
-        setChartData([{ data: [prevExpense, currentExpense] }]);
+        const prevLabaRugi = await handleGetLabaRugiInfo(user.id, previousPeriodeString);
+
+        setCurrentLabaRugi(currentLabaRugi);
+        setPrevLabaRugi(prevLabaRugi);
       }
     };
 
     handleSetTotalPercent();
   }, [user]);
 
+  useEffect(() => {
+    if (currentLabaRugi && prevLabaRugi) {
+      const currentExpense =
+        currentLabaRugi.biayaProduksiProdukTerjual + currentLabaRugi.biayaOperasi;
+      const prevExpense = prevLabaRugi.biayaProduksiProdukTerjual + prevLabaRugi.biayaOperasi;
+      setPercent(((currentExpense - prevExpense) / currentExpense) * 100);
+    }
+  }, [currentLabaRugi, prevLabaRugi]);
+
   return (
     <RootStyle>
-      <IconWrapperStyle>
-        <Icon icon={diagonalArrowRightUpFill} width={24} height={24} />
-      </IconWrapperStyle>
+      {currentLabaRugi && prevLabaRugi ? (
+        <>
+          <IconWrapperStyle>
+            <Icon icon={diagonalArrowRightUpFill} width={24} height={24} />
+          </IconWrapperStyle>
 
-      <Stack spacing={1} sx={{ p: 3 }}>
-        <Typography sx={{ typography: 'subtitle2' }}>Expenses</Typography>
-        <Typography sx={{ typography: 'h3' }}>{total ? fCurrency(total) : 'Loading...'}</Typography>
-        <Stack direction="row" alignItems="center" flexWrap="wrap">
-          {percent ? (
-            <>
+          <Stack spacing={1} sx={{ p: 3 }}>
+            <Typography sx={{ typography: 'subtitle2' }}>Expenses</Typography>
+            <Typography sx={{ typography: 'h3' }}>
+              {fCurrency(currentLabaRugi.biayaProduksiProdukTerjual + currentLabaRugi.biayaOperasi)}
+            </Typography>
+            <Stack direction="row" alignItems="center" flexWrap="wrap">
               <Icon
                 width={20}
                 height={20}
@@ -121,15 +123,22 @@ export default function BankingExpenses() {
               <Typography variant="body2" component="span" sx={{ opacity: 0.72 }}>
                 &nbsp;than last month
               </Typography>
-            </>
-          ) : (
-            'Loading...'
-          )}
-        </Stack>
-      </Stack>
-
-      {chartData ? (
-        <ReactApexChart type="area" series={chartData} options={chartOptions} height={120} />
+            </Stack>
+          </Stack>
+          <ReactApexChart
+            type="area"
+            series={[
+              {
+                data: [
+                  prevLabaRugi.biayaProduksiProdukTerjual + prevLabaRugi.biayaOperasi,
+                  currentLabaRugi.biayaProduksiProdukTerjual + currentLabaRugi.biayaOperasi
+                ]
+              }
+            ]}
+            options={chartOptions}
+            height={120}
+          />
+        </>
       ) : (
         'Loading...'
       )}
