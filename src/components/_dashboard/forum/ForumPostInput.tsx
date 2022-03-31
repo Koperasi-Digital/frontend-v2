@@ -1,20 +1,33 @@
 import { useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
+import { useDispatch } from '../../../redux/store';
+import { createForum } from '../../../redux/slices/forum';
 import roundAddPhotoAlternate from '@iconify/icons-ic/round-add-photo-alternate';
 // material
 import { Box, Card, Button, TextField, IconButton } from '@mui/material';
-// import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
 export default function ForumPostInput() {
-  // const { user } = useAuth();
+  const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch();
   const [topic, setTopic] = useState('');
   const [message, setMessage] = useState('');
 
   const handleAttach = () => {
     fileInputRef.current?.click();
+  };
+
+  const onClickAddForum = () => {
+    if (message === '' || topic === '') {
+      console.log('you need to input topic and message');
+    } else {
+      dispatch(createForum(user?.id, topic, message));
+      setTopic('');
+      setMessage('');
+    }
   };
 
   return (
@@ -61,7 +74,9 @@ export default function ForumPostInput() {
             <Icon icon={roundAddPhotoAlternate} width={24} height={24} />
           </IconButton>
         </Box>
-        <Button variant="contained">Post</Button>
+        <Button onClick={() => onClickAddForum()} variant="contained">
+          Post
+        </Button>
       </Box>
 
       <input

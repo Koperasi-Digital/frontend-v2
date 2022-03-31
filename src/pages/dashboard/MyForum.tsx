@@ -16,11 +16,11 @@ import { MyForumPost } from '../../components/_dashboard/forum';
 export default function MyForum() {
   const { user } = useAuth();
   const dispatch = useDispatch();
-  const { posts } = useSelector((state: RootState) => state.forum);
+  const { ownPosts, refresh } = useSelector((state: RootState) => state.forum);
 
   useEffect(() => {
     dispatch(getOwnPosts(user?.id));
-  }, [dispatch, user]);
+  }, [dispatch, user, refresh]);
 
   return (
     <Page title="Forumku | CoopChick">
@@ -33,8 +33,8 @@ export default function MyForum() {
             { name: user?.displayName || '' }
           ]}
         />
-        {posts.length > 0 ? (
-          <MyForumPost posts={posts} />
+        {ownPosts.length > 0 ? (
+          <MyForumPost posts={ownPosts} />
         ) : (
           <Typography variant="h6">Anda tidak pernah memposting apa pun di forum</Typography>
         )}
