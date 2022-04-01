@@ -6,6 +6,7 @@ import { deleteForum, createComment, deleteComment } from '../../../redux/slices
 import roundSend from '@iconify/icons-ic/round-send';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import closeOutline from '@iconify/icons-eva/close-circle-outline';
+import { useSnackbar } from 'notistack';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 // material
 import {
@@ -20,6 +21,9 @@ import {
   CardHeader,
   IconButton,
   Menu,
+  Button,
+  DialogTitle,
+  DialogContent,
   MenuItem,
   ListItemIcon,
   ListItemText
@@ -33,6 +37,7 @@ import { fDateTime } from '../../../utils/formatTime';
 import createAvatar from 'utils/createAvatar';
 //
 import { MAvatar } from 'components/@material-extend';
+import { DialogAnimate } from '../../../components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +48,11 @@ interface PostCardProps extends CardProps {
 export default function ForumPostCard({ post }: PostCardProps) {
   const { user, currentRole } = useAuth();
   const [message, setMessage] = useState('');
+  const [isOpenModalDeleteForum, setIsOpenModalDeleteForum] = useState<boolean>(false);
+  const [isOpenModalDeleteComment, setIsOpenModalDeleteComment] = useState<boolean>(false);
+  const [currentCommentId, setCurrentCommentId] = useState(0);
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const hasComments = post.comments.length > 0;
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -56,12 +65,49 @@ export default function ForumPostCard({ post }: PostCardProps) {
     setMessage(value);
   };
 
-  const onClickAddComment = () => {
-    if (message === '') {
-      console.log('you need to input message');
-    } else {
-      dispatch(createComment(user?.id, parseInt(post.id), message));
+  const handleOpenModalDeleteComment = (commentId: number) => {
+    setCurrentCommentId(commentId);
+    setIsOpenModalDeleteComment(!isOpenModalDeleteComment);
+  };
+
+  const postComment = async () => {
+    try {
+      await dispatch(createComment(user?.id, parseInt(post.id), message));
+      enqueueSnackbar(`Komentar berhasil dibuat`, { variant: 'success' });
       setMessage('');
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar(`Gagal membuat komentar, mohon dicoba lagi!`, { variant: 'error' });
+    }
+  };
+
+  const handlePostComment = () => {
+    if (message === '') {
+      enqueueSnackbar(`Komentar perlu diisi`, { variant: 'error' });
+    } else {
+      postComment();
+    }
+  };
+
+  const handleDeleteForum = async () => {
+    setIsOpenModalDeleteForum(!setIsOpenModalDeleteForum);
+    try {
+      await dispatch(deleteForum(parseInt(post.id)));
+      enqueueSnackbar(`Forum berhasil dihapus`, { variant: 'success' });
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar(`Gagal menghapus forum, mohon dicoba lagi!`, { variant: 'error' });
+    }
+  };
+
+  const handleDeleteComment = async () => {
+    setIsOpenModalDeleteComment(!setIsOpenModalDeleteComment);
+    try {
+      await dispatch(deleteComment(currentCommentId));
+      enqueueSnackbar(`Komentar berhasil dihapus`, { variant: 'success' });
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar(`Gagal menghapus komentar, mohon dicoba lagi!`, { variant: 'error' });
     }
   };
 
@@ -105,7 +151,7 @@ export default function ForumPostCard({ post }: PostCardProps) {
                 transformOrigin={{ vertical: 'top', horizontal: 'right' }}
               >
                 <MenuItem
-                  onClick={() => dispatch(deleteForum(parseInt(post.id)))}
+                  onClick={() => setIsOpenModalDeleteForum(!isOpenModalDeleteForum)}
                   sx={{ color: 'text.secondary' }}
                 >
                   <ListItemIcon>
@@ -175,7 +221,7 @@ export default function ForumPostCard({ post }: PostCardProps) {
                         </Typography>
                         {comment.author.id === user?.id || isAdmin ? (
                           <IconButton
-                            onClick={() => dispatch(deleteComment(parseInt(comment.id)))}
+                            onClick={() => handleOpenModalDeleteComment(parseInt(comment.id))}
                             size={'small'}
                           >
                             <Icon icon={closeOutline} width={12} height={12} />
@@ -187,6 +233,36 @@ export default function ForumPostCard({ post }: PostCardProps) {
                       {comment.message}
                     </Typography>
                   </Paper>
+                  <DialogAnimate
+                    open={isOpenModalDeleteComment}
+                    onClose={() => setIsOpenModalDeleteComment(!isOpenModalDeleteComment)}
+                  >
+                    <DialogTitle sx={{ pb: 1 }}>Delete Komentar ?</DialogTitle>
+                    <DialogContent sx={{ overflowY: 'unset' }}>
+                      <Typography align={'justify'}>
+                        Komentar yang sudah dihapus akan hilang selamanya ! Apakah anda tetap ingin
+                        menghapus komentar ?
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-around',
+                          p: 1.5
+                        }}
+                      >
+                        <Button variant="contained" onClick={() => handleDeleteComment()}>
+                          Delete
+                        </Button>
+                        <Button
+                          color="error"
+                          variant="contained"
+                          onClick={() => setIsOpenModalDeleteComment(!isOpenModalDeleteComment)}
+                        >
+                          Cancel
+                        </Button>
+                      </Box>
+                    </DialogContent>
+                  </DialogAnimate>
                 </Stack>
               );
             })}
@@ -205,7 +281,7 @@ export default function ForumPostCard({ post }: PostCardProps) {
             fullWidth
             size="small"
             value={message}
-            placeholder="Tulis komen di sini…"
+            placeholder="Tulis komentar di sini…"
             onChange={(event) => handleChangeMessage(event.target.value)}
             sx={{
               ml: 2,
@@ -216,11 +292,41 @@ export default function ForumPostCard({ post }: PostCardProps) {
               }
             }}
           />
-          <IconButton onClick={() => onClickAddComment()}>
+          <IconButton onClick={() => handlePostComment()}>
             <Icon icon={roundSend} width={24} height={24} />
           </IconButton>
         </Stack>
       </Stack>
+      <DialogAnimate
+        open={isOpenModalDeleteForum}
+        onClose={() => setIsOpenModalDeleteForum(!isOpenModalDeleteForum)}
+      >
+        <DialogTitle sx={{ pb: 1 }}>Delete Forum ?</DialogTitle>
+        <DialogContent sx={{ overflowY: 'unset' }}>
+          <Typography align={'justify'}>
+            Forum yang sudah dihapus akan hilang selamanya ! Apakah anda tetap ingin menghapus Forum
+            ?
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-around',
+              p: 1.5
+            }}
+          >
+            <Button variant="contained" onClick={() => handleDeleteForum()}>
+              Delete
+            </Button>
+            <Button
+              color="error"
+              variant="contained"
+              onClick={() => setIsOpenModalDeleteForum(!isOpenModalDeleteForum)}
+            >
+              Cancel
+            </Button>
+          </Box>
+        </DialogContent>
+      </DialogAnimate>
     </Card>
   );
 }
