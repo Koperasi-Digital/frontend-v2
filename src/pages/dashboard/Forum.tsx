@@ -36,14 +36,14 @@ export default function Forum() {
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
-  const { posts, totalPage } = useSelector((state: RootState) => state.forum);
+  const { posts, totalPage, refresh } = useSelector((state: RootState) => state.forum);
 
   useEffect(() => {
     dispatch(getPosts(filterTopic, page));
     if (page > totalPage) {
       setPage(1);
     }
-  }, [dispatch, filterTopic, page, totalPage]);
+  }, [dispatch, filterTopic, page, totalPage, refresh]);
 
   return (
     <Page title="Forum | CoopChick">

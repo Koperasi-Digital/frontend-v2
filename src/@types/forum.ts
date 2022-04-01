@@ -1,22 +1,18 @@
+import { User } from './account';
+
 export type ForumPostType = {
   id: string;
-  author: {
-    id: string;
-    avatarUrl: string;
-    name: string;
-  };
-  createdAt: Date | string | number;
-  media: string;
+  author: User;
+  created_at: Date | string | number;
+  media: string | null;
   topic: string;
   message: string;
-  comments: {
-    id: string;
-    author: {
-      id: string;
-      avatarUrl: string;
-      name: string;
-    };
-    createdAt: Date | string | number;
-    message: string;
-  }[];
+  comments: CommentType[];
+};
+
+export type CommentType = {
+  id: string;
+  author: User;
+  created_at: Date | string | number;
+  message: string;
 };
