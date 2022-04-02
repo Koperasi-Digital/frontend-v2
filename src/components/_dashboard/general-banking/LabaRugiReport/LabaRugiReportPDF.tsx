@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 });
 
 // Create Document Component
-export default function LaporanLabaRugiPDF(props: { bankingExpenseChartURI: string | undefined }) {
+export default function LabaRugiReportPDF(props: { bankingExpenseChartURI: string | undefined }) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>

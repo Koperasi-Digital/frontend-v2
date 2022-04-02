@@ -6,7 +6,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 // material
 import { LoadingButton } from '@mui/lab';
 
-import LaporanLabaRugiPDF from './LaporanLabaRugiPDF';
+import LabaRugiReportPDF from './LabaRugiReportPDF';
 
 export default function LaporanLabaRugiToolbar() {
   const [bankingExpenseChartURI, setBankingExpenseChartURI] = useState<string>();
@@ -33,7 +33,7 @@ export default function LaporanLabaRugiToolbar() {
   return bankingExpenseChartURI ? (
     <>
       <PDFDownloadLink
-        document={<LaporanLabaRugiPDF bankingExpenseChartURI={bankingExpenseChartURI} />}
+        document={<LabaRugiReportPDF bankingExpenseChartURI={bankingExpenseChartURI} />}
         fileName={`LAPORAN-NERACA-1`}
         style={{ textDecoration: 'none' }}
       >
