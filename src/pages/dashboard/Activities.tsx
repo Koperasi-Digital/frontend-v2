@@ -60,18 +60,18 @@ export default function Activities() {
   };
 
   return (
-    <Page title="Activities | CoopChick">
+    <Page title="Aktivitas | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Activities"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Activities' }]}
+          heading="Aktivitas"
+          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Aktivitas' }]}
           action={
             <Button
               variant="contained"
               startIcon={<Icon icon={plusFill} width={20} height={20} />}
               onClick={handleAddEvent}
             >
-              New Activity
+              Buat Aktivitas
             </Button>
           }
         />
