@@ -79,3 +79,40 @@ export async function handleAddOrderSimpananWajib(
     return null;
   }
 }
+
+export async function handleGetSimpananSukarela(userId: number) {
+  try {
+    const response = await axios.get('simpanan-sukarela/show/' + userId);
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+export async function handleEditSimpananSukarela(userId: number, amount: number, isAdd: number) {
+  try {
+    const response = await axios.post('simpanan-sukarela/edit', {
+      userId: userId,
+      amount: amount,
+      isAdd: isAdd
+    });
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
+export async function handleAddOrderSimpananSukarela(userId: number, orderId: string) {
+  try {
+    const response = await axios.post('simpanan-sukarela/add-order', {
+      userId: userId,
+      orderId: orderId
+    });
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}

@@ -11,11 +11,13 @@ import GoogleAnalytics from './components/GoogleAnalytics';
 import NotistackProvider from './components/NotistackProvider';
 import { BaseOptionChartStyle } from './components/charts/BaseOptionChart';
 import LoadingScreen, { ProgressBarStyle } from './components/LoadingScreen';
+import { requestFirebaseNotificationPermission } from './firebase';
 
 // ----------------------------------------------------------------------
 
 export default function App() {
   const { isInitialized } = useAuth();
+  requestFirebaseNotificationPermission();
 
   return (
     <ThemeConfig>

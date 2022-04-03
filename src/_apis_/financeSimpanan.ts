@@ -1,7 +1,7 @@
 // utils
 import mock from './mock';
 
-mock.onGet('simpananPokok/list').reply((config) => {
+mock.onGet('simpanan-pokok/list').reply((config) => {
   return [
     200,
     {
@@ -66,7 +66,7 @@ mock.onGet('simpananPokok/list').reply((config) => {
   ];
 });
 
-mock.onGet(/simpananWajib\/list\/.*/).reply((config) => {
+mock.onGet(/simpanan-wajib\/list\/.*/).reply((config) => {
   return [
     200,
     {
@@ -119,7 +119,7 @@ mock.onGet(/simpananWajib\/list\/.*/).reply((config) => {
   ];
 });
 
-mock.onGet(/simpananPokok\/show\/.*/).reply((config) => {
+mock.onGet(/simpanan-pokok\/show\/.*/).reply((config) => {
   return [
     200,
     {
@@ -156,7 +156,7 @@ mock.onGet(/simpananPokok\/show\/.*/).reply((config) => {
   ];
 });
 
-mock.onGet(/simpananWajib\/show\/.*\/.*/).reply((config) => {
+mock.onGet(/simpanan-wajib\/show\/.*\/.*/).reply((config) => {
   return [
     200,
     {

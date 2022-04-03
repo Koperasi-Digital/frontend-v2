@@ -1,37 +1,12 @@
-import { Icon } from '@iconify/react';
-import shareFill from '@iconify/icons-eva/share-fill';
-import twitterFill from '@iconify/icons-eva/twitter-fill';
-import linkedinFill from '@iconify/icons-eva/linkedin-fill';
-import facebookFill from '@iconify/icons-eva/facebook-fill';
-import instagramFilled from '@iconify/icons-ant-design/instagram-filled';
 // material
-import { alpha, useTheme, styled } from '@mui/material/styles';
-import { Box, Avatar, SpeedDial, Typography, useMediaQuery, SpeedDialAction } from '@mui/material';
+import { alpha, styled } from '@mui/material/styles';
+import { Box, Avatar, Typography } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
 // @types
 import { Post } from '../../../@types/blog';
 
 // ----------------------------------------------------------------------
-
-const SOCIALS = [
-  {
-    name: 'Facebook',
-    icon: <Icon icon={facebookFill} width={20} height={20} color="#1877F2" />
-  },
-  {
-    name: 'Instagram',
-    icon: <Icon icon={instagramFilled} width={20} height={20} color="#D7336D" />
-  },
-  {
-    name: 'Linkedin',
-    icon: <Icon icon={linkedinFill} width={20} height={20} color="#006097" />
-  },
-  {
-    name: 'Twitter',
-    icon: <Icon icon={twitterFill} width={20} height={20} color="#1C9CEA" />
-  }
-];
 
 const RootStyle = styled('div')(({ theme }) => ({
   height: 480,
@@ -103,8 +78,6 @@ type BlogPostHeroProps = {
 
 export default function BlogPostHero({ post }: BlogPostHeroProps) {
   const { cover, title, author, createdAt } = post;
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <RootStyle>
@@ -124,23 +97,6 @@ export default function BlogPostHero({ post }: BlogPostHeroProps) {
             </Typography>
           </Box>
         </Box>
-
-        <SpeedDial
-          direction={isMobile ? 'up' : 'left'}
-          ariaLabel="Share post"
-          icon={<Icon icon={shareFill} />}
-          sx={{ '& .MuiSpeedDial-fab': { width: 48, height: 48 } }}
-        >
-          {SOCIALS.map((action) => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              tooltipPlacement="top"
-              FabProps={{ color: 'default' }}
-            />
-          ))}
-        </SpeedDial>
       </FooterStyle>
     </RootStyle>
   );

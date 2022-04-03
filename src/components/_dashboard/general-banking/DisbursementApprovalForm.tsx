@@ -12,8 +12,11 @@ import { UploadSingleFile } from '../../upload';
 import { handleEditReimbursement, handleShowOneReimbursement } from 'utils/financeReimbursement';
 import { handleCreateCoopTransaction } from 'utils/financeCoopTransaction';
 import { handleEditSaldo } from 'utils/financeSaldo';
+import { handleEditSimpananSukarela } from 'utils/financeSimpanan';
 
 import { handleUploadFile } from 'utils/bucket';
+
+import { handlePencairanSaldoNeraca, handlePencairanSaldoArusKas } from 'utils/financeReport';
 
 // ----------------------------------------------------------------------
 
@@ -50,11 +53,17 @@ export default function DisbursementApprovalForm() {
           'success',
           undefined
         );
-        const editedSaldo = await handleEditSaldo(
-          reimbursement.user.id,
-          reimbursement.total_cost,
-          0
-        );
+        let editedSaldo;
+        let editedSimpananSukarela;
+        if (reimbursement.type === 'saldo') {
+          editedSaldo = await handleEditSaldo(reimbursement.user.id, reimbursement.total_cost, 0);
+        } else {
+          editedSimpananSukarela = await handleEditSimpananSukarela(
+            reimbursement.user.id,
+            reimbursement.total_cost,
+            0
+          );
+        }
 
         const createdCoopTransaction = await handleCreateCoopTransaction({
           sisaHasilUsahaId: undefined,
@@ -69,9 +78,27 @@ export default function DisbursementApprovalForm() {
           values.disbursementRequestId + '.png'
         );
 
+        const currentPeriode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
+        const neracaReportEdited = await handlePencairanSaldoNeraca(
+          reimbursement.user.id,
+          currentPeriode,
+          reimbursement.total_cost
+        );
+        const arusKasReportEdited = await handlePencairanSaldoArusKas(
+          reimbursement.user.id,
+          currentPeriode,
+          reimbursement.total_cost
+        );
         resetForm();
         setSubmitting(false);
-        if (editedReimbursement && editedSaldo && createdCoopTransaction && uploadFileMessage) {
+        if (
+          editedReimbursement &&
+          (editedSaldo || editedSimpananSukarela) &&
+          createdCoopTransaction &&
+          uploadFileMessage &&
+          neracaReportEdited &&
+          arusKasReportEdited
+        ) {
           enqueueSnackbar('Create success', { variant: 'success' });
         } else {
           enqueueSnackbar('Create fail', { variant: 'error' });

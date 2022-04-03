@@ -32,7 +32,7 @@ export default function FAQ() {
             Frequently Asked Questions(FAQ)
           </Typography>
           <Typography variant="h6" gutterBottom>
-            Commonly asked questions and answers about the app
+            Pertanyaan dan jawaban yang sering ditanyakan tentang aplikasi
           </Typography>
         </Stack>
         {faqData.map((data, index) => (

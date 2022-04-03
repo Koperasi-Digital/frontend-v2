@@ -5,7 +5,7 @@ mock.onPost('payment/create').reply((config) => {
   return [200, { message: 'transactionToken', data: '5dc506fb-bc4a-4fcd-8869-d5098a3945c7' }];
 });
 
-mock.onPost('emoney/createPayAccount').reply((config) => {
+mock.onPost('emoney/create-pay-account').reply((config) => {
   return [
     200,
     {
@@ -20,7 +20,7 @@ mock.onPost('emoney/createPayAccount').reply((config) => {
   ];
 });
 
-mock.onGet(/emoney\/getPayAccount\/.*/).reply((config) => {
+mock.onGet(/emoney\/get-pay-account\/.*/).reply((config) => {
   return [
     200,
     {
@@ -59,7 +59,7 @@ mock.onGet(/emoney\/getPayAccount\/.*/).reply((config) => {
   ];
 });
 
-mock.onPost(/emoney\/unbindPayAccount\/.*/).reply((config) => {
+mock.onPost(/emoney\/unbind-pay-account\/.*/).reply((config) => {
   return [
     200,
     {
@@ -75,7 +75,7 @@ mock.onPost(/emoney\/unbindPayAccount\/.*/).reply((config) => {
   ];
 });
 
-mock.onGet(/laporanLabaRugi\/.*\/.*/).reply((config) => {
+mock.onGet(/laporan-laba-rugi\/.*\/.*/).reply((config) => {
   const jumlahPenjualan = Math.floor(Math.random() * 200000) + 30000;
   const biayaProduksiProdukTerjual = Math.floor(Math.random() * 200000) + 30000;
   const biayaOperasi = Math.floor(Math.random() * 200000) + 30000;
@@ -97,7 +97,7 @@ mock.onGet(/laporanLabaRugi\/.*\/.*/).reply((config) => {
   ];
 });
 
-mock.onGet(/laporanNeraca\/.*\/.*/).reply((config) => {
+mock.onGet(/laporan-neraca\/.*\/.*/).reply((config) => {
   return [
     200,
     {
@@ -107,7 +107,7 @@ mock.onGet(/laporanNeraca\/.*\/.*/).reply((config) => {
   ];
 });
 
-mock.onGet(/laporanArusKas\/.*\/.*/).reply((config) => {
+mock.onGet(/laporan-arus-kas\/.*\/.*/).reply((config) => {
   const jumlahKasAwal = Math.floor(Math.random() * 200000) + 30000;
   const kasMasuk = Math.floor(Math.random() * 200000) + 30000;
   const kasCair = Math.floor(Math.random() * 200000) + 30000;

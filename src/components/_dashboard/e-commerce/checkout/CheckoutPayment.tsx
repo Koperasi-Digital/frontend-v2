@@ -86,8 +86,6 @@ const CARDS_OPTIONS: CardOption[] = [
   { value: 'MasterCard', label: '**** **** **** 4545 - Cole Armstrong' }
 ];
 
-const SELLERID = 1; //TODO: replace using user id of shop owner
-
 export default function CheckoutPayment() {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -97,7 +95,7 @@ export default function CheckoutPayment() {
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
 
   const dispatch = useDispatch();
-  const { total, discount, subtotal, shipping, orderId } = checkout;
+  const { total, discount, subtotal, shipping, orderId, cart } = checkout;
 
   const handleBackStep = () => {
     dispatch(onBackStep());
@@ -136,7 +134,7 @@ export default function CheckoutPayment() {
     const handleCheckOrderStatus = async () => {
       if (orderId) {
         const order = await handleGetOrder(orderId);
-        if (order.status === 'LUNAS') {
+        if (order && order.status === 'LUNAS') {
           handleNextStep();
         }
       }

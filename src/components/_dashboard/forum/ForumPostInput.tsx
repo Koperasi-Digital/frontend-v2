@@ -1,16 +1,45 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
+import { useDispatch } from '../../../redux/store';
+import { createForum } from '../../../redux/slices/forum';
+import { useSnackbar } from 'notistack';
 import roundAddPhotoAlternate from '@iconify/icons-ic/round-add-photo-alternate';
 // material
 import { Box, Card, Button, TextField, IconButton } from '@mui/material';
+import useAuth from '../../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
 export default function ForumPostInput() {
+  const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+  const [topic, setTopic] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleAttach = () => {
     fileInputRef.current?.click();
+  };
+
+  const postForum = async () => {
+    try {
+      await dispatch(createForum(user?.id, topic, message));
+      enqueueSnackbar(`Forum berhasil dibuat`, { variant: 'success' });
+      setTopic('');
+      setMessage('');
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar(`Gagal membuat forum, mohon dicoba lagi!`, { variant: 'error' });
+    }
+  };
+
+  const handlePostForum = () => {
+    if (message === '' || topic === '') {
+      enqueueSnackbar(`Perlu mengisi topik dan isi forum`, { variant: 'error' });
+    } else {
+      postForum();
+    }
   };
 
   return (
@@ -18,7 +47,9 @@ export default function ForumPostInput() {
       <TextField
         fullWidth
         rows={1}
-        placeholder="Input your topic here..."
+        value={topic}
+        onChange={(e) => setTopic(e.target.value)}
+        placeholder="Tulis topik di sini..."
         sx={{
           '& fieldset': {
             borderWidth: `1px !important`,
@@ -30,7 +61,9 @@ export default function ForumPostInput() {
         multiline
         fullWidth
         rows={4}
-        placeholder="Share what you are thinking here..."
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Tulis apa yang ingin dibagikan di sini..."
         sx={{
           mt: 2,
           '& fieldset': {
@@ -53,7 +86,9 @@ export default function ForumPostInput() {
             <Icon icon={roundAddPhotoAlternate} width={24} height={24} />
           </IconButton>
         </Box>
-        <Button variant="contained">Post</Button>
+        <Button onClick={() => handlePostForum()} variant="contained">
+          Post
+        </Button>
       </Box>
 
       <input

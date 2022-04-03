@@ -1,14 +1,14 @@
 // material
 import { Grid, Stack } from '@mui/material';
 // @types
-import { UserPost } from '../../../@types/user';
+import { ForumPostType } from '../../../@types/forum';
 //
 import ForumPostCard from './ForumPostCard';
 
 // ----------------------------------------------------------------------
 
 type ForumProps = {
-  posts: UserPost[];
+  posts: ForumPostType[];
 };
 
 export default function MyForumPost({ posts }: ForumProps) {

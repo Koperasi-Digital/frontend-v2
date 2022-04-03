@@ -35,11 +35,15 @@ export const PATH_DASHBOARD = {
     blogs: path(ROOTS_DASHBOARD, '/blogs'),
     blog: path(ROOTS_DASHBOARD, '/blogs/:title'),
     newBlog: path(ROOTS_DASHBOARD, '/blogs/new'),
-    blogVerification: path(ROOTS_DASHBOARD, '/blog/verification'),
+    myBlog: path(ROOTS_DASHBOARD, '/blogs/own'),
+    blogVerification: path(ROOTS_DASHBOARD, '/blogs/verification'),
     faq: path(ROOTS_DASHBOARD, '/faq'),
     faqPost: path(ROOTS_DASHBOARD, '/faq/:number'),
     forum: path(ROOTS_DASHBOARD, '/forum'),
-    myforum: path(ROOTS_DASHBOARD, '/forum/own')
+    myforum: path(ROOTS_DASHBOARD, '/forum/own'),
+    course: path(ROOTS_DASHBOARD, '/course'),
+    courseDetail: path(ROOTS_DASHBOARD, '/course/:title'),
+    coursePage: path(ROOTS_DASHBOARD, '/course/:title/:page')
   },
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),
@@ -71,9 +75,11 @@ export const PATH_DASHBOARD = {
     home: path(ROOTS_DASHBOARD, '/finance/home'),
     report: path(ROOTS_DASHBOARD, '/finance/report'),
     memberReport: path(ROOTS_DASHBOARD, '/finance/member-report'),
+    addSimpananSukarela: path(ROOTS_DASHBOARD, '/finance/add-simpanan-sukarela'),
     disbursementApproval: path(ROOTS_DASHBOARD, '/finance/disbursement-approval'),
     disbursementRequest: path(ROOTS_DASHBOARD, '/finance/create-disbursement-request'),
-    disbursementRequestList: path(ROOTS_DASHBOARD, '/finance/disbursement-request-list')
+    disbursementRequestList: path(ROOTS_DASHBOARD, '/finance/disbursement-request-list'),
+    deprecationRegister: path(ROOTS_DASHBOARD, '/finance/register-deprecation')
   },
   managementFinance: {
     root: path(ROOTS_DASHBOARD, '/management-finance'),

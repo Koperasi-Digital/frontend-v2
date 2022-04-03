@@ -6,9 +6,10 @@ import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
-import RoleBasedGuard from '../guards/RoleBasedGuard';
+// import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import RoleBasedGuard from 'guards/RoleBasedGuard';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component: React.ElementType) => (props: any) => {
@@ -87,11 +88,15 @@ export default function Router() {
         },
         { path: 'blogs/:title', element: <BlogPost /> },
         { path: 'blogs/new', element: <BlogNewPost /> },
-        { path: 'blog/verification', element: <BlogVerification /> },
+        { path: 'blogs/own', element: <MyBlog /> },
+        { path: 'blogs/verification', element: <BlogVerification /> },
         { path: 'faq', element: <FAQ /> },
         { path: 'faq/:number', element: <FAQPost /> },
         { path: 'forum', element: <Forum /> },
         { path: 'forum/own', element: <MyForum /> },
+        { path: 'course', element: <Course /> },
+        { path: 'course/:title', element: <CourseDetail /> },
+        { path: 'course/:title/:page', element: <CoursePage /> },
         {
           path: 'e-commerce',
           children: [
@@ -131,7 +136,12 @@ export default function Router() {
                 </RoleBasedGuard>
               )
             },
-            { path: 'create-disbursement-request', element: <DisbursementRequest /> }
+            { path: 'create-disbursement-request', element: <DisbursementRequest /> },
+            { path: 'register-deprecation', element: <DeprecationRegister /> },
+            {
+              path: 'add-simpanan-sukarela',
+              element: <AddSimpananSukarela />
+            }
           ]
         },
         {
@@ -259,6 +269,10 @@ const EcommerceInvoice = Loadable(lazy(() => import('../pages/dashboard/Ecommerc
 const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
 const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
+const MyBlog = Loadable(lazy(() => import('../pages/dashboard/MyBlog')));
+const Course = Loadable(lazy(() => import('../pages/dashboard/Course')));
+const CourseDetail = Loadable(lazy(() => import('../pages/dashboard/CourseDetail')));
+const CoursePage = Loadable(lazy(() => import('../pages/dashboard/CoursePage')));
 const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
 const FAQ = Loadable(lazy(() => import('../pages/dashboard/FAQ')));
 const FAQPost = Loadable(lazy(() => import('../pages/dashboard/FAQPost')));
@@ -281,6 +295,8 @@ const DisbursementRequestList = Loadable(
   lazy(() => import('../pages/dashboard/DisbursementRequestList'))
 );
 const DisbursementRequest = Loadable(lazy(() => import('../pages/dashboard/DisbursementRequest')));
+const DeprecationRegister = Loadable(lazy(() => import('../pages/dashboard/DeprecationRegister')));
+const AddSimpananSukarela = Loadable(lazy(() => import('../pages/dashboard/AddSimpananSukarela')));
 // Main
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));

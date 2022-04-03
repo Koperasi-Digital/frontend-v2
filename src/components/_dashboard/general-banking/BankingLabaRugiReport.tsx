@@ -31,6 +31,9 @@ import {
 import closeFill from '@iconify/icons-eva/close-fill';
 import { fCurrency } from '../../../utils/formatNumber';
 
+// hooks
+import useAuth from 'hooks/useAuth';
+
 type BankingLabaRugiReportProps = {
   dateValue: Date;
 };
@@ -38,6 +41,8 @@ type BankingLabaRugiReportProps = {
 export default function BankingLabaRugiReport({ dateValue }: BankingLabaRugiReportProps) {
   const dispatch = useDispatch();
   const { isOpenModalLabaRugi } = useSelector((state: RootState) => state.financeReport);
+
+  const { user } = useAuth();
 
   interface ILabaRugiData {
     id: number;
@@ -59,7 +64,10 @@ export default function BankingLabaRugiReport({ dateValue }: BankingLabaRugiRepo
   }));
 
   const handleOpenModalLabaRugi = async () => {
-    setLabaRugiData(await handleGetLabaRugiInfo(dateValue));
+    if (user) {
+      let currentPeriodeString = dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1';
+      setLabaRugiData(await handleGetLabaRugiInfo(user.id, currentPeriodeString));
+    }
     dispatch(openModalLabaRugi());
   };
 

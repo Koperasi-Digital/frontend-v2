@@ -1,13 +1,13 @@
 // ----------------------------------------------------------------------
 
 export const title = [
-  'Apply These 7 Secret Techniques To Improve the Health of Chicken',
-  'Believing These 7 Myths About Event Keeps Chicken From Growing',
-  "Don't Waste Time! 7 Facts About Chicken",
-  'How 7 Things Will Change The Way You Build A Chicken Farm',
-  "Event Awards: 7 Reasons Why They Don't Work & What You Can Do About It",
-  "Event Doesn't Have To Be Hard. Read These 7 Tips",
-  'Event Is Your Worst Enemy. 7 Ways To Defeat It',
+  '7 Cara Untuk Merawat Kesehatan Ayam',
+  '5 Langkah Untuk Membuat Ayam Lebih Besar',
+  'Jangan Buang Waktu! 7 Fakta Tentang Peternakan Ayam',
+  'Bagaimana 7 Hal Membuat Anda Merubah Cara Merawat Ayam',
+  'Bagaimana Membuat Pakan Ayam',
+  '10 Tips Dalam Membuat Peternakan Ayam',
+  'Beberapa Penyakit Ayam Yang Mematikan',
   'Event On A Budget: 7 Tips From The Great Depression',
   'Knowing These 7 Secrets Will Make Your Event Look Amazing',
   'Master The Art Of Event With These 7 Tips',

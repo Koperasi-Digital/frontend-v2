@@ -17,7 +17,9 @@ export default function BankingSaldo() {
     const fetchData = async () => {
       if (user) {
         const saldo = await handleGetSaldo(user.id);
-        setSaldo(saldo.amount);
+        if (saldo) {
+          setSaldo(saldo.amount);
+        }
       }
     };
     fetchData();

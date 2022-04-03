@@ -31,6 +31,9 @@ import {
 import closeFill from '@iconify/icons-eva/close-fill';
 import { fCurrency } from '../../../utils/formatNumber';
 
+// hooks
+import useAuth from 'hooks/useAuth';
+
 type BankingArusKasReportProps = {
   dateValue: Date;
 };
@@ -38,6 +41,8 @@ type BankingArusKasReportProps = {
 export default function BankingArusKasReport({ dateValue }: BankingArusKasReportProps) {
   const dispatch = useDispatch();
   const { isOpenModalArusKas } = useSelector((state: RootState) => state.financeReport);
+
+  const { user } = useAuth();
 
   interface IArusKasData {
     id: number;
@@ -59,7 +64,10 @@ export default function BankingArusKasReport({ dateValue }: BankingArusKasReport
   }));
 
   const handleOpenModalArusKas = async () => {
-    setArusKasData(await handleGetArusKasInfo(dateValue));
+    let periodeString = dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1';
+    if (user) {
+      setArusKasData(await handleGetArusKasInfo(user.id, periodeString));
+    }
     dispatch(openModalArusKas());
   };
 

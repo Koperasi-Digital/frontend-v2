@@ -15,6 +15,9 @@ import BaseOptionChart from '../../charts/BaseOptionChart';
 
 import { handleGetLabaRugiInfo } from '../../../utils/financeReport';
 
+// hooks
+import useAuth from 'hooks/useAuth';
+
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Card)(({ theme }) => ({
@@ -44,6 +47,8 @@ export default function BankingIncome() {
   const [percent, setPercent] = useState<number>();
   const [chartData, setChartData] = useState<{ data: number[] }[]>();
 
+  const { user } = useAuth();
+
   const chartOptions = merge(BaseOptionChart(), {
     chart: { sparkline: { enabled: true } },
     xaxis: { labels: { show: false } },
@@ -63,25 +68,31 @@ export default function BankingIncome() {
     fill: { gradient: { opacityFrom: 0.56, opacityTo: 0.56 } }
   });
 
-  const handleSetTotalPercent = async () => {
-    const currentDate = new Date();
-    const prevMonthDate = new Date();
-    prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
-    const currentLabaRugi = await handleGetLabaRugiInfo(currentDate);
-    const prevLabaRugi = await handleGetLabaRugiInfo(prevMonthDate);
-    setTotal(currentLabaRugi.jumlahPenjualan);
-
-    setPercent(
-      ((currentLabaRugi.jumlahPenjualan - prevLabaRugi.jumlahPenjualan) /
-        currentLabaRugi.jumlahPenjualan) *
-        100
-    );
-    setChartData([{ data: [prevLabaRugi.jumlahPenjualan, currentLabaRugi.jumlahPenjualan] }]);
-  };
-
   useEffect(() => {
+    const handleSetTotalPercent = async () => {
+      const currentDate = new Date();
+      const prevMonthDate = new Date();
+      prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
+      let currentPeriodeString =
+        currentDate.getFullYear() + '-' + (currentDate.getMonth() + 1) + '-1';
+      let previousPeriodeString =
+        prevMonthDate.getFullYear() + '-' + (prevMonthDate.getMonth() + 1) + '-1';
+      if (user) {
+        const currentLabaRugi = await handleGetLabaRugiInfo(user.id, currentPeriodeString);
+        const prevLabaRugi = await handleGetLabaRugiInfo(user.id, previousPeriodeString);
+        setTotal(currentLabaRugi.jumlahPenjualan);
+
+        setPercent(
+          ((currentLabaRugi.jumlahPenjualan - prevLabaRugi.jumlahPenjualan) /
+            currentLabaRugi.jumlahPenjualan) *
+            100
+        );
+        setChartData([{ data: [prevLabaRugi.jumlahPenjualan, currentLabaRugi.jumlahPenjualan] }]);
+      }
+    };
+
     handleSetTotalPercent();
-  }, []);
+  }, [user]);
 
   return (
     <RootStyle>

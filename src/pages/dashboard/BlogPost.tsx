@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { sentenceCase } from 'change-case';
 import { useParams } from 'react-router-dom';
 // material
-import { Box, Card, Divider, Skeleton, Container, Typography, Pagination } from '@mui/material';
+import { Box, Card, Divider, Skeleton, Container, Typography } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getPost, getRecentPosts } from '../../redux/slices/blog';
@@ -16,9 +16,7 @@ import Markdown from '../../components/Markdown';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import {
   BlogPostHero,
-  BlogPostTags,
-  // BlogPostRecent,
-  BlogPostCommentList
+  BlogPostTags
   // BlogPostCommentForm
 } from '../../components/_dashboard/blog';
 
@@ -41,7 +39,6 @@ const SkeletonLoad = (
 export default function BlogPost() {
   const dispatch = useDispatch();
   const { title = '' } = useParams();
-  // const { post, error, recentPosts } = useSelector((state: { blog: BlogState }) => state.blog);
   const { post, error } = useSelector((state: { blog: BlogState }) => state.blog);
 
   useEffect(() => {
@@ -50,10 +47,10 @@ export default function BlogPost() {
   }, [dispatch, title]);
 
   return (
-    <Page title="Blog Details | CoopChick">
+    <Page title="Blog Detail | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Blog Details"
+          heading="Blog Detail"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
@@ -78,21 +75,21 @@ export default function BlogPost() {
               <Box sx={{ my: 5 }}>
                 <Divider />
                 <BlogPostTags post={post} />
-                <Divider />
+                {/* <Divider /> */}
               </Box>
 
-              <Box sx={{ display: 'flex', mb: 2 }}>
+              {/* <Box sx={{ display: 'flex', mb: 2 }}>
                 <Typography variant="h4">Comments</Typography>
                 <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
                   ({post.comments.length})
                 </Typography>
-              </Box>
+              </Box> */}
 
-              <BlogPostCommentList post={post} />
+              {/* <BlogPostCommentList post={post} /> */}
 
-              <Box sx={{ mb: 5, mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+              {/* <Box sx={{ mb: 5, mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                 <Pagination count={8} color="primary" />
-              </Box>
+              </Box> */}
 
               {/* <BlogPostCommentForm /> */}
             </Box>
@@ -102,8 +99,6 @@ export default function BlogPost() {
         {!post && SkeletonLoad}
 
         {error && <Typography variant="h6">404 Post not found</Typography>}
-
-        {/* {recentPosts.length > 0 && <BlogPostRecent posts={recentPosts} />} */}
       </Container>
     </Page>
   );

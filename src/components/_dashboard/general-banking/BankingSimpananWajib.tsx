@@ -39,7 +39,7 @@ export default function BankingSimpananWajib() {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedSimpananWajib = await handleGetSimpananWajib(userId, new Date());
-      if (fetchedSimpananWajib.order === null) {
+      if (fetchedSimpananWajib && fetchedSimpananWajib.order === null) {
         const createdOrder = await handleCreateOrder(userId, fetchedSimpananWajib.amount);
         const temp = await handleAddOrderSimpananWajib(userId, new Date(), createdOrder.id);
         fetchedSimpananWajib.order = temp.order;

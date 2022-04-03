@@ -152,9 +152,9 @@ export default function BankingMemberSimpananPokok() {
       let result = [];
       result = allSimpananPokokData.filter((data) => {
         if (filterName !== 'LUNAS') {
-          return data.order.status !== 'success';
+          return !data.order || data.order.status !== 'success';
         } else {
-          return data.order.status === 'success';
+          return data.order && data.order.status === 'success';
         }
       });
       setFilteredSimpananPokokData(result);
@@ -260,7 +260,9 @@ export default function BankingMemberSimpananPokok() {
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Box sx={{ ml: 2 }}>
-                          <Typography variant="subtitle2">{row.user.displayName}</Typography>
+                          <Typography variant="subtitle2">
+                            {row.user ? row.user.displayName : 'No user data'}
+                          </Typography>
                         </Box>
                       </Box>
                     </TableCell>
@@ -272,9 +274,17 @@ export default function BankingMemberSimpananPokok() {
                     <TableCell>
                       <Label
                         variant={isLight ? 'ghost' : 'filled'}
-                        color={(row.order.status === 'success' && 'success') || 'error'}
+                        color={
+                          (row.order && row.order.status === 'success' && 'success') || 'error'
+                        }
                       >
-                        {sentenceCase(row.order.status === 'success' ? 'LUNAS' : 'BELUM DIBAYAR')}
+                        {sentenceCase(
+                          row.order
+                            ? row.order.status === 'success'
+                              ? 'LUNAS'
+                              : 'BELUM DIBAYAR'
+                            : 'TIDAK ADA ORDER'
+                        )}
                       </Label>
                     </TableCell>
 

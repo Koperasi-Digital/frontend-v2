@@ -213,3 +213,43 @@ mock.onGet('/api/user/posts').reply(() => {
 
   return [200, { posts }];
 });
+
+mock.onGet('/api/forum/posts').reply(() => {
+  const posts = [...Array(3)].map((_, index) => ({
+    id: mockData.id(index),
+    author: {
+      id: mockData.id(8),
+      avatarUrl: mockData.image.avatar(1),
+      name: 'Caitlyn Kerluke'
+    },
+    createdAt: mockData.time(index),
+    media: mockData.image.feed(index),
+    topic: mockData.text.title(index),
+    message: mockData.text.sentence(index),
+    comments: (index === 2 && []) || [
+      {
+        id: mockData.id(7),
+        author: {
+          id: mockData.id(8),
+          avatarUrl: mockData.image.avatar(sample([2, 3, 4, 5, 6]) || 2),
+          name: mockData.name.fullName(index + 5)
+        },
+        createdAt: mockData.time(2),
+        message: 'Test'
+      },
+      {
+        id: mockData.id(9),
+        author: {
+          id: mockData.id(10),
+          avatarUrl: mockData.image.avatar(sample([7, 8, 9, 10, 11]) || 7),
+          name: mockData.name.fullName(index + 6)
+        },
+        createdAt: mockData.time(3),
+        message: 'Test2'
+      }
+    ]
+  }));
+  const totalPage = 10;
+
+  return [200, { posts, totalPage }];
+});
