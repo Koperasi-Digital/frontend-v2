@@ -1,13 +1,14 @@
 // material
-import { Grid, Container, Stack } from '@mui/material';
+// import { Grid, Container, Stack } from '@mui/material';
+import { Container } from '@mui/material';
 // components
 import Page from '../../components/Page';
-import {
-  BankingIncome,
-  BankingExpenses,
-  BankingBalanceStatistics,
-  BankingExpensesCategories
-} from '../../components/_dashboard/general-banking';
+// import {
+//   BankingIncome,
+//   BankingExpenses,
+//   BankingBalanceStatistics,
+//   BankingExpensesCategories
+// } from '../../components/_dashboard/general-banking';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 
 // routes
@@ -28,7 +29,7 @@ export default function AdminFinance() {
             { name: 'Home' }
           ]}
         />
-        <Grid container spacing={3}>
+        {/* <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
             <Stack spacing={3}>
               <BankingBalanceStatistics />
@@ -42,7 +43,7 @@ export default function AdminFinance() {
               <BankingExpenses />
             </Stack>
           </Grid>
-        </Grid>
+        </Grid> */}
       </Container>
     </Page>
   );

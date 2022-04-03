@@ -8,33 +8,77 @@ import { LoadingButton } from '@mui/lab';
 
 import LabaRugiReportPDF from './LabaRugiReportPDF';
 
-export default function LaporanLabaRugiToolbar() {
+type LabaRugiData = {
+  id: number;
+  user_id: number;
+  periode: string;
+  jumlahPenjualan: number;
+  biayaProduksiProdukTerjual: number;
+  biayaOperasi: number;
+  net: number;
+};
+
+export default function LaporanLabaRugiToolbar(props: {
+  currentLabaRugiData: LabaRugiData | undefined;
+  incomePercent: number;
+  expensePercent: number;
+}) {
   const [bankingExpenseChartURI, setBankingExpenseChartURI] = useState<string>();
+  const [bankingIncomeChartURI, setBankingIncomeChartURI] = useState<string>();
+  const [bankingBalanceStatisticsChartURI, setBankingBalanceStatisticsChartURI] =
+    useState<string>();
+  const [bankingExpenseCategoriesChartURI, setBankingExpenseCategoriesChartURI] =
+    useState<string>();
 
   useEffect(() => {
     const getChartURI = async () => {
-      const chartURI = await ApexCharts.exec('banking-expense-chart', 'dataURI');
-      if (chartURI) {
-        setBankingExpenseChartURI(chartURI.imgURI);
+      const bankingExpenseChartURI = await ApexCharts.exec('banking-expense-chart', 'dataURI');
+      const bankingIncomeChartURI = await ApexCharts.exec('banking-income-chart', 'dataURI');
+      const bankingBalanceStatisticsChartURI = await ApexCharts.exec(
+        'banking-balance-statistics',
+        'dataURI'
+      );
+      const bankingExpenseCategoriesChartURI = await ApexCharts.exec(
+        'banking-expense-categories',
+        'dataURI'
+      );
+      if (
+        bankingExpenseChartURI &&
+        bankingIncomeChartURI &&
+        bankingBalanceStatisticsChartURI &&
+        bankingExpenseCategoriesChartURI
+      ) {
+        setBankingExpenseChartURI(bankingExpenseChartURI.imgURI);
+        setBankingIncomeChartURI(bankingIncomeChartURI.imgURI);
+        setBankingBalanceStatisticsChartURI(bankingBalanceStatisticsChartURI.imgURI);
+        setBankingExpenseCategoriesChartURI(bankingExpenseCategoriesChartURI.imgURI);
       } else {
         setTimeout(() => {
           getChartURI();
-        }, 10);
+        }, 1000);
       }
     };
 
     setTimeout(() => {
       getChartURI();
-    }, 10);
+    }, 1000);
   }, []);
 
-  console.log('BankingExpenseChartURI: ', bankingExpenseChartURI);
-
-  return bankingExpenseChartURI ? (
+  return props.currentLabaRugiData ? (
     <>
       <PDFDownloadLink
-        document={<LabaRugiReportPDF bankingExpenseChartURI={bankingExpenseChartURI} />}
-        fileName={`LAPORAN-NERACA-1`}
+        document={
+          <LabaRugiReportPDF
+            bankingExpenseChartURI={bankingExpenseChartURI}
+            bankingIncomeChartURI={bankingIncomeChartURI}
+            bankingBalanceStatisticsChartURI={bankingBalanceStatisticsChartURI}
+            bankingExpenseCategoriesChartURI={bankingExpenseCategoriesChartURI}
+            currentLabaRugiData={props.currentLabaRugiData}
+            incomePercent={props.incomePercent}
+            expensePercent={props.expensePercent}
+          />
+        }
+        fileName={`LAPORAN-LABA-RUGI`}
         style={{ textDecoration: 'none' }}
       >
         {({ loading }) => (
@@ -45,7 +89,7 @@ export default function LaporanLabaRugiToolbar() {
             loadingPosition="end"
             endIcon={<Icon icon={downloadFill} />}
           >
-            Download Laporan Neraca
+            Download Laporan Laba Rugi
           </LoadingButton>
         )}
       </PDFDownloadLink>

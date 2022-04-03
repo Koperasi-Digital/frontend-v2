@@ -8,17 +8,9 @@ import diagonalArrowRightUpFill from '@iconify/icons-eva/diagonal-arrow-right-up
 import { styled, useTheme } from '@mui/material/styles';
 import { Card, Typography, Stack } from '@mui/material';
 // utils
-import { fCurrency, fPercent } from '../../../utils/formatNumber';
-import { useEffect, useState } from 'react';
+import { fCurrency, fPercent } from '../../../../utils/formatNumber';
 //
-import BaseOptionChart from '../../charts/BaseOptionChart';
-
-import { handleGetLabaRugiInfo } from '../../../utils/financeReport';
-
-// hooks
-import useAuth from 'hooks/useAuth';
-
-// ----------------------------------------------------------------------
+import BaseOptionChart from '../../../charts/BaseOptionChart';
 
 const RootStyle = styled(Card)(({ theme }) => ({
   width: '100%',
@@ -42,14 +34,22 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.warning.dark
 }));
 
-export default function BankingExpenses() {
-  const [percent, setPercent] = useState<number>(0);
-  const [currentLabaRugi, setCurrentLabaRugi] = useState<any>();
-  const [prevLabaRugi, setPrevLabaRugi] = useState<any>();
+type LabaRugiData = {
+  id: number;
+  user_id: number;
+  periode: string;
+  jumlahPenjualan: number;
+  biayaProduksiProdukTerjual: number;
+  biayaOperasi: number;
+  net: number;
+};
 
+export default function Expenses(props: {
+  currentLabaRugiData: LabaRugiData | undefined;
+  prevLabaRugiData: LabaRugiData | undefined;
+  expensePercent: number;
+}) {
   const theme = useTheme();
-
-  const { user } = useAuth();
 
   const chartOptions = merge(BaseOptionChart(), {
     colors: [theme.palette.warning.main],
@@ -71,35 +71,9 @@ export default function BankingExpenses() {
     fill: { gradient: { opacityFrom: 0.56, opacityTo: 0.56 } }
   });
 
-  useEffect(() => {
-    const handleSetTotalPercent = async () => {
-      const date = new Date();
-      let currentPeriodeString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-1';
-      let previousPeriodeString = date.getFullYear() + '-' + date.getMonth() + '-1';
-      if (user) {
-        const currentLabaRugi = await handleGetLabaRugiInfo(user.id, currentPeriodeString);
-        const prevLabaRugi = await handleGetLabaRugiInfo(user.id, previousPeriodeString);
-
-        setCurrentLabaRugi(currentLabaRugi);
-        setPrevLabaRugi(prevLabaRugi);
-      }
-    };
-
-    handleSetTotalPercent();
-  }, [user]);
-
-  useEffect(() => {
-    if (currentLabaRugi && prevLabaRugi) {
-      const currentExpense =
-        currentLabaRugi.biayaProduksiProdukTerjual + currentLabaRugi.biayaOperasi;
-      const prevExpense = prevLabaRugi.biayaProduksiProdukTerjual + prevLabaRugi.biayaOperasi;
-      setPercent(((currentExpense - prevExpense) / currentExpense) * 100);
-    }
-  }, [currentLabaRugi, prevLabaRugi]);
-
   return (
     <RootStyle>
-      {currentLabaRugi && prevLabaRugi ? (
+      {props.currentLabaRugiData && props.prevLabaRugiData ? (
         <>
           <IconWrapperStyle>
             <Icon icon={diagonalArrowRightUpFill} width={24} height={24} />
@@ -108,17 +82,20 @@ export default function BankingExpenses() {
           <Stack spacing={1} sx={{ p: 3 }}>
             <Typography sx={{ typography: 'subtitle2' }}>Expenses</Typography>
             <Typography sx={{ typography: 'h3' }}>
-              {fCurrency(currentLabaRugi.biayaProduksiProdukTerjual + currentLabaRugi.biayaOperasi)}
+              {fCurrency(
+                props.currentLabaRugiData.biayaProduksiProdukTerjual +
+                  props.currentLabaRugiData.biayaOperasi
+              )}
             </Typography>
             <Stack direction="row" alignItems="center" flexWrap="wrap">
               <Icon
                 width={20}
                 height={20}
-                icon={percent >= 0 ? trendingUpFill : trendingDownFill}
+                icon={props.expensePercent >= 0 ? trendingUpFill : trendingDownFill}
               />
               <Typography variant="subtitle2" component="span" sx={{ ml: 0.5 }}>
-                {percent > 0 && '+'}
-                {fPercent(percent)}
+                {props.expensePercent > 0 && '+'}
+                {fPercent(props.expensePercent)}
               </Typography>
               <Typography variant="body2" component="span" sx={{ opacity: 0.72 }}>
                 &nbsp;than last month
@@ -130,8 +107,10 @@ export default function BankingExpenses() {
             series={[
               {
                 data: [
-                  prevLabaRugi.biayaProduksiProdukTerjual + prevLabaRugi.biayaOperasi,
-                  currentLabaRugi.biayaProduksiProdukTerjual + currentLabaRugi.biayaOperasi
+                  props.prevLabaRugiData.biayaProduksiProdukTerjual +
+                    props.prevLabaRugiData.biayaOperasi,
+                  props.currentLabaRugiData.biayaProduksiProdukTerjual +
+                    props.currentLabaRugiData.biayaOperasi
                 ]
               }
             ]}

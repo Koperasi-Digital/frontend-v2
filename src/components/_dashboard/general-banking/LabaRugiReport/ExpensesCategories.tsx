@@ -5,9 +5,9 @@ import ReactApexChart from 'react-apexcharts';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Card, Divider, CardHeader, useMediaQuery } from '@mui/material';
 //
-import { BaseOptionChart } from '../../charts';
+import { BaseOptionChart } from '../../../charts';
 
-import { handleGetLabaRugiInfo } from '../../../utils/financeReport';
+import { handleGetLabaRugiInfo } from '../../../../utils/financeReport';
 
 // ----------------------------------------------------------------------
 
@@ -29,18 +29,44 @@ const RootStyle = styled(Card)(({ theme }) => ({
   }
 }));
 
-export default function BankingExpensesCategories() {
-  const [chartData, setChartData] = useState<{ labels: string[]; data: number[] }>({
-    labels: ['Biaya Produksi Produk Terjual', 'Biaya Operasi'],
-    data: []
-  });
+export default function ExpensesCategories(props: { dateValue: Date }) {
+  const { user } = useAuth();
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const { user } = useAuth();
+  const [expensesCategoriesChartData, setExpensesCategoriesChartData] = useState<{
+    labels: string[];
+    data: number[];
+  }>({
+    labels: ['Biaya Produksi Produk Terjual', 'Biaya Operasi'],
+    data: []
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let currentPeriodString =
+        props.dateValue.getFullYear() + '-' + (props.dateValue.getMonth() + 1) + '-1';
+      if (user) {
+        const currentLabaRugiData = await handleGetLabaRugiInfo(user.id, currentPeriodString);
+        const expensesCategoriesChartDataTemp: {
+          labels: string[];
+          data: number[];
+        } = { labels: ['Biaya Produksi Produk Terjual', 'Biaya Operasi'], data: [] };
+        let expensesCategoriesValues = [
+          currentLabaRugiData.biayaProduksiProdukTerjual,
+          currentLabaRugiData.biayaOperasi
+        ];
+        expensesCategoriesChartDataTemp.data = expensesCategoriesValues;
+        setExpensesCategoriesChartData(expensesCategoriesChartDataTemp);
+      }
+    };
+    fetchData();
+  }, [props.dateValue, user]);
 
   const chartOptions = merge(BaseOptionChart(), {
-    labels: chartData.labels,
+    chart: { id: 'banking-expense-categories' },
+    labels: expensesCategoriesChartData.labels,
     colors: [
       theme.palette.primary.main,
       theme.palette.info.darker,
@@ -76,29 +102,6 @@ export default function BankingExpensesCategories() {
     ]
   });
 
-  useEffect(() => {
-    const handleSetChartData = async () => {
-      const temp: { labels: string[]; data: number[] } = {
-        labels: ['Biaya Produksi Produk Terjual', 'Biaya Operasi'],
-        data: []
-      };
-      let tempData = [];
-      const date = new Date();
-      let periodeString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-1';
-      if (user) {
-        const labaRugiInfo = await handleGetLabaRugiInfo(user.id, periodeString);
-        if (labaRugiInfo) {
-          tempData.push(labaRugiInfo.biayaProduksiProdukTerjual);
-          tempData.push(labaRugiInfo.biayaOperasi);
-        }
-        temp.data = tempData;
-        setChartData(temp);
-      }
-    };
-
-    handleSetChartData();
-  }, [user]);
-
   return (
     <RootStyle>
       <CardHeader title="Expenses Categories" />
@@ -106,7 +109,7 @@ export default function BankingExpensesCategories() {
       <Box sx={{ my: 5 }} dir="ltr">
         <ReactApexChart
           type="pie"
-          series={chartData.data}
+          series={expensesCategoriesChartData.data}
           options={chartOptions}
           height={isMobile ? 360 : 240}
         />

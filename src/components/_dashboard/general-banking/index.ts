@@ -1,9 +1,5 @@
-export { default as BankingIncome } from './BankingIncome';
-export { default as BankingExpenses } from './BankingExpenses';
 export { default as BankingContacts } from './BankingContacts';
-export { default as BankingBalanceStatistics } from './BankingBalanceStatistics';
 export { default as BankingTransactionsReport } from './BankingTransactionsReport';
-export { default as BankingExpensesCategories } from './BankingExpensesCategories';
 export { default as BankingSavings } from './BankingSavings';
 export { default as DisbursementApprovalForm } from './DisbursementApprovalForm';
 export { default as DisbursementRequestList } from './DisbursementRequestListTable';

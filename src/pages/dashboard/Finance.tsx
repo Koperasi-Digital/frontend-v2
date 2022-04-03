@@ -42,7 +42,6 @@ export default function Finance() {
             },
             { name: 'Home' }
           ]}
-          moreLink={PATH_DASHBOARD.finance.root}
         />
         <Grid container spacing={3}>
           <Grid item xs={12}>

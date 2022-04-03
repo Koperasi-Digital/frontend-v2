@@ -8,17 +8,9 @@ import diagonalArrowLeftDownFill from '@iconify/icons-eva/diagonal-arrow-left-do
 import { styled } from '@mui/material/styles';
 import { Card, Typography, Stack } from '@mui/material';
 // utils
-import { fCurrency, fPercent } from '../../../utils/formatNumber';
-import { useEffect, useState } from 'react';
+import { fCurrency, fPercent } from '../../../../utils/formatNumber';
 //
-import BaseOptionChart from '../../charts/BaseOptionChart';
-
-import { handleGetLabaRugiInfo } from '../../../utils/financeReport';
-
-// hooks
-import useAuth from 'hooks/useAuth';
-
-// ----------------------------------------------------------------------
+import BaseOptionChart from '../../../charts/BaseOptionChart';
 
 const RootStyle = styled(Card)(({ theme }) => ({
   width: '100%',
@@ -42,15 +34,23 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.primary.dark
 }));
 
-export default function BankingIncome() {
-  const [percent, setPercent] = useState<number>(0);
-  const [currentLabaRugi, setCurrentLabaRugi] = useState<any>();
-  const [prevLabaRugi, setPrevLabaRugi] = useState<any>();
+type LabaRugiData = {
+  id: number;
+  user_id: number;
+  periode: string;
+  jumlahPenjualan: number;
+  biayaProduksiProdukTerjual: number;
+  biayaOperasi: number;
+  net: number;
+};
 
-  const { user } = useAuth();
-
+export default function Income(props: {
+  currentLabaRugiData: LabaRugiData | undefined;
+  prevLabaRugiData: LabaRugiData | undefined;
+  incomePercent: number;
+}) {
   const chartOptions = merge(BaseOptionChart(), {
-    chart: { sparkline: { enabled: true } },
+    chart: { id: 'banking-income-chart', sparkline: { enabled: true } },
     xaxis: { labels: { show: false } },
     yaxis: { labels: { show: false } },
     stroke: { width: 4 },
@@ -68,36 +68,9 @@ export default function BankingIncome() {
     fill: { gradient: { opacityFrom: 0.56, opacityTo: 0.56 } }
   });
 
-  useEffect(() => {
-    const handleSetTotalPercent = async () => {
-      const date = new Date();
-      let currentPeriodeString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-1';
-      let previousPeriodeString = date.getFullYear() + '-' + date.getMonth() + '-1';
-      if (user) {
-        const currentLabaRugi = await handleGetLabaRugiInfo(user.id, currentPeriodeString);
-        const prevLabaRugi = await handleGetLabaRugiInfo(user.id, previousPeriodeString);
-
-        setCurrentLabaRugi(currentLabaRugi);
-        setPrevLabaRugi(prevLabaRugi);
-      }
-    };
-
-    handleSetTotalPercent();
-  }, [user]);
-
-  useEffect(() => {
-    if (currentLabaRugi && prevLabaRugi) {
-      setPercent(
-        ((currentLabaRugi.jumlahPenjualan - prevLabaRugi.jumlahPenjualan) /
-          currentLabaRugi.jumlahPenjualan) *
-          100
-      );
-    }
-  }, [currentLabaRugi, prevLabaRugi]);
-
   return (
     <RootStyle>
-      {currentLabaRugi && prevLabaRugi ? (
+      {props.currentLabaRugiData && props.prevLabaRugiData ? (
         <>
           <IconWrapperStyle>
             <Icon icon={diagonalArrowLeftDownFill} width={24} height={24} />
@@ -106,17 +79,17 @@ export default function BankingIncome() {
           <Stack spacing={1} sx={{ p: 3 }}>
             <Typography sx={{ typography: 'subtitle2' }}>Income</Typography>
             <Typography sx={{ typography: 'h3' }}>
-              {fCurrency(currentLabaRugi.jumlahPenjualan)}
+              {fCurrency(props.currentLabaRugiData.jumlahPenjualan)}
             </Typography>
             <Stack direction="row" alignItems="center" flexWrap="wrap">
               <Icon
                 width={20}
                 height={20}
-                icon={percent >= 0 ? trendingUpFill : trendingDownFill}
+                icon={props.incomePercent >= 0 ? trendingUpFill : trendingDownFill}
               />
               <Typography variant="subtitle2" component="span" sx={{ ml: 0.5 }}>
-                {percent > 0 && '+'}
-                {fPercent(percent)}
+                {props.incomePercent > 0 && '+'}
+                {fPercent(props.incomePercent)}
               </Typography>
               <Typography variant="body2" component="span" sx={{ opacity: 0.72 }}>
                 &nbsp;than last month
@@ -125,7 +98,14 @@ export default function BankingIncome() {
           </Stack>
           <ReactApexChart
             type="area"
-            series={[{ data: [prevLabaRugi.jumlahPenjualan, currentLabaRugi.jumlahPenjualan] }]}
+            series={[
+              {
+                data: [
+                  props.prevLabaRugiData.jumlahPenjualan,
+                  props.currentLabaRugiData.jumlahPenjualan
+                ]
+              }
+            ]}
             options={chartOptions}
             height={120}
           />
