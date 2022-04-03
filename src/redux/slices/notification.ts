@@ -97,10 +97,14 @@ export async function addMessagingToken(token: string) {
   }
 }
 
-export async function createNotification(title: string, description: string) {
+export async function createNotification(
+  title: string,
+  description: string,
+  scheduleTime?: number
+) {
   dispatch(slice.actions.startLoading());
   try {
-    await axios.post('notifications', { title, description });
+    await axios.post('notifications', { title, description, scheduleTime });
   } catch (error) {
     dispatch(slice.actions.hasError(error));
   }

@@ -17,11 +17,11 @@ export default function CurrentRoleSwitch() {
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="current-role-switch">Switch Role</InputLabel>
+      <InputLabel id="current-role-switch">Ganti Role</InputLabel>
       <Select
         labelId="current-role-switch"
         id="current-role-switch"
-        label="Switch Role"
+        label="Ganti Role"
         value={currentRole?.id.toString()}
         onChange={handleChange}
       >

@@ -24,7 +24,8 @@ import {
   Autocomplete,
   Stack,
   Typography,
-  Grid
+  Grid,
+  Link
 } from '@mui/material';
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 import { EventInput } from '@fullcalendar/common';
@@ -55,10 +56,11 @@ const getInitialValues = (event: EventInput, range: { start: Date; end: Date } |
     type: 'koperasi',
     textColor: EVENT_COLOR.koperasi,
     allDay: false,
-    includeNotification: false,
+    includeNotification: true,
     start: range ? new Date(range.start) : new Date(),
     end: range ? new Date(range.end) : new Date(),
-    invitedUsersEmail: event && event.users ? event.users.map((user: User) => user.email) : []
+    invitedUsersEmail: event && event.users ? event.users.map((user: User) => user.email) : [],
+    meetingLink: ''
   };
 
   if (event || range) {
@@ -86,16 +88,16 @@ const Field = ({
   isReadOnly
 }: {
   name: string;
-  value: string;
-  field: JSX.Element;
+  value: string | JSX.Element;
+  field?: JSX.Element;
   isReadOnly: boolean;
 }) =>
   isReadOnly ? (
     <Grid container xs={12} sx={{ mb: 2 }}>
-      <Grid item xs={12} sm={3} component={Typography} variant="body1" sx={{ fontWeight: 'bold' }}>
+      <Grid item xs={12} sm={4} component={Typography} variant="body1" sx={{ fontWeight: 'bold' }}>
         {name}
       </Grid>
-      <Grid item xs={12} sm={9} component={Typography} variant="body1">
+      <Grid item xs={12} sm={8} component={Typography} variant="body1">
         {value}
       </Grid>
     </Grid>
@@ -113,7 +115,8 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
 
   const EventSchema = Yup.object().shape({
     title: Yup.string().max(255).required('Title is required'),
-    description: Yup.string().max(5000)
+    description: Yup.string().max(5000),
+    meetingLink: Yup.string().url('URL tidak valid').nullable()
   });
 
   const formik = useFormik({
@@ -129,7 +132,8 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           includeNotification: values.includeNotification,
           startAt: values.start,
           endAt: values.end,
-          invitedUsersEmail: values.invitedUsersEmail
+          invitedUsersEmail: values.invitedUsersEmail,
+          meetingLink: values.meetingLink
         };
         if (event.id) {
           dispatch(updateEvent(event.id, newEvent));
@@ -184,13 +188,13 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <DialogContent sx={{ pb: 0, overflowY: 'unset' }}>
           <Field
-            name="Title"
+            name="Nama"
             value={values.title}
             isReadOnly={isReadOnly}
             field={
               <TextField
                 fullWidth
-                label="Title"
+                label="Nama"
                 {...getFieldProps('title')}
                 error={Boolean(touched.title && errors.title)}
                 helperText={touched.title && errors.title}
@@ -200,7 +204,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           />
 
           <Field
-            name="Description"
+            name="Deskripsi"
             value={values.description || '-'}
             isReadOnly={isReadOnly}
             field={
@@ -208,7 +212,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
                 fullWidth
                 multiline
                 rows={4}
-                label="Description"
+                label="Deskripsi"
                 {...getFieldProps('description')}
                 error={Boolean(touched.description && errors.description)}
                 helperText={touched.description && errors.description}
@@ -219,14 +223,14 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           />
 
           <Field
-            name="Type"
+            name="Tipe"
             value={startCase(values.type)}
             isReadOnly={isReadOnly}
             field={
               <FormControl fullWidth disabled={isReadOnly}>
-                <InputLabel>Type</InputLabel>
+                <InputLabel>Tipe</InputLabel>
                 <Select
-                  label="Type"
+                  label="Tipe"
                   native
                   {...getFieldProps('type')}
                   value={values.type}
@@ -239,25 +243,6 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
                   ))}
                 </Select>
               </FormControl>
-            }
-          />
-
-          <Field
-            name="Include Notification"
-            value={values.includeNotification ? 'Yes' : 'No'}
-            isReadOnly={isReadOnly}
-            field={
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={values.includeNotification}
-                    {...getFieldProps('includeNotification')}
-                  />
-                }
-                label="Push Notification"
-                sx={{ mb: 3 }}
-                disabled={isReadOnly}
-              />
             }
           />
 
@@ -319,36 +304,57 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
               name="Organizer"
               value={`${event.createdBy.displayName} (${event.createdBy.email})`}
               isReadOnly={isReadOnly}
-              field={
-                <TextField
-                  fullWidth
-                  disabled
-                  label="Organizer"
-                  value={`${event.createdBy.displayName} (${event.createdBy.email})`}
-                  sx={{ mb: 3 }}
-                />
-              }
             />
           )}
 
-          <Autocomplete
-            multiple
-            options={[]}
-            filterSelectedOptions
-            freeSolo
-            onChange={(_, value) => setFieldValue('invitedUsersEmail', value)}
-            value={values.invitedUsersEmail}
-            renderInput={(params) => (
+          <Field
+            name="Meeting Link"
+            value={
+              values.meetingLink ? (
+                <Link href={values.meetingLink} target="_blank">
+                  {values.meetingLink}
+                </Link>
+              ) : (
+                '-'
+              )
+            }
+            isReadOnly={isReadOnly}
+            field={
               <TextField
-                {...params}
                 fullWidth
-                label="Guest(s)"
-                error={Boolean(touched.invitedUsersEmail && errors.invitedUsersEmail)}
-                helperText={touched.invitedUsersEmail && errors.invitedUsersEmail}
-                sx={{ mb: 3, mt: isReadOnly ? 1 : 'auto' }}
+                label="Meeting Link"
+                {...getFieldProps('meetingLink')}
+                error={Boolean(touched.meetingLink && errors.meetingLink)}
+                helperText={touched.meetingLink && errors.meetingLink}
+                sx={{ mb: 3 }}
               />
-            )}
-            disabled={isReadOnly}
+            }
+          />
+
+          <Field
+            name="User(s)"
+            value={values.invitedUsersEmail.join(',\n') || '-'}
+            isReadOnly={isReadOnly}
+            field={
+              <Autocomplete
+                multiple
+                options={[]}
+                filterSelectedOptions
+                freeSolo
+                onChange={(_, value) => setFieldValue('invitedUsersEmail', value)}
+                value={values.invitedUsersEmail}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    label="User(s)"
+                    error={Boolean(touched.invitedUsersEmail && errors.invitedUsersEmail)}
+                    helperText={touched.invitedUsersEmail && errors.invitedUsersEmail}
+                    sx={{ mb: 3, mt: isReadOnly ? 1 : 'auto' }}
+                  />
+                )}
+              />
+            }
           />
         </DialogContent>
 
