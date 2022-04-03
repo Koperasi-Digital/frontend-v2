@@ -1,37 +1,55 @@
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Box, Card, Typography, Stack, Link } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD } from 'routes/paths';
 // utils
-import { fNumber, fPercent } from '../../../utils/formatNumber';
+import axios from 'utils/axios';
+import { fNumber, fPercent } from 'utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
-const PERCENT = 95;
-const TOTAL_ACTIVE = 19;
-const TOTAL_ACTIVITIES = 20;
-
 export default function AppTotalActive() {
+  const [totalActive, setTotalActive] = useState({ totalLogs: 0, totalActivities: 0 });
+  const { totalLogs, totalActivities } = totalActive;
+
+  const getTotalActive = () =>
+    axios
+      .get('activity-logs/summary', {
+        params: {
+          type: 'presensi_meeting'
+        }
+      })
+      .then((response) => {
+        const { totalLogs, totalActivities } = response.data.payload;
+        setTotalActive({ totalLogs, totalActivities });
+      });
+
+  useEffect(() => {
+    getTotalActive();
+  }, []);
+
   return (
     <>
       <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
         <Box sx={{ flexGrow: 1 }}>
-          <Typography variant="subtitle2">Total Active</Typography>
+          <Typography variant="subtitle2">Keaktifan Anggota</Typography>
           <Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 2, mb: 1 }}>
-            <Typography variant="subtitle2">{`${fNumber(TOTAL_ACTIVE)} / ${fNumber(
-              TOTAL_ACTIVITIES
+            <Typography variant="subtitle2">{`${fNumber(totalLogs)} / ${fNumber(
+              totalActivities
             )}`}</Typography>
           </Stack>
         </Box>
 
         <Typography component="span" variant="h3">
-          {fPercent(PERCENT)}
+          {/* use default 100% to prevent divide by zero */}
+          {totalActivities ? fPercent((totalLogs / totalActivities) * 100) : '100%'}
         </Typography>
       </Card>
-      <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.general.faq}>
+      <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.user.account}>
         <Typography variant="body2" align="right" sx={{ m: '0.5rem', fontWeight: 'bold' }}>
-          Learn More
+          Lebih lanjut
         </Typography>
       </Link>
     </>
