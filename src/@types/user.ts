@@ -31,14 +31,14 @@ export type Gallery = {
 };
 
 export type UserAddressBook = {
-  id: string;
-  name: string;
-  phone: string;
+  id: number;
+  phoneNumber: string;
   country: string;
   state: string;
   city: string;
-  street: string;
+  address: string;
   zipCode: string;
+  isDefault: boolean;
 };
 
 export type Profile = {
