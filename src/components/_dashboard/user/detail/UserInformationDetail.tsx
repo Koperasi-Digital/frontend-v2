@@ -46,54 +46,6 @@ export default function UserDetail({ user }: UserDetailProps) {
             </Grid>
             <Grid item xs={12} md={3}>
               <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                Phone Number
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={9}>
-              <Typography variant="body1">{user?.phoneNumber || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                Country
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={9}>
-              <Typography variant="body1">{user?.country || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                State/Region
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={9}>
-              <Typography variant="body1">{user?.state || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                City
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={9}>
-              <Typography variant="body1">{user?.city || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                Address
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={9}>
-              <Typography variant="body1">{user?.address || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                Zip Code
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={9}>
-              <Typography variant="body1">{user?.zipCode || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                 Assigned Roles
               </Typography>
             </Grid>

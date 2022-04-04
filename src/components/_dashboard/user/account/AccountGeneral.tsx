@@ -13,8 +13,6 @@ import { UploadAvatar } from '../../../upload';
 import { fData } from '../../../../utils/formatNumber';
 // @types
 import { User } from '../../../../@types/account';
-//
-import countries from '../countries';
 
 // ----------------------------------------------------------------------
 
@@ -38,12 +36,6 @@ export default function AccountGeneral() {
       displayName: user?.displayName || '',
       email: user?.email,
       photoURL: user?.photoURL,
-      phoneNumber: user?.phoneNumber,
-      country: user?.country,
-      address: user?.address,
-      state: user?.state,
-      city: user?.city,
-      zipCode: user?.zipCode,
       roles: user?.roles,
       storeName: user?.storeName
     },
@@ -88,43 +80,9 @@ export default function AccountGeneral() {
           <Grid item xs={12} md={8} order={{ xs: 2, md: 1 }}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={{ xs: 2, md: 3 }}>
-                <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                  <TextField fullWidth label="Name" {...getFieldProps('displayName')} />
-                  <TextField fullWidth disabled label="Email Address" {...getFieldProps('email')} />
-                </Stack>
-
-                <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                  <TextField fullWidth label="Phone Number" {...getFieldProps('phoneNumber')} />
-                  <TextField fullWidth label="Address" {...getFieldProps('address')} />
-                </Stack>
-
-                <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Country"
-                    placeholder="Country"
-                    {...getFieldProps('country')}
-                    SelectProps={{ native: true }}
-                    error={Boolean(touched.country && errors.country)}
-                    helperText={touched.country && errors.country}
-                  >
-                    <option value="" />
-                    {countries.map((option) => (
-                      <option key={option.code} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </TextField>
-                  <TextField fullWidth label="State/Region" {...getFieldProps('state')} />
-                </Stack>
-
-                <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                  <TextField fullWidth label="City" {...getFieldProps('city')} />
-                  <TextField fullWidth label="Zip/Code" {...getFieldProps('zipCode')} />
-                </Stack>
+                <TextField fullWidth label="Name" {...getFieldProps('displayName')} />
+                <TextField fullWidth disabled label="Email Address" {...getFieldProps('email')} />
               </Stack>
-
               <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                   Save Changes

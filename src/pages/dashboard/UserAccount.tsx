@@ -19,7 +19,11 @@ import { UserManager } from '../../@types/user';
 // components
 import Page from 'components/Page';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
-import { AccountGeneral, AccountChangePassword } from 'components/_dashboard/user/account';
+import {
+  AccountGeneral,
+  AccountChangePassword,
+  AccountAddressBook
+} from 'components/_dashboard/user/account';
 import { UserInformationDetail, UserActivityLogs } from 'components/_dashboard/user/detail';
 
 // ----------------------------------------------------------------------
@@ -27,11 +31,7 @@ import { UserInformationDetail, UserActivityLogs } from 'components/_dashboard/u
 export default function UserAccount() {
   const dispatch = useDispatch();
   const { user } = useAuth();
-  const {
-    cards,
-    myProfile
-    // addressBook,
-  } = useSelector((state: RootState) => state.user);
+  const { cards, myProfile, addressBook } = useSelector((state: RootState) => state.user);
 
   const [currentTab, setCurrentTab] = useState('detail');
 
@@ -79,6 +79,9 @@ export default function UserAccount() {
             <UserInformationDetail user={currentUser} />
           </Grid>
           <Grid item xs={12}>
+            <AccountAddressBook addressBook={addressBook} />
+          </Grid>
+          <Grid item xs={12}>
             <UserActivityLogs user={currentUser} />
           </Grid>
         </Grid>
@@ -87,10 +90,19 @@ export default function UserAccount() {
     {
       value: 'edit',
       icon: <Icon icon={edit} width={20} height={20} />,
-      component: <AccountGeneral />
+      component: (
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <AccountGeneral />
+          </Grid>
+          <Grid item xs={12}>
+            <AccountAddressBook addressBook={addressBook} isEdit={true} />
+          </Grid>
+        </Grid>
+      )
     },
     {
-      value: 'change_password',
+      value: 'ubah_password',
       icon: <Icon icon={roundVpnKey} width={20} height={20} />,
       component: <AccountChangePassword />
     }
