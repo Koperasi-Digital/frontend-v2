@@ -22,6 +22,7 @@ import DatePicker from '@mui/lab/DatePicker';
 import { PATH_DASHBOARD } from '../../routes/paths';
 
 import { LabaRugiReport } from 'components/_dashboard/general-banking/LabaRugiReport';
+import { NeracaReport } from 'components/_dashboard/general-banking/NeracaReport';
 
 import { useState } from 'react';
 
@@ -87,14 +88,18 @@ export default function Finance() {
               </LocalizationProvider>
             </Stack>
           </Grid>
+          {reportName === 'laporanNeraca' ? (
+            <>
+              <Grid item xs={12}>
+                <NeracaReport dateValue={dateValue ? dateValue : new Date()} />
+              </Grid>
+            </>
+          ) : null}
           {reportName === 'laporanLabaRugi' ? (
             <>
               <Grid item xs={12}>
                 <LabaRugiReport dateValue={dateValue ? dateValue : new Date()} />
               </Grid>
-              {/* <Grid item xs={12}>
-                <LabaRugiReportToolbar />
-              </Grid> */}
             </>
           ) : null}
         </Grid>
