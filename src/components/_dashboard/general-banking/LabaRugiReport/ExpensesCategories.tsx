@@ -1,11 +1,8 @@
-import { merge } from 'lodash';
 import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 // material
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Card, Divider, CardHeader, useMediaQuery } from '@mui/material';
-//
-import { BaseOptionChart } from '../../../charts';
 
 import { handleGetLabaRugiInfo } from '../../../../utils/financeReport';
 
@@ -35,49 +32,12 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [expensesCategoriesChartData, setExpensesCategoriesChartData] = useState<{
-    labels: string[];
-    data: number[];
-  }>({
-    labels: ['Biaya Produksi Produk Terjual', 'Biaya Operasi'],
-    data: []
-  });
+  const [chartData, setChartData] = useState<number[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let currentPeriodString =
-        props.dateValue.getFullYear() + '-' + (props.dateValue.getMonth() + 1) + '-1';
-      if (user) {
-        const currentLabaRugiData = await handleGetLabaRugiInfo(user.id, currentPeriodString);
-        const expensesCategoriesChartDataTemp: {
-          labels: string[];
-          data: number[];
-        } = { labels: ['Biaya Produksi Produk Terjual', 'Biaya Operasi'], data: [] };
-        let expensesCategoriesValues = [
-          currentLabaRugiData.biayaProduksiProdukTerjual,
-          currentLabaRugiData.biayaOperasi
-        ];
-        expensesCategoriesChartDataTemp.data = expensesCategoriesValues;
-        setExpensesCategoriesChartData(expensesCategoriesChartDataTemp);
-      }
-    };
-    fetchData();
-  }, [props.dateValue, user]);
-
-  const chartOptions = merge(BaseOptionChart(), {
+  const [chartOptions] = useState<any>({
     chart: { id: 'banking-expense-categories' },
-    labels: expensesCategoriesChartData.labels,
-    colors: [
-      theme.palette.primary.main,
-      theme.palette.info.darker,
-      theme.palette.chart.yellow[0],
-      theme.palette.chart.blue[0],
-      theme.palette.chart.red[0],
-      theme.palette.chart.violet[2],
-      theme.palette.chart.violet[0],
-      theme.palette.success.darker,
-      theme.palette.chart.green[0]
-    ],
+    labels: ['Biaya Produksi Produk Terjual', 'Biaya Operasi'],
+    colors: [theme.palette.primary.main, theme.palette.info.darker],
     stroke: {
       colors: [theme.palette.background.paper]
     },
@@ -88,19 +48,24 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
         horizontal: 10,
         vertical: 5
       }
-    },
-    responsive: [
-      {
-        breakpoint: theme.breakpoints.values.sm,
-        options: {
-          legend: {
-            position: 'bottom',
-            horizontalAlign: 'left'
-          }
-        }
-      }
-    ]
+    }
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (user) {
+        const currentPeriodString =
+          props.dateValue.getFullYear() + '-' + (props.dateValue.getMonth() + 1) + '-1';
+        const currentLabaRugiData = await handleGetLabaRugiInfo(user.id, currentPeriodString);
+        const series = [
+          currentLabaRugiData.biayaProduksiProdukTerjual,
+          currentLabaRugiData.biayaOperasi
+        ];
+        setChartData(series);
+      }
+    };
+    fetchData();
+  }, [props.dateValue, user]);
 
   return (
     <RootStyle>
@@ -108,9 +73,9 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
 
       <Box sx={{ my: 5 }} dir="ltr">
         <ReactApexChart
-          type="pie"
-          series={expensesCategoriesChartData.data}
           options={chartOptions}
+          series={chartData}
+          type="pie"
           height={isMobile ? 360 : 240}
         />
       </Box>

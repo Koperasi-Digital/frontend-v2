@@ -105,6 +105,7 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
                 currentLabaRugiData={currentLabaRugiData}
                 incomePercent={incomePercent}
                 expensePercent={expensePercent}
+                dateValue={dateValue}
               />
             </Stack>
           </Grid>

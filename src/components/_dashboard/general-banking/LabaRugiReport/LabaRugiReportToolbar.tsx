@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import downloadFill from '@iconify/icons-eva/download-fill';
 // import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -24,6 +24,7 @@ export default function LaporanLabaRugiToolbar(props: {
   currentLabaRugiData: LabaRugiData | undefined;
   incomePercent: number;
   expensePercent: number;
+  dateValue: Date;
 }) {
   const [bankingExpenseChartURI, setBankingExpenseChartURI] = useState<string>();
   const [bankingIncomeChartURI, setBankingIncomeChartURI] = useState<string>();
@@ -55,7 +56,7 @@ export default function LaporanLabaRugiToolbar(props: {
     }
   }, [props.currentLabaRugiData]);
 
-  useEffect(() => {
+  const getChartURICallback = useCallback(() => {
     const getChartURI = async () => {
       const bankingExpenseChartURI = await ApexCharts.exec('banking-expense-chart', 'dataURI');
       const bankingIncomeChartURI = await ApexCharts.exec('banking-income-chart', 'dataURI');
@@ -83,11 +84,14 @@ export default function LaporanLabaRugiToolbar(props: {
         }, 1000);
       }
     };
-
     setTimeout(() => {
       getChartURI();
     }, 1000);
   }, []);
+
+  useEffect(() => {
+    getChartURICallback();
+  }, [props.dateValue, getChartURICallback]);
 
   return props.currentLabaRugiData ? (
     <>
@@ -113,6 +117,11 @@ export default function LaporanLabaRugiToolbar(props: {
               loading={loading}
               variant="contained"
               loadingPosition="end"
+              onClick={() => {
+                setTimeout(() => {
+                  getChartURICallback();
+                }, 1000);
+              }}
               endIcon={<Icon icon={downloadFill} />}
             >
               Download Laporan Laba Rugi

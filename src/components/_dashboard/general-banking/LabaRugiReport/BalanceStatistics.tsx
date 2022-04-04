@@ -1,10 +1,9 @@
-import { merge } from 'lodash';
 import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 // material
+import { useTheme } from '@mui/material/styles';
 import { Card, CardHeader, Box } from '@mui/material';
-//
-import { BaseOptionChart } from '../../../charts';
+
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 
@@ -21,8 +20,11 @@ export default function BalanceStatistics(props: { dateValue: Date }) {
 
   const { user } = useAuth();
 
-  const chartOptions = merge(BaseOptionChart(), {
+  const theme = useTheme();
+
+  const chartOptions = {
     chart: { id: 'banking-balance-statistics' },
+    colors: [theme.palette.primary.main, theme.palette.warning.main],
     stroke: {
       show: true,
       width: 2,
@@ -44,12 +46,19 @@ export default function BalanceStatistics(props: { dateValue: Date }) {
         'Des'
       ]
     },
+    legend: {
+      position: 'right' as 'right',
+      itemMargin: {
+        horizontal: 10,
+        vertical: 5
+      }
+    },
     tooltip: {
       y: {
         formatter: (val: number) => fCurrency(val)
       }
     }
-  });
+  };
 
   useEffect(() => {
     console.log('Masuk useeffect sini');
