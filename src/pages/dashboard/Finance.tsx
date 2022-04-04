@@ -23,6 +23,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 
 import { LabaRugiReport } from 'components/_dashboard/general-banking/LabaRugiReport';
 import { NeracaReport } from 'components/_dashboard/general-banking/NeracaReport';
+import { ArusKasReport } from 'components/_dashboard/general-banking/ArusKasReport';
 
 import { useState } from 'react';
 
@@ -99,6 +100,13 @@ export default function Finance() {
             <>
               <Grid item xs={12}>
                 <LabaRugiReport dateValue={dateValue ? dateValue : new Date()} />
+              </Grid>
+            </>
+          ) : null}
+          {reportName === 'laporanArusKas' ? (
+            <>
+              <Grid item xs={12}>
+                <ArusKasReport dateValue={dateValue ? dateValue : new Date()} />
               </Grid>
             </>
           ) : null}
