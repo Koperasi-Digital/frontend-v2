@@ -38,6 +38,8 @@ export default function SimpananPokok() {
   const { user } = useAuth();
 
   const [simpananPokok, setSimpananPokok] = useState<SimpananPokokType>();
+  const [dataNotExist, setDataNotExist] = useState<Boolean>(false);
+
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
@@ -46,6 +48,9 @@ export default function SimpananPokok() {
           const createdOrder = await handleCreateOrder(user.id, fetchedSimpananPokok.amount);
           const temp = await handleAddOrderSimpananPokok(user.id, createdOrder.id);
           fetchedSimpananPokok.order = temp.order;
+        }
+        if (!fetchedSimpananPokok) {
+          setDataNotExist(true);
         }
         setSimpananPokok(fetchedSimpananPokok);
       }
@@ -76,6 +81,12 @@ export default function SimpananPokok() {
               </Typography>
             )}
           </Stack>
+        </>
+      ) : dataNotExist ? (
+        <>
+          <Typography variant="body1" gutterBottom>
+            Data tidak tersedia (coba refresh jika yakin memang data ada)
+          </Typography>
         </>
       ) : (
         <LoadingScreen />
