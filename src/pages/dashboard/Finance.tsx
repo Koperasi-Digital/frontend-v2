@@ -24,11 +24,12 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import { LabaRugiReport } from 'components/_dashboard/general-banking/LabaRugiReport';
 import { NeracaReport } from 'components/_dashboard/general-banking/NeracaReport';
 import { ArusKasReport } from 'components/_dashboard/general-banking/ArusKasReport';
+import { MemberReport } from 'components/_dashboard/general-banking/MemberReport';
 
 import { useState } from 'react';
 
 export default function Finance() {
-  const [reportName, setReportName] = useState<String>('laporanNeraca');
+  const [menuName, setMenuName] = useState<String>('laporanNeraca');
   const [dateValue, setDateValue] = useState<Date | null>(new Date());
 
   return (
@@ -52,15 +53,16 @@ export default function Finance() {
               <Select
                 labelId="report-name-select-label"
                 id="report-name-select"
-                value={reportName}
+                value={menuName}
                 label="Report Name"
                 onChange={(event: SelectChangeEvent<String>) => {
-                  setReportName(event.target.value);
+                  setMenuName(event.target.value);
                 }}
               >
                 <MenuItem value={'laporanNeraca'}>Laporan Neraca</MenuItem>
                 <MenuItem value={'laporanLabaRugi'}>Laporan Laba Rugi</MenuItem>
                 <MenuItem value={'laporanArusKas'}>Laporan Arus Kas</MenuItem>
+                <MenuItem value={'simpananDanSHU'}>Simpanan dan SHU</MenuItem>
               </Select>
             </Stack>
           </Grid>
@@ -89,24 +91,31 @@ export default function Finance() {
               </LocalizationProvider>
             </Stack>
           </Grid>
-          {reportName === 'laporanNeraca' ? (
+          {menuName === 'laporanNeraca' ? (
             <>
               <Grid item xs={12}>
                 <NeracaReport dateValue={dateValue ? dateValue : new Date()} />
               </Grid>
             </>
           ) : null}
-          {reportName === 'laporanLabaRugi' ? (
+          {menuName === 'laporanLabaRugi' ? (
             <>
               <Grid item xs={12}>
                 <LabaRugiReport dateValue={dateValue ? dateValue : new Date()} />
               </Grid>
             </>
           ) : null}
-          {reportName === 'laporanArusKas' ? (
+          {menuName === 'laporanArusKas' ? (
             <>
               <Grid item xs={12}>
                 <ArusKasReport dateValue={dateValue ? dateValue : new Date()} />
+              </Grid>
+            </>
+          ) : null}
+          {menuName === 'simpananDanSHU' ? (
+            <>
+              <Grid item xs={12}>
+                <MemberReport dateValue={dateValue ? dateValue : new Date()} />
               </Grid>
             </>
           ) : null}

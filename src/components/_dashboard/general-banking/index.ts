@@ -9,4 +9,3 @@ export { default as BankingEMoney } from './BankingEMoney';
 export { default as BankingSaldo } from './BankingSaldo';
 export { default as BankingMemberSimpananPokok } from './BankingMemberSimpananPokok';
 export { default as BankingMemberSimpananWajib } from './BankingMemberSimpananWajib';
-export { default as PeriodicMemberReport } from './PeriodicMemberReport';

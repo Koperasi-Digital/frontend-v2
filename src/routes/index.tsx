@@ -123,14 +123,6 @@ export default function Router() {
               )
             },
             { path: 'report', element: <TransactionsReport /> },
-            {
-              path: 'member-report',
-              element: (
-                <RoleBasedGuard accessibleRoles={['MEMBER']}>
-                  <MemberReport />
-                </RoleBasedGuard>
-              )
-            },
             { path: 'create-disbursement-request', element: <DisbursementRequest /> },
             { path: 'register-deprecation', element: <DeprecationRegister /> },
             {
@@ -278,7 +270,6 @@ const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')))
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
 const AdminFinance = Loadable(lazy(() => import('../pages/dashboard/AdminFinance')));
 const TransactionsReport = Loadable(lazy(() => import('../pages/dashboard/TransactionsReport')));
-const MemberReport = Loadable(lazy(() => import('../pages/dashboard/MemberReport')));
 const DisbursementApproval = Loadable(
   lazy(() => import('../pages/dashboard/DisbursementApproval'))
 );

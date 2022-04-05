@@ -1,0 +1,94 @@
+import { Stack, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { PaymentCreation as PaymentButton } from 'components/_dashboard/general-banking';
+
+import { handleGetSimpananWajib, handleAddOrderSimpananWajib } from 'utils/financeSimpanan';
+import { handleCreateOrder } from 'utils/financeOrder';
+import useAuth from 'hooks/useAuth';
+
+import { fCurrency } from 'utils/formatNumber';
+
+import LoadingScreen from 'components/LoadingScreen';
+
+type SimpananWajibType = {
+  id: number;
+  status: string;
+  amount: number;
+  period: Date;
+  userId: number;
+  user: {
+    id: number;
+    email: string;
+    password: string;
+    username: string;
+    name: string;
+    role: string;
+    language: string;
+    created_at: string;
+    updated_at: string;
+  };
+  order: {
+    id: number;
+    user_id: number;
+    total_cost: number;
+    status: string;
+  };
+};
+
+export default function SimpananWajib(props: { dateValue: Date }) {
+  const { user } = useAuth();
+
+  const [simpananWajib, setSimpananWajib] = useState<SimpananWajibType>();
+  useEffect(() => {
+    const fetchData = async () => {
+      if (user) {
+        const fetchedSimpananWajib = await handleGetSimpananWajib(user.id, props.dateValue);
+        if (fetchedSimpananWajib && fetchedSimpananWajib.order === null) {
+          const createdOrder = await handleCreateOrder(user.id, fetchedSimpananWajib.amount);
+          const temp = await handleAddOrderSimpananWajib(user.id, new Date(), createdOrder.id);
+          fetchedSimpananWajib.order = temp.order;
+        }
+        setSimpananWajib(fetchedSimpananWajib);
+      }
+    };
+    fetchData();
+  }, [user, props.dateValue]);
+
+  return (
+    <>
+      {simpananWajib ? (
+        <>
+          <Stack direction="row" spacing={5} justifyContent="center" sx={{ mb: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Simpanan wajib : {fCurrency(simpananWajib.amount)}
+            </Typography>
+
+            {simpananWajib.order && simpananWajib.order.status !== 'LUNAS' ? (
+              <PaymentButton
+                user_id={2}
+                buttonName="Bayar"
+                transaction_details={{
+                  order_id: simpananWajib.order.id,
+                  gross_amount: simpananWajib.amount
+                }}
+              />
+            ) : (
+              <Typography variant="body1" gutterBottom>
+                Lunas
+              </Typography>
+            )}
+          </Stack>
+          <Stack direction="row" justifyContent="center">
+            <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+              periode {new Date(simpananWajib.period).getDate()} -{' '}
+              {new Date(simpananWajib.period).getMonth() + 1} -{' '}
+              {new Date(simpananWajib.period).getFullYear()}
+            </Typography>
+          </Stack>
+        </>
+      ) : (
+        <LoadingScreen />
+      )}
+    </>
+  );
+}

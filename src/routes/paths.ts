@@ -70,7 +70,6 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/finance'),
     home: path(ROOTS_DASHBOARD, '/finance/home'),
     report: path(ROOTS_DASHBOARD, '/finance/report'),
-    memberReport: path(ROOTS_DASHBOARD, '/finance/member-report'),
     addSimpananSukarela: path(ROOTS_DASHBOARD, '/finance/add-simpanan-sukarela'),
     disbursementApproval: path(ROOTS_DASHBOARD, '/finance/disbursement-approval'),
     disbursementRequest: path(ROOTS_DASHBOARD, '/finance/create-disbursement-request'),
