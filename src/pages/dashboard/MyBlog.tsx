@@ -3,30 +3,28 @@ import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 import { useEffect } from 'react';
 // material
-import { Button, Container } from '@mui/material';
+import { Grid, Button, Container } from '@mui/material';
 // redux
-import { useDispatch, useSelector, RootState } from '../../redux/store';
-// import { getPostsInitial, getMorePosts } from '../../redux/slices/blog';
-import { getGallery } from '../../redux/slices/user';
+import { useDispatch, useSelector } from '../../redux/store';
+import useAuth from '../../hooks/useAuth';
+import { getBlogByUserId } from '../../redux/slices/blog';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // @types
-// import { Post, BlogState } from '../../@types/blog';
+import { BlogState } from '../../@types/blog';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-// import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../../components/_dashboard/blog';
-import { CourseList } from '../../components/_dashboard/course';
-
-// ----------------------------------------------------------------------
+import { BlogOwnPostCard } from '../../components/_dashboard/blog';
 
 export default function MyBlog() {
   const dispatch = useDispatch();
-  const { gallery } = useSelector((state: RootState) => state.user);
+  const { user } = useAuth();
+  const { ownPosts } = useSelector((state: { blog: BlogState }) => state.blog);
 
   useEffect(() => {
-    dispatch(getGallery());
-  }, [dispatch]);
+    dispatch(getBlogByUserId(user?.id));
+  }, [dispatch, user]);
 
   return (
     <Page title="Blogku | CoopChick">
@@ -52,7 +50,12 @@ export default function MyBlog() {
             </Button>
           }
         />
-        <CourseList gallery={gallery} />
+
+        <Grid container spacing={3}>
+          {ownPosts.map((post) => (
+            <BlogOwnPostCard key={post.id} post={post} />
+          ))}
+        </Grid>
       </Container>
     </Page>
   );

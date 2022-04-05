@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 // material
 import { useTheme } from '@mui/material/styles';
+import { Link as RouterLink } from 'react-router-dom';
 import {
   Card,
   Table,
   Stack,
-  Avatar,
   Checkbox,
   TableRow,
   TableBody,
@@ -18,12 +19,11 @@ import {
   TablePagination
 } from '@mui/material';
 // redux
-import { RootState, useDispatch, useSelector } from '../../redux/store';
-import { getUserList, deleteUser } from '../../redux/slices/user';
+import { useDispatch, useSelector } from '../../redux/store';
+import { BlogState } from '../../@types/blog';
+import { getBlogVerificationList, setVerified, deleteBlog } from '../../redux/slices/blog';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// @types
-// import { UserManager } from '../../@types/user';
 // components
 import Page from '../../components/Page';
 import Label from '../../components/Label';
@@ -36,43 +36,23 @@ import {
   BlogVerificationToolbar,
   BlogVerificationMoreMenu
 } from '../../components/_dashboard/blog/list';
-import { sample } from 'lodash';
+import createAvatar from 'utils/createAvatar';
+import { MAvatar } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'title', label: 'Title', alignRight: false },
-  { id: 'createdBy', label: 'Created By', alignRight: false },
-  { id: 'createdAt', label: 'Created At', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: '' }
+  { id: 'none1' },
+  { id: 'author', label: 'Created By', alignRight: false, disableSort: true },
+  { id: 'created_at', label: 'Created At', alignRight: false },
+  { id: 'is_verified', label: 'Verified', alignRight: false },
+  { id: 'none2' }
 ];
 
 // ----------------------------------------------------------------------
 
 type Anonymous = Record<string | number, string>;
-
-function makeMockData(arr: any[]) {
-  let mock = [...Array(24)].map((_, index) => ({
-    id: index,
-    avatarUrl: undefined,
-    title: sample([
-      'Cara merawat DOC (Day Old Chick)',
-      'Cara menyuntik vaksin pada ayam',
-      'Cara merawat ayam'
-    ]),
-    createdBy: sample(['John Doe', 'Jane Doe']),
-    isVerified: index % 2,
-    createdAt: sample([new Date(1592452800000), new Date()]),
-    role: sample(['Admin', 'Non-Admin'])
-  }));
-  for (let i = 0; i < mock.length; i++) {
-    mock[i].createdBy = arr[i].name;
-    mock[i].avatarUrl = arr[i].avatarUrl;
-  }
-  return mock;
-}
 
 function descendingComparator(a: Anonymous, b: Anonymous, orderBy: string) {
   if (b[orderBy] < a[orderBy]) {
@@ -107,33 +87,29 @@ export default function BlogVerification() {
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const { userList } = useSelector((state: RootState) => state.user);
+  const { blogVerificationList } = useSelector((state: { blog: BlogState }) => state.blog);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [selected, setSelected] = useState<string[]>([]);
   const [orderBy, setOrderBy] = useState('title');
   const [filterTitle, setFilterTitle] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [data, setData] = useState([]) as any[];
 
   useEffect(() => {
-    dispatch(getUserList());
+    dispatch(getBlogVerificationList());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (userList.length > 0) {
-      setData(makeMockData(userList));
-    }
-  }, [userList]);
   const handleRequestSort = (property: string) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
+  console.log(orderBy);
+  console.log(order);
 
   const handleSelectAllClick = (checked: boolean) => {
     if (checked) {
-      const newSelecteds = data.map((n: { title: any }) => n.title);
+      const newSelecteds = blogVerificationList.map((n: { title: any }) => n.title);
       setSelected(newSelecteds);
       return;
     }
@@ -167,13 +143,22 @@ export default function BlogVerification() {
     setFilterTitle(filterTitle);
   };
 
-  const handleDeleteUser = (userId: string) => {
-    deleteUser(userId);
+  const handleDeleteBlog = (blogId: number) => {
+    dispatch(deleteBlog(blogId));
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
+  const handleVerifyBlog = (blogId: number) => {
+    dispatch(setVerified(blogId));
+  };
 
-  const filteredBlogs = applySortFilter(data, getComparator(order, orderBy), filterTitle);
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - blogVerificationList.length) : 0;
+
+  const filteredBlogs = applySortFilter(
+    blogVerificationList,
+    getComparator(order, orderBy),
+    filterTitle
+  );
 
   const isBlogNotFound = filteredBlogs.length === 0;
 
@@ -202,7 +187,7 @@ export default function BlogVerification() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userList.length}
+                  rowCount={blogVerificationList.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -210,14 +195,17 @@ export default function BlogVerification() {
                 <TableBody>
                   {filteredBlogs
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
-                      const { id, title, createdBy, createdAt, avatarUrl, isVerified, role } = row;
+                    .map((row, index) => {
+                      const { id, title, created_at, author, is_verified } = row;
                       const isItemSelected = selected.indexOf(title) !== -1;
+                      const defaultAvatar = author.photoURL
+                        ? null
+                        : createAvatar(author.displayName);
 
                       return (
                         <TableRow
                           hover
-                          key={id}
+                          key={index + 'blog'}
                           tabIndex={-1}
                           role="checkbox"
                           selected={isItemSelected}
@@ -226,30 +214,47 @@ export default function BlogVerification() {
                           <TableCell padding="checkbox">
                             <Checkbox checked={isItemSelected} onClick={() => handleClick(title)} />
                           </TableCell>
-                          <TableCell align="left">{title}</TableCell>
+                          <TableCell align="left">
+                            <Typography
+                              component={RouterLink}
+                              to={`${PATH_DASHBOARD.root}/blogs/${id}`}
+                              style={{ textDecoration: 'none', color: 'inherit' }}
+                            >
+                              {title}
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell align="left"></TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={createdBy} src={avatarUrl} />
+                              <MAvatar
+                                sx={{ width: 48, height: 48 }}
+                                src={author.photoURL || undefined}
+                                alt={author.displayName}
+                                color={author.photoURL ? 'default' : defaultAvatar!.color}
+                              >
+                                {defaultAvatar?.name}
+                              </MAvatar>
                               <Typography variant="subtitle2" noWrap>
-                                {createdBy}
+                                {author.displayName}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{fDateTime(createdAt)}</TableCell>
-                          <TableCell align="left">{role}</TableCell>
+                          <TableCell align="left">{fDateTime(created_at)}</TableCell>
                           <TableCell align="left">
                             <Label
                               variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                              color={(!isVerified && 'error') || 'success'}
+                              color={(!is_verified && 'error') || 'success'}
                             >
-                              {sentenceCase(isVerified ? 'Yes' : 'No')}
+                              {sentenceCase(is_verified ? 'Yes' : 'No')}
                             </Label>
                           </TableCell>
 
                           <TableCell align="right">
                             <BlogVerificationMoreMenu
-                              onDelete={() => handleDeleteUser(id)}
-                              title={title}
+                              onDelete={() => handleDeleteBlog(id)}
+                              onVerify={() => handleVerifyBlog(id)}
+                              id={id}
                             />
                           </TableCell>
                         </TableRow>
@@ -277,7 +282,7 @@ export default function BlogVerification() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={userList.length}
+            count={blogVerificationList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={(e, page) => setPage(page)}

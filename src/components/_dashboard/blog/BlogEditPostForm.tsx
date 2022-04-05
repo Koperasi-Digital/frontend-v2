@@ -1,11 +1,12 @@
 import * as Yup from 'yup';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { useFormik, Form, FormikProvider } from 'formik';
 // material
 import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material/styles';
-import { useDispatch } from '../../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 import {
   Grid,
   Card,
@@ -19,13 +20,12 @@ import {
 } from '@mui/material';
 // utils
 // @types
-import { NewPostFormValues } from '../../../@types/blog';
+import { NewPostFormValues, BlogState } from '../../../@types/blog';
 //
 import { QuillEditor } from '../../editor';
 import { UploadSingleFile } from '../../upload';
 import BlogNewPostPreview from './BlogNewPostPreview';
-import useAuth from 'hooks/useAuth';
-import { createBlog } from 'redux/slices/blog';
+import { editBlog, getBlogById } from 'redux/slices/blog';
 
 // ----------------------------------------------------------------------
 
@@ -46,11 +46,18 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function BlogNewPostForm() {
+export default function BlogEditPostForm() {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const { user } = useAuth();
+  const { id = '' } = useParams();
   const { enqueueSnackbar } = useSnackbar();
+  const { post, refresh } = useSelector((state: { blog: BlogState }) => state.blog);
+
+  useEffect(() => {
+    if (parseInt(id) > 0) {
+      dispatch(getBlogById(parseInt(id)));
+    }
+  }, [dispatch, id, refresh]);
 
   const handleOpenPreview = () => {
     setOpen(true);
@@ -68,25 +75,19 @@ export default function BlogNewPostForm() {
   });
 
   const formik = useFormik<NewPostFormValues>({
+    enableReinitialize: true,
     initialValues: {
-      title: '',
-      description: '',
-      content: '',
-      cover: null,
-      tags: []
+      title: post?.title || '',
+      description: post?.description || '',
+      content: post?.body || '',
+      cover: post?.cover || null,
+      tags: post?.tags ? post?.tags.split(';/;') : []
     },
     validationSchema: NewBlogSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
         await dispatch(
-          createBlog(
-            user?.id,
-            values.title,
-            values.description,
-            values.content,
-            values.cover,
-            values.tags
-          )
+          editBlog(parseInt(id), values.title, values.description, values.content, values.tags)
         );
         resetForm();
         handleClosePreview();
@@ -130,7 +131,6 @@ export default function BlogNewPostForm() {
                     error={Boolean(touched.title && errors.title)}
                     helperText={touched.title && errors.title}
                   />
-
                   <TextField
                     fullWidth
                     multiline
@@ -141,7 +141,6 @@ export default function BlogNewPostForm() {
                     error={Boolean(touched.description && errors.description)}
                     helperText={touched.description && errors.description}
                   />
-
                   <div>
                     <LabelStyle>Konten Blog</LabelStyle>
                     <QuillEditor
@@ -156,7 +155,6 @@ export default function BlogNewPostForm() {
                       </FormHelperText>
                     )}
                   </div>
-
                   <div>
                     <LabelStyle>Cover</LabelStyle>
                     <UploadSingleFile
@@ -172,7 +170,6 @@ export default function BlogNewPostForm() {
                       </FormHelperText>
                     )}
                   </div>
-
                   <Autocomplete
                     multiple
                     freeSolo

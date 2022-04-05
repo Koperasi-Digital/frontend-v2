@@ -86,7 +86,8 @@ export default function Router() {
           path: 'blogs',
           element: <BlogPosts />
         },
-        { path: 'blogs/:title', element: <BlogPost /> },
+        { path: 'blogs/:id', element: <BlogPost /> },
+        { path: 'blogs/edit/:id', element: <BlogEdit /> },
         { path: 'blogs/new', element: <BlogNewPost /> },
         { path: 'blogs/own', element: <MyBlog /> },
         { path: 'blogs/verification', element: <BlogVerification /> },
@@ -269,6 +270,7 @@ const EcommerceInvoice = Loadable(lazy(() => import('../pages/dashboard/Ecommerc
 const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
 const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
+const BlogEdit = Loadable(lazy(() => import('../pages/dashboard/BlogEdit')));
 const MyBlog = Loadable(lazy(() => import('../pages/dashboard/MyBlog')));
 const Course = Loadable(lazy(() => import('../pages/dashboard/Course')));
 const CourseDetail = Loadable(lazy(() => import('../pages/dashboard/CourseDetail')));

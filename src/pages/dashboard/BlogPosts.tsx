@@ -1,46 +1,55 @@
-import { orderBy } from 'lodash';
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import roundAccountBox from '@iconify/icons-ic/round-account-box';
+import searchFill from '@iconify/icons-eva/search-fill';
 import { Link as RouterLink } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useEffect, useCallback, useState } from 'react';
 // material
-import { Box, Grid, Button, Skeleton, Container, Stack } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Button,
+  Skeleton,
+  Container,
+  Stack,
+  InputAdornment,
+  OutlinedInput
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getPostsInitial, getMorePosts } from '../../redux/slices/blog';
+import { getPostsBlogList, getPostsBlogListMore } from '../../redux/slices/blog';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // @types
-import { Post, BlogState } from '../../@types/blog';
+import { BlogState } from '../../@types/blog';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../../components/_dashboard/blog';
+import { BlogPostCard, BlogPostsSort } from '../../components/_dashboard/blog';
 
 // ----------------------------------------------------------------------
 
 const SORT_OPTIONS = [
-  { value: 'latest', label: 'Terbaru' },
-  { value: 'popular', label: 'Populer' },
-  { value: 'oldest', label: 'Terlama' }
+  { value: 'TERBARU', label: 'Terbaru' },
+  { value: 'POPULER', label: 'Populer' },
+  { value: 'TERLAMA', label: 'Terlama' }
 ];
 
 // ----------------------------------------------------------------------
-
-const applySort = (posts: Post[], sortBy: string) => {
-  if (sortBy === 'latest') {
-    return orderBy(posts, ['createdAt'], ['desc']);
+const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
+  width: 240,
+  transition: theme.transitions.create(['box-shadow', 'width'], {
+    easing: theme.transitions.easing.easeInOut,
+    duration: theme.transitions.duration.shorter
+  }),
+  '&.Mui-focused': { width: 320, boxShadow: theme.customShadows.z8 },
+  '& fieldset': {
+    borderWidth: `1px !important`,
+    borderColor: `${theme.palette.grey[500_32]} !important`
   }
-  if (sortBy === 'oldest') {
-    return orderBy(posts, ['createdAt'], ['asc']);
-  }
-  if (sortBy === 'popular') {
-    return orderBy(posts, ['view'], ['desc']);
-  }
-  return posts;
-};
+}));
 
 const SkeletonLoad = (
   <Grid container spacing={3} sx={{ mt: 2 }}>
@@ -58,15 +67,15 @@ const SkeletonLoad = (
 
 export default function BlogPosts() {
   const dispatch = useDispatch();
-  const [filters, setFilters] = useState('latest');
-  const { posts, hasMore, index, step } = useSelector((state: { blog: BlogState }) => state.blog);
+  const [filters, setFilters] = useState('TERBARU');
+  const [filterTitle, setFilterTitle] = useState('');
+  const { posts, hasMore } = useSelector((state: { blog: BlogState }) => state.blog);
 
-  const sortedPosts = applySort(posts, filters);
-  const onScroll = useCallback(() => dispatch(getMorePosts()), [dispatch]);
+  const onScroll = useCallback(() => dispatch(getPostsBlogListMore()), [dispatch]);
 
   useEffect(() => {
-    dispatch(getPostsInitial(index, step));
-  }, [dispatch, index, step]);
+    dispatch(getPostsBlogList(filterTitle, 0, filters));
+  }, [dispatch, filterTitle, filters]);
 
   const handleChangeSort = (value?: string) => {
     if (value) {
@@ -104,7 +113,16 @@ export default function BlogPosts() {
         />
 
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          <BlogPostsSearch />
+          <SearchStyle
+            value={filterTitle}
+            onChange={(e) => setFilterTitle(e.target.value)}
+            placeholder="Cari judul..."
+            startAdornment={
+              <InputAdornment position="start">
+                <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
+              </InputAdornment>
+            }
+          />
           <BlogPostsSort query={filters} options={SORT_OPTIONS} onSort={handleChangeSort} />
         </Stack>
 
@@ -116,7 +134,7 @@ export default function BlogPosts() {
           style={{ overflow: 'inherit' }}
         >
           <Grid container spacing={3}>
-            {sortedPosts.map((post, index) => (
+            {posts.map((post, index) => (
               <BlogPostCard key={post.id} post={post} index={index} />
             ))}
           </Grid>

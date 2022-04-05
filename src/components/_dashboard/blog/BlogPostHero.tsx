@@ -1,10 +1,12 @@
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Avatar, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 // utils
-import { fDate } from '../../../utils/formatTime';
+import { fDateTime } from '../../../utils/formatTime';
 // @types
-import { Post } from '../../../@types/blog';
+import { BlogPost } from '../../../@types/blog';
+import createAvatar from 'utils/createAvatar';
+import { MAvatar } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -73,11 +75,12 @@ const CoverImgStyle = styled('img')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 type BlogPostHeroProps = {
-  post: Post;
+  post: BlogPost;
 };
 
 export default function BlogPostHero({ post }: BlogPostHeroProps) {
-  const { cover, title, author, createdAt } = post;
+  const { cover, title, author, created_at } = post;
+  const postAvatar = post.author.photoURL ? null : createAvatar(post.author.displayName);
 
   return (
     <RootStyle>
@@ -87,13 +90,20 @@ export default function BlogPostHero({ post }: BlogPostHeroProps) {
 
       <FooterStyle>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar alt={author.name} src={author.avatarUrl} sx={{ width: 48, height: 48 }} />
+          <MAvatar
+            sx={{ width: 48, height: 48 }}
+            src={post.author.photoURL || undefined}
+            alt={post.author.displayName}
+            color={post.author.photoURL ? 'default' : postAvatar!.color}
+          >
+            {postAvatar?.name}
+          </MAvatar>
           <Box sx={{ ml: 2 }}>
             <Typography variant="subtitle1" sx={{ color: 'common.white' }}>
-              {author.name}
+              {author.displayName}
             </Typography>
             <Typography variant="body2" sx={{ color: 'grey.500' }}>
-              {fDate(createdAt)}
+              {fDateTime(created_at)}
             </Typography>
           </Box>
         </Box>

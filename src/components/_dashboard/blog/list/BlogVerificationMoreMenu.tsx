@@ -2,23 +2,28 @@ import { Icon } from '@iconify/react';
 // import { paramCase } from 'change-case';
 import { useRef, useState } from 'react';
 import editFill from '@iconify/icons-eva/edit-fill';
-// import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import checkmarkFill from '@iconify/icons-eva/checkmark-circle-2-fill';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
 // routes
-// import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
 type BlogVerificationMenuProps = {
   onDelete: VoidFunction;
-  title: string;
+  onVerify: VoidFunction;
+  id: number;
 };
 
-export default function BlogVerificationMoreMenu({ onDelete, title }: BlogVerificationMenuProps) {
+export default function BlogVerificationMoreMenu({
+  onDelete,
+  onVerify,
+  id
+}: BlogVerificationMenuProps) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -46,8 +51,8 @@ export default function BlogVerificationMoreMenu({ onDelete, title }: BlogVerifi
         </MenuItem>
 
         <MenuItem
-          // component={RouterLink}
-          // to={`${PATH_DASHBOARD.user.root}/${paramCase(title)}/edit`}
+          component={RouterLink}
+          to={`${PATH_DASHBOARD.root}/blogs/edit/${id}`}
           sx={{ color: 'text.secondary' }}
         >
           <ListItemIcon>
@@ -56,7 +61,7 @@ export default function BlogVerificationMoreMenu({ onDelete, title }: BlogVerifi
           <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem sx={{ color: 'text.secondary' }}>
+        <MenuItem onClick={onVerify} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={checkmarkFill} width={24} height={24} />
           </ListItemIcon>
