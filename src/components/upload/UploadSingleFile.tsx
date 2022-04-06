@@ -43,12 +43,14 @@ interface UploadSingleFileProps extends DropzoneOptions {
   error?: boolean;
   file: CustomFile | string | null;
   sx?: SxProps<Theme>;
+  withIllustration?: boolean;
 }
 
 export default function UploadSingleFile({
   error = false,
   file,
   sx,
+  withIllustration = true,
   ...other
 }: UploadSingleFileProps) {
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
@@ -101,7 +103,7 @@ export default function UploadSingleFile({
       >
         <input {...getInputProps()} />
 
-        <UploadIllustration sx={{ width: 220 }} />
+        {withIllustration && <UploadIllustration sx={{ width: 220 }} />}
 
         <Box sx={{ p: 3, ml: { md: 2 } }}>
           <Typography gutterBottom variant="h5">
