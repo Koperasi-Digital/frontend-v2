@@ -15,6 +15,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { ForumPost } from '../../components/_dashboard/forum';
+import useAuth from '../../hooks/useAuth';
 
 const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
   width: 240,
@@ -32,6 +33,8 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 export default function Forum() {
   const dispatch = useDispatch();
   const [filterTopic, setFilterTopic] = useState('');
+  const { currentRole } = useAuth();
+  const isCustomer = currentRole?.name === 'CUSTOMER';
   const [page, setPage] = useState(1);
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -55,14 +58,16 @@ export default function Forum() {
             { name: 'Forum', href: PATH_DASHBOARD.general.forum }
           ]}
           action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.general.myforum}
-              startIcon={<Icon icon={roundAccountBox} />}
-            >
-              Forumku
-            </Button>
+            isCustomer ? null : (
+              <Button
+                variant="contained"
+                component={RouterLink}
+                to={PATH_DASHBOARD.general.myforum}
+                startIcon={<Icon icon={roundAccountBox} />}
+              >
+                Forumku
+              </Button>
+            )
           }
         />
         <SearchStyle

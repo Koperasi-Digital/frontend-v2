@@ -1,21 +1,20 @@
 import { Icon } from '@iconify/react';
-import { paramCase } from 'change-case';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import { Link as RouterLink } from 'react-router-dom';
-import shareFill from '@iconify/icons-eva/share-fill';
-import messageCircleFill from '@iconify/icons-eva/message-circle-fill';
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
+import { Box, Card, Grid, Typography, CardContent, Chip } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // utils
 import { fDate } from '../../../utils/formatTime';
 import { fShortenNumber } from '../../../utils/formatNumber';
 // @types
-import { Post } from '../../../@types/blog';
+import { BlogList } from '../../../@types/blog';
 //
 import SvgIconStyle from '../../SvgIconStyle';
+import createAvatar from 'utils/createAvatar';
+import { MAvatar } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -38,15 +37,6 @@ const TitleStyle = styled(RouterLink)(({ theme }) => ({
   }
 }));
 
-const AvatarStyle = styled(Avatar)(({ theme }) => ({
-  zIndex: 9,
-  width: 32,
-  height: 32,
-  position: 'absolute',
-  left: theme.spacing(3),
-  bottom: theme.spacing(-2)
-}));
-
 const InfoStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
@@ -66,21 +56,18 @@ const CoverImgStyle = styled('img')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 type BlogPostCardProps = {
-  post: Post;
+  post: BlogList;
   index: number;
 };
 
 export default function BlogPostCard({ post, index }: BlogPostCardProps) {
-  const { cover, title, view, comment, share, author, createdAt } = post;
-  const linkTo = `${PATH_DASHBOARD.root}/blogs/${paramCase(title)}`;
+  const { id, cover, title, view, author, created_at, tags } = post;
+  const linkTo = `${PATH_DASHBOARD.root}/blogs/${id}`;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
+  const postAvatar = author.photoURL ? null : createAvatar(author.displayName);
 
-  const POST_INFO = [
-    { number: comment, icon: messageCircleFill },
-    { number: view, icon: eyeFill },
-    { number: share, icon: shareFill }
-  ];
+  const POST_INFO = [{ number: view, icon: eyeFill }];
 
   return (
     <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
@@ -118,10 +105,14 @@ export default function BlogPostCard({ post, index }: BlogPostCardProps) {
               ...((latestPostLarge || latestPost) && { display: 'none' })
             }}
           />
-          <AvatarStyle
-            alt={author.name}
-            src={author.avatarUrl}
+          <MAvatar
             sx={{
+              zIndex: 9,
+              width: 32,
+              height: 32,
+              position: 'absolute',
+              left: 24,
+              bottom: -16,
               ...((latestPostLarge || latestPost) && {
                 zIndex: 9,
                 top: 24,
@@ -130,7 +121,12 @@ export default function BlogPostCard({ post, index }: BlogPostCardProps) {
                 height: 40
               })
             }}
-          />
+            src={post.author.photoURL || undefined}
+            alt={post.author.displayName}
+            color={post.author.photoURL ? 'default' : postAvatar!.color}
+          >
+            {postAvatar?.name}
+          </MAvatar>
 
           <CoverImgStyle alt={title} src={cover} />
         </CardMediaStyle>
@@ -150,7 +146,7 @@ export default function BlogPostCard({ post, index }: BlogPostCardProps) {
             variant="caption"
             sx={{ color: 'text.disabled', display: 'block' }}
           >
-            {fDate(createdAt)}
+            {fDate(created_at)}
           </Typography>
 
           <TitleStyle
@@ -166,6 +162,28 @@ export default function BlogPostCard({ post, index }: BlogPostCardProps) {
           </TitleStyle>
 
           <InfoStyle>
+            <Box>
+              {tags ? (
+                tags
+                  .split(';/;')
+                  .slice(0, 2)
+                  .map((tag) => (
+                    <Chip
+                      key={tag}
+                      label={tag}
+                      size={'small'}
+                      sx={{
+                        mx: 0.5,
+                        ...((latestPostLarge || latestPost) && {
+                          color: 'grey.500'
+                        })
+                      }}
+                    />
+                  ))
+              ) : (
+                <Box sx={{ mb: 3 }}></Box>
+              )}
+            </Box>
             {POST_INFO.map((info, index) => (
               <Box
                 key={index}

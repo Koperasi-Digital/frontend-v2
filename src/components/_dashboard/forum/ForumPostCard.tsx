@@ -57,6 +57,7 @@ export default function ForumPostCard({ post }: PostCardProps) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const isAdmin = currentRole?.name === 'ADMIN';
+  const isCustomer = currentRole?.name === 'CUSTOMER';
   const forumCanBeDeleted = post.author.id === user?.id || isAdmin ? true : false;
   const postAvatar = post.author.photoURL ? null : createAvatar(post.author.displayName);
   const userAvatar = user?.photoURL ? null : createAvatar(user?.displayName);
@@ -268,34 +269,35 @@ export default function ForumPostCard({ post }: PostCardProps) {
             })}
           </Stack>
         )}
-
-        <Stack direction="row" alignItems="center">
-          <MAvatar
-            src={post.author.photoURL || undefined}
-            alt={post.author.displayName}
-            color={post.author.photoURL ? 'default' : userAvatar!.color}
-          >
-            {userAvatar?.name}
-          </MAvatar>
-          <TextField
-            fullWidth
-            size="small"
-            value={message}
-            placeholder="Tulis komentar di sini…"
-            onChange={(event) => handleChangeMessage(event.target.value)}
-            sx={{
-              ml: 2,
-              mr: 1,
-              '& fieldset': {
-                borderWidth: `1px !important`,
-                borderColor: (theme) => `${theme.palette.grey[500_32]} !important`
-              }
-            }}
-          />
-          <IconButton onClick={() => handlePostComment()}>
-            <Icon icon={roundSend} width={24} height={24} />
-          </IconButton>
-        </Stack>
+        {isCustomer ? null : (
+          <Stack direction="row" alignItems="center">
+            <MAvatar
+              src={post.author.photoURL || undefined}
+              alt={post.author.displayName}
+              color={post.author.photoURL ? 'default' : userAvatar!.color}
+            >
+              {userAvatar?.name}
+            </MAvatar>
+            <TextField
+              fullWidth
+              size="small"
+              value={message}
+              placeholder="Tulis komentar di sini…"
+              onChange={(event) => handleChangeMessage(event.target.value)}
+              sx={{
+                ml: 2,
+                mr: 1,
+                '& fieldset': {
+                  borderWidth: `1px !important`,
+                  borderColor: (theme) => `${theme.palette.grey[500_32]} !important`
+                }
+              }}
+            />
+            <IconButton onClick={() => handlePostComment()}>
+              <Icon icon={roundSend} width={24} height={24} />
+            </IconButton>
+          </Stack>
+        )}
       </Stack>
       <DialogAnimate
         open={isOpenModalDeleteForum}

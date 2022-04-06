@@ -86,14 +86,50 @@ export default function Router() {
           path: 'blogs',
           element: <BlogPosts />
         },
-        { path: 'blogs/:title', element: <BlogPost /> },
-        { path: 'blogs/new', element: <BlogNewPost /> },
-        { path: 'blogs/own', element: <MyBlog /> },
-        { path: 'blogs/verification', element: <BlogVerification /> },
+        { path: 'blogs/:id', element: <BlogPost /> },
+        {
+          path: 'blogs/edit/:id',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN', 'MEMBER']}>
+              <BlogEdit />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'blogs/new',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN', 'MEMBER']}>
+              <BlogNewPost />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'blogs/own',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN', 'MEMBER']}>
+              <MyBlog />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'blogs/verification',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN']}>
+              <BlogVerification />
+            </RoleBasedGuard>
+          )
+        },
         { path: 'faq', element: <FAQ /> },
         { path: 'faq/:number', element: <FAQPost /> },
         { path: 'forum', element: <Forum /> },
-        { path: 'forum/own', element: <MyForum /> },
+        {
+          path: 'forum/own',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN', 'MEMBER']}>
+              <MyForum />
+            </RoleBasedGuard>
+          )
+        },
         { path: 'course', element: <Course /> },
         { path: 'course/:title', element: <CourseDetail /> },
         { path: 'course/:title/:page', element: <CoursePage /> },
@@ -269,6 +305,7 @@ const EcommerceInvoice = Loadable(lazy(() => import('../pages/dashboard/Ecommerc
 const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
 const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
+const BlogEdit = Loadable(lazy(() => import('../pages/dashboard/BlogEdit')));
 const MyBlog = Loadable(lazy(() => import('../pages/dashboard/MyBlog')));
 const Course = Loadable(lazy(() => import('../pages/dashboard/Course')));
 const CourseDetail = Loadable(lazy(() => import('../pages/dashboard/CourseDetail')));

@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Box, Card, Skeleton, Container, Typography, Pagination } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getPost, getRecentPosts } from '../../redux/slices/blog';
+import { getBlogById } from '../../redux/slices/blog';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // @types
@@ -38,9 +38,8 @@ export default function CoursePage() {
   const { post, error } = useSelector((state: { blog: BlogState }) => state.blog);
 
   useEffect(() => {
-    dispatch(getPost(title));
-    dispatch(getRecentPosts(title));
-  }, [dispatch, title]);
+    dispatch(getBlogById(3));
+  }, [dispatch]);
 
   return (
     <Page title="Course Page | CoopChick">
