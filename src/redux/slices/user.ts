@@ -148,6 +148,42 @@ const slice = createSlice({
       state.addressBook = action.payload;
     },
 
+    // SET ADDRESS AS DEFAULT
+    setAddressAsDefault(state, action) {
+      state.isLoading = false;
+      state.addressBook = state.addressBook.map((address) => {
+        if (address.id === action.payload) {
+          address.isDefault = true;
+        } else {
+          address.isDefault = false;
+        }
+        return address;
+      });
+    },
+
+    // ADD ADDRESS
+    addAddressSuccess(state, action) {
+      state.isLoading = false;
+      state.addressBook.push(action.payload);
+    },
+
+    // EDIT ADDRESS
+    editAddressSuccess(state, action) {
+      state.isLoading = false;
+      state.addressBook = state.addressBook.map((address) => {
+        if (address.id === action.payload.id) {
+          address = action.payload;
+        }
+        return address;
+      });
+    },
+
+    // DELETE ADDRESS
+    deleteAddressSuccess(state, action) {
+      state.isLoading = false;
+      state.addressBook = state.addressBook.filter((address) => address.id !== action.payload);
+    },
+
     // GET INVOICES
     getInvoicesSuccess(state, action) {
       state.isLoading = false;
@@ -266,12 +302,56 @@ export function getAddressBook() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axiosMock.get('/api/user/account/address-book');
-      dispatch(slice.actions.getAddressBookSuccess(response.data.addressBook));
+      const response = await axios.get('user-addresses');
+      dispatch(slice.actions.getAddressBookSuccess(response.data.payload));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
+}
+
+export async function setAddressAsDefault(id: number) {
+  dispatch(slice.actions.startLoading());
+  try {
+    await axios.post(`user-addresses/default/${id}`);
+    dispatch(slice.actions.setAddressAsDefault(id));
+  } catch (error) {
+    console.log(error);
+    dispatch(slice.actions.hasError(error));
+  }
+}
+
+export async function addAddress(data: Partial<UserAddressBook>) {
+  dispatch(slice.actions.startLoading());
+  try {
+    const response = await axios.post(`user-addresses`, data);
+    dispatch(slice.actions.addAddressSuccess(response.data.payload));
+  } catch (error) {
+    console.log(error);
+    dispatch(slice.actions.hasError(error));
+  }
+}
+
+export async function editAddress(id: number, data: Partial<UserAddressBook>) {
+  dispatch(slice.actions.startLoading());
+  try {
+    const response = await axios.patch(`user-addresses/${id}`, data);
+    dispatch(slice.actions.editAddressSuccess(response.data.payload));
+  } catch (error) {
+    console.log(error);
+    dispatch(slice.actions.hasError(error));
+  }
+}
+
+export async function deleteAddress(id: number) {
+  dispatch(slice.actions.startLoading());
+  try {
+    await axios.delete(`user-addresses/${id}`);
+    dispatch(slice.actions.deleteAddressSuccess(id));
+  } catch (error) {
+    console.log(error);
+    dispatch(slice.actions.hasError(error));
+  }
 }
 
 // ----------------------------------------------------------------------

@@ -14,6 +14,7 @@ export const toCalendarEvent: (events: CalendarApiEvent) => EventInput = (event)
   end: new Date(event.endAt),
   type: event.type,
   includeNotification: event.includeNotification,
+  meetingLink: event.meetingLink,
   createdBy: event.createdBy,
   users: event.users,
   textColor: EVENT_COLOR[event.type as unknown as keyof typeof EVENT_COLOR]
