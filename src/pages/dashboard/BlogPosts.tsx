@@ -28,6 +28,7 @@ import { BlogState } from '../../@types/blog';
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { BlogPostCard, BlogPostsSort } from '../../components/_dashboard/blog';
+import useAuth from '../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -70,6 +71,8 @@ export default function BlogPosts() {
   const [filters, setFilters] = useState('TERBARU');
   const [filterTitle, setFilterTitle] = useState('');
   const { posts, hasMore } = useSelector((state: { blog: BlogState }) => state.blog);
+  const { currentRole } = useAuth();
+  const isCustomer = currentRole?.name === 'CUSTOMER';
 
   const onScroll = useCallback(() => dispatch(getPostsBlogListMore()), [dispatch]);
 
@@ -90,25 +93,27 @@ export default function BlogPosts() {
           heading="Blogs"
           links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Blogs' }]}
           action={
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Button
-                variant="contained"
-                component={RouterLink}
-                to={PATH_DASHBOARD.general.newBlog}
-                startIcon={<Icon icon={plusFill} />}
-              >
-                Buat Blog
-              </Button>
-              <Button
-                sx={{ ml: 1 }}
-                variant="contained"
-                component={RouterLink}
-                to={PATH_DASHBOARD.general.myBlog}
-                startIcon={<Icon icon={roundAccountBox} />}
-              >
-                Blogku
-              </Button>
-            </Stack>
+            isCustomer ? null : (
+              <Stack direction="row" alignItems="center" justifyContent="space-between">
+                <Button
+                  variant="contained"
+                  component={RouterLink}
+                  to={PATH_DASHBOARD.general.newBlog}
+                  startIcon={<Icon icon={plusFill} />}
+                >
+                  Buat Blog
+                </Button>
+                <Button
+                  sx={{ ml: 1 }}
+                  variant="contained"
+                  component={RouterLink}
+                  to={PATH_DASHBOARD.general.myBlog}
+                  startIcon={<Icon icon={roundAccountBox} />}
+                >
+                  Blogku
+                </Button>
+              </Stack>
+            )
           }
         />
 

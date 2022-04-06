@@ -109,6 +109,7 @@ const slice = createSlice({
     delete(state, action) {
       state.isLoading = false;
       state.ownPosts = state.ownPosts.filter((blog) => blog.id !== action.payload);
+      state.refresh = !state.refresh;
     }
   }
 });

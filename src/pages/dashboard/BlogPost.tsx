@@ -79,7 +79,11 @@ export default function BlogPost() {
 
         {!post && SkeletonLoad}
 
-        {error && <Typography variant="h6">404 Post not found</Typography>}
+        {error && (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Typography variant="h6">404 Post not found</Typography>
+          </Box>
+        )}
       </Container>
     </Page>
   );

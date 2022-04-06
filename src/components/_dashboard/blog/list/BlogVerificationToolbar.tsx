@@ -1,17 +1,8 @@
 import { Icon } from '@iconify/react';
 import searchFill from '@iconify/icons-eva/search-fill';
-import trash2Fill from '@iconify/icons-eva/trash-2-fill';
 // material
-import { useTheme, styled } from '@mui/material/styles';
-import {
-  Box,
-  Toolbar,
-  Tooltip,
-  IconButton,
-  Typography,
-  OutlinedInput,
-  InputAdornment
-} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Box, Toolbar, OutlinedInput, InputAdornment } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -38,52 +29,26 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 type BlogVerificationToolbarProps = {
-  numSelected: number;
   filterTitle: string;
   onFilterTitle: (value: string) => void;
 };
 
 export default function BlogVerificationToolbar({
-  numSelected,
   filterTitle,
   onFilterTitle
 }: BlogVerificationToolbarProps) {
-  const theme = useTheme();
-  const isLight = theme.palette.mode === 'light';
-
   return (
-    <RootStyle
-      sx={{
-        ...(numSelected > 0 && {
-          color: isLight ? 'primary.main' : 'text.primary',
-          bgcolor: isLight ? 'primary.lighter' : 'primary.dark'
-        })
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography component="div" variant="subtitle1">
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <SearchStyle
-          value={filterTitle}
-          onChange={(e) => onFilterTitle(e.target.value)}
-          placeholder="Search title..."
-          startAdornment={
-            <InputAdornment position="start">
-              <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
-            </InputAdornment>
-          }
-        />
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <Icon icon={trash2Fill} />
-          </IconButton>
-        </Tooltip>
-      ) : null}
+    <RootStyle>
+      <SearchStyle
+        value={filterTitle}
+        onChange={(e) => onFilterTitle(e.target.value)}
+        placeholder="Search title..."
+        startAdornment={
+          <InputAdornment position="start">
+            <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
+          </InputAdornment>
+        }
+      />
     </RootStyle>
   );
 }

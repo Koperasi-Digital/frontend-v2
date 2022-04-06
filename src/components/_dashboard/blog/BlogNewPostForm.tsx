@@ -91,10 +91,11 @@ export default function BlogNewPostForm() {
         resetForm();
         handleClosePreview();
         setSubmitting(false);
-        enqueueSnackbar('Post success', { variant: 'success' });
+        enqueueSnackbar('Create Blog success', { variant: 'success' });
       } catch (error) {
         console.error(error);
         setSubmitting(false);
+        enqueueSnackbar('Create Blog failed', { variant: 'error' });
       }
     }
   });
