@@ -12,6 +12,7 @@ export type EventInput = $EventInput & {
   description: string;
   type: ActivityType;
   includeNotification: boolean;
+  meetingLink: string;
   createdBy: User;
   users: User[];
 };
@@ -33,6 +34,7 @@ export type CalendarApiEvent = {
   endAt: string;
   allDay: boolean;
   includeNotification: boolean;
+  meetingLink: string;
   type: ActivityType;
   createdBy: User;
   users: User[];

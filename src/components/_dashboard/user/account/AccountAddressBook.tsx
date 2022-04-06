@@ -1,0 +1,117 @@
+import { useState } from 'react';
+import { Icon } from '@iconify/react';
+import plusFill from '@iconify/icons-eva/plus-fill';
+import editFill from '@iconify/icons-eva/edit-fill';
+import trash2Fill from '@iconify/icons-eva/trash-2-fill';
+import checkmarkOutline from '@iconify/icons-eva/checkmark-outline';
+// material
+import { Box, Card, Button, Typography, CardProps, Stack, Paper } from '@mui/material';
+// @types
+import { UserAddressBook } from '../../../../@types/user';
+// components
+import Label from 'components/Label';
+import { deleteAddress, setAddressAsDefault } from 'redux/slices/user';
+import { AccountAddressForm } from '.';
+
+// ----------------------------------------------------------------------
+
+interface AccountAddressBookProp extends CardProps {
+  addressBook: UserAddressBook[];
+  isEdit?: boolean;
+}
+
+export default function AccountAddressBook({ addressBook, isEdit }: AccountAddressBookProp) {
+  const [open, setOpen] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState<UserAddressBook>();
+
+  const handleOpen = (address?: UserAddressBook) => {
+    setSelectedAddress(address);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedAddress(undefined);
+  };
+
+  return (
+    <>
+      <Card sx={{ p: 3 }}>
+        <Stack spacing={3} alignItems="flex-start">
+          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+            Buku Alamat
+          </Typography>
+
+          {addressBook.map((address) => (
+            <Paper
+              key={address.id}
+              sx={{
+                p: 3,
+                width: 1,
+                bgcolor: 'background.neutral'
+              }}
+            >
+              <Typography variant="body2" gutterBottom>
+                <Typography variant="body2" component="span" sx={{ color: 'text.secondary' }}>
+                  Alamat: &nbsp;
+                </Typography>
+                {`${address.address}, ${address.city}, ${address.state}, ${address.country} ${address.zipCode}`}
+                {address.isDefault && (
+                  <Label color="info" sx={{ ml: 1 }}>
+                    Default
+                  </Label>
+                )}
+              </Typography>
+
+              <Typography variant="body2" gutterBottom>
+                <Typography variant="body2" component="span" sx={{ color: 'text.secondary' }}>
+                  No. Telepon: &nbsp;
+                </Typography>
+                {address.phoneNumber}
+              </Typography>
+
+              {isEdit && (
+                <Box sx={{ mt: 1 }}>
+                  <Button
+                    color="error"
+                    size="small"
+                    startIcon={<Icon icon={trash2Fill} />}
+                    onClick={() => deleteAddress(address.id)}
+                    sx={{ mr: 1 }}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    size="small"
+                    startIcon={<Icon icon={editFill} />}
+                    onClick={() => handleOpen(address)}
+                    sx={{ mr: 1 }}
+                  >
+                    Edit
+                  </Button>
+                  {!address.isDefault && (
+                    <Button
+                      size="small"
+                      color="info"
+                      startIcon={<Icon icon={checkmarkOutline} />}
+                      onClick={() => setAddressAsDefault(address.id)}
+                    >
+                      Set As Default
+                    </Button>
+                  )}
+                </Box>
+              )}
+            </Paper>
+          ))}
+
+          {isEdit && (
+            <Button size="small" startIcon={<Icon icon={plusFill} />} onClick={() => handleOpen()}>
+              Tambah Alamat
+            </Button>
+          )}
+        </Stack>
+      </Card>
+      <AccountAddressForm open={open} onClose={handleClose} existingAddress={selectedAddress} />
+    </>
+  );
+}

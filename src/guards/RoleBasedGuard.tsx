@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import { Container, Alert, AlertTitle } from '@mui/material';
 import useAuth from 'hooks/useAuth';
+import PermissionDenied from 'components/PermissionDenied';
 
 // ----------------------------------------------------------------------
 
@@ -20,16 +20,7 @@ export default function RoleBasedGuard({ accessibleRoles, children }: RoleBasedG
   const currentRole = useCurrentRole();
 
   if (!currentRole || !accessibleRoles.includes(currentRole)) {
-    return (
-      <Container
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}
-      >
-        <Alert severity="error">
-          <AlertTitle>Permission Denied</AlertTitle>
-          You do not have permission to access this page
-        </Alert>
-      </Container>
-    );
+    return <PermissionDenied />;
   }
 
   return <>{children}</>;

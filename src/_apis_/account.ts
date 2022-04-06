@@ -17,12 +17,6 @@ const users: User[] = [
     displayName: 'Walter White',
     email: 'admin@admin.com',
     photoURL: '/static/mock-images/avatars/avatar_default.jpg',
-    phoneNumber: '+62 8123123123',
-    country: 'Indonesia',
-    address: 'Jl. Ganesa No.10, Lb. Siliwangi, Kec. Coblong',
-    state: 'West Java',
-    city: 'Bandung',
-    zipCode: '40132',
     storeName: null,
     roles: [
       {
@@ -42,12 +36,6 @@ const users: User[] = [
     email: 'customer@customer.com',
     displayName: 'Jesse Pinkman',
     photoURL: null,
-    phoneNumber: null,
-    country: 'Indonesia',
-    address: null,
-    state: null,
-    city: null,
-    zipCode: null,
     storeName: null,
     roles: [
       {
@@ -102,12 +90,6 @@ mock.onPost('/api/account/register').reply(async (config) => {
       email,
       // password,
       photoURL: null,
-      phoneNumber: null,
-      country: null,
-      address: null,
-      state: null,
-      city: null,
-      zipCode: null,
       storeName: null,
       roles: [
         {
