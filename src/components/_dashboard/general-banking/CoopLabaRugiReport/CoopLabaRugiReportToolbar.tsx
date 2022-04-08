@@ -10,6 +10,8 @@ import CoopLabaRugiReportPDF from './CoopLabaRugiReportPDF';
 import { ExportToExcel } from 'components/ExportToExcel';
 import { Stack } from '@mui/material';
 
+import { fCurrency, fPercent } from 'utils/formatNumber';
+
 type CoopLabaRugiData = {
   id: number;
   periode: string;
@@ -139,7 +141,74 @@ export default function CoopLabaRugiReportToolbar(props: {
             </LoadingButton>
           )}
         </PDFDownloadLink>
-        <ExportToExcel csvData={sheetData} fileName={'LAPORAN-LABA-RUGI-KOPERASI'} />
+        {bankingExpenseChartURI &&
+        bankingIncomeChartURI &&
+        bankingBalanceStatisticsChartURI &&
+        bankingExpenseCategoriesChartURI &&
+        sheetData ? (
+          <ExportToExcel
+            worksheetsNames={[
+              'Data Sheet',
+              'Grafik Pengeluaran Koperasi',
+              'Grafik Pemasukan Koperasi',
+              'Grafik Statistik Saldo Koperasi',
+              'Grafik Kategori Pengeluaran Koperasi'
+            ]}
+            sizes={[
+              { width: 0, height: 0 },
+              { width: 200, height: 100 },
+              { width: 200, height: 100 },
+              { width: 500, height: 200 },
+              { width: 700, height: 200 }
+            ]}
+            filename={'LAPORAN-LABA-RUGI-KOPERASI'}
+            contents={[
+              {
+                sheetData: sheetData
+              },
+              {
+                chartInfo: [
+                  `Expenses: ${fCurrency(
+                    props.currentCoopLabaRugiData.biayaSisaHasilUsaha +
+                      props.currentCoopLabaRugiData.biayaOperasi
+                  )}`,
+                  `${props.expensePercent > 0 ? '+' : ''} ${fPercent(
+                    props.expensePercent
+                  )} than last month`
+                ],
+                chartBase64: bankingExpenseChartURI
+              },
+              {
+                chartInfo: [
+                  `Income: ${fCurrency(
+                    props.currentCoopLabaRugiData.jumlahSimpananPokok +
+                      props.currentCoopLabaRugiData.jumlahSimpananWajib +
+                      props.currentCoopLabaRugiData.jumlahBiayaLayanan
+                  )}`,
+                  `${props.incomePercent > 0 ? '+' : ''} ${fPercent(
+                    props.incomePercent
+                  )} than last month`
+                ],
+                chartBase64: bankingIncomeChartURI
+              },
+              {
+                chartInfo: ['Balance Statistics Koperasi'],
+                chartBase64: bankingBalanceStatisticsChartURI
+              },
+              {
+                chartInfo: ['Expense Categories Koperasi'],
+                chartBase64: bankingExpenseCategoriesChartURI
+              }
+            ]}
+            onClick={() => {
+              setTimeout(() => {
+                getChartURICallback();
+              }, 1000);
+            }}
+          />
+        ) : (
+          <>Loading</>
+        )}
       </Stack>
     </>
   ) : (

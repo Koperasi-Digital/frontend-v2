@@ -10,6 +10,8 @@ import LabaRugiReportPDF from './LabaRugiReportPDF';
 import { ExportToExcel } from 'components/ExportToExcel';
 import { Stack } from '@mui/material';
 
+import { fCurrency, fPercent } from 'utils/formatNumber';
+
 type LabaRugiData = {
   id: number;
   user_id: number;
@@ -128,7 +130,70 @@ export default function LaporanLabaRugiToolbar(props: {
             </LoadingButton>
           )}
         </PDFDownloadLink>
-        <ExportToExcel csvData={sheetData} fileName={'LAPORAN-LABA-RUGI'} />
+        {bankingExpenseChartURI &&
+        bankingIncomeChartURI &&
+        bankingBalanceStatisticsChartURI &&
+        bankingExpenseCategoriesChartURI &&
+        sheetData ? (
+          <ExportToExcel
+            worksheetsNames={[
+              'Data Sheet',
+              'Grafik Pengeluaran Koperasi',
+              'Grafik Pemasukan Koperasi',
+              'Grafik Statistik Saldo Koperasi',
+              'Grafik Kategori Pengeluaran Koperasi'
+            ]}
+            sizes={[
+              { width: 0, height: 0 },
+              { width: 200, height: 100 },
+              { width: 200, height: 100 },
+              { width: 500, height: 200 },
+              { width: 700, height: 200 }
+            ]}
+            filename={'LAPORAN-LABA-RUGI'}
+            contents={[
+              {
+                sheetData: sheetData
+              },
+              {
+                chartInfo: [
+                  `Expenses: ${fCurrency(
+                    props.currentLabaRugiData.biayaProduksiProdukTerjual +
+                      props.currentLabaRugiData.biayaOperasi
+                  )}`,
+                  `${props.expensePercent > 0 ? '+' : ''} ${fPercent(
+                    props.expensePercent
+                  )} than last month`
+                ],
+                chartBase64: bankingExpenseChartURI
+              },
+              {
+                chartInfo: [
+                  `Income: ${fCurrency(props.currentLabaRugiData.jumlahPenjualan)}`,
+                  `${props.incomePercent > 0 ? '+' : ''} ${fPercent(
+                    props.incomePercent
+                  )} than last month`
+                ],
+                chartBase64: bankingIncomeChartURI
+              },
+              {
+                chartInfo: ['Balance Statistics Chart'],
+                chartBase64: bankingBalanceStatisticsChartURI
+              },
+              {
+                chartInfo: ['Expense Categories Chart'],
+                chartBase64: bankingExpenseCategoriesChartURI
+              }
+            ]}
+            onClick={() => {
+              setTimeout(() => {
+                getChartURICallback();
+              }, 1000);
+            }}
+          />
+        ) : (
+          <>Loading</>
+        )}
       </Stack>
     </>
   ) : (

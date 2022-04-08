@@ -64,7 +64,16 @@ export default function NeracaReportToolbar(props: { neracaData: NeracaData | un
             </LoadingButton>
           )}
         </PDFDownloadLink>
-        <ExportToExcel csvData={sheetData} fileName={'LAPORAN-NERACA'} />
+        <ExportToExcel
+          worksheetsNames={['Data Sheet']}
+          sizes={[{ width: 0, height: 0 }]}
+          contents={[
+            {
+              sheetData: sheetData
+            }
+          ]}
+          filename={'LAPORAN-NERACA'}
+        />
       </Stack>
     </>
   ) : (

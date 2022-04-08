@@ -64,7 +64,16 @@ export default function CoopNeracaReportToolbar(props: {
             </LoadingButton>
           )}
         </PDFDownloadLink>
-        <ExportToExcel csvData={sheetData} fileName={'LAPORAN-NERACA-KOPERASI'} />
+        <ExportToExcel
+          worksheetsNames={['Data Sheet']}
+          sizes={[{ width: 0, height: 0 }]}
+          contents={[
+            {
+              sheetData: sheetData
+            }
+          ]}
+          filename={'LAPORAN-NERACA-KOPERASI'}
+        />
       </Stack>
     </>
   ) : (

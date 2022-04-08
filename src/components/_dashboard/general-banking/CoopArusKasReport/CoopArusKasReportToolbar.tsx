@@ -58,7 +58,16 @@ export default function CoopArusKasReportToolbar(props: {
             </LoadingButton>
           )}
         </PDFDownloadLink>
-        <ExportToExcel csvData={sheetData} fileName={'LAPORAN-ARUS-KAS-KOPERASI'} />
+        <ExportToExcel
+          worksheetsNames={['Data Sheet']}
+          sizes={[{ width: 0, height: 0 }]}
+          contents={[
+            {
+              sheetData: sheetData
+            }
+          ]}
+          filename={'LAPORAN-ARUS-KAS-KOPERASI'}
+        />
       </Stack>
     </>
   ) : (

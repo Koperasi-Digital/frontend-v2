@@ -57,7 +57,16 @@ export default function ArusKasReportToolbar(props: { arusKasData: ArusKasData |
             </LoadingButton>
           )}
         </PDFDownloadLink>
-        <ExportToExcel csvData={sheetData} fileName={'LAPORAN-ARUS-KAS'} />
+        <ExportToExcel
+          worksheetsNames={['Data Sheet']}
+          sizes={[{ width: 0, height: 0 }]}
+          contents={[
+            {
+              sheetData: sheetData
+            }
+          ]}
+          filename={'LAPORAN-ARUS-KAS'}
+        />
       </Stack>
     </>
   ) : (
