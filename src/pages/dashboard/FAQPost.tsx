@@ -48,7 +48,7 @@ export default function FAQPost() {
         {postData && (
           <Card>
             <Box sx={{ p: { xs: 3, md: 5 } }}>
-              <Typography variant="h1" sx={{ mb: 4 }}>
+              <Typography variant="h3" sx={{ mb: 4 }}>
                 {postData.title}
               </Typography>
               <Divider sx={{ mb: 3 }} />

@@ -7,12 +7,6 @@ export type User = {
   displayName: string;
   email: string;
   photoURL: File | any;
-  phoneNumber: string | null;
-  country: string | null;
-  address: string | null;
-  state: string | null;
-  city: string | null;
-  zipCode: string | null;
   storeName: string | null;
   roles: Role[];
 };

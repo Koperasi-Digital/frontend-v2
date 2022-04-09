@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
-import settings2Fill from '@iconify/icons-eva/settings-2-fill';
+import personFill from '@iconify/icons-eva/person-fill';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import { alpha } from '@mui/material/styles';
@@ -27,8 +27,8 @@ const MENU_OPTIONS = [
     linkTo: '/'
   },
   {
-    label: 'Settings',
-    icon: settings2Fill,
+    label: 'My Account',
+    icon: personFill,
     linkTo: PATH_DASHBOARD.user.account
   }
 ];

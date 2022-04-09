@@ -5,44 +5,37 @@ import { useFormik, Form, FormikProvider } from 'formik';
 // material
 import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material/styles';
+import { useDispatch } from '../../../redux/store';
 import {
   Grid,
   Card,
   Chip,
   Stack,
-  Switch,
   Button,
   TextField,
   Typography,
   Autocomplete,
-  FormHelperText,
-  FormControlLabel
+  FormHelperText
 } from '@mui/material';
 // utils
-import fakeRequest from '../../../utils/fakeRequest';
 // @types
 import { NewPostFormValues } from '../../../@types/blog';
 //
 import { QuillEditor } from '../../editor';
 import { UploadSingleFile } from '../../upload';
 import BlogNewPostPreview from './BlogNewPostPreview';
+import useAuth from 'hooks/useAuth';
+import { createBlog } from 'redux/slices/blog';
 
 // ----------------------------------------------------------------------
 
 const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots'
+  'Chicken',
+  'Ayam',
+  'Peternakan Ayam',
+  'Penyakit Ayam',
+  'Kandang Ayam',
+  'Peternak Ayam'
 ];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
@@ -55,6 +48,8 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 
 export default function BlogNewPostForm() {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const { user } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
 
   const handleOpenPreview = () => {
@@ -68,7 +63,7 @@ export default function BlogNewPostForm() {
   const NewBlogSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
-    content: Yup.string().min(1000).required('Content is required'),
+    content: Yup.string().min(100).required('Content is required'),
     cover: Yup.mixed().required('Cover is required')
   });
 
@@ -78,24 +73,29 @@ export default function BlogNewPostForm() {
       description: '',
       content: '',
       cover: null,
-      tags: ['Logan'],
-      publish: true,
-      comments: true,
-      metaTitle: '',
-      metaDescription: '',
-      metaKeywords: ['Logan']
+      tags: []
     },
     validationSchema: NewBlogSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        await fakeRequest(500);
+        await dispatch(
+          createBlog(
+            user?.id,
+            values.title,
+            values.description,
+            values.content,
+            values.cover,
+            values.tags
+          )
+        );
         resetForm();
         handleClosePreview();
         setSubmitting(false);
-        enqueueSnackbar('Post success', { variant: 'success' });
+        enqueueSnackbar('Create Blog success', { variant: 'success' });
       } catch (error) {
         console.error(error);
         setSubmitting(false);
+        enqueueSnackbar('Create Blog failed', { variant: 'error' });
       }
     }
   });
@@ -121,12 +121,12 @@ export default function BlogNewPostForm() {
       <FormikProvider value={formik}>
         <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={12}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
                   <TextField
                     fullWidth
-                    label="Blog Title"
+                    label="Judul Blog"
                     {...getFieldProps('title')}
                     error={Boolean(touched.title && errors.title)}
                     helperText={touched.title && errors.title}
@@ -137,14 +137,14 @@ export default function BlogNewPostForm() {
                     multiline
                     minRows={3}
                     maxRows={5}
-                    label="Description"
+                    label="Deskripsi"
                     {...getFieldProps('description')}
                     error={Boolean(touched.description && errors.description)}
                     helperText={touched.description && errors.description}
                   />
 
                   <div>
-                    <LabelStyle>Content</LabelStyle>
+                    <LabelStyle>Konten Blog</LabelStyle>
                     <QuillEditor
                       id="post-content"
                       value={values.content}
@@ -173,28 +173,6 @@ export default function BlogNewPostForm() {
                       </FormHelperText>
                     )}
                   </div>
-                </Stack>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <Card sx={{ p: 3 }}>
-                <Stack spacing={3}>
-                  <div>
-                    <FormControlLabel
-                      control={<Switch {...getFieldProps('publish')} checked={values.publish} />}
-                      label="Publish"
-                      labelPlacement="start"
-                      sx={{ mb: 1, mx: 0, width: '100%', justifyContent: 'space-between' }}
-                    />
-
-                    <FormControlLabel
-                      control={<Switch {...getFieldProps('comments')} checked={values.comments} />}
-                      label="Enable comments"
-                      labelPlacement="start"
-                      sx={{ mx: 0, width: '100%', justifyContent: 'space-between' }}
-                    />
-                  </div>
 
                   <Autocomplete
                     multiple
@@ -216,63 +194,30 @@ export default function BlogNewPostForm() {
                     }
                     renderInput={(params) => <TextField {...params} label="Tags" />}
                   />
-
-                  {/* <TextField fullWidth label="Meta title" {...getFieldProps('metaTitle')} />
-
-                  <TextField
+                </Stack>
+                <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
+                  <Button
                     fullWidth
-                    multiline
-                    minRows={3}
-                    maxRows={5}
-                    label="Meta description"
-                    {...getFieldProps('metaDescription')}
-                  />
-
-                  <Autocomplete
-                    multiple
-                    freeSolo
-                    value={values.tags}
-                    onChange={(event, newValue) => {
-                      setFieldValue('metaKeywords', newValue);
-                    }}
-                    options={TAGS_OPTION.map((option) => option)}
-                    renderTags={(value, getTagProps) =>
-                      value.map((option, index) => (
-                        <Chip
-                          {...getTagProps({ index })}
-                          key={option}
-                          size="small"
-                          label={option}
-                        />
-                      ))
-                    }
-                    renderInput={(params) => <TextField {...params} label="Meta keywords" />}
-                  /> */}
+                    type="button"
+                    color="inherit"
+                    variant="outlined"
+                    size="large"
+                    onClick={handleOpenPreview}
+                    sx={{ mr: 1.5 }}
+                  >
+                    Preview
+                  </Button>
+                  <LoadingButton
+                    fullWidth
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    loading={isSubmitting}
+                  >
+                    Post
+                  </LoadingButton>
                 </Stack>
               </Card>
-
-              <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
-                <Button
-                  fullWidth
-                  type="button"
-                  color="inherit"
-                  variant="outlined"
-                  size="large"
-                  onClick={handleOpenPreview}
-                  sx={{ mr: 1.5 }}
-                >
-                  Preview
-                </Button>
-                <LoadingButton
-                  fullWidth
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  loading={isSubmitting}
-                >
-                  Post
-                </LoadingButton>
-              </Stack>
             </Grid>
           </Grid>
         </Form>

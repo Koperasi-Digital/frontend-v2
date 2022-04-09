@@ -33,13 +33,18 @@ export const PATH_DASHBOARD = {
     activities: path(ROOTS_DASHBOARD, '/activities'),
     activity: path(ROOTS_DASHBOARD, '/activities/:id'),
     blogs: path(ROOTS_DASHBOARD, '/blogs'),
-    blog: path(ROOTS_DASHBOARD, '/blogs/:title'),
+    blog: path(ROOTS_DASHBOARD, '/blogs/:id'),
     newBlog: path(ROOTS_DASHBOARD, '/blogs/new'),
-    blogVerification: path(ROOTS_DASHBOARD, '/blog/verification'),
+    editBlog: path(ROOTS_DASHBOARD, '/blogs/edit/:id'),
+    myBlog: path(ROOTS_DASHBOARD, '/blogs/own'),
+    blogVerification: path(ROOTS_DASHBOARD, '/blogs/verification'),
     faq: path(ROOTS_DASHBOARD, '/faq'),
     faqPost: path(ROOTS_DASHBOARD, '/faq/:number'),
     forum: path(ROOTS_DASHBOARD, '/forum'),
-    myforum: path(ROOTS_DASHBOARD, '/forum/own')
+    myforum: path(ROOTS_DASHBOARD, '/forum/own'),
+    course: path(ROOTS_DASHBOARD, '/course'),
+    courseDetail: path(ROOTS_DASHBOARD, '/course/:title'),
+    coursePage: path(ROOTS_DASHBOARD, '/course/:title/:page')
   },
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),
@@ -49,6 +54,7 @@ export const PATH_DASHBOARD = {
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
     list: path(ROOTS_DASHBOARD, '/user/list'),
+    detail: path(ROOTS_DASHBOARD, `/user/:name/detail`),
     editById: path(ROOTS_DASHBOARD, `/user/:name/edit`),
     account: path(ROOTS_DASHBOARD, '/user/account')
   },

@@ -12,6 +12,7 @@ const getIcon = (name: string) => (
 const ICONS = {
   blog: getIcon('ic_blog'),
   faq: getIcon('ic_faq'),
+  course: getIcon('ic_course'),
   cart: getIcon('ic_cart'),
   chat: getIcon('ic_chat'),
   user: getIcon('ic_user'),
@@ -35,8 +36,12 @@ const sidebarConfig = [
       {
         title: 'blogs',
         path: PATH_DASHBOARD.general.blogs,
-        icon: ICONS.blog,
-        accessibleRoles: ['CUSTOMER', 'MEMBER']
+        icon: ICONS.blog
+      },
+      {
+        title: 'course',
+        path: PATH_DASHBOARD.general.course,
+        icon: ICONS.course
       },
       { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq }
     ]

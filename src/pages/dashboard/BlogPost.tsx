@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-import { sentenceCase } from 'change-case';
 import { useParams } from 'react-router-dom';
 // material
-import { Box, Card, Divider, Skeleton, Container, Typography, Pagination } from '@mui/material';
+import { Box, Card, Divider, Skeleton, Container, Typography } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getPost, getRecentPosts } from '../../redux/slices/blog';
+import { getBlogById, addView } from '../../redux/slices/blog';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // @types
@@ -14,13 +13,7 @@ import { BlogState } from '../../@types/blog';
 import Page from '../../components/Page';
 import Markdown from '../../components/Markdown';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import {
-  BlogPostHero,
-  BlogPostTags,
-  // BlogPostRecent,
-  BlogPostCommentList
-  // BlogPostCommentForm
-} from '../../components/_dashboard/blog';
+import { BlogPostHero, BlogPostTags } from '../../components/_dashboard/blog';
 
 // ----------------------------------------------------------------------
 
@@ -40,27 +33,28 @@ const SkeletonLoad = (
 
 export default function BlogPost() {
   const dispatch = useDispatch();
-  const { title = '' } = useParams();
-  // const { post, error, recentPosts } = useSelector((state: { blog: BlogState }) => state.blog);
+  const { id = '' } = useParams();
   const { post, error } = useSelector((state: { blog: BlogState }) => state.blog);
 
   useEffect(() => {
-    dispatch(getPost(title));
-    dispatch(getRecentPosts(title));
-  }, [dispatch, title]);
+    if (parseInt(id) > 0) {
+      dispatch(getBlogById(parseInt(id)));
+      dispatch(addView(parseInt(id)));
+    }
+  }, [dispatch, id]);
 
   return (
-    <Page title="Blog Details | CoopChick">
+    <Page title="Blog Detail | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Blog Details"
+          heading="Blog Detail"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Blogs',
               href: PATH_DASHBOARD.general.blogs
             },
-            { name: sentenceCase(title) }
+            { name: post ? post.title : `Title for ${id}` }
           ]}
         />
 
@@ -78,32 +72,18 @@ export default function BlogPost() {
               <Box sx={{ my: 5 }}>
                 <Divider />
                 <BlogPostTags post={post} />
-                <Divider />
               </Box>
-
-              <Box sx={{ display: 'flex', mb: 2 }}>
-                <Typography variant="h4">Comments</Typography>
-                <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-                  ({post.comments.length})
-                </Typography>
-              </Box>
-
-              <BlogPostCommentList post={post} />
-
-              <Box sx={{ mb: 5, mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-                <Pagination count={8} color="primary" />
-              </Box>
-
-              {/* <BlogPostCommentForm /> */}
             </Box>
           </Card>
         )}
 
         {!post && SkeletonLoad}
 
-        {error && <Typography variant="h6">404 Post not found</Typography>}
-
-        {/* {recentPosts.length > 0 && <BlogPostRecent posts={recentPosts} />} */}
+        {error && (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Typography variant="h6">404 Post not found</Typography>
+          </Box>
+        )}
       </Container>
     </Page>
   );

@@ -23,6 +23,7 @@ export type AuthState = {
   isInitialized: boolean;
   user: AuthUser;
   currentRole: CurrentRole;
+  isSeller: boolean;
 };
 
 export type JWTContextType = {
@@ -30,6 +31,7 @@ export type JWTContextType = {
   isInitialized: boolean;
   user: AuthUser;
   currentRole: CurrentRole;
+  isSeller: boolean;
   method: 'jwt';
   login: (email: string, password: string) => Promise<void>;
   register: (

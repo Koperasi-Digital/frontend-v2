@@ -6,7 +6,6 @@ import mock from './mock';
 // utils
 import mockData from '../utils/mock-data';
 // @types
-import { Post } from '../@types/blog';
 
 // ----------------------------------------------------------------------
 
@@ -293,19 +292,19 @@ mock.onGet('/api/blog/posts/search').reply((config) => {
   try {
     const { query } = config.params;
     const cleanQuery = query.toLowerCase().trim();
-    const results: Post[] = [];
+    // const results: Post[] = [];
 
-    posts.forEach((post) => {
-      if (!query) {
-        return results.push(post);
-      }
+    // posts.forEach((post) => {
+    //   if (!query) {
+    //     return results.push(post);
+    //   }
 
-      if (post.title.toLowerCase().includes(cleanQuery)) {
-        return results.push(post);
-      }
-    });
+    //   if (post.title.toLowerCase().includes(cleanQuery)) {
+    //     return results.push(post);
+    //   }
+    // });
 
-    return [200, { results }];
+    return [200, {}];
   } catch (error) {
     console.error(error);
     return [500, { message: 'Internal server error' }];

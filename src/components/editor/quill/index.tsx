@@ -82,7 +82,7 @@ export default function QuillEditor({
         onChange={onChange}
         modules={modules}
         formats={formats}
-        placeholder="Write something awesome..."
+        placeholder="Tulis di sini..."
         {...other}
       />
     </RootStyle>
