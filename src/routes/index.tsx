@@ -130,9 +130,30 @@ export default function Router() {
             </RoleBasedGuard>
           )
         },
-        { path: 'course', element: <Course /> },
-        { path: 'course/:title', element: <CourseDetail /> },
-        { path: 'course/:title/:page', element: <CoursePage /> },
+        {
+          path: 'course',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN', 'MEMBER']}>
+              <Course />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'course/:id',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN', 'MEMBER']}>
+              <CourseDetail />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'course/:courseId/page/:order',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN', 'MEMBER']}>
+              <CoursePage />
+            </RoleBasedGuard>
+          )
+        },
         {
           path: 'e-commerce',
           children: [

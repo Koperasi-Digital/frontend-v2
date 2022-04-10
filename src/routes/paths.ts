@@ -43,8 +43,8 @@ export const PATH_DASHBOARD = {
     forum: path(ROOTS_DASHBOARD, '/forum'),
     myforum: path(ROOTS_DASHBOARD, '/forum/own'),
     course: path(ROOTS_DASHBOARD, '/course'),
-    courseDetail: path(ROOTS_DASHBOARD, '/course/:title'),
-    coursePage: path(ROOTS_DASHBOARD, '/course/:title/:page')
+    courseDetail: path(ROOTS_DASHBOARD, '/course/:id'),
+    coursePage: path(ROOTS_DASHBOARD, '/course/:courseId/page/:order')
   },
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),

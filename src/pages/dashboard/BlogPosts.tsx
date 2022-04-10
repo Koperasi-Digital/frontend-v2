@@ -14,6 +14,7 @@ import {
   Container,
   Stack,
   InputAdornment,
+  Typography,
   OutlinedInput
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -131,19 +132,23 @@ export default function BlogPosts() {
           <BlogPostsSort query={filters} options={SORT_OPTIONS} onSort={handleChangeSort} />
         </Stack>
 
-        <InfiniteScroll
-          next={onScroll}
-          hasMore={hasMore}
-          loader={SkeletonLoad}
-          dataLength={posts.length}
-          style={{ overflow: 'inherit' }}
-        >
-          <Grid container spacing={3}>
-            {posts.map((post, index) => (
-              <BlogPostCard key={post.id} post={post} index={index} />
-            ))}
-          </Grid>
-        </InfiniteScroll>
+        {posts.length > 0 ? (
+          <InfiniteScroll
+            next={onScroll}
+            hasMore={hasMore}
+            loader={SkeletonLoad}
+            dataLength={posts.length}
+            style={{ overflow: 'inherit' }}
+          >
+            <Grid container spacing={3}>
+              {posts.map((post, index) => (
+                <BlogPostCard key={post.id} post={post} index={index} />
+              ))}
+            </Grid>
+          </InfiniteScroll>
+        ) : (
+          <Typography>No Blogs with title "{filterTitle}" found</Typography>
+        )}
       </Container>
     </Page>
   );

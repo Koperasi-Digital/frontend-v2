@@ -4,7 +4,15 @@ import searchFill from '@iconify/icons-eva/search-fill';
 import { Link as RouterLink } from 'react-router-dom';
 import roundAccountBox from '@iconify/icons-ic/round-account-box';
 // material
-import { Box, Button, Container, OutlinedInput, InputAdornment, Pagination } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  OutlinedInput,
+  InputAdornment,
+  Pagination,
+  Typography
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 // redux
 import { RootState, useDispatch, useSelector } from '../../redux/store';
@@ -81,7 +89,11 @@ export default function Forum() {
           }
           sx={{ mb: 4 }}
         />
-        <ForumPost posts={posts} />
+        {posts.length > 0 ? (
+          <ForumPost posts={posts} />
+        ) : (
+          <Typography>No Forum with topic "{filterTopic}" found</Typography>
+        )}
         {totalPage > 0 && (
           <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
             <Pagination count={totalPage} page={page} onChange={handleChange} color="primary" />
