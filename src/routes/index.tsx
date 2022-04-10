@@ -204,7 +204,23 @@ export default function Router() {
                 </RoleBasedGuard>
               )
             },
-            { path: 'account', element: <UserAccount /> }
+            { path: 'account', element: <UserAccount /> },
+            {
+              path: 'member-verification/verify',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <MemberVerification />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'member-verification/request',
+              element: (
+                <RoleBasedGuard accessibleRoles={['CUSTOMER']}>
+                  <RequestMemberVerification />
+                </RoleBasedGuard>
+              )
+            }
           ]
         },
         {
@@ -282,6 +298,10 @@ const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 const UserDetail = Loadable(lazy(() => import('../pages/dashboard/UserDetail')));
+const MemberVerification = Loadable(lazy(() => import('../pages/dashboard/MemberVerification')));
+const RequestMemberVerification = Loadable(
+  lazy(() => import('../pages/dashboard/RequestMemberVerification'))
+);
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));

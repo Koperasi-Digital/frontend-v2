@@ -43,7 +43,13 @@ const sidebarConfig = [
         path: PATH_DASHBOARD.general.course,
         icon: ICONS.course
       },
-      { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq }
+      { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq },
+      {
+        title: 'Request Keanggotaan',
+        accessibleRoles: ['CUSTOMER'],
+        path: PATH_DASHBOARD.user.memberVerification.request,
+        icon: ICONS.faq
+      }
     ]
   },
   // MANAGEMENT
@@ -56,7 +62,10 @@ const sidebarConfig = [
         title: 'user',
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
-        children: [{ title: 'list', path: PATH_DASHBOARD.user.list }]
+        children: [
+          { title: 'list', path: PATH_DASHBOARD.user.list },
+          { title: 'Member Verification', path: PATH_DASHBOARD.user.memberVerification.verify }
+        ]
       },
       // MANAGEMENT : FINANCE
       {
