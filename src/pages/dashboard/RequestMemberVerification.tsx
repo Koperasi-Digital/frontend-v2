@@ -46,8 +46,6 @@ export default function RequestMemberVerification() {
       .catch((err) => setMemberVerification(undefined));
   };
 
-  console.log(memberVerification);
-
   useEffect(() => {
     if (user) {
       getUserMemberVerification(user.id);
@@ -58,7 +56,6 @@ export default function RequestMemberVerification() {
     if (user && user.roles) {
       setIsCustomer(user.roles.length === 1 && user.roles[0].name === 'CUSTOMER');
     }
-    setIsCustomer(true); // TODO: DELETE THIS
   }, [user]);
 
   const renderContent = () => {
