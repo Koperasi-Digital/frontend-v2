@@ -102,7 +102,18 @@ mock.onGet(/laporan-neraca\/.*\/.*/).reply((config) => {
     200,
     {
       message: 'Laporan neraca found.',
-      payload: undefined
+      payload: {
+        id: 5,
+        periode: '2022-02-01T00:00:00.000Z',
+        kas: 100000,
+        persediaan: 0,
+        asetTetap: 0,
+        modal: 100000,
+        prive: 0,
+        beban: 0,
+        harta: 100000,
+        modalCalc: 100000
+      }
     }
   ];
 });

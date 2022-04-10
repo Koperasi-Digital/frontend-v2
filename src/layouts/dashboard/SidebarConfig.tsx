@@ -115,12 +115,6 @@ const sidebarConfig = [
         icon: ICONS.banking
       },
       {
-        title: 'member report',
-        path: PATH_DASHBOARD.finance.memberReport,
-        accessibleRoles: ['MEMBER'],
-        icon: ICONS.banking
-      },
-      {
         title: 'disbursement request',
         path: PATH_DASHBOARD.finance.disbursementRequest,
         accessibleRoles: ['MEMBER'],
