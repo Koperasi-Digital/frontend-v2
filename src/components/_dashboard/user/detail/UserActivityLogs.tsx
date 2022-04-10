@@ -124,6 +124,15 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
                 </TableRow>
               )}
             </TableBody>
+            {!activityLogList.length && (
+              <TableBody>
+                <TableRow>
+                  <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                    Kosong
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            )}
           </Table>
         </TableContainer>
       </Scrollbar>
