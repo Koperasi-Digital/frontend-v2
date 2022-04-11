@@ -43,6 +43,7 @@ import {
 } from '../../../redux/slices/calendar';
 // utils
 import { EVENT_COLOR } from 'utils/calendar';
+import axios from 'utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -182,6 +183,10 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
     }
   };
 
+  const recordMeetingPresence = (activityId: string) => {
+    axios.post('activity-logs', { activityId, type: 'presensi_meeting' });
+  };
+
   return (
     <FormikProvider value={formik}>
       <DialogTitle>{renderTitle()}</DialogTitle>
@@ -311,7 +316,11 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
             name="Meeting Link"
             value={
               values.meetingLink ? (
-                <Link href={values.meetingLink} target="_blank">
+                <Link
+                  href={values.meetingLink}
+                  target="_blank"
+                  onClick={() => (event?.id ? recordMeetingPresence(event.id) : {})}
+                >
                   {values.meetingLink}
                 </Link>
               ) : (
