@@ -56,7 +56,11 @@ export const PATH_DASHBOARD = {
     list: path(ROOTS_DASHBOARD, '/user/list'),
     detail: path(ROOTS_DASHBOARD, `/user/:name/detail`),
     editById: path(ROOTS_DASHBOARD, `/user/:name/edit`),
-    account: path(ROOTS_DASHBOARD, '/user/account')
+    account: path(ROOTS_DASHBOARD, '/user/account'),
+    memberVerification: {
+      request: path(ROOTS_DASHBOARD, '/user/member-verification/request'),
+      verify: path(ROOTS_DASHBOARD, '/user/member-verification/verify')
+    }
   },
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),

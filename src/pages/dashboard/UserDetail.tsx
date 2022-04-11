@@ -20,6 +20,7 @@ export default function UserDetail() {
   const { name = '' } = useParams();
   const { userList } = useSelector((state: RootState) => state.user);
   const currentUser = userList.find((user) => paramCase(user.displayName) === name);
+  const isMember = currentUser?.roles.map((roles) => roles.name).includes('MEMBER') || false;
 
   useEffect(() => {
     dispatch(getUserList());
@@ -42,9 +43,11 @@ export default function UserDetail() {
             <Grid item xs={12}>
               <UserInformationDetail user={currentUser} />
             </Grid>
-            <Grid item xs={12}>
-              <UserActivityLogs user={currentUser} />
-            </Grid>
+            {isMember && (
+              <Grid item xs={12}>
+                <UserActivityLogs user={currentUser} />
+              </Grid>
+            )}
           </Grid>
         ) : (
           <Typography variant="body1">No Data</Typography>

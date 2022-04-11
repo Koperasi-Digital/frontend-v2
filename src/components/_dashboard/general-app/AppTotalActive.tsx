@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Typography, Stack, Link } from '@mui/material';
+import { Box, Card, Typography, Stack, Link, Skeleton } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from 'routes/paths';
 // utils
@@ -30,6 +30,13 @@ export default function AppTotalActive() {
     getTotalActive();
   }, []);
 
+  const renderPercentage = () => {
+    if (totalLogs && totalActivities) {
+      return totalActivities ? fPercent((totalLogs / totalActivities) * 100) : '100%';
+    }
+    return <Skeleton width={50} />;
+  };
+
   return (
     <>
       <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
@@ -44,7 +51,7 @@ export default function AppTotalActive() {
 
         <Typography component="span" variant="h3">
           {/* use default 100% to prevent divide by zero */}
-          {totalActivities ? fPercent((totalLogs / totalActivities) * 100) : '100%'}
+          {renderPercentage()}
         </Typography>
       </Card>
       <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.user.account}>
