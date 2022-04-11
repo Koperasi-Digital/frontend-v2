@@ -114,7 +114,7 @@ export default function Calendar({
           endAt: event.end
         })
       );
-      enqueueSnackbar('Update event success', { variant: 'success' });
+      enqueueSnackbar('Edit aktivitas sukses!', { variant: 'success' });
     } catch (error) {
       console.error(error);
     }
@@ -129,7 +129,7 @@ export default function Calendar({
           endAt: event.end
         })
       );
-      enqueueSnackbar('Update event success', {
+      enqueueSnackbar('Edit aktivitas sukses!', {
         variant: 'success'
       });
     } catch (error) {
@@ -171,6 +171,7 @@ export default function Calendar({
           eventResize={handleResizeEvent}
           height={injectedHeight || (isMobile ? 'auto' : 720)}
           plugins={[listPlugin, dayGridPlugin, timelinePlugin, timeGridPlugin, interactionPlugin]}
+          noEventsContent="Tidak Ada Aktivitas"
         />
       </CalendarStyle>
     </Card>
