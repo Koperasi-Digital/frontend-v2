@@ -169,7 +169,7 @@ export default function CheckoutPayment() {
 
   const fetchData = async () => {
     if (!orderId) {
-      const createdOrder = await handleCreateOrder(userId, Math.floor(total), checkout.cart);
+      const createdOrder = await handleCreateOrder(userId, Math.floor(total), cart);
       dispatch(addCheckoutOrder(createdOrder.id));
       return createdOrder;
     } else {

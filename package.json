@@ -117,9 +117,9 @@
     "simplebar-react": "^2.3.5",
     "slick-carousel": "^1.8.1",
     "typescript": "^4.3.5",
+    "util": "^0.12.4",
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.0",
-    "worker-loader": "^3.0.8",
     "workbox-background-sync": "^5.1.3",
     "workbox-broadcast-update": "^5.1.3",
     "workbox-cacheable-response": "^5.1.3",
@@ -132,6 +132,7 @@
     "workbox-routing": "^5.1.3",
     "workbox-strategies": "^5.1.3",
     "workbox-streams": "^5.1.3",
+    "worker-loader": "^3.0.8",
     "yup": "^0.32.9"
   },
   "devDependencies": {

@@ -31,13 +31,13 @@ import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { OrderListHead, OrderListToolbar } from '../../components/_dashboard/e-commerce/order-list';
-import getOrders from 'utils/orders';
+import { getOrdersBySeller } from 'utils/ecommerceOrder';
 import { fDateTime } from 'utils/formatTime';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'order_id', label: 'ID', alignRight: false },
+  { id: 'id', label: 'ID', alignRight: false },
   { id: 'product_name', label: 'Produk', alignRight: false },
   { id: 'user_name', label: 'Pembeli', alignRight: false },
   { id: 'timestamp', label: 'Tanggal', alignRight: false },
@@ -86,7 +86,7 @@ function applySortFilter(array: any[], comparator: (a: any, b: any) => number, q
   if (query) {
     return filter(
       array,
-      (_product) => _product.order_id.toString().toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_product) => _product.id.toString().toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
 
@@ -95,7 +95,7 @@ function applySortFilter(array: any[], comparator: (a: any, b: any) => number, q
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceProductList() {
+export default function EcommerceOrderList() {
   const theme = useTheme();
 
   const linkTo = `${PATH_DASHBOARD.eCommerce.root}/order/`;
@@ -109,7 +109,8 @@ export default function EcommerceProductList() {
 
   useEffect(() => {
     async function fetchOrders() {
-      const orderList = await getOrders();
+      const orderList = await getOrdersBySeller('2');
+      console.log(orderList);
       setOrders(orderList);
       setIsLoading(false);
     }
@@ -169,20 +170,16 @@ export default function EcommerceProductList() {
                     filteredOrders
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row, index) => {
-                        const {
-                          order_id,
-                          user_name,
-                          timestamp,
-                          product_name,
-                          cover,
-                          quantity,
-                          subtotal,
-                          status
-                        } = row;
+                        const { id, order, product, quantity, subtotal, status } = row;
+
+                        const timestamp = order.timestamp;
+                        const product_name = product.name;
+                        const cover = product.cover;
+                        const user_name = order.user.displayName;
 
                         return (
-                          <TableRow hover key={order_id} tabIndex={-1} role="checkbox">
-                            <TableCell style={{ minWidth: 50 }}>{order_id}</TableCell>
+                          <TableRow hover key={id} tabIndex={-1} role="checkbox">
+                            <TableCell style={{ minWidth: 50 }}>{id}</TableCell>
                             <TableCell component="th" scope="row" padding="none">
                               <Box
                                 sx={{
@@ -215,7 +212,7 @@ export default function EcommerceProductList() {
                             </TableCell>
                             <TableCell align="right">
                               <IconButton>
-                                <Link to={linkTo + order_id} color="inherit">
+                                <Link to={linkTo + id} color="inherit">
                                   <Icon icon={moreVerticalFill} width={20} height={20} />
                                 </Link>
                               </IconButton>

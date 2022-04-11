@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { fDate } from '../../../../utils/formatTime';
 import { fCurrency } from '../../../../utils/formatNumber';
-import { Order } from '../../../../@types/order';
+import { OrderDetails } from '../../../../@types/order';
 import { PATH_DASHBOARD } from 'routes/paths';
 
 const ProductImgStyle = styled('img')({
@@ -16,15 +16,18 @@ const ProductImgStyle = styled('img')({
 
 // --------------------------------------------s--------------------------
 
-export default function OrderCard({ order }: { order: Order }) {
+export default function OrderCard({ orderDetails }: { orderDetails: OrderDetails }) {
   const linkTo = `${PATH_DASHBOARD.eCommerce.root}/order/`;
-  const { order_id, seller_name, timestamp, product_name, cover, quantity, subtotal, status } =
-    order;
+  const { id, seller, order, product, quantity, subtotal, status } = orderDetails;
+  const seller_name = seller.displayName;
+  const timestamp = order.timestamp;
+  const product_name = product.name;
+  const cover = product.cover;
 
   return (
     <Card sx={{ mx: 2, px: 2, py: 2, ':hover': { boxShadow: 50 } }}>
       <Link
-        to={linkTo + order_id}
+        to={linkTo + id}
         color="inherit"
         style={{
           textDecoration: 'none',
