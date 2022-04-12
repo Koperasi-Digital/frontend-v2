@@ -97,18 +97,6 @@ export default function CheckoutPayment() {
   const dispatch = useDispatch();
   const { total, discount, subtotal, shipping, orderId, cart } = checkout;
 
-  //TODO: Ubah data" ini langsung ada di reduxnya (soalnya aku liat di BE ada field" ini tp di FEnya blm dikasih field" ini)
-
-  const cartTemp = JSON.parse(JSON.stringify(cart));
-  for (let i = 0; i < cartTemp.length; i++) {
-    cartTemp[i].seller_id = 1;
-    cartTemp[i].PRODUCT_ID = 1;
-    cartTemp[i].SHIPMENT_ID = 1;
-    cartTemp[i].shipment_price = 10000;
-  }
-
-  //END OF TODO
-
   const handleBackStep = () => {
     dispatch(onBackStep());
   };
@@ -181,7 +169,7 @@ export default function CheckoutPayment() {
 
   const fetchData = async () => {
     if (!orderId) {
-      const createdOrder = await handleCreateOrder(userId, Math.floor(total), cartTemp);
+      const createdOrder = await handleCreateOrder(userId, Math.floor(total), cart);
       dispatch(addCheckoutOrder(createdOrder.id));
       return createdOrder;
     } else {

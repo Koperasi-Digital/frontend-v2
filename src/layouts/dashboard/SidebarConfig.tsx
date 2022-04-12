@@ -150,7 +150,8 @@ const sidebarConfig = [
     items: [
       { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop, icon: ICONS.cart },
       { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout, icon: ICONS.cart },
-      { title: 'invoice', path: PATH_DASHBOARD.eCommerce.invoice, icon: ICONS.cart }
+      { title: 'invoice', path: PATH_DASHBOARD.eCommerce.invoice, icon: ICONS.cart },
+      { title: 'history', path: PATH_DASHBOARD.eCommerce.orderHistory, icon: ICONS.cart }
     ]
   }
 ];

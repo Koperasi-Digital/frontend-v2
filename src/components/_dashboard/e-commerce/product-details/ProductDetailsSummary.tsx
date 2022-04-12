@@ -104,7 +104,8 @@ export default function ProductDetailsSummary({
 }: ProductDetailsSumaryprops) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { id, name, category, price, available, cover, status } = product;
+  const { id, name, category, price, available, cover, status, seller } = product;
+  const { storeName } = seller;
   const sizes = ['KG', 'LUSIN', 'TON'];
 
   const alreadyProduct = cart.map((item) => item.id).includes(id);
@@ -126,7 +127,11 @@ export default function ProductDetailsSummary({
         if (!alreadyProduct) {
           onAddCart({
             ...values,
-            subtotal: values.price * values.quantity
+            subtotal: values.price * values.quantity,
+            seller_id: seller.id,
+            store_name: storeName,
+            shipment_id: null,
+            shipment_price: null
           });
         }
         setSubmitting(false);
@@ -144,7 +149,11 @@ export default function ProductDetailsSummary({
     try {
       onAddCart({
         ...values,
-        subtotal: values.price * values.quantity
+        subtotal: values.price * values.quantity,
+        seller_id: seller.id,
+        store_name: storeName,
+        shipment_id: null,
+        shipment_price: null
       });
     } catch (error) {
       console.error(error);
@@ -172,6 +181,19 @@ export default function ProductDetailsSummary({
           </Typography>
 
           <Divider sx={{ borderStyle: 'dashed' }} />
+
+          <Box
+            sx={{
+              mb: 3,
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}
+          >
+            <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+              Toko
+            </Typography>
+            <Typography sx={{ mt: 0.5 }}>{storeName}</Typography>
+          </Box>
 
           <Box
             sx={{
