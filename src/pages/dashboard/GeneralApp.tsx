@@ -81,12 +81,12 @@ export default function GeneralApp() {
           </Grid>
           <Grid item xs={12} md={4}>
             <Typography gutterBottom variant="h6" sx={{ mx: '0.5rem' }}>
-              Activities This Week
+              Aktivitas Minggu Ini
             </Typography>
             <Calendar injectedView="listWeek" withToolbar={false} injectedHeight={240} />
             <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.general.activities}>
               <Typography variant="body2" align="right" sx={{ m: '0.5rem', fontWeight: 'bold' }}>
-                See More
+                Lebih Lanjut
               </Typography>
             </Link>
           </Grid>
