@@ -4,6 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 import interactionPlugin, { EventResizeDoneArg } from '@fullcalendar/interaction';
+import idLocale from '@fullcalendar/core/locales/id';
 import { useSnackbar } from 'notistack';
 import { useState, useRef, useEffect } from 'react';
 // material
@@ -151,6 +152,7 @@ export default function Calendar({
           />
         )}
         <FullCalendar
+          locale={idLocale as any}
           weekends
           editable
           droppable

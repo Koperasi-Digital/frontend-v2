@@ -2,6 +2,7 @@ import { useState } from 'react';
 import * as Yup from 'yup';
 import { isEmpty, merge, startCase } from 'lodash';
 import { isBefore, format } from 'date-fns';
+import { id } from 'date-fns/locale';
 import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack';
 import trash2Fill from '@iconify/icons-eva/trash-2-fill';
@@ -138,10 +139,10 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
         };
         if (event.id) {
           dispatch(updateEvent(event.id, newEvent));
-          enqueueSnackbar('Sukses edit aktivitas', { variant: 'success' });
+          enqueueSnackbar('Edit aktivitas sukses!', { variant: 'success' });
         } else {
           dispatch(createEvent(newEvent));
-          enqueueSnackbar('Sukses menambahkan aktivitas', { variant: 'success' });
+          enqueueSnackbar('Tambah aktivitas sukses!', { variant: 'success' });
         }
         resetForm();
         onCancel();
@@ -160,7 +161,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
     try {
       onCancel();
       dispatch(isOrganizer ? deleteEvent(event.id) : deleteUserFromEvent(event.id));
-      enqueueSnackbar('Delete activity success', { variant: 'success' });
+      enqueueSnackbar('Hapus aktivitas sukses!', { variant: 'success' });
     } catch (error) {
       console.error(error);
     }
@@ -252,13 +253,13 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           />
 
           <Field
-            name="Berlangsung seharian"
-            value={values.allDay ? 'Yes' : 'No'}
+            name="Sehari penuh"
+            value={values.allDay ? 'Ya' : 'Tidak'}
             isReadOnly={isReadOnly}
             field={
               <FormControlLabel
                 control={<Switch checked={values.allDay} {...getFieldProps('allDay')} />}
-                label="Berlangsung seharian"
+                label="Sehari penuh"
                 sx={{ mb: 3 }}
                 disabled={isReadOnly}
               />
@@ -268,10 +269,9 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           {!values.allDay && (
             <Field
               name="Waktu"
-              value={`${format(new Date(values.start), 'dd/MM/yyyy hh:mm a')} - ${format(
-                new Date(values.end),
-                'dd/MM/yyyy hh:mm a'
-              )}`}
+              value={`${format(new Date(values.start), 'dd/MM/yyyy hh:mm a', {
+                locale: id
+              })} - ${format(new Date(values.end), 'dd/MM/yyyy hh:mm a', { locale: id })}`}
               isReadOnly={isReadOnly}
               field={
                 <Stack direction="row" spacing={1}>
