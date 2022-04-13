@@ -31,7 +31,7 @@ const sidebarConfig = [
     subheader: 'general',
     items: [
       { title: 'dashboard', path: PATH_DASHBOARD.general.dashboard, icon: ICONS.dashboard },
-      { title: 'activities', path: PATH_DASHBOARD.general.activities, icon: ICONS.calendar },
+      { title: 'aktivitas', path: PATH_DASHBOARD.general.activities, icon: ICONS.calendar },
       { title: 'Forum', path: PATH_DASHBOARD.general.forum, icon: ICONS.chat },
       {
         title: 'blogs',
@@ -54,17 +54,20 @@ const sidebarConfig = [
   },
   // MANAGEMENT
   {
-    subheader: 'management',
+    subheader: 'manajemen',
     accessibleRoles: ['ADMIN'],
     items: [
       // MANAGEMENT : USER
       {
-        title: 'user',
+        title: 'pengguna',
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
         children: [
           { title: 'list', path: PATH_DASHBOARD.user.list },
-          { title: 'Member Verification', path: PATH_DASHBOARD.user.memberVerification.verify }
+          {
+            title: 'verifikasi calon anggota',
+            path: PATH_DASHBOARD.user.memberVerification.verify
+          }
         ]
       },
       // MANAGEMENT : FINANCE

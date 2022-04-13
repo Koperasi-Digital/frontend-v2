@@ -58,7 +58,7 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
                 {`${address.address}, ${address.city}, ${address.state}, ${address.country} ${address.zipCode}`}
                 {address.isDefault && (
                   <Label color="info" sx={{ ml: 1 }}>
-                    Default
+                    Utama
                   </Label>
                 )}
               </Typography>
@@ -79,7 +79,7 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
                     onClick={() => deleteAddress(address.id)}
                     sx={{ mr: 1 }}
                   >
-                    Delete
+                    Hapus
                   </Button>
                   <Button
                     size="small"
@@ -96,7 +96,7 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
                       startIcon={<Icon icon={checkmarkOutline} />}
                       onClick={() => setAddressAsDefault(address.id)}
                     >
-                      Set As Default
+                      Jadikan Alamat Utama
                     </Button>
                   )}
                 </Box>

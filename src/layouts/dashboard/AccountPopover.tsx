@@ -22,12 +22,12 @@ import CurrentRoleSwitch from './CurrentRoleSwitch';
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
+    label: 'Beranda',
     icon: homeFill,
     linkTo: '/'
   },
   {
-    label: 'My Account',
+    label: 'Akun Saya',
     icon: personFill,
     linkTo: PATH_DASHBOARD.user.account
   }
@@ -59,7 +59,7 @@ export default function AccountPopover() {
       }
     } catch (error) {
       console.error(error);
-      enqueueSnackbar('Unable to logout', { variant: 'error' });
+      enqueueSnackbar('Error, silakan refresh halaman ini', { variant: 'error' });
     }
   };
 

@@ -63,12 +63,6 @@ export type UserManager = {
   id: string;
   displayName: string;
   email: string;
-  phoneNumber: string | null;
-  country: string | null;
-  address: string | null;
-  state: string | null;
-  city: string | null;
-  zipCode: string | null;
   photoURL: string | null;
   roles: Role[];
   storeName: string | null;

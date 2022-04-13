@@ -29,17 +29,17 @@ export default function UserCreate() {
 
   return (
     <Page
-      title={`User: ${
-        isEdit ? `Edit user - ${currentUser?.displayName}` : `Create a new user`
+      title={`${
+        isEdit ? `Edit Pengguna - ${currentUser?.displayName}` : `Buat Pengguna Baru`
       } | CoopChick`}
     >
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={!isEdit ? 'Create a new user' : 'Edit user'}
+          heading={!isEdit ? 'Buat Pengguna Baru' : 'Edit Pengguna'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: !isEdit ? 'New user' : name }
+            { name: 'Pengguna', href: PATH_DASHBOARD.user.root },
+            { name: !isEdit ? 'Pengguna Baru' : name }
           ]}
         />
 

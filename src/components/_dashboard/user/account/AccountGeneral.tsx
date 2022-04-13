@@ -16,7 +16,7 @@ import { User } from '../../../../@types/account';
 
 // ----------------------------------------------------------------------
 
-interface InitialState extends User {
+interface InitialState extends Partial<User> {
   afterSubmit?: string;
 }
 
@@ -26,7 +26,7 @@ export default function AccountGeneral() {
   const { user, updateProfile } = useAuth();
 
   const UpdateUserSchema = Yup.object().shape({
-    displayName: Yup.string().required('Name is required')
+    displayName: Yup.string().required('Nama harus diisi')
   });
 
   const formik = useFormik<InitialState>({
@@ -44,7 +44,7 @@ export default function AccountGeneral() {
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
         updateProfile(values);
-        enqueueSnackbar('Update success', { variant: 'success' });
+        enqueueSnackbar('Pengguna berhasil diedit!', { variant: 'success' });
         if (isMountedRef.current) {
           setSubmitting(false);
         }
@@ -81,11 +81,11 @@ export default function AccountGeneral() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={{ xs: 2, md: 3 }}>
                 <TextField fullWidth label="Name" {...getFieldProps('displayName')} />
-                <TextField fullWidth disabled label="Email Address" {...getFieldProps('email')} />
+                <TextField fullWidth disabled label="Email" {...getFieldProps('email')} />
               </Stack>
               <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  Save Changes
+                  Simpan
                 </LoadingButton>
               </Box>
             </Card>
@@ -120,10 +120,8 @@ export default function AccountGeneral() {
                       color: 'text.secondary'
                     }}
                   >
-                    Click the image to upload a new Avatar
-                    <br />
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
-                    <br /> max size of {fData(3145728)}
+                    Ekstensi file: *.jpeg, *.jpg, *.png, *.gif
+                    <br /> dengan ukuran {fData(3145728)}
                   </Typography>
                 }
               />
