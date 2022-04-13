@@ -28,6 +28,8 @@ import BlogNewPostPreview from './BlogNewPostPreview';
 import { editBlog, getBlogById } from 'redux/slices/blog';
 import useAuth from 'hooks/useAuth';
 import PermissionDenied from 'components/PermissionDenied';
+import { handleUploadFile } from 'utils/bucket';
+import { fTimestamp } from 'utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -57,7 +59,6 @@ export default function BlogEditPostForm() {
   const { user, currentRole } = useAuth();
   const isAdmin = currentRole?.name === 'ADMIN';
   const canEdit = post?.author.id === user?.id || isAdmin ? true : false;
-  console.log(post);
 
   useEffect(() => {
     if (parseInt(id) > 0) {
@@ -92,8 +93,20 @@ export default function BlogEditPostForm() {
     validationSchema: NewBlogSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
+        const uploadFileMessage = await handleUploadFile(
+          values.cover,
+          'blog',
+          values.cover.path + fTimestamp(new Date())
+        );
         await dispatch(
-          editBlog(parseInt(id), values.title, values.description, values.content, values.tags)
+          editBlog(
+            parseInt(id),
+            values.title,
+            values.description,
+            values.content,
+            uploadFileMessage,
+            values.tags
+          )
         );
         resetForm();
         handleClosePreview();
@@ -114,10 +127,7 @@ export default function BlogEditPostForm() {
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file) {
-        setFieldValue('cover', {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
+        setFieldValue('cover', Object.assign(file, { preview: URL.createObjectURL(file) }));
       }
     },
     [setFieldValue]

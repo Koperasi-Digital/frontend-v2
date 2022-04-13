@@ -98,15 +98,15 @@ export function getOwnPosts(userId: number) {
   };
 }
 
-//TODO add media (link url or file)
-export function createForum(userId: number, topic: string, message: string) {
+export function createForum(userId: number, topic: string, message: string, media: string) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       await axios.post(`forum/create-forum`, {
         userId,
         topic,
-        message
+        message,
+        media
       });
       dispatch(slice.actions.addForum());
     } catch (error) {
