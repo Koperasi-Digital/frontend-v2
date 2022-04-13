@@ -11,7 +11,11 @@ import { PATH_DASHBOARD } from 'routes/paths';
 //
 import { handleCreateTransaction } from 'utils/financeTransaction';
 import { handleCreateOrder } from 'utils/financeOrder';
-import { handleAddOrderSimpananSukarela } from 'utils/financeSimpanan';
+import {
+  handleAddOrderSimpananSukarela,
+  handleGetSimpananSukarela,
+  handleCreateSimpananSukarela
+} from 'utils/financeSimpanan';
 
 type transaction_details = {
   order_id: number;
@@ -60,6 +64,11 @@ export default function AddSimpananSukarelaForm() {
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         const createdOrder = await handleCreateOrder(userId, Number(values.amount));
+        console.log('Created order: ', createdOrder);
+        const fetchedSimpananSukarela = await handleGetSimpananSukarela(userId);
+        if (!fetchedSimpananSukarela) {
+          await handleCreateSimpananSukarela(userId);
+        }
         await handleAddOrderSimpananSukarela(userId, createdOrder.id);
         await paymentFunction(userId, {
           order_id: createdOrder.id,

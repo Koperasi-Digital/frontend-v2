@@ -97,17 +97,29 @@ export default function CheckoutPayment() {
   const dispatch = useDispatch();
   const { total, discount, subtotal, shipping, orderId, cart } = checkout;
 
+  console.log('Cart');
+  console.log(cart);
+  console.log('===============');
+
   //TODO: Ubah data" ini langsung ada di reduxnya (soalnya aku liat di BE ada field" ini tp di FEnya blm dikasih field" ini)
+
+  const orderDetailCategoryList = ['Supply', 'Equipment'];
 
   const cartTemp = JSON.parse(JSON.stringify(cart));
   for (let i = 0; i < cartTemp.length; i++) {
     cartTemp[i].seller_id = 1;
     cartTemp[i].PRODUCT_ID = 1;
     cartTemp[i].SHIPMENT_ID = 1;
+    cartTemp[i].category =
+      orderDetailCategoryList[Math.floor(Math.random() * orderDetailCategoryList.length)];
     cartTemp[i].shipment_price = 10000;
   }
 
   //END OF TODO
+
+  console.log('Cart Temp');
+  console.log(cartTemp);
+  console.log('==========');
 
   const handleBackStep = () => {
     dispatch(onBackStep());
@@ -188,7 +200,6 @@ export default function CheckoutPayment() {
       const editedOrder = await handleEditOrder(orderId, Math.floor(total));
       return editedOrder;
     }
-    //TODO: INSERT ORDER DETAIL TO DB
   };
 
   const PaymentSchema = Yup.object().shape({

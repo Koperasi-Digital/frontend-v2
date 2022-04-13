@@ -50,7 +50,7 @@ export async function handleBeliBahanBakuNeraca(
   userId: number,
   periode: string,
   price: number,
-  tax: number
+  addition: number
 ) {
   try {
     await axios.post('laporan-neraca/edit', {
@@ -65,7 +65,7 @@ export async function handleBeliBahanBakuNeraca(
       periode: periode,
       field: 'beban',
       isAdd: 1,
-      amount: tax
+      amount: addition
     });
     await axios.post('laporan-neraca/edit', {
       userId: userId,
@@ -79,7 +79,49 @@ export async function handleBeliBahanBakuNeraca(
       periode: periode,
       field: 'modal',
       isAdd: 1,
-      amount: tax
+      amount: addition
+    });
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
+export async function handleBeliPeralatanNeraca(
+  userId: number,
+  periode: string,
+  price: number,
+  addition: number
+) {
+  try {
+    await axios.post('laporan-neraca/edit', {
+      userId: userId,
+      periode: periode,
+      field: 'asetTetap',
+      isAdd: 1,
+      amount: price
+    });
+    await axios.post('laporan-neraca/edit', {
+      userId: userId,
+      periode: periode,
+      field: 'beban',
+      isAdd: 1,
+      amount: addition
+    });
+    await axios.post('laporan-neraca/edit', {
+      userId: userId,
+      periode: periode,
+      field: 'modal',
+      isAdd: 1,
+      amount: price
+    });
+    const response = await axios.post('laporan-neraca/edit', {
+      userId: userId,
+      periode: periode,
+      field: 'modal',
+      isAdd: 1,
+      amount: addition
     });
     return response.data.payload;
   } catch (e) {
@@ -92,7 +134,7 @@ export async function handleJualProdukNeraca(
   userId: number,
   periode: string,
   price: number,
-  serviceTax: number
+  addition: number
 ) {
   try {
     await axios.post('laporan-neraca/edit', {
@@ -107,7 +149,7 @@ export async function handleJualProdukNeraca(
       periode: periode,
       field: 'kas',
       isAdd: 0,
-      amount: serviceTax
+      amount: addition
     });
     await axios.post('laporan-neraca/edit', {
       userId: userId,
@@ -121,7 +163,7 @@ export async function handleJualProdukNeraca(
       periode: periode,
       field: 'beban',
       isAdd: 1,
-      amount: serviceTax
+      amount: addition
     });
     return response.data.payload;
   } catch (e) {
@@ -143,29 +185,6 @@ export async function handlePencairanSaldoNeraca(userId: number, periode: string
       userId: userId,
       periode: periode,
       field: 'prive',
-      isAdd: 1,
-      amount: amount
-    });
-    return response.data.payload;
-  } catch (e) {
-    console.log(e);
-    return undefined;
-  }
-}
-
-export async function handleBeliPeralatanNeraca(userId: number, periode: string, amount: number) {
-  try {
-    await axios.post('laporan-neraca/edit', {
-      userId: userId,
-      periode: periode,
-      field: 'asetTetap',
-      isAdd: 1,
-      amount: amount
-    });
-    const response = await axios.post('laporan-neraca/edit', {
-      userId: userId,
-      periode: periode,
-      field: 'modal',
       isAdd: 1,
       amount: amount
     });
@@ -253,7 +272,7 @@ export async function handleJualProdukLabaRugi(
   userId: number,
   periode: string,
   price: number,
-  serviceTax: number,
+  addition: number,
   biayaProduksi: number
 ) {
   try {
@@ -262,7 +281,7 @@ export async function handleJualProdukLabaRugi(
       periode: periode,
       field: 'jumlahPenjualan',
       isAdd: 1,
-      amount: price - serviceTax
+      amount: price - addition
     });
     const response = await axios.post('laporan-neraca/edit', {
       userId: userId,
@@ -357,7 +376,7 @@ export async function handleJualProdukArusKas(
   userId: number,
   periode: string,
   price: number,
-  serviceTax: number
+  addition: number
 ) {
   try {
     const response = await axios.post('laporan-neraca/edit', {
@@ -365,7 +384,7 @@ export async function handleJualProdukArusKas(
       periode: periode,
       field: 'kasMasuk',
       isAdd: 1,
-      amount: price - serviceTax
+      amount: price - addition
     });
     return response.data.payload;
   } catch (e) {

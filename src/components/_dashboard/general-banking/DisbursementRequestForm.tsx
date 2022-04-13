@@ -47,6 +47,7 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
         const saldo = await handleGetSaldo(user.id);
         if (saldo) {
           setSaldo(saldo.amount);
+          setMaxDisbursement(saldo.amount);
         }
         const simpananSukarela = await handleGetSimpananSukarela(user.id);
         if (simpananSukarela) {

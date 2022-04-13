@@ -104,6 +104,18 @@ export async function handleEditSimpananSukarela(userId: number, amount: number,
   }
 }
 
+export async function handleCreateSimpananSukarela(userId: number) {
+  try {
+    const response = await axios.post('simpanan-sukarela/create', {
+      userId: userId
+    });
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
 export async function handleAddOrderSimpananSukarela(userId: number, orderId: string) {
   try {
     const response = await axios.post('simpanan-sukarela/add-order', {

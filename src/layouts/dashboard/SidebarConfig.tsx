@@ -129,7 +129,7 @@ const sidebarConfig = [
       {
         title: 'deprecation register',
         path: PATH_DASHBOARD.finance.deprecationRegister,
-        accessibleRoles: ['CUSTOMER'],
+        accessibleRoles: ['MEMBER'],
         icon: ICONS.banking
       }
     ]
@@ -137,7 +137,7 @@ const sidebarConfig = [
   // E-COMMERCE
   {
     subheader: 'e-commerce',
-    accessibleRoles: ['CUSTOMER'],
+    accessibleRoles: ['MEMBER', 'CUSTOMER'],
     items: [
       { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop, icon: ICONS.cart },
       { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout, icon: ICONS.cart },
