@@ -43,7 +43,13 @@ const sidebarConfig = [
         path: PATH_DASHBOARD.general.course,
         icon: ICONS.course
       },
-      { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq }
+      { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq },
+      {
+        title: 'Request Keanggotaan',
+        accessibleRoles: ['CUSTOMER'],
+        path: PATH_DASHBOARD.user.memberVerification.request,
+        icon: ICONS.faq
+      }
     ]
   },
   // MANAGEMENT
@@ -56,7 +62,10 @@ const sidebarConfig = [
         title: 'user',
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
-        children: [{ title: 'list', path: PATH_DASHBOARD.user.list }]
+        children: [
+          { title: 'list', path: PATH_DASHBOARD.user.list },
+          { title: 'Member Verification', path: PATH_DASHBOARD.user.memberVerification.verify }
+        ]
       },
       // MANAGEMENT : FINANCE
       {
@@ -141,7 +150,8 @@ const sidebarConfig = [
     items: [
       { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop, icon: ICONS.cart },
       { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout, icon: ICONS.cart },
-      { title: 'invoice', path: PATH_DASHBOARD.eCommerce.invoice, icon: ICONS.cart }
+      { title: 'invoice', path: PATH_DASHBOARD.eCommerce.invoice, icon: ICONS.cart },
+      { title: 'history', path: PATH_DASHBOARD.eCommerce.orderHistory, icon: ICONS.cart }
     ]
   }
 ];

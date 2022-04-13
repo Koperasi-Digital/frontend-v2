@@ -1,17 +1,13 @@
-import { findIndex } from 'lodash';
 import { Icon } from '@iconify/react';
-import { useState } from 'react';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 import { Link as RouterLink } from 'react-router-dom';
-import { paramCase } from 'change-case';
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Grid, Card, IconButton, Typography, CardContent, Button } from '@mui/material';
+import { Box, Grid, Card, IconButton, Typography, CardContent, Button, Stack } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
-import LightboxModal from '../../LightboxModal';
 // @types
-import { Gallery } from '../../../@types/user';
+import { CourseList } from '../../../@types/course';
 // ----------------------------------------------------------------------
 
 const CaptionStyle = styled(CardContent)(({ theme }) => ({
@@ -29,7 +25,7 @@ const CaptionStyle = styled(CardContent)(({ theme }) => ({
   borderBottomRightRadius: theme.shape.borderRadiusMd
 }));
 
-const GalleryImgStyle = styled('img')({
+const ImgStyle = styled('img')({
   top: 0,
   width: '100%',
   height: '100%',
@@ -39,73 +35,44 @@ const GalleryImgStyle = styled('img')({
 
 // ----------------------------------------------------------------------
 
-type GalleryItemProps = {
-  image: Gallery;
-  onOpenLightbox: (value: string) => void;
+type CourseListProps = {
+  courseList: CourseList[];
+  isAdmin: boolean;
 };
 
-function GalleryItem({ image, onOpenLightbox }: GalleryItemProps) {
-  const { imageUrl, title, postAt } = image;
-  return (
-    <Card sx={{ pt: '100%', cursor: 'pointer' }}>
-      <GalleryImgStyle
-        alt="gallery image"
-        src={imageUrl}
-        onClick={() => onOpenLightbox(imageUrl)}
-      />
-
-      <CaptionStyle>
-        <Button component={RouterLink} to={paramCase(title)}>
-          <Typography variant="subtitle1">{title}</Typography>
-          <Typography variant="body2" sx={{ opacity: 0.72 }}>
-            {fDate(postAt)}
-          </Typography>
-        </Button>
-        <IconButton color="inherit">
-          <Icon icon={moreVerticalFill} width={20} height={20} />
-        </IconButton>
-      </CaptionStyle>
-    </Card>
-  );
-}
-
-type ProfileGalleryProps = {
-  gallery: Gallery[];
-};
-
-export default function CourseList({ gallery }: ProfileGalleryProps) {
-  const [openLightbox, setOpenLightbox] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<number>(0);
-  const imagesLightbox = gallery.map((img) => img.imageUrl);
-
-  const handleOpenLightbox = (url: string) => {
-    const selectedImage = findIndex(imagesLightbox, (index) => index === url);
-    setOpenLightbox(true);
-    setSelectedImage(selectedImage);
-  };
+export default function CourseListCard({ courseList, isAdmin }: CourseListProps) {
   return (
     <Box sx={{ mt: 5 }}>
-      {/* <Typography variant="h4" sx={{ mb: 3 }}>
-        Gallery
-      </Typography> */}
+      <Grid container spacing={3}>
+        {courseList.map((course) => (
+          <Grid key={course.id} item xs={12} sm={6} md={4}>
+            <Card sx={{ pt: '100%', cursor: 'pointer' }}>
+              <ImgStyle alt="Cover" src={course.cover} />
 
-      <Card sx={{ p: 3 }}>
-        <Grid container spacing={3}>
-          {gallery.map((image) => (
-            <Grid key={image.id} item xs={12} sm={6} md={4}>
-              <GalleryItem image={image} onOpenLightbox={handleOpenLightbox} />
-            </Grid>
-          ))}
-        </Grid>
-
-        <LightboxModal
-          images={imagesLightbox}
-          photoIndex={selectedImage}
-          setPhotoIndex={setSelectedImage}
-          isOpen={openLightbox}
-          onClose={() => setOpenLightbox(false)}
-        />
-      </Card>
+              <CaptionStyle>
+                <Button component={RouterLink} to={String(course.id)}>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    spacing={2}
+                  >
+                    <Typography variant="subtitle1">{course.title}</Typography>
+                    <Typography variant="body2" sx={{ opacity: 0.72 }}>
+                      {fDate(course.created_at)}
+                    </Typography>
+                  </Stack>
+                </Button>
+                {isAdmin ? (
+                  <IconButton color="primary">
+                    <Icon icon={moreVerticalFill} width={20} height={20} />
+                  </IconButton>
+                ) : null}
+              </CaptionStyle>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
     </Box>
   );
 }

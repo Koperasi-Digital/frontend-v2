@@ -1,0 +1,232 @@
+import { useState, useEffect, useCallback } from 'react';
+import {
+  Card,
+  Table,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TablePagination,
+  CardHeader,
+  Container,
+  Box,
+  Button,
+  styled,
+  Link
+} from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import { paramCase } from 'change-case';
+// utils
+import axios from 'utils/axios';
+// routes
+import { PATH_DASHBOARD } from 'routes/paths';
+// hooks
+import useIsMountedRef from 'hooks/useIsMountedRef';
+// components
+import Scrollbar from 'components/Scrollbar';
+import Page from 'components/Page';
+import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
+import LightboxModal from 'components/LightboxModal';
+
+// ----------------------------------------------------------------------
+
+const ImgStyle = styled('img')(() => ({
+  top: 0,
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  position: 'absolute'
+}));
+
+export default function MemberVerification() {
+  const isMountedRef = useIsMountedRef();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [memberVerificationList, setMemberVerificationList] = useState([]);
+  const [openLightbox, setOpenLightbox] = useState(false);
+  const [lightboxImages, setLightboxImages] = useState({ images: [''], selectedIndex: 0 });
+  const { enqueueSnackbar } = useSnackbar();
+
+  const getMemberVerification = useCallback(async () => {
+    try {
+      const response = await axios.get('member-verification');
+      if (isMountedRef.current) {
+        setMemberVerificationList(response.data.payload);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isMountedRef]);
+
+  useEffect(() => {
+    getMemberVerification();
+  }, [getMemberVerification]);
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleOpenLightbox = (index: number, images?: string[]) => {
+    setOpenLightbox(true);
+    setLightboxImages((prev) => ({
+      images: images || prev.images,
+      selectedIndex: index
+    }));
+  };
+
+  const handleAcceptVerification = (userId: number) => {
+    axios.post('member-verification/verify', { id: userId }).then(() => {
+      setMemberVerificationList((prev) =>
+        prev.filter((memberVerification: any) => memberVerification.user.id !== userId)
+      );
+      enqueueSnackbar('Pengguna berhasil terverifikasi!', { variant: 'success' });
+    });
+  };
+
+  const handleRejectVerification = (userId: number) => {
+    axios.post('member-verification/reject', { id: userId }).then(() => {
+      setMemberVerificationList((prev) =>
+        prev.filter((memberVerification: any) => memberVerification.user.id !== userId)
+      );
+      enqueueSnackbar('Verifikasi pengguna berhasil ditolak!', { variant: 'success' });
+    });
+  };
+
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - memberVerificationList.length) : 0;
+
+  return (
+    <Page title="Verifikasi Calon Anggota Koperasi | CoopChick">
+      <Container maxWidth={false}>
+        <HeaderBreadcrumbs
+          heading="Verifikasi Calon Anggota Koperasi"
+          links={[
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            {
+              name: 'Verifikasi Calon Anggota Koperasi',
+              href: PATH_DASHBOARD.user.memberVerification.verify
+            }
+          ]}
+        />
+        <Card>
+          <CardHeader title="Verifikasi Calon Anggota Koperasi" sx={{ mb: 3 }} />
+          <Scrollbar>
+            <TableContainer sx={{ minWidth: 800 }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Verification ID</TableCell>
+                    <TableCell>User ID</TableCell>
+                    <TableCell>Nama</TableCell>
+                    <TableCell sx={{ width: '15%' }}>Foto KTP</TableCell>
+                    <TableCell sx={{ width: '15%' }}>Foto Selfie</TableCell>
+                    <TableCell>Aksi</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {memberVerificationList
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => {
+                      const { id, user, identityCardPhotoURL, selfiePhotoURL } = row;
+                      const { displayName, id: userId } = user;
+                      const images = [identityCardPhotoURL, selfiePhotoURL];
+
+                      return (
+                        <TableRow hover key={id} tabIndex={-1}>
+                          <TableCell align="left">{id}</TableCell>
+                          <TableCell align="left">{userId}</TableCell>
+                          <TableCell align="left">
+                            <Link
+                              to={PATH_DASHBOARD.user.detail.replace(
+                                ':name',
+                                paramCase(displayName)
+                              )}
+                              component={RouterLink}
+                            >
+                              {displayName}
+                            </Link>
+                          </TableCell>
+                          <TableCell align="left">
+                            <Box sx={{ pt: '100%', position: 'relative' }}>
+                              <ImgStyle
+                                alt={identityCardPhotoURL}
+                                src={identityCardPhotoURL}
+                                onClick={() => handleOpenLightbox(0, images)}
+                              />
+                            </Box>
+                          </TableCell>
+                          <TableCell align="left">
+                            <Box sx={{ pt: '100%', position: 'relative' }}>
+                              <ImgStyle
+                                alt={selfiePhotoURL}
+                                src={selfiePhotoURL}
+                                onClick={() => handleOpenLightbox(1, images)}
+                              />
+                            </Box>
+                          </TableCell>
+                          <TableCell align="left">
+                            <Box display="flex" gap={2}>
+                              <Button
+                                color="success"
+                                variant="contained"
+                                size="small"
+                                onClick={() => handleAcceptVerification(userId)}
+                              >
+                                Terima
+                              </Button>
+                              <Button
+                                color="error"
+                                variant="contained"
+                                size="small"
+                                onClick={() => handleRejectVerification(userId)}
+                              >
+                                Tolak
+                              </Button>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+                {!memberVerificationList.length && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        Kosong
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
+          </Scrollbar>
+
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={memberVerificationList.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={(e, page) => setPage(page)}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Card>
+        <LightboxModal
+          images={lightboxImages.images}
+          photoIndex={lightboxImages.selectedIndex}
+          isOpen={openLightbox}
+          setPhotoIndex={handleOpenLightbox}
+          onClose={() => setOpenLightbox(false)}
+        />
+      </Container>
+    </Page>
+  );
+}

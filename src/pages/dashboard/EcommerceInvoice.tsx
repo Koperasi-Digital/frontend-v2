@@ -91,12 +91,7 @@ export default function EcommerceInvoice() {
         <Card sx={{ pt: 5, px: 5 }}>
           <Grid container>
             <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-              <Box
-                component="img"
-                alt="logo"
-                src="/static/brand/logo_full.svg"
-                sx={{ height: 48 }}
-              />
+              <Box component="img" alt="logo" src="/favicon/icon-512x512.png" sx={{ height: 48 }} />
             </Grid>
 
             <Grid item xs={12} sm={6} sx={{ mb: 5 }}>

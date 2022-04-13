@@ -43,8 +43,8 @@ export const PATH_DASHBOARD = {
     forum: path(ROOTS_DASHBOARD, '/forum'),
     myforum: path(ROOTS_DASHBOARD, '/forum/own'),
     course: path(ROOTS_DASHBOARD, '/course'),
-    courseDetail: path(ROOTS_DASHBOARD, '/course/:title'),
-    coursePage: path(ROOTS_DASHBOARD, '/course/:title/:page')
+    courseDetail: path(ROOTS_DASHBOARD, '/course/:id'),
+    coursePage: path(ROOTS_DASHBOARD, '/course/:courseId/page/:order')
   },
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),
@@ -56,13 +56,18 @@ export const PATH_DASHBOARD = {
     list: path(ROOTS_DASHBOARD, '/user/list'),
     detail: path(ROOTS_DASHBOARD, `/user/:name/detail`),
     editById: path(ROOTS_DASHBOARD, `/user/:name/edit`),
-    account: path(ROOTS_DASHBOARD, '/user/account')
+    account: path(ROOTS_DASHBOARD, '/user/account'),
+    memberVerification: {
+      request: path(ROOTS_DASHBOARD, '/user/member-verification/request'),
+      verify: path(ROOTS_DASHBOARD, '/user/member-verification/verify')
+    }
   },
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
     shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
     seller: path(ROOTS_DASHBOARD, '/e-commerce/seller'),
     orderById: path(ROOTS_DASHBOARD, '/e-commerce/order/:id'),
+    orderHistory: path(ROOTS_DASHBOARD, '/e-commerce/order-history'),
     orderList: path(ROOTS_DASHBOARD, '/e-commerce/order-list'),
     product: path(ROOTS_DASHBOARD, '/e-commerce/product/:name'),
     productById: path(ROOTS_DASHBOARD, '/e-commerce/product/itik-ayam'),

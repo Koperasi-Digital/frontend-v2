@@ -19,15 +19,6 @@ const RootStyle = styled(Page)(({ theme }) => ({
   }
 }));
 
-// const SectionStyle = styled(Card)(({ theme }) => ({
-//   width: '100%',
-//   maxWidth: 464,
-//   display: 'flex',
-//   flexDirection: 'column',
-//   justifyContent: 'center',
-//   margin: theme.spacing(2, 0, 2, 2)
-// }));
-
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
   margin: 'auto',
@@ -49,15 +40,6 @@ export default function Register() {
           Login
         </Link>
       </AuthLayout>
-
-      {/* <MHidden width="mdDown">
-        <SectionStyle>
-          <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Manage the job more effectively with Minimal
-          </Typography>
-          <img alt="register" src="/static/illustrations/illustration_register.png" />
-        </SectionStyle>
-      </MHidden> */}
 
       <Container>
         <ContentStyle>

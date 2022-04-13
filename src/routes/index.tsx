@@ -130,9 +130,30 @@ export default function Router() {
             </RoleBasedGuard>
           )
         },
-        { path: 'course', element: <Course /> },
-        { path: 'course/:title', element: <CourseDetail /> },
-        { path: 'course/:title/:page', element: <CoursePage /> },
+        {
+          path: 'course',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN', 'MEMBER']}>
+              <Course />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'course/:id',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN', 'MEMBER']}>
+              <CourseDetail />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'course/:courseId/page/:order',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN', 'MEMBER']}>
+              <CoursePage />
+            </RoleBasedGuard>
+          )
+        },
         {
           path: 'e-commerce',
           children: [
@@ -143,6 +164,7 @@ export default function Router() {
             { path: 'general-analytics', element: <GeneralAnalytics /> },
             { path: 'order/:id', element: <EcommerceOrderDetails /> },
             { path: 'order-list', element: <EcommerceOrderList /> },
+            { path: 'order-history', element: <EcommerceOrderHistory /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'list', element: <EcommerceProductList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
@@ -232,7 +254,23 @@ export default function Router() {
                 </RoleBasedGuard>
               )
             },
-            { path: 'account', element: <UserAccount /> }
+            { path: 'account', element: <UserAccount /> },
+            {
+              path: 'member-verification/verify',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <MemberVerification />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'member-verification/request',
+              element: (
+                <RoleBasedGuard accessibleRoles={['CUSTOMER']}>
+                  <RequestMemberVerification />
+                </RoleBasedGuard>
+              )
+            }
           ]
         },
         {
@@ -275,6 +313,9 @@ const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralE
 const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
 // const GeneralBanking = Loadable(lazy(() => import('../pages/dashboard/GeneralBanking')));
 // const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
+const EcommerceOrderHistory = Loadable(
+  lazy(() => import('../pages/dashboard/EcommerceOrderHistory'))
+);
 const EcommerceOrderList = Loadable(lazy(() => import('../pages/dashboard/EcommerceOrderList')));
 const EcommerceOrderDetails = Loadable(
   lazy(() => import('../pages/dashboard/EcommerceOrderDetails'))
@@ -311,6 +352,10 @@ const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 const UserDetail = Loadable(lazy(() => import('../pages/dashboard/UserDetail')));
+const MemberVerification = Loadable(lazy(() => import('../pages/dashboard/MemberVerification')));
+const RequestMemberVerification = Loadable(
+  lazy(() => import('../pages/dashboard/RequestMemberVerification'))
+);
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
