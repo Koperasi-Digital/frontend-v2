@@ -46,11 +46,10 @@ export async function handleAwalPeriodeNeraca(userId: number, periode: string, k
   }
 }
 
-export async function handleBeliBahanBakuNeraca(
+export async function handleAddProductReport(
   userId: number,
   periode: string,
-  price: number,
-  addition: number
+  productionCost: number
 ) {
   try {
     await axios.post('laporan-neraca/edit', {
@@ -58,28 +57,14 @@ export async function handleBeliBahanBakuNeraca(
       periode: periode,
       field: 'persediaan',
       isAdd: 1,
-      amount: price
-    });
-    await axios.post('laporan-neraca/edit', {
-      userId: userId,
-      periode: periode,
-      field: 'beban',
-      isAdd: 1,
-      amount: addition
-    });
-    await axios.post('laporan-neraca/edit', {
-      userId: userId,
-      periode: periode,
-      field: 'modal',
-      isAdd: 1,
-      amount: price
+      amount: productionCost
     });
     const response = await axios.post('laporan-neraca/edit', {
       userId: userId,
       periode: periode,
       field: 'modal',
       isAdd: 1,
-      amount: addition
+      amount: productionCost
     });
     return response.data.payload;
   } catch (e) {

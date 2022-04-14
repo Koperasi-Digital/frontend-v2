@@ -30,6 +30,8 @@ import { Product } from '../../../@types/products';
 import { QuillEditor } from '../../editor';
 import { UploadMultiFile } from '../../upload';
 // import addProduct from 'utils/products';
+import { handleAddProductReport } from 'utils/financeReport';
+import useAuth from 'hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -52,11 +54,15 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
+  const { user } = useAuth();
+  const userId = user?.id;
+
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     description: Yup.string().required('Description is required'),
     images: Yup.array().min(1, 'Images is required'),
-    price: Yup.number().required('Price is required')
+    price: Yup.number().required('Price is required'),
+    productionCost: Yup.number().required('Production cost is required')
   });
 
   const formik = useFormik({
@@ -66,6 +72,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
       name: currentProduct?.name || '',
       category: currentProduct?.category || CATEGORY_OPTION[0],
       price: currentProduct?.price || '',
+      productionCost: currentProduct?.productionCost || '',
       available: currentProduct?.available || '',
       cover:
         currentProduct?.cover || 'http://localhost:3000/static/mock-images/products/product_2.jpg',
@@ -79,7 +86,12 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
       try {
         await fakeRequest(500);
         // await addProduct(values);
-        resetForm();
+        let periodeString = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-1';
+        const prevStock = currentProduct ? currentProduct.available : 0;
+        const productionCost =
+          Number(values.productionCost) * (Number(values.available) - prevStock);
+        await handleAddProductReport(userId, periodeString, productionCost);
+        await resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
         navigate(PATH_DASHBOARD.eCommerce.list);
@@ -211,7 +223,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                     fullWidth
                     placeholder="0"
                     label="Jumlah"
-                    {...getFieldProps('quantity')}
+                    {...getFieldProps('available')}
                     InputProps={{
                       endAdornment: <InputAdornment position="end">kilogram</InputAdornment>,
                       type: 'number'
@@ -230,6 +242,18 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                     }}
                     error={Boolean(touched.price && errors.price)}
                     helperText={touched.price && errors.price}
+                  />
+                  <TextField
+                    fullWidth
+                    placeholder="0"
+                    label="Production Cost"
+                    {...getFieldProps('productionCost')}
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+                      type: 'number'
+                    }}
+                    error={Boolean(touched.productionCost && errors.productionCost)}
+                    helperText={touched.productionCost && errors.productionCost}
                   />
                 </Stack>
               </Card>

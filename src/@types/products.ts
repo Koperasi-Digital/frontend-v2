@@ -35,6 +35,7 @@ export type Product = {
   sku: string;
   name: string;
   price: number;
+  productionCost: number;
   category: ProductCategory;
   available: number;
   cover: string;
@@ -55,6 +56,7 @@ export type CartItem = {
   subtotal: number;
   seller_id: number;
   store_name: string | null;
+  product_id: number;
   shipment_id: number | null;
   shipment_price: number | null;
 };
