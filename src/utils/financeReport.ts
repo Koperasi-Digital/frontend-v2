@@ -73,6 +73,29 @@ export async function handleAddProductReport(
   }
 }
 
+export async function handleAddEquipment(userId: number, periode: string, price: number) {
+  try {
+    await axios.post('laporan-neraca/edit', {
+      userId: userId,
+      periode: periode,
+      field: 'asetTetap',
+      isAdd: 1,
+      amount: price
+    });
+    const response = await axios.post('laporan-neraca/edit', {
+      userId: userId,
+      periode: periode,
+      field: 'modal',
+      isAdd: 1,
+      amount: price
+    });
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
 export async function handleBeliPeralatanNeraca(
   userId: number,
   periode: string,

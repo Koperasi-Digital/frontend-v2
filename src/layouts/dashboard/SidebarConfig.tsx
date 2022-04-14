@@ -140,6 +140,12 @@ const sidebarConfig = [
         path: PATH_DASHBOARD.finance.deprecationRegister,
         accessibleRoles: ['MEMBER'],
         icon: ICONS.banking
+      },
+      {
+        title: 'equipment register',
+        path: PATH_DASHBOARD.finance.equipmentRegister,
+        accessibleRoles: ['MEMBER'],
+        icon: ICONS.banking
       }
     ]
   },
