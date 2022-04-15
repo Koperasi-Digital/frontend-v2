@@ -1,4 +1,4 @@
-import { Stack, Grid, Container, Typography, Card, Box, styled } from '@mui/material';
+import { Button, Stack, Grid, Container, Typography, Card, Box, styled } from '@mui/material';
 import { fDate } from 'utils/formatTime';
 import { fCurrency } from 'utils/formatNumber';
 import { OrderDetails } from '../../../../@types/order';
@@ -15,12 +15,25 @@ type OrderDetailsSummaryProps = {
   orderDetails: OrderDetails;
 };
 
+function getNextStatus(status: string) {
+  if (status === 'SEDANG DISIAPKAN') {
+    return 'KONFIRMASI DALAM PENGIRIMAN';
+  } else if (status === 'DALAM PENGIRIMAN') {
+    return 'KONFIRMASI SUDAH SAMPAI';
+  } else if (status === 'SEDANG DISIAPKAN') {
+    return 'KONFIRMASI DALAM PENGIRIMAN';
+  } else {
+    return 'NONE';
+  }
+}
+
 export default function OrderDetailsSummary({ orderDetails }: OrderDetailsSummaryProps) {
   const { id, order, product, seller, quantity, subtotal, status } = orderDetails;
   const timestamp = order.timestamp;
   const product_name = product.name;
   const cover = product.cover;
   const seller_name = seller.displayName;
+  const nextStatus = getNextStatus(status);
   return (
     <Container>
       <Grid container>
@@ -72,6 +85,9 @@ export default function OrderDetailsSummary({ orderDetails }: OrderDetailsSummar
               <Typography>Jalan Ganesha No. 10 Bandung</Typography>
             </Stack>
           </Card>
+          <Button size="medium" variant="contained" sx={{ float: 'right', mx: 2, px: 2 }}>
+            {nextStatus}
+          </Button>
         </Grid>
       </Grid>
     </Container>

@@ -1,5 +1,6 @@
 import { FormikProps } from 'formik';
 import { User } from './account';
+import { UserAddressBook } from './user';
 
 // ----------------------------------------------------------------------
 
@@ -9,7 +10,7 @@ export type ProductInventoryType = 'Active' | 'Inactive' | 'Low Stock';
 
 export type ProductCategory = 'Ayam' | 'Infrastruktur' | 'Kandang';
 
-export type OnCreateBilling = (address: BillingAddress) => void;
+export type OnCreateBilling = (address: UserAddressBook) => void;
 
 export type FormikPropsShopView = FormikProps<ProductFilter>;
 
@@ -59,14 +60,6 @@ export type CartItem = {
   shipment_price: number | null;
 };
 
-export type BillingAddress = {
-  receiver: string;
-  phone: string;
-  fullAddress: string;
-  addressType: string;
-  isDefault: boolean;
-};
-
 export type ProductState = {
   isLoading: boolean;
   error: boolean;
@@ -88,7 +81,7 @@ export type ProductState = {
     total: number;
     discount: number;
     shipping: number;
-    billing: BillingAddress | null;
+    billing: UserAddressBook | null;
   };
 };
 
