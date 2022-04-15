@@ -77,21 +77,24 @@ const JWTReducer = (state: AuthState, action: JWTActions) => {
         ...state,
         isAuthenticated: true,
         user: action.payload.user,
-        currentRole: action.payload.currentRole
+        currentRole: action.payload.currentRole,
+        isSeller: action.payload.isSeller
       };
     case Types.Logout:
       return {
         ...state,
         isAuthenticated: false,
         user: null,
-        currentRole: null
+        currentRole: null,
+        isSeller: false
       };
     case Types.Register:
       return {
         ...state,
         isAuthenticated: true,
         user: action.payload.user,
-        currentRole: action.payload.currentRole
+        currentRole: action.payload.currentRole,
+        isSeller: action.payload.isSeller
       };
     case Types.Update:
       return {
@@ -183,15 +186,14 @@ function AuthProvider({ children }: { children: ReactNode }) {
     email: string,
     password: string,
     passwordConfirm: string,
-    firstName: string,
-    lastName: string,
+    displayName: string,
     isMember: boolean
   ) => {
     const response = await axios.post('auth/register', {
       email,
       password,
       passwordConfirm,
-      displayName: firstName.concat(' ', lastName),
+      displayName,
       isMember
     });
     const { accessToken, refreshToken, user } = response.data.payload;
