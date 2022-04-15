@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { handleGetNeracaInfo } from 'utils/financeReport';
+import { handleGetNeracaInfo } from 'utils/financeAxios/financeReport';
 
 import { styled } from '@mui/material/styles';
 

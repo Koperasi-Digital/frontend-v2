@@ -4,7 +4,7 @@ import ReactApexChart from 'react-apexcharts';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Card, Divider, CardHeader, useMediaQuery } from '@mui/material';
 
-import { handleGetLabaRugiInfo } from '../../../../utils/financeReport';
+import { handleGetLabaRugiInfo } from '../../../../utils/financeAxios/financeReport';
 
 // ----------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { handleGetCoopNeracaInfo } from 'utils/financeCoopReport';
+import { handleGetCoopNeracaInfo } from 'utils/financeAxios/financeCoopReport';
 
 import { styled } from '@mui/material/styles';
 

@@ -21,7 +21,7 @@ import {
   handleKerusakanAlatLabaRugi,
   handleKerusakanBahanBakuNeraca,
   handleKerusakanBahanBakuLabaRugi
-} from 'utils/financeReport';
+} from 'utils/financeAxios/financeReport';
 
 export default function DeprecationRegisterForm() {
   const { enqueueSnackbar } = useSnackbar();

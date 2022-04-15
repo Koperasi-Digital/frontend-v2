@@ -7,7 +7,7 @@ import { Card, CardHeader, Box } from '@mui/material';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 
-import { handleGetLabaRugiInfo } from '../../../../utils/financeReport';
+import { handleGetLabaRugiInfo } from '../../../../utils/financeAxios/financeReport';
 
 // hooks
 import useAuth from 'hooks/useAuth';

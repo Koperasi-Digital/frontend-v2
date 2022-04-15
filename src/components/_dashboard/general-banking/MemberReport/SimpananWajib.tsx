@@ -2,8 +2,8 @@ import { Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { PaymentCreation as PaymentButton } from 'components/_dashboard/general-banking';
 
-import { handleGetSimpananWajib, handleAddOrderSimpananWajib } from 'utils/financeSimpanan';
-import { handleCreateOrder } from 'utils/financeOrder';
+import { handleGetSimpananWajib, handleAddOrderSimpananWajib } from 'utils/financeAxios/financeSimpanan';
+import { handleCreateOrder } from 'utils/financeAxios/financeOrder';
 import useAuth from 'hooks/useAuth';
 
 import { fCurrency } from 'utils/formatNumber';

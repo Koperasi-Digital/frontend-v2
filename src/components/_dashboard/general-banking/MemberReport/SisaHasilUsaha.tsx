@@ -1,7 +1,7 @@
 import { Typography, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-import { handleGetSisaHasilUsaha } from 'utils/financeSisaHasilUsaha';
+import { handleGetSisaHasilUsaha } from 'utils/financeAxios/financeSisaHasilUsaha';
 
 import useAuth from 'hooks/useAuth';
 

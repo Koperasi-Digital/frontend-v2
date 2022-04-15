@@ -6,7 +6,7 @@ import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, TextField } from '@mui/material';
 // hooks
 import useAuth from 'hooks/useAuth';
-import { handleAddEquipment } from 'utils/financeReport';
+import { handleAddEquipment } from 'utils/financeAxios/financeReport';
 
 export default function EquipmentRegisterForm() {
   const { enqueueSnackbar } = useSnackbar();

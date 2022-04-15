@@ -7,7 +7,7 @@ import { Card, CardHeader, Box } from '@mui/material';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 
-import { handleGetCoopLabaRugiInfo } from '../../../../utils/financeCoopReport';
+import { handleGetCoopLabaRugiInfo } from '../../../../utils/financeAxios/financeCoopReport';
 
 export default function BalanceStatistics(props: { dateValue: Date }) {
   const [chartData, setChartData] = useState<{ name: string; data: number[] }[]>([

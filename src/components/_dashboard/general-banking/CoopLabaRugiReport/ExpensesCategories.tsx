@@ -4,7 +4,7 @@ import ReactApexChart from 'react-apexcharts';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Card, Divider, CardHeader, useMediaQuery } from '@mui/material';
 
-import { handleGetCoopLabaRugiInfo } from '../../../../utils/financeCoopReport';
+import { handleGetCoopLabaRugiInfo } from '../../../../utils/financeAxios/financeCoopReport';
 
 const RootStyle = styled(Card)(({ theme }) => ({
   '& .apexcharts-legend': {

@@ -9,13 +9,13 @@ import { Card, Grid, Stack, TextField } from '@mui/material';
 import useAuth from 'hooks/useAuth';
 import { PATH_DASHBOARD } from 'routes/paths';
 //
-import { handleCreateTransaction } from 'utils/financeTransaction';
-import { handleCreateOrder } from 'utils/financeOrder';
+import { handleCreateTransaction } from 'utils/financeAxios/financeTransaction';
+import { handleCreateOrder } from 'utils/financeAxios/financeOrder';
 import {
   handleAddOrderSimpananSukarela,
   handleGetSimpananSukarela,
   handleCreateSimpananSukarela
-} from 'utils/financeSimpanan';
+} from 'utils/financeAxios/financeSimpanan';
 
 type transaction_details = {
   order_id: number;

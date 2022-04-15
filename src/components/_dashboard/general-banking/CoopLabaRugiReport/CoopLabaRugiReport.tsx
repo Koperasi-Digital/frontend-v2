@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { handleGetCoopLabaRugiInfo } from 'utils/financeCoopReport';
+import { handleGetCoopLabaRugiInfo } from 'utils/financeAxios/financeCoopReport';
 
 import BalanceStatistics from './BalanceStatistics';
 import Expenses from './Expenses';

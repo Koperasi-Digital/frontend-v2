@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { handleGetCoopArusKasInfo } from 'utils/financeCoopReport';
+import { handleGetCoopArusKasInfo } from 'utils/financeAxios/financeCoopReport';
 
 import { styled } from '@mui/material/styles';
 

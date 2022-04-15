@@ -30,7 +30,7 @@ import { Product } from '../../../@types/products';
 import { QuillEditor } from '../../editor';
 import { UploadMultiFile } from '../../upload';
 // import addProduct from 'utils/products';
-import { handleAddProductReport } from 'utils/financeReport';
+import { handleAddProductReport } from 'utils/financeAxios/financeReport';
 import useAuth from 'hooks/useAuth';
 
 // ----------------------------------------------------------------------
