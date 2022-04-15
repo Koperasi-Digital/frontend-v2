@@ -38,8 +38,7 @@ export type JWTContextType = {
     email: string,
     password: string,
     passwordConfirm: string,
-    firstName: string,
-    lastName: string,
+    displayName: string,
     isMember: boolean
   ) => Promise<void>;
   logout: () => Promise<void>;
@@ -55,7 +54,7 @@ export type FirebaseContextType = {
   user: AuthUser;
   method: 'firebase';
   login: (email: string, password: string) => Promise<firebase.auth.UserCredential>;
-  register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
+  register: (email: string, password: string, displayName: string) => Promise<void>;
   loginWithGoogle: () => Promise<firebase.auth.UserCredential>;
   loginWithFaceBook: () => Promise<firebase.auth.UserCredential>;
   loginWithTwitter: () => Promise<firebase.auth.UserCredential>;

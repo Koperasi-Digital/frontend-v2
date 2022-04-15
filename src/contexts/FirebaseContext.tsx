@@ -106,20 +106,16 @@ function AuthProvider({ children }: { children: ReactNode }) {
     return firebase.auth().signInWithPopup(provider);
   };
 
-  const register = (email: string, password: string, firstName: string, lastName: string) =>
+  const register = (email: string, password: string, displayName: string) =>
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((res) => {
-        firebase
-          .firestore()
-          .collection('users')
-          .doc(res.user?.uid)
-          .set({
-            uid: res.user?.uid,
-            email,
-            displayName: `${firstName} ${lastName}`
-          });
+        firebase.firestore().collection('users').doc(res.user?.uid).set({
+          uid: res.user?.uid,
+          email,
+          displayName
+        });
       });
 
   const logout = async () => {
