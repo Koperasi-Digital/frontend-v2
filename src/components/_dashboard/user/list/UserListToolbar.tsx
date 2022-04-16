@@ -99,7 +99,7 @@ export default function UserListToolbar({
     >
       {numSelected > 0 ? (
         <Typography component="div" variant="subtitle1">
-          {numSelected} selected
+          {numSelected} dipilih
         </Typography>
       ) : (
         <FilterContainer>
@@ -125,7 +125,7 @@ export default function UserListToolbar({
           <SearchStyle
             value={filterName}
             onChange={(e) => onFilterName(e.target.value)}
-            placeholder="Search name or email..."
+            placeholder="Cari nama atau email..."
             startAdornment={
               <InputAdornment position="start">
                 <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />

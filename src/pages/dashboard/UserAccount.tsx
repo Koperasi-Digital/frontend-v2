@@ -53,13 +53,7 @@ export default function UserAccount() {
   const toUserManager = (user: AuthUser): UserManager => ({
     id: user!.id,
     displayName: user!.displayName,
-    address: user!.address,
-    city: user!.city,
-    country: user!.country,
-    state: user!.state,
-    zipCode: user!.zipCode,
     email: user!.email,
-    phoneNumber: user!.phoneNumber,
     photoURL: user!.photoURL,
     roles: user!.roles,
     storeName: user!.storeName,
@@ -109,14 +103,14 @@ export default function UserAccount() {
   ];
 
   return (
-    <Page title="User: My Account | CoopChick">
+    <Page title="Akun Saya | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Account"
+          heading="Akun Saya"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'My Account' }
+            { name: 'Pengguna', href: PATH_DASHBOARD.user.root },
+            { name: 'Akun Saya' }
           ]}
         />
 

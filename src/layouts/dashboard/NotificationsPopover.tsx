@@ -61,7 +61,7 @@ function NotificationItem({ notification }: { notification: Notification }) {
     <ListItem
       disablePadding
       secondaryAction={
-        <Tooltip title="Delete" arrow>
+        <Tooltip title="Hapus" arrow>
           <IconButton onClick={handleDelete}>
             <Icon icon={trash2Outline} width={20} height={20} />
           </IconButton>
@@ -119,7 +119,7 @@ export default function NotificationsPopover() {
   };
 
   onMessageListener().then(() => {
-    enqueueSnackbar('New Notification!', {
+    enqueueSnackbar('Ada Notifikasi Baru!', {
       variant: 'info',
       action: (key) => (
         <Button color="info" onClick={() => handleClickNotification(key)}>
@@ -161,9 +161,9 @@ export default function NotificationsPopover() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="subtitle1">Notifications</Typography>
+            <Typography variant="subtitle1">Notifikasi</Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              You have {totalUnread} unread messages
+              Kamu memiliki {totalUnread} pesan yang belum dibaca
             </Typography>
           </Box>
         </Box>

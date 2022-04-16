@@ -34,10 +34,10 @@ import createAvatar from 'utils/createAvatar';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
+  { id: 'name', label: 'Nama', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
   { id: 'role', label: 'Role', alignRight: false, disableSort: true },
-  { id: 'createdAt', label: 'Joined At', alignRight: false },
+  { id: 'createdAt', label: 'Waktu Daftar', alignRight: false },
   { id: '' }
 ];
 
@@ -89,7 +89,6 @@ function applySortFilter(
 }
 
 export default function UserList() {
-  // const theme = useTheme();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -155,7 +154,7 @@ export default function UserList() {
   const handleDeleteUser = async (userId: string) => {
     try {
       await deleteUser(userId);
-      enqueueSnackbar(`Delete User ID: ${userId} success`, { variant: 'success' });
+      enqueueSnackbar(`Pengguna (ID: ${userId}) berhasil dihapus!`, { variant: 'success' });
     } catch (err) {
       console.error(err);
     }
@@ -173,13 +172,13 @@ export default function UserList() {
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="User: List | CoopChick">
+    <Page title="List Pengguna | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="User List"
+          heading="List Pengguna"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
+            { name: 'Pengguna', href: PATH_DASHBOARD.user.root },
             { name: 'List' }
           ]}
         />
