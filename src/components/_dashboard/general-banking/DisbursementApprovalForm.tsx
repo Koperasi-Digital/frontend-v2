@@ -9,14 +9,20 @@ import { Card, Grid, Stack, TextField, Typography, FormHelperText } from '@mui/m
 // utils
 import { UploadSingleFile } from '../../upload';
 
-import { handleEditReimbursement, handleShowOneReimbursement } from 'utils/financeAxios/financeReimbursement';
+import {
+  handleEditReimbursement,
+  handleShowOneReimbursement
+} from 'utils/financeAxios/financeReimbursement';
 import { handleCreateCoopTransaction } from 'utils/financeAxios/financeCoopTransaction';
 import { handleEditSaldo } from 'utils/financeAxios/financeSaldo';
 import { handleEditSimpananSukarela } from 'utils/financeAxios/financeSimpanan';
 
 import { handleUploadFile } from 'utils/bucket';
 
-import { handlePencairanSaldoNeraca, handlePencairanSaldoArusKas } from 'utils/financeAxios/financeReport';
+import {
+  handlePencairanSaldo,
+  handlePencairanSimpananSukarela
+} from 'utils/financeAxios/financeReport';
 
 // ----------------------------------------------------------------------
 
@@ -79,16 +85,22 @@ export default function DisbursementApprovalForm() {
         );
 
         const currentPeriode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
-        const neracaReportEdited = await handlePencairanSaldoNeraca(
-          reimbursement.user.id,
-          currentPeriode,
-          reimbursement.total_cost
-        );
-        const arusKasReportEdited = await handlePencairanSaldoArusKas(
-          reimbursement.user.id,
-          currentPeriode,
-          reimbursement.total_cost
-        );
+        let saldoEditedFinanceReport;
+        let simpananSukarelaEditedFinanceReport;
+        if (reimbursement.type === 'saldo') {
+          saldoEditedFinanceReport = await handlePencairanSaldo(
+            reimbursement.user.id,
+            currentPeriode,
+            reimbursement.total_cost
+          );
+        } else {
+          simpananSukarelaEditedFinanceReport = await handlePencairanSimpananSukarela(
+            reimbursement.user.id,
+            currentPeriode,
+            reimbursement.total_cost
+          );
+        }
+
         resetForm();
         setSubmitting(false);
         if (
@@ -96,8 +108,7 @@ export default function DisbursementApprovalForm() {
           (editedSaldo || editedSimpananSukarela) &&
           createdCoopTransaction &&
           uploadFileMessage &&
-          neracaReportEdited &&
-          arusKasReportEdited
+          (saldoEditedFinanceReport || simpananSukarelaEditedFinanceReport)
         ) {
           enqueueSnackbar('Create success', { variant: 'success' });
         } else {
