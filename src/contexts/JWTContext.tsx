@@ -46,6 +46,8 @@ type JWTAuthPayload = {
   };
   [Types.Update]: {
     user: AuthUser;
+    currentRole: CurrentRole;
+    isSeller: boolean;
   };
   [Types.SetRole]: {
     currentRole: CurrentRole;
@@ -99,7 +101,9 @@ const JWTReducer = (state: AuthState, action: JWTActions) => {
     case Types.Update:
       return {
         ...state,
-        user: action.payload.user
+        user: action.payload.user,
+        currentRole: action.payload.currentRole,
+        isSeller: action.payload.isSeller
       };
     case Types.SetRole:
       return {
@@ -132,7 +136,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
               isAuthenticated: true,
               user,
               currentRole,
-              isSeller: !isEmpty(user.storeName)
+              isSeller: !isEmpty(user.store)
             }
           });
         } else {
@@ -177,7 +181,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
       payload: {
         user,
         currentRole,
-        isSeller: !isEmpty(user.storeName)
+        isSeller: !isEmpty(user.store)
       }
     });
   };
@@ -205,7 +209,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
       payload: {
         user,
         currentRole,
-        isSeller: !isEmpty(user.storeName)
+        isSeller: !isEmpty(user.store)
       }
     });
   };
@@ -229,13 +233,30 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const updateProfile = (newData: Partial<User>) =>
     axios.patch(`/users/${newData.id}`, newData).then((response) => {
       const user = response.data.payload;
+      const currentRole = getCurrentRole(user.roles);
+
       dispatch({
         type: Types.Update,
         payload: {
-          user
+          user,
+          currentRole,
+          isSeller: !isEmpty(user.store)
         }
       });
     });
+
+  const updateUser = (user: User) => {
+    const currentRole = getCurrentRole(user.roles);
+
+    dispatch({
+      type: Types.Update,
+      payload: {
+        user,
+        currentRole,
+        isSeller: !isEmpty(user.store)
+      }
+    });
+  };
 
   const getCurrentRole = (ownedRoles?: Role[]) => {
     if (ownedRoles && ownedRoles.length) {
@@ -281,6 +302,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
         changePassword,
         resetPassword,
         updateProfile,
+        updateUser,
         setCurrentRole
       }}
     >

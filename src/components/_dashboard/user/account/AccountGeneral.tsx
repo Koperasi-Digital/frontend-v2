@@ -37,7 +37,7 @@ export default function AccountGeneral() {
       email: user?.email,
       photoURL: user?.photoURL,
       roles: user?.roles,
-      storeName: user?.storeName
+      store: user?.store
     },
 
     validationSchema: UpdateUserSchema,

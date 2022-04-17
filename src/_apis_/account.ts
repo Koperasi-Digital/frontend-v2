@@ -17,7 +17,7 @@ const users: User[] = [
     displayName: 'Walter White',
     email: 'admin@admin.com',
     photoURL: '/static/mock-images/avatars/avatar_default.jpg',
-    storeName: null,
+    store: null,
     roles: [
       {
         id: 1,
@@ -36,7 +36,7 @@ const users: User[] = [
     email: 'customer@customer.com',
     displayName: 'Jesse Pinkman',
     photoURL: null,
-    storeName: null,
+    store: null,
     roles: [
       {
         id: 2,
@@ -90,7 +90,7 @@ mock.onPost('/api/account/register').reply(async (config) => {
       email,
       // password,
       photoURL: null,
-      storeName: null,
+      store: null,
       roles: [
         {
           id: 2,
