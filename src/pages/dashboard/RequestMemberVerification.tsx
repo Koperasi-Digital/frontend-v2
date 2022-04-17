@@ -166,5 +166,9 @@ export default function RequestMemberVerification() {
     );
   };
 
-  return <Page title="Request Keanggotaan Koperasi | CoopChick">{renderContent()}</Page>;
+  return (
+    <Page title="Request Keanggotaan Koperasi | CoopChick" sx={{ height: '100%' }}>
+      {renderContent()}
+    </Page>
+  );
 }

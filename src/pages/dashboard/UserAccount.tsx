@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { Icon } from '@iconify/react';
 import { capitalCase } from 'change-case';
 import { useState, useEffect } from 'react';
@@ -10,7 +11,7 @@ import { Container, Tab, Box, Tabs, Grid } from '@mui/material';
 import useAuth from 'hooks/useAuth';
 // redux
 import { RootState, useDispatch, useSelector } from 'redux/store';
-import { getCards, getProfile, getInvoices, getAddressBook } from 'redux/slices/user';
+import { getAddressBook } from 'redux/slices/user';
 // routes
 import { PATH_DASHBOARD } from 'routes/paths';
 // types
@@ -20,35 +21,25 @@ import { UserManager } from '../../@types/user';
 import Page from 'components/Page';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
 import {
-  AccountGeneral,
+  AccountInformationEdit,
   AccountChangePassword,
   AccountAddressBook
 } from 'components/_dashboard/user/account';
 import { UserInformationDetail, UserActivityLogs } from 'components/_dashboard/user/detail';
+import { EditStoreForm } from 'components/_dashboard/user/store';
 
 // ----------------------------------------------------------------------
 
 export default function UserAccount() {
   const dispatch = useDispatch();
   const { user } = useAuth();
-  const { cards, myProfile, addressBook } = useSelector((state: RootState) => state.user);
+  const { addressBook } = useSelector((state: RootState) => state.user);
 
   const [currentTab, setCurrentTab] = useState('detail');
 
   useEffect(() => {
-    dispatch(getCards());
     dispatch(getAddressBook());
-    dispatch(getInvoices());
-    dispatch(getProfile());
   }, [dispatch]);
-
-  if (!myProfile) {
-    return null;
-  }
-
-  if (!cards) {
-    return null;
-  }
 
   const toUserManager = (user: AuthUser): UserManager => ({
     id: user!.id,
@@ -56,7 +47,7 @@ export default function UserAccount() {
     email: user!.email,
     photoURL: user!.photoURL,
     roles: user!.roles,
-    storeName: user!.storeName,
+    store: user!.store,
     created_at: user!.created_at,
     updated_at: user!.updated_at
   });
@@ -87,8 +78,13 @@ export default function UserAccount() {
       component: (
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <AccountGeneral />
+            <AccountInformationEdit />
           </Grid>
+          {!isEmpty(currentUser.store) && (
+            <Grid item xs={12}>
+              <EditStoreForm />
+            </Grid>
+          )}
           <Grid item xs={12}>
             <AccountAddressBook addressBook={addressBook} isEdit={true} />
           </Grid>

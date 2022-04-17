@@ -20,13 +20,17 @@ interface InitialState extends Partial<User> {
   afterSubmit?: string;
 }
 
-export default function AccountGeneral() {
+export default function AccountInformationEdit() {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar } = useSnackbar();
   const { user, updateProfile } = useAuth();
 
   const UpdateUserSchema = Yup.object().shape({
-    displayName: Yup.string().required('Nama harus diisi')
+    displayName: Yup.string()
+      .min(2, 'Terlalu pendek!')
+      .max(50, 'Terlalu panjang!')
+      .required('Nama harus diisi'),
+    email: Yup.string().email('Email tidak valid').required('Email harus diisi')
   });
 
   const formik = useFormik<InitialState>({
@@ -37,7 +41,7 @@ export default function AccountGeneral() {
       email: user?.email,
       photoURL: user?.photoURL,
       roles: user?.roles,
-      storeName: user?.storeName
+      store: user?.store
     },
 
     validationSchema: UpdateUserSchema,
@@ -78,15 +82,41 @@ export default function AccountGeneral() {
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8} order={{ xs: 2, md: 1 }}>
-            <Card sx={{ p: 3 }}>
+            <Card sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
               <Stack spacing={{ xs: 2, md: 3 }}>
-                <TextField fullWidth label="Name" {...getFieldProps('displayName')} />
-                <TextField fullWidth disabled label="Email" {...getFieldProps('email')} />
+                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                  Informasi Pengguna
+                </Typography>
+                <TextField
+                  fullWidth
+                  label="Nama"
+                  {...getFieldProps('displayName')}
+                  error={Boolean(touched.displayName && errors.displayName)}
+                  helperText={touched.displayName && errors.displayName}
+                />
+                <TextField
+                  fullWidth
+                  disabled
+                  label="Email"
+                  {...getFieldProps('email')}
+                  error={Boolean(touched.email && errors.email)}
+                  helperText={touched.email && errors.email}
+                />
               </Stack>
-              <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  Simpan
-                </LoadingButton>
+              <Box
+                sx={{
+                  mt: 3,
+                  display: 'flex',
+                  justifyContent: 'end',
+                  alignItems: 'end',
+                  flexGrow: 1
+                }}
+              >
+                <Box>
+                  <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                    Simpan
+                  </LoadingButton>
+                </Box>
               </Box>
             </Card>
           </Grid>

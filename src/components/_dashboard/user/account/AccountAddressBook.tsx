@@ -53,7 +53,11 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
                 }}
               >
                 <Typography variant="body2" gutterBottom>
-                  <Typography variant="body2" component="span" sx={{ color: 'text.secondary' }}>
+                  <Typography
+                    variant="body2"
+                    component="span"
+                    sx={{ color: 'text.secondary', fontWeight: 'bold' }}
+                  >
                     Alamat: &nbsp;
                   </Typography>
                   {`${address.address}, ${address.city}, ${address.state}, ${address.country} ${address.zipCode}`}
@@ -65,7 +69,11 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
                 </Typography>
 
                 <Typography variant="body2" gutterBottom>
-                  <Typography variant="body2" component="span" sx={{ color: 'text.secondary' }}>
+                  <Typography
+                    variant="body2"
+                    component="span"
+                    sx={{ color: 'text.secondary', fontWeight: 'bold' }}
+                  >
                     No. Telepon: &nbsp;
                   </Typography>
                   {address.phoneNumber}
@@ -111,9 +119,15 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
           )}
 
           {isEdit && (
-            <Button size="small" startIcon={<Icon icon={plusFill} />} onClick={() => handleOpen()}>
-              Tambah Alamat
-            </Button>
+            <Box display="flex" width="100%" justifyContent="end">
+              <Button
+                variant="contained"
+                startIcon={<Icon icon={plusFill} />}
+                onClick={() => handleOpen()}
+              >
+                Tambah Alamat
+              </Button>
+            </Box>
           )}
         </Stack>
       </Card>
