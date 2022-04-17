@@ -20,7 +20,7 @@ interface InitialState extends Partial<User> {
   afterSubmit?: string;
 }
 
-export default function AccountGeneral() {
+export default function AccountInformationEdit() {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar } = useSnackbar();
   const { user, updateProfile } = useAuth();

@@ -20,7 +20,7 @@ import { UserManager } from '../../@types/user';
 import Page from 'components/Page';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
 import {
-  AccountGeneral,
+  AccountInformationEdit,
   AccountChangePassword,
   AccountAddressBook
 } from 'components/_dashboard/user/account';
@@ -76,7 +76,7 @@ export default function UserAccount() {
       component: (
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <AccountGeneral />
+            <AccountInformationEdit />
           </Grid>
           <Grid item xs={12}>
             <AccountAddressBook addressBook={addressBook} isEdit={true} />
