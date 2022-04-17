@@ -7,7 +7,10 @@ import { Card, Grid, Stack, TextField } from '@mui/material';
 // hooks
 import useAuth from 'hooks/useAuth';
 
-import { handleCreateBankAccount, handleEditBankAccount } from 'utils/financeAxios/financeBankAccount';
+import {
+  handleCreateBankAccount,
+  handleEditBankAccount
+} from 'utils/financeAxios/financeBankAccount';
 
 type BankAccount = {
   accountNumber: string;

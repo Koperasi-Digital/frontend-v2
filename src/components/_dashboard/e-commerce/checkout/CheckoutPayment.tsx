@@ -30,7 +30,11 @@ import CheckoutSummary from './CheckoutSummary';
 import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
-import { handleCreateOrder, handleEditOrder, handleGetOrder } from 'utils/financeAxios/financeOrder';
+import {
+  handleCreateOrder,
+  handleEditOrder,
+  handleGetOrder
+} from 'utils/financeAxios/financeOrder';
 import { handleCreateTransaction } from 'utils/financeAxios/financeTransaction';
 import { PATH_DASHBOARD } from 'routes/paths';
 import useAuth from 'hooks/useAuth';

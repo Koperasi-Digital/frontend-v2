@@ -2,7 +2,10 @@ import { Box, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import PaymentButton from './PaymentCreation';
 
-import { handleGetSimpananPokok, handleAddOrderSimpananPokok } from 'utils/financeAxios/financeSimpanan';
+import {
+  handleGetSimpananPokok,
+  handleAddOrderSimpananPokok
+} from 'utils/financeAxios/financeSimpanan';
 import { handleCreateOrder } from 'utils/financeAxios/financeOrder';
 import useAuth from 'hooks/useAuth';
 
