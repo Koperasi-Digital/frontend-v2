@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import { sum, map, filter, uniqBy } from 'lodash';
 import { store } from '../store';
 // utils
-import axiosMock from '../../utils/axiosMock';
-// import axios from '../../utils/axios';
+// import axiosMock from '../../utils/axiosMock';
+import axios from '../../utils/axios';
 import { CartItem, Product, ProductState } from '../../@types/products';
 
 // ----------------------------------------------------------------------
@@ -223,10 +223,8 @@ export function getProducts() {
     const { dispatch } = store;
     dispatch(slice.actions.startLoading());
     try {
-      const response: { data: { products: Product[] } } = await axiosMock.get('/api/products');
-      // const response = await axios.get('/products');
-      // dispatch(slice.actions.getProductsSuccess(response.data.payload));
-      dispatch(slice.actions.getProductsSuccess(response.data.products));
+      const response: { data: { payload: Product[] } } = await axios.get('/products/');
+      dispatch(slice.actions.getProductsSuccess(response.data.payload));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error));
@@ -241,17 +239,8 @@ export function getProduct(name: string) {
     const { dispatch } = store;
     dispatch(slice.actions.startLoading());
     try {
-      const response: { data: { product: Product } } = await axiosMock.get(
-        '/api/products/product',
-        {
-          params: { name }
-        }
-      );
-      // const response = await axios.get('/products/' + name);
-      // console.log(response.data.payload);
-      // dispatch(slice.actions.getProductSuccess(response.data.payload));
-      // console.log(response.data.product);
-      dispatch(slice.actions.getProductSuccess(response.data.product));
+      const response: { data: { payload: Product } } = await axios.get('/products/' + name);
+      dispatch(slice.actions.getProductSuccess(response.data.payload));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

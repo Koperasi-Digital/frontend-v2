@@ -1,7 +1,7 @@
 import { Stack, Grid, Container, Typography, Card, Box, styled } from '@mui/material';
 import { fDate } from 'utils/formatTime';
 import { fCurrency } from 'utils/formatNumber';
-import { Order } from '../../../../@types/order';
+import { OrderDetails } from '../../../../@types/order';
 
 const ProductImgStyle = styled('img')({
   top: 0,
@@ -12,12 +12,15 @@ const ProductImgStyle = styled('img')({
 });
 
 type OrderDetailsSummaryProps = {
-  order: Order;
+  orderDetails: OrderDetails;
 };
 
-export default function OrderDetailsSummary({ order }: OrderDetailsSummaryProps) {
-  const { order_id, timestamp, cover, product_name, seller_name, quantity, subtotal, status } =
-    order;
+export default function OrderDetailsSummary({ orderDetails }: OrderDetailsSummaryProps) {
+  const { id, order, product, seller, quantity, subtotal, status } = orderDetails;
+  const timestamp = order.timestamp;
+  const product_name = product.name;
+  const cover = product.cover;
+  const seller_name = seller.displayName;
   return (
     <Container>
       <Grid container>
@@ -32,7 +35,7 @@ export default function OrderDetailsSummary({ order }: OrderDetailsSummaryProps)
           <Card sx={{ mx: 2, px: 2, py: 2 }}>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography variant="subtitle1">ID Transaksi</Typography>
-              <Typography>{order_id}</Typography>
+              <Typography>{id}</Typography>
             </Stack>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography variant="subtitle1">Tanggal Pemesanan</Typography>

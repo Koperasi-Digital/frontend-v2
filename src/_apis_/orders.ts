@@ -49,7 +49,6 @@ mock.onGet('/api/orders').reply(200, { orders });
 mock.onGet('/api/orders/order').reply((config) => {
   try {
     const { order_id } = config.params;
-    console.log(order_id);
     const order = orders.find((_order) => _order.order_id === order_id);
 
     if (!order) {

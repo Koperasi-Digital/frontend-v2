@@ -247,12 +247,12 @@ export function deleteBlog(blogId: number) {
   };
 }
 
-// TODO add cover
 export function editBlog(
   id: number,
   title: string,
   description: string,
   body: string,
+  cover: string,
   tagsArray: string[]
 ) {
   return async () => {
@@ -260,7 +260,7 @@ export function editBlog(
     dispatch(slice.actions.startLoading());
     try {
       const tags = tagsArray.join(';/;');
-      await axios.patch(`blog/${id}`, { title, description, body, tags });
+      await axios.patch(`blog/${id}`, { title, description, body, cover, tags });
       dispatch(slice.actions.editBlogSuccess());
     } catch (error) {
       console.error(error);
@@ -268,13 +268,12 @@ export function editBlog(
   };
 }
 
-// TODO add cover(image or link url)
 export function createBlog(
   userId: number,
   title: string,
   description: string,
   body: string,
-  coverFile: string,
+  cover: string,
   tagsArray: string[]
 ) {
   return async () => {
@@ -282,9 +281,6 @@ export function createBlog(
     dispatch(slice.actions.startLoading());
     try {
       const tags = tagsArray.join(';/;');
-      // TODO hapus cover ganti ke File
-      const cover =
-        'https://assets.petpintar.com/cache/750/375/userfiles/2/1620091499-model-kandang-ayam-2.jpg';
       await axios.post(`blog`, {
         userId,
         title,

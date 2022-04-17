@@ -172,6 +172,7 @@ export default function Router() {
             { path: 'general-analytics', element: <GeneralAnalytics /> },
             { path: 'order/:id', element: <EcommerceOrderDetails /> },
             { path: 'order-list', element: <EcommerceOrderList /> },
+            { path: 'order-history', element: <EcommerceOrderHistory /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'list', element: <EcommerceProductList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
@@ -328,6 +329,9 @@ const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralE
 const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
 // const GeneralBanking = Loadable(lazy(() => import('../pages/dashboard/GeneralBanking')));
 // const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
+const EcommerceOrderHistory = Loadable(
+  lazy(() => import('../pages/dashboard/EcommerceOrderHistory'))
+);
 const EcommerceOrderList = Loadable(lazy(() => import('../pages/dashboard/EcommerceOrderList')));
 const EcommerceOrderDetails = Loadable(
   lazy(() => import('../pages/dashboard/EcommerceOrderDetails'))

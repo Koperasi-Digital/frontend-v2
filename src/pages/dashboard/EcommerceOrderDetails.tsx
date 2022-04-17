@@ -1,21 +1,21 @@
 import Page from '../../components/Page';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getOrder } from 'utils/orders';
+import { getOrderDetails } from 'utils/ecommerceOrder';
 import { OrderDetailsSummary } from 'components/_dashboard/e-commerce/order-details';
-import { Order } from '../../@types/order';
+import { OrderDetails } from '../../@types/order';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
 import { PATH_DASHBOARD } from 'routes/paths';
 import { Container } from '@mui/material';
 
 export default function EcommerceOrderDetails() {
   const { id = '' } = useParams();
-  const [orderDetails, setOrderDetails] = useState<Order>();
+  const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchOrder() {
-      const orderDetails = await getOrder(id);
+      const orderDetails = await getOrderDetails(id);
       console.log(orderDetails);
       setOrderDetails(orderDetails);
       setIsLoading(false);
@@ -27,7 +27,7 @@ export default function EcommerceOrderDetails() {
     <Page title="Detail Transaction">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={'Order Details #' + (orderDetails && orderDetails.order_id)}
+          heading={'Order Details #' + (orderDetails && orderDetails.id)}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
@@ -36,11 +36,11 @@ export default function EcommerceOrderDetails() {
             },
             { name: 'Order List', href: PATH_DASHBOARD.eCommerce.orderList },
             {
-              name: 'Order Details #' + (orderDetails && orderDetails.order_id)
+              name: 'Order Details #' + (orderDetails && orderDetails.id)
             }
           ]}
         />
-        {!isLoading && orderDetails && <OrderDetailsSummary order={orderDetails} />}
+        {!isLoading && orderDetails && <OrderDetailsSummary orderDetails={orderDetails} />}
       </Container>
     </Page>
   );
