@@ -26,7 +26,7 @@ export default function CreateStore() {
   const [hasStore, setHasStore] = useState(false);
 
   useEffect(() => {
-    setHasStore(user && user.storeName);
+    setHasStore(user && user.store);
   }, [user]);
 
   const renderContent = () => {
@@ -37,7 +37,7 @@ export default function CreateStore() {
         >
           <Alert severity="error">
             <AlertTitle>Akses ditolak</AlertTitle>
-            {`Anda telah memiliki toko bernama ${user?.storeName || ''}`}
+            {`Anda telah memiliki toko bernama ${user?.store.name || ''}`}
           </Alert>
         </Container>
       );

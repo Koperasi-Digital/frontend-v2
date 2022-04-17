@@ -2,20 +2,24 @@ import * as Yup from 'yup';
 import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack';
 import { useFormik, Form, FormikProvider } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import closeFill from '@iconify/icons-eva/close-fill';
 // material
 import { TextField, Alert, Grid } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // hooks
 import useIsMountedRef from 'hooks/useIsMountedRef';
+import useAuth from 'hooks/useAuth';
 //
 import { MIconButton } from '../../../@material-extend';
 import countries from '../countries';
+import axios from 'utils/axios';
+import { PATH_DASHBOARD } from 'routes/paths';
 
 // ----------------------------------------------------------------------
 
 type InitialValues = {
-  storeName: string;
+  name: string;
   description: string;
   phoneNumber: string;
   country: string;
@@ -29,9 +33,11 @@ type InitialValues = {
 export default function CreateStoreForm() {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { updateUser } = useAuth();
+  const navigate = useNavigate();
 
   const RegisterSchema = Yup.object().shape({
-    storeName: Yup.string()
+    name: Yup.string()
       .min(2, 'Terlalu pendek!')
       .max(50, 'Terlalu panjang!')
       .required('Nama toko harus diisi'),
@@ -51,7 +57,7 @@ export default function CreateStoreForm() {
 
   const formik = useFormik<InitialValues>({
     initialValues: {
-      storeName: '',
+      name: '',
       description: '',
       phoneNumber: '',
       country: countries[99].label,
@@ -63,7 +69,9 @@ export default function CreateStoreForm() {
     validationSchema: RegisterSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        // TODO: Handle request
+        const response = await axios.post(`users/create-store`, values);
+        const updatedUser = response.data.payload;
+        updateUser(updatedUser);
         enqueueSnackbar('Pembukaan toko sukses!', {
           variant: 'success',
           action: (key) => (
@@ -75,6 +83,7 @@ export default function CreateStoreForm() {
         if (isMountedRef.current) {
           setSubmitting(false);
         }
+        navigate(PATH_DASHBOARD.eCommerce.seller);
       } catch (error: any) {
         console.error(error);
         if (isMountedRef.current) {
@@ -99,9 +108,9 @@ export default function CreateStoreForm() {
             <TextField
               fullWidth
               label="Nama Toko"
-              {...getFieldProps('storeName')}
-              error={Boolean(touched.storeName && errors.storeName)}
-              helperText={touched.storeName && errors.storeName}
+              {...getFieldProps('name')}
+              error={Boolean(touched.name && errors.name)}
+              helperText={touched.name && errors.name}
             />
           </Grid>
 
