@@ -15,12 +15,7 @@ interface UserDetailProps {
 export default function UserDetail({ user }: UserDetailProps) {
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} md={4}>
-        <Card sx={{ py: 10, px: 3 }}>
-          <UploadAvatar accept="image/*" file={user?.photoURL || null} disabled={true} />
-        </Card>
-      </Grid>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={8} order={{ xs: 2, md: 1 }}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Card sx={{ p: 3 }}>
@@ -107,6 +102,21 @@ export default function UserDetail({ user }: UserDetailProps) {
             </Grid>
           )}
         </Grid>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        md={4}
+        sx={{
+          order: {
+            xs: 1,
+            md: 2
+          }
+        }}
+      >
+        <Card sx={{ py: 10, px: 3, height: '100%', display: 'flex', alignItems: 'center' }}>
+          <UploadAvatar accept="image/*" file={user?.photoURL || null} disabled={true} />
+        </Card>
       </Grid>
     </Grid>
   );

@@ -69,7 +69,7 @@ export default function CreateStoreForm() {
     validationSchema: RegisterSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        const response = await axios.post(`users/create-store`, values);
+        const response = await axios.post(`users/store`, values);
         const updatedUser = response.data.payload;
         updateUser(updatedUser);
         enqueueSnackbar('Pembukaan toko sukses!', {

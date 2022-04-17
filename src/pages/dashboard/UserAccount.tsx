@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { Icon } from '@iconify/react';
 import { capitalCase } from 'change-case';
 import { useState, useEffect } from 'react';
@@ -25,6 +26,7 @@ import {
   AccountAddressBook
 } from 'components/_dashboard/user/account';
 import { UserInformationDetail, UserActivityLogs } from 'components/_dashboard/user/detail';
+import { EditStoreForm } from 'components/_dashboard/user/store';
 
 // ----------------------------------------------------------------------
 
@@ -78,6 +80,11 @@ export default function UserAccount() {
           <Grid item xs={12}>
             <AccountInformationEdit />
           </Grid>
+          {!isEmpty(currentUser.store) && (
+            <Grid item xs={12}>
+              <EditStoreForm />
+            </Grid>
+          )}
           <Grid item xs={12}>
             <AccountAddressBook addressBook={addressBook} isEdit={true} />
           </Grid>
