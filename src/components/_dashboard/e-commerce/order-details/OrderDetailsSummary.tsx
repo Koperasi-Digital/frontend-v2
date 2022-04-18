@@ -1,7 +1,29 @@
-import { Button, Stack, Grid, Container, Typography, Card, Box, styled } from '@mui/material';
-import { fDate } from 'utils/formatTime';
+import * as Yup from 'yup';
+import {
+  Button,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  Grid,
+  Container,
+  Typography,
+  Card,
+  Box,
+  styled,
+  TextField
+} from '@mui/material';
+import { fDateTime } from 'utils/formatTime';
 import { fCurrency } from 'utils/formatNumber';
-import { OrderDetails } from '../../../../@types/order';
+import { OrderDetails, OrderDetailsLog } from '../../../../@types/order';
+import { DialogAnimate } from '../../../../components/animate';
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+import { Form, FormikProvider, useFormik } from 'formik';
+import OrderDetailsTimeline from './OrderDetailsTimeline';
+import { useDispatch } from '../../../../redux/store';
+// import useAuth from 'hooks/useAuth';
+import { createOrderDetailsLog, updateOrderDetails } from '../../../../redux/slices/order';
+import { LoadingButton } from '@mui/lab';
 
 const ProductImgStyle = styled('img')({
   top: 0,
@@ -11,8 +33,14 @@ const ProductImgStyle = styled('img')({
   position: 'absolute'
 });
 
+type OrderDetailsUpdateStatusValues = {
+  description: string;
+  newStatus: string;
+};
+
 type OrderDetailsSummaryProps = {
   orderDetails: OrderDetails;
+  orderDetailsLog: OrderDetailsLog[];
 };
 
 function getNextStatus(status: string) {
@@ -27,69 +55,149 @@ function getNextStatus(status: string) {
   }
 }
 
-export default function OrderDetailsSummary({ orderDetails }: OrderDetailsSummaryProps) {
-  const { id, order, product, seller, quantity, subtotal, status } = orderDetails;
-  const timestamp = order.timestamp;
-  const product_name = product.name;
-  const cover = product.cover;
-  const seller_name = seller.displayName;
+export default function OrderDetailsSummary({
+  orderDetails,
+  orderDetailsLog
+}: OrderDetailsSummaryProps) {
+  const { id, order, product, seller, quantity, subtotal, status, shipment, shipment_price } =
+    orderDetails;
+
+  const summaryInfo = [
+    ['ID Transaksi', id],
+    ['Tanggal Pemesanan', fDateTime(order.timestamp)],
+    ['Nama Produk', product.name],
+    ['Nama Toko', seller.storeName],
+    ['Jumlah', quantity],
+    ['Total', fCurrency(subtotal)],
+    ['Status', status]
+  ];
+
+  const shipmentInfo = [
+    ['Jenis Pengiriman', shipment.name],
+    ['Ongkos Kirim', fCurrency(shipment_price)],
+    ['Alamat', 'Jalan Ganesha No. 10, Dago, Coblong, Bandung']
+  ];
+
+  const [isOpenModalUpdateStatus, setIsOpenModalUpdateStatus] = useState<boolean>(false);
   const nextStatus = getNextStatus(status);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const dispatch = useDispatch();
+  // const { currentRole, user } = useAuth();
+
+  const UpdateStatusSchema = Yup.object().shape({
+    description: Yup.string().required('Description is required'),
+    newStatus: Yup.string()
+  });
+
+  const formik = useFormik<OrderDetailsUpdateStatusValues>({
+    enableReinitialize: true,
+    initialValues: {
+      description: '',
+      newStatus: 'DALAM PENGIRIMAN'
+    },
+    validationSchema: UpdateStatusSchema,
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      try {
+        dispatch(updateOrderDetails(id, values.newStatus));
+        dispatch(createOrderDetailsLog(id, values.newStatus, values.description));
+        resetForm();
+        setSubmitting(false);
+        setIsOpenModalUpdateStatus(!setIsOpenModalUpdateStatus);
+        enqueueSnackbar(`Status pesanan berhasil diperbaharui`, { variant: 'success' });
+      } catch (error) {
+        setSubmitting(false);
+        enqueueSnackbar(`Gagal memperbaharui status`, { variant: 'error' });
+      }
+    }
+  });
+
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+
+  const handleOpenModalUpdateStatus = () => {
+    setIsOpenModalUpdateStatus(!isOpenModalUpdateStatus);
+  };
+
   return (
     <Container>
       <Grid container>
         <Grid item xs={12} md={4}>
           <Card sx={{ mx: 2, px: 2, py: 2, maxHeight: '300px' }}>
             <Box sx={{ pt: '100%', position: 'relative' }}>
-              <ProductImgStyle alt={product_name} src={cover} />
+              <ProductImgStyle alt={product.name} src={product.cover} />
             </Box>
           </Card>
         </Grid>
         <Grid item xs={12} md>
           <Card sx={{ mx: 2, px: 2, py: 2 }}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="subtitle1">ID Transaksi</Typography>
-              <Typography>{id}</Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="subtitle1">Tanggal Pemesanan</Typography>
-              <Typography>{fDate(timestamp)}</Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="subtitle1">Nama Produk</Typography>
-              <Typography>{product_name}</Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="subtitle1">Nama Penjual</Typography>
-              <Typography>{seller_name}</Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="subtitle1">Quantity</Typography>
-              <Typography>{quantity}</Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="subtitle1">Total</Typography>
-              <Typography>{fCurrency(subtotal)}</Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="subtitle1">Status</Typography>
-              <Typography>{status}</Typography>
-            </Stack>
+            {summaryInfo.map((item, index) => (
+              <Stack key={index} direction="row" alignItems="center" justifyContent="space-between">
+                <Typography variant="subtitle1">{item[0]}</Typography>
+                <Typography>{item[1]}</Typography>
+              </Stack>
+            ))}
           </Card>
           <Card sx={{ mx: 2, px: 2, py: 2, my: 2 }}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="subtitle1">Kurir</Typography>
-              <Typography>{seller_name}</Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="subtitle1">Alamat</Typography>
-              <Typography>Jalan Ganesha No. 10 Bandung</Typography>
-            </Stack>
+            {shipmentInfo.map((item, index) => (
+              <Stack key={index} direction="row" alignItems="center" justifyContent="space-between">
+                <Typography variant="subtitle1">{item[0]}</Typography>
+                <Typography>{item[1]}</Typography>
+              </Stack>
+            ))}
           </Card>
-          <Button size="medium" variant="contained" sx={{ float: 'right', mx: 2, px: 2 }}>
+          <Box sx={{ my: 2, mx: 2 }}>
+            <OrderDetailsTimeline orderDetailsLog={orderDetailsLog}></OrderDetailsTimeline>
+          </Box>
+          <Button
+            size="medium"
+            variant="contained"
+            sx={{ float: 'right', mx: 2, px: 2 }}
+            onClick={() => handleOpenModalUpdateStatus()}
+          >
             {nextStatus}
           </Button>
         </Grid>
       </Grid>
+      <DialogAnimate
+        open={isOpenModalUpdateStatus}
+        onClose={() => setIsOpenModalUpdateStatus(!isOpenModalUpdateStatus)}
+      >
+        <FormikProvider value={formik}>
+          <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
+            <DialogTitle sx={{ pb: 1 }}>Update Status ?</DialogTitle>
+            <DialogContent sx={{ overflowY: 'unset' }}>
+              <Typography sx={{ my: 2 }}>
+                Anda akan mengubah status menjadi TERKONFIRMASI.
+              </Typography>
+              <TextField
+                fullWidth
+                label="Deskripsi"
+                {...getFieldProps('description')}
+                error={Boolean(touched.description && errors.description)}
+                helperText={touched.description && errors.description}
+              />
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-around',
+                  p: 1.5
+                }}
+              >
+                <LoadingButton variant="contained" type="submit" loading={isSubmitting}>
+                  Update
+                </LoadingButton>
+                <Button
+                  color="error"
+                  variant="contained"
+                  onClick={() => setIsOpenModalUpdateStatus(!isOpenModalUpdateStatus)}
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </DialogContent>
+          </Form>
+        </FormikProvider>
+      </DialogAnimate>
     </Container>
   );
 }

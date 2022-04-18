@@ -19,6 +19,9 @@ import {
   TableContainer,
   TablePagination
 } from '@mui/material';
+// redux
+import { useDispatch, useSelector } from '../../redux/store';
+import { getOrdersBySeller } from '../../redux/slices/order';
 // utils
 import { fCurrency } from '../../utils/formatNumber';
 // routes
@@ -31,8 +34,9 @@ import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { OrderListHead, OrderListToolbar } from '../../components/_dashboard/e-commerce/order-list';
-import { getOrdersBySeller } from 'utils/ecommerceOrder';
 import { fDateTime } from 'utils/formatTime';
+import { OrderState } from '../../@types/order';
+import useAuth from 'hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -99,23 +103,20 @@ export default function EcommerceOrderList() {
   const theme = useTheme();
 
   const linkTo = `${PATH_DASHBOARD.eCommerce.root}/order/`;
-  const [orders, setOrders] = useState([]);
+  const dispatch = useDispatch();
+  const { orderDetailsList: orders, isLoading } = useSelector(
+    (state: { order: OrderState }) => state.order
+  );
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [orderBy, setOrderBy] = useState('createdAt');
-  const [isLoading, setIsLoading] = useState(true);
+  const { currentRole, user } = useAuth();
 
   useEffect(() => {
-    async function fetchOrders() {
-      const orderList = await getOrdersBySeller('2');
-      console.log(orderList);
-      setOrders(orderList);
-      setIsLoading(false);
-    }
-    fetchOrders();
-  }, []);
+    dispatch(getOrdersBySeller(user?.id.toString()));
+  }, [dispatch, user, currentRole]);
 
   const handleRequestSort = (property: string) => {
     const isAsc = orderBy === property && order === 'asc';
