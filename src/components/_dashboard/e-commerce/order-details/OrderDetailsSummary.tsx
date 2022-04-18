@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import {
   Button,
+  Dialog,
   DialogContent,
   DialogTitle,
   Stack,
@@ -15,7 +16,7 @@ import {
 import { fDateTime } from 'utils/formatTime';
 import { fCurrency } from 'utils/formatNumber';
 import { OrderDetails, OrderDetailsLog } from '../../../../@types/order';
-import { DialogAnimate } from '../../../../components/animate';
+// import { DialogAnimate } from '../../../../components/animate';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
@@ -55,6 +56,87 @@ function getNextStatus(status: string) {
   }
 }
 
+interface ConfirmationFormDialogProps {
+  id: string;
+  isOpenModalUpdateStatus: boolean;
+  setIsOpenModalUpdateStatus: (value: boolean) => void;
+}
+
+function ConfirmationFormDialog({
+  id,
+  isOpenModalUpdateStatus,
+  setIsOpenModalUpdateStatus
+}: ConfirmationFormDialogProps) {
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+  const UpdateStatusSchema = Yup.object().shape({
+    description: Yup.string().required('Description is required'),
+    newStatus: Yup.string()
+  });
+
+  const formik = useFormik<OrderDetailsUpdateStatusValues>({
+    initialValues: {
+      description: '',
+      newStatus: 'DALAM PENGIRIMAN'
+    },
+    validationSchema: UpdateStatusSchema,
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      console.log(values);
+      try {
+        dispatch(updateOrderDetails(id, values.newStatus));
+        dispatch(createOrderDetailsLog(id, values.newStatus, values.description));
+        resetForm();
+        setSubmitting(false);
+        setIsOpenModalUpdateStatus(!setIsOpenModalUpdateStatus);
+        enqueueSnackbar(`Status pesanan berhasil diperbaharui`, { variant: 'success' });
+      } catch (error) {
+        setSubmitting(false);
+        enqueueSnackbar(`Gagal memperbaharui status`, { variant: 'error' });
+      }
+    }
+  });
+
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+
+  return (
+    <Dialog open={isOpenModalUpdateStatus} onClose={() => setIsOpenModalUpdateStatus(false)}>
+      <DialogTitle sx={{ pb: 1 }}>Update Status ?</DialogTitle>
+      <DialogContent sx={{ overflowY: 'unset' }}>
+        <FormikProvider value={formik}>
+          <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
+            <Typography sx={{ my: 2 }}>Anda akan mengubah status menjadi TERKONFIRMASI.</Typography>
+            <TextField
+              fullWidth
+              label="Deskripsi"
+              {...getFieldProps('description')}
+              error={Boolean(touched.description && errors.description)}
+              helperText={touched.description && errors.description}
+            />
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-around',
+                p: 1.5
+              }}
+            >
+              <LoadingButton variant="contained" type="submit" loading={isSubmitting}>
+                Update
+              </LoadingButton>
+              <Button
+                color="error"
+                variant="contained"
+                onClick={() => setIsOpenModalUpdateStatus(false)}
+              >
+                Cancel
+              </Button>
+            </Box>
+          </Form>
+        </FormikProvider>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function OrderDetailsSummary({
   orderDetails,
   orderDetailsLog
@@ -80,39 +162,8 @@ export default function OrderDetailsSummary({
 
   const [isOpenModalUpdateStatus, setIsOpenModalUpdateStatus] = useState<boolean>(false);
   const nextStatus = getNextStatus(status);
-  const { enqueueSnackbar } = useSnackbar();
 
-  const dispatch = useDispatch();
   // const { currentRole, user } = useAuth();
-
-  const UpdateStatusSchema = Yup.object().shape({
-    description: Yup.string().required('Description is required'),
-    newStatus: Yup.string()
-  });
-
-  const formik = useFormik<OrderDetailsUpdateStatusValues>({
-    enableReinitialize: true,
-    initialValues: {
-      description: '',
-      newStatus: 'DALAM PENGIRIMAN'
-    },
-    validationSchema: UpdateStatusSchema,
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
-      try {
-        dispatch(updateOrderDetails(id, values.newStatus));
-        dispatch(createOrderDetailsLog(id, values.newStatus, values.description));
-        resetForm();
-        setSubmitting(false);
-        setIsOpenModalUpdateStatus(!setIsOpenModalUpdateStatus);
-        enqueueSnackbar(`Status pesanan berhasil diperbaharui`, { variant: 'success' });
-      } catch (error) {
-        setSubmitting(false);
-        enqueueSnackbar(`Gagal memperbaharui status`, { variant: 'error' });
-      }
-    }
-  });
-
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   const handleOpenModalUpdateStatus = () => {
     setIsOpenModalUpdateStatus(!isOpenModalUpdateStatus);
@@ -158,46 +209,11 @@ export default function OrderDetailsSummary({
           </Button>
         </Grid>
       </Grid>
-      <DialogAnimate
-        open={isOpenModalUpdateStatus}
-        onClose={() => setIsOpenModalUpdateStatus(!isOpenModalUpdateStatus)}
-      >
-        <FormikProvider value={formik}>
-          <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
-            <DialogTitle sx={{ pb: 1 }}>Update Status ?</DialogTitle>
-            <DialogContent sx={{ overflowY: 'unset' }}>
-              <Typography sx={{ my: 2 }}>
-                Anda akan mengubah status menjadi TERKONFIRMASI.
-              </Typography>
-              <TextField
-                fullWidth
-                label="Deskripsi"
-                {...getFieldProps('description')}
-                error={Boolean(touched.description && errors.description)}
-                helperText={touched.description && errors.description}
-              />
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-around',
-                  p: 1.5
-                }}
-              >
-                <LoadingButton variant="contained" type="submit" loading={isSubmitting}>
-                  Update
-                </LoadingButton>
-                <Button
-                  color="error"
-                  variant="contained"
-                  onClick={() => setIsOpenModalUpdateStatus(!isOpenModalUpdateStatus)}
-                >
-                  Cancel
-                </Button>
-              </Box>
-            </DialogContent>
-          </Form>
-        </FormikProvider>
-      </DialogAnimate>
+      <ConfirmationFormDialog
+        id={id}
+        isOpenModalUpdateStatus={isOpenModalUpdateStatus}
+        setIsOpenModalUpdateStatus={setIsOpenModalUpdateStatus}
+      />
     </Container>
   );
 }
