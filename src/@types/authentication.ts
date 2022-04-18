@@ -38,7 +38,9 @@ export type JWTContextType = {
     password: string,
     passwordConfirm: string,
     displayName: string,
-    isMember: boolean
+    isMember: boolean,
+    identityCardPhoto: File | null,
+    selfiePhoto: File | null
   ) => Promise<void>;
   logout: () => Promise<void>;
   changePassword: (oldPassword: string, newPassword: string, confirmNewPassword: string) => void;

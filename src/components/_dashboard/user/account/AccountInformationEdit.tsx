@@ -6,11 +6,13 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import { Box, Grid, Card, Stack, TextField, Typography, FormHelperText } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // hooks
-import useAuth from '../../../../hooks/useAuth';
-import useIsMountedRef from '../../../../hooks/useIsMountedRef';
+import useAuth from 'hooks/useAuth';
+import useIsMountedRef from 'hooks/useIsMountedRef';
 import { UploadAvatar } from '../../../upload';
 // utils
-import { fData } from '../../../../utils/formatNumber';
+import { fData } from 'utils/formatNumber';
+import { handleUploadFile } from 'utils/bucket';
+import { fTimestamp } from 'utils/formatTime';
 // @types
 import { User } from '../../../../@types/account';
 
@@ -47,12 +49,23 @@ export default function AccountInformationEdit() {
     validationSchema: UpdateUserSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
+        if (typeof values.photoURL === 'object') {
+          const photoFile = values.photoURL as unknown as File;
+          const photoUrl = await handleUploadFile(
+            photoFile,
+            `user/${user?.id}/profile`,
+            `${fTimestamp(new Date())}-${photoFile.name}`
+          );
+          values.photoURL = photoUrl;
+        }
         updateProfile(values);
         enqueueSnackbar('Pengguna berhasil diedit!', { variant: 'success' });
         if (isMountedRef.current) {
           setSubmitting(false);
         }
       } catch (error: any) {
+        console.log(error);
+        enqueueSnackbar('Error!', { variant: 'error' });
         if (isMountedRef.current) {
           setErrors({ afterSubmit: error.code });
           setSubmitting(false);
@@ -68,10 +81,12 @@ export default function AccountInformationEdit() {
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file) {
-        setFieldValue('photoURL', {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
+        setFieldValue(
+          'photoURL',
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          })
+        );
       }
     },
     [setFieldValue]

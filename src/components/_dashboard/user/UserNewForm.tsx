@@ -27,7 +27,9 @@ import {
 import { useDispatch, useSelector, RootState } from '../../../redux/store';
 import { getRoles } from '../../../redux/slices/role';
 // utils
-import { fData } from '../../../utils/formatNumber';
+import { fData } from 'utils/formatNumber';
+import { handleUploadFile } from 'utils/bucket';
+import { fTimestamp } from 'utils/formatTime';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
@@ -73,6 +75,15 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
+        if (typeof values.photoURL === 'object') {
+          const photoFile = values.photoURL as unknown as File;
+          const photoUrl = await handleUploadFile(
+            photoFile,
+            `user/${currentUser?.id}/profile`,
+            `${fTimestamp(new Date())}-${photoFile.name}`
+          );
+          values.photoURL = photoUrl;
+        }
         if (isEdit) {
           await editUser(currentUser!.id, {
             ...values,
@@ -87,6 +98,7 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
         navigate(PATH_DASHBOARD.user.list);
       } catch (error: any) {
         console.error(error);
+        enqueueSnackbar('Error!', { variant: 'error' });
         setSubmitting(false);
         setErrors(error);
       }
@@ -100,10 +112,12 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file) {
-        setFieldValue('avatarUrl', {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
+        setFieldValue(
+          'photoURL',
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          })
+        );
       }
     },
     [setFieldValue]
