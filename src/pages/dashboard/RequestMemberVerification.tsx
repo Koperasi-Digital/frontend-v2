@@ -168,7 +168,7 @@ export default function RequestMemberVerification() {
 
   return (
     <Page title="Request Keanggotaan Koperasi | CoopChick" sx={{ height: '100%' }}>
-      {renderContent()}
+      <Container>{renderContent()}</Container>
     </Page>
   );
 }

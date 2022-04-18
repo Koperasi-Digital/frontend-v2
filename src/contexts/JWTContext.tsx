@@ -1,7 +1,10 @@
 import { createContext, ReactNode, useEffect, useReducer } from 'react';
+import { isEmpty } from 'lodash';
 // utils
 import { setSession } from 'utils/jwt';
 import axios from 'utils/axios';
+import { handleUploadFile } from 'utils/bucket';
+import { fTimestamp } from 'utils/formatTime';
 // import axiosMock from 'utils/axiosMock';
 // @types
 import {
@@ -13,7 +16,6 @@ import {
 } from '../@types/authentication';
 import { Role } from '../@types/role';
 import { User } from '../@types/account';
-import { isEmpty } from 'lodash';
 
 // ----------------------------------------------------------------------
 
@@ -191,19 +193,43 @@ function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     passwordConfirm: string,
     displayName: string,
-    isMember: boolean
+    isMember: boolean,
+    identityCardPhoto: File | null,
+    selfiePhoto: File | null
   ) => {
     const response = await axios.post('auth/register', {
       email,
       password,
       passwordConfirm,
-      displayName,
-      isMember
+      displayName
     });
     const { accessToken, refreshToken, user } = response.data.payload;
     const currentRole = getCurrentRole(user.roles);
-
     setSession(accessToken, refreshToken);
+
+    if (isMember && identityCardPhoto && selfiePhoto) {
+      const fileUrlPromises: Promise<string>[] = [];
+      fileUrlPromises.push(
+        handleUploadFile(
+          identityCardPhoto,
+          `user/${user?.id}/verification`,
+          `${fTimestamp(new Date())}-KTP-${identityCardPhoto.name}`
+        )
+      );
+      fileUrlPromises.push(
+        handleUploadFile(
+          selfiePhoto,
+          `user/${user?.id}/verification`,
+          `${fTimestamp(new Date())}-Selfie-${selfiePhoto.name}`
+        )
+      );
+      const [identityCardPhotoURL, selfiePhotoURL] = await Promise.all(fileUrlPromises);
+      await axios.post(`member-verification/create`, {
+        identityCardPhotoURL,
+        selfiePhotoURL
+      });
+    }
+
     dispatch({
       type: Types.Register,
       payload: {
