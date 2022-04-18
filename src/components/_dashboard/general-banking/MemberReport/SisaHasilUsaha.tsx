@@ -52,13 +52,13 @@ export default function SisaHasilUsaha(props: { dateValue: Date }) {
               sx={{ color: (theme) => theme.palette.error.main }}
               gutterBottom
             >
-              *SHU = 2% dari total simpanan koperasi
+              *SHU = 1% + persentase keaktifan * 1% dari total simpanan koperasi
             </Typography>
           </Stack>
           <Stack direction="row" justifyContent="center">
             <Typography variant="overline" sx={{ color: 'text.secondary' }}>
               periode {new Date(sisaHasilUsaha.periode).getDate()} -{' '}
-              {new Date(sisaHasilUsaha.periode).getMonth() + 1} -{' '}
+              {1} -{' '}
               {new Date(sisaHasilUsaha.periode).getFullYear()}
             </Typography>
           </Stack>
