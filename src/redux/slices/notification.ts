@@ -97,6 +97,15 @@ export async function addMessagingToken(token: string) {
   }
 }
 
+export async function deleteMessagingToken(token: string) {
+  dispatch(slice.actions.startLoading());
+  try {
+    await axios.post('notifications/delete-token', { token });
+  } catch (error) {
+    dispatch(slice.actions.hasError(error));
+  }
+}
+
 export async function createNotification(
   title: string,
   description: string,
