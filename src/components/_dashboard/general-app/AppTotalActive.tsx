@@ -31,7 +31,7 @@ export default function AppTotalActive() {
   }, []);
 
   const renderPercentage = () => {
-    if (totalLogs && totalActivities) {
+    if (typeof totalLogs !== 'undefined' && typeof totalActivities !== 'undefined') {
       return totalActivities ? fPercent((totalLogs / totalActivities) * 100) : '100%';
     }
     return <Skeleton width={50} />;

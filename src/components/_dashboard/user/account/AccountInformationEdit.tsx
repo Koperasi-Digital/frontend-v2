@@ -6,27 +6,33 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import { Box, Grid, Card, Stack, TextField, Typography, FormHelperText } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // hooks
-import useAuth from '../../../../hooks/useAuth';
-import useIsMountedRef from '../../../../hooks/useIsMountedRef';
+import useAuth from 'hooks/useAuth';
+import useIsMountedRef from 'hooks/useIsMountedRef';
 import { UploadAvatar } from '../../../upload';
 // utils
-import { fData } from '../../../../utils/formatNumber';
+import { fData } from 'utils/formatNumber';
+import { handleUploadFile } from 'utils/bucket';
+import { fTimestamp } from 'utils/formatTime';
 // @types
 import { User } from '../../../../@types/account';
 
 // ----------------------------------------------------------------------
 
-interface InitialState extends User {
+interface InitialState extends Partial<User> {
   afterSubmit?: string;
 }
 
-export default function AccountGeneral() {
+export default function AccountInformationEdit() {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar } = useSnackbar();
   const { user, updateProfile } = useAuth();
 
   const UpdateUserSchema = Yup.object().shape({
-    displayName: Yup.string().required('Name is required')
+    displayName: Yup.string()
+      .min(2, 'Terlalu pendek!')
+      .max(50, 'Terlalu panjang!')
+      .required('Nama harus diisi'),
+    email: Yup.string().email('Email tidak valid').required('Email harus diisi')
   });
 
   const formik = useFormik<InitialState>({
@@ -37,18 +43,29 @@ export default function AccountGeneral() {
       email: user?.email,
       photoURL: user?.photoURL,
       roles: user?.roles,
-      storeName: user?.storeName
+      store: user?.store
     },
 
     validationSchema: UpdateUserSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
+        if (typeof values.photoURL === 'object') {
+          const photoFile = values.photoURL as unknown as File;
+          const photoUrl = await handleUploadFile(
+            photoFile,
+            `user/${user?.id}/profile`,
+            `${fTimestamp(new Date())}-${photoFile.name}`
+          );
+          values.photoURL = photoUrl;
+        }
         updateProfile(values);
-        enqueueSnackbar('Update success', { variant: 'success' });
+        enqueueSnackbar('Pengguna berhasil diedit!', { variant: 'success' });
         if (isMountedRef.current) {
           setSubmitting(false);
         }
       } catch (error: any) {
+        console.log(error);
+        enqueueSnackbar('Error!', { variant: 'error' });
         if (isMountedRef.current) {
           setErrors({ afterSubmit: error.code });
           setSubmitting(false);
@@ -64,10 +81,12 @@ export default function AccountGeneral() {
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file) {
-        setFieldValue('photoURL', {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
+        setFieldValue(
+          'photoURL',
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          })
+        );
       }
     },
     [setFieldValue]
@@ -78,15 +97,41 @@ export default function AccountGeneral() {
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8} order={{ xs: 2, md: 1 }}>
-            <Card sx={{ p: 3 }}>
+            <Card sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
               <Stack spacing={{ xs: 2, md: 3 }}>
-                <TextField fullWidth label="Name" {...getFieldProps('displayName')} />
-                <TextField fullWidth disabled label="Email Address" {...getFieldProps('email')} />
+                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                  Informasi Pengguna
+                </Typography>
+                <TextField
+                  fullWidth
+                  label="Nama"
+                  {...getFieldProps('displayName')}
+                  error={Boolean(touched.displayName && errors.displayName)}
+                  helperText={touched.displayName && errors.displayName}
+                />
+                <TextField
+                  fullWidth
+                  disabled
+                  label="Email"
+                  {...getFieldProps('email')}
+                  error={Boolean(touched.email && errors.email)}
+                  helperText={touched.email && errors.email}
+                />
               </Stack>
-              <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  Save Changes
-                </LoadingButton>
+              <Box
+                sx={{
+                  mt: 3,
+                  display: 'flex',
+                  justifyContent: 'end',
+                  alignItems: 'end',
+                  flexGrow: 1
+                }}
+              >
+                <Box>
+                  <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                    Simpan
+                  </LoadingButton>
+                </Box>
               </Box>
             </Card>
           </Grid>
@@ -120,10 +165,8 @@ export default function AccountGeneral() {
                       color: 'text.secondary'
                     }}
                   >
-                    Click the image to upload a new Avatar
-                    <br />
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
-                    <br /> max size of {fData(3145728)}
+                    Ekstensi file: *.jpeg, *.jpg, *.png, *.gif
+                    <br /> dengan ukuran {fData(3145728)}
                   </Typography>
                 }
               />

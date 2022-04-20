@@ -26,6 +26,8 @@ import { UploadSingleFile } from '../../upload';
 import BlogNewPostPreview from './BlogNewPostPreview';
 import useAuth from 'hooks/useAuth';
 import { createBlog } from 'redux/slices/blog';
+import { handleUploadFile } from 'utils/bucket';
+import { fTimestamp } from 'utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -78,13 +80,18 @@ export default function BlogNewPostForm() {
     validationSchema: NewBlogSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
+        const uploadFileMessage = await handleUploadFile(
+          values.cover,
+          'blog',
+          values.cover.path + fTimestamp(new Date())
+        );
         await dispatch(
           createBlog(
             user?.id,
             values.title,
             values.description,
             values.content,
-            values.cover,
+            uploadFileMessage,
             values.tags
           )
         );
@@ -107,10 +114,7 @@ export default function BlogNewPostForm() {
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file) {
-        setFieldValue('cover', {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
+        setFieldValue('cover', Object.assign(file, { preview: URL.createObjectURL(file) }));
       }
     },
     [setFieldValue]

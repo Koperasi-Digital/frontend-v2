@@ -36,11 +36,10 @@ type InitialValues = {
   email: string;
   password: string;
   passwordConfirm: string;
-  firstName: string;
-  lastName: string;
+  displayName: string;
   registerAsMember: 'yes' | 'no';
-  identityCardPhotoURL: File | null;
-  selfiePhotoURL: File | null;
+  identityCardPhoto: File | null;
+  selfiePhoto: File | null;
   afterSubmit?: string;
 };
 
@@ -58,40 +57,40 @@ export default function RegisterForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string()
-      .min(2, 'Too Short!')
-      .max(50, 'Too Long!')
-      .required('First name required'),
-    lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().min(6, 'Too Short!').required('Password is required'),
-    passwordConfirm: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match')
+    displayName: Yup.string()
+      .min(2, 'Terlalu pendek!')
+      .max(50, 'Terlalu panjang!')
+      .required('Nama harus diisi'),
+    email: Yup.string().email('Email tidak valid').required('Email harus diisi'),
+    password: Yup.string()
+      .min(6, 'Password minimal harus terdiri dari 6 karakter!')
+      .required('Password harus diisi'),
+    passwordConfirm: Yup.string().oneOf([Yup.ref('password'), null], 'Password tidak sesuai')
   });
 
   const formik = useFormik<InitialValues>({
     initialValues: {
-      firstName: '',
-      lastName: '',
+      displayName: '',
       email: '',
       password: '',
       passwordConfirm: '',
       registerAsMember: 'no',
-      identityCardPhotoURL: null,
-      selfiePhotoURL: null
+      identityCardPhoto: null,
+      selfiePhoto: null
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
-      // TODO: Handle Upload Image
       try {
         await register(
           values.email,
           values.password,
           values.passwordConfirm,
-          values.firstName,
-          values.lastName,
-          values.registerAsMember === 'yes'
+          values.displayName,
+          values.registerAsMember === 'yes',
+          values.identityCardPhoto,
+          values.selfiePhoto
         );
-        enqueueSnackbar('Register success', {
+        enqueueSnackbar('Pendaftaran sukses!', {
           variant: 'success',
           action: (key) => (
             <MIconButton size="small" onClick={() => closeSnackbar(key)}>
@@ -120,10 +119,12 @@ export default function RegisterForm() {
     (fieldName: string) => (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
       if (file) {
-        setFieldValue(fieldName, {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
+        setFieldValue(
+          fieldName,
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          })
+        );
       }
     },
     [setFieldValue]
@@ -135,29 +136,19 @@ export default function RegisterForm() {
         <Stack spacing={3}>
           {errors.afterSubmit && <Alert severity="error">{errors.afterSubmit}</Alert>}
 
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField
-              fullWidth
-              label="First name"
-              {...getFieldProps('firstName')}
-              error={Boolean(touched.firstName && errors.firstName)}
-              helperText={touched.firstName && errors.firstName}
-            />
-
-            <TextField
-              fullWidth
-              label="Last name"
-              {...getFieldProps('lastName')}
-              error={Boolean(touched.lastName && errors.lastName)}
-              helperText={touched.lastName && errors.lastName}
-            />
-          </Stack>
+          <TextField
+            fullWidth
+            label="Nama"
+            {...getFieldProps('displayName')}
+            error={Boolean(touched.displayName && errors.displayName)}
+            helperText={touched.displayName && errors.displayName}
+          />
 
           <TextField
             fullWidth
             autoComplete="username"
             type="email"
-            label="Email address"
+            label="Email"
             {...getFieldProps('email')}
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
@@ -185,7 +176,7 @@ export default function RegisterForm() {
           <TextField
             fullWidth
             type={showConfirmPassword ? 'text' : 'password'}
-            label="Password Confirmation"
+            label="Konfirmasi Password"
             {...getFieldProps('passwordConfirm')}
             InputProps={{
               endAdornment: (
@@ -221,35 +212,35 @@ export default function RegisterForm() {
           {registerAsMember === 'yes' && (
             <>
               <FormControl>
-                <LabelStyle>Upload KTP</LabelStyle>
+                <LabelStyle>Upload Foto KTP</LabelStyle>
                 <UploadSingleFile
                   maxSize={10485760} // 10MB
                   accept="image/*"
-                  file={values.identityCardPhotoURL}
+                  file={values.identityCardPhoto}
                   withIllustration={false}
-                  onDrop={handleDrop('identityCardPhotoURL')}
-                  error={Boolean(touched.identityCardPhotoURL && errors.identityCardPhotoURL)}
+                  onDrop={handleDrop('identityCardPhoto')}
+                  error={Boolean(touched.identityCardPhoto && errors.identityCardPhoto)}
                 />
-                {touched.identityCardPhotoURL && errors.identityCardPhotoURL && (
+                {touched.identityCardPhoto && errors.identityCardPhoto && (
                   <FormHelperText error sx={{ px: 2 }}>
-                    {touched.identityCardPhotoURL && errors.identityCardPhotoURL}
+                    {touched.identityCardPhoto && errors.identityCardPhoto}
                   </FormHelperText>
                 )}
               </FormControl>
 
               <FormControl>
-                <LabelStyle>Upload Selfie dengan KTP</LabelStyle>
+                <LabelStyle>Upload Foto Selfie dengan KTP</LabelStyle>
                 <UploadSingleFile
                   maxSize={10485760} // 10MB
                   accept="image/*"
-                  file={values.selfiePhotoURL}
+                  file={values.selfiePhoto}
                   withIllustration={false}
-                  onDrop={handleDrop('selfiePhotoURL')}
-                  error={Boolean(touched.selfiePhotoURL && errors.selfiePhotoURL)}
+                  onDrop={handleDrop('selfiePhoto')}
+                  error={Boolean(touched.selfiePhoto && errors.selfiePhoto)}
                 />
-                {touched.selfiePhotoURL && errors.selfiePhotoURL && (
+                {touched.selfiePhoto && errors.selfiePhoto && (
                   <FormHelperText error sx={{ px: 2 }}>
-                    {touched.selfiePhotoURL && errors.selfiePhotoURL}
+                    {touched.selfiePhoto && errors.selfiePhoto}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -263,7 +254,7 @@ export default function RegisterForm() {
             variant="contained"
             loading={isSubmitting}
           >
-            Register
+            Daftar
           </LoadingButton>
         </Stack>
       </Form>

@@ -17,9 +17,9 @@ import { CalendarView } from '../../../@types/calendar';
 // ----------------------------------------------------------------------
 
 const VIEW_OPTIONS = [
-  { value: 'dayGridMonth', label: 'Month', icon: roundViewModule },
-  { value: 'timeGridWeek', label: 'Week', icon: roundViewWeek },
-  { value: 'timeGridDay', label: 'Day', icon: roundViewDay },
+  { value: 'dayGridMonth', label: 'Bulanan', icon: roundViewModule },
+  { value: 'timeGridWeek', label: 'Mingguan', icon: roundViewWeek },
+  { value: 'timeGridDay', label: 'Harian', icon: roundViewDay },
   { value: 'listWeek', label: 'Agenda', icon: roundViewAgenda }
 ] as const;
 
@@ -83,7 +83,7 @@ export default function CalendarToolbar({
         </IconButton>
 
         <Button size="small" color="error" variant="contained" onClick={onToday} sx={{ mx: 0.5 }}>
-          Today
+          Hari Ini
         </Button>
 
         <IconButton onClick={onNextDate}>

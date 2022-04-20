@@ -105,7 +105,7 @@ export default function ProductDetailsSummary({
   const theme = useTheme();
   const navigate = useNavigate();
   const { id, name, category, price, available, cover, status, seller } = product;
-  const { storeName } = seller;
+  const storeName = seller.store!.name;
   const sizes = ['KG', 'LUSIN', 'TON'];
 
   const alreadyProduct = cart.map((item) => item.id).includes(id);

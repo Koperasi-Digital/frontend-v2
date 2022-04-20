@@ -2,6 +2,7 @@ import { useState } from 'react';
 import * as Yup from 'yup';
 import { isEmpty, merge, startCase } from 'lodash';
 import { isBefore, format } from 'date-fns';
+import { id } from 'date-fns/locale';
 import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack';
 import trash2Fill from '@iconify/icons-eva/trash-2-fill';
@@ -115,8 +116,8 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
   const [isReadOnly, setIsReadOnly] = useState(!isCreating);
 
   const EventSchema = Yup.object().shape({
-    title: Yup.string().max(255).required('Title is required'),
-    description: Yup.string().max(5000),
+    title: Yup.string().max(255).required('Nama aktivitas harus diisi'),
+    description: Yup.string().max(5000, 'Deskripsi terlalu panjang'),
     meetingLink: Yup.string().url('URL tidak valid').nullable()
   });
 
@@ -138,10 +139,10 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
         };
         if (event.id) {
           dispatch(updateEvent(event.id, newEvent));
-          enqueueSnackbar('Update activity success', { variant: 'success' });
+          enqueueSnackbar('Edit aktivitas sukses!', { variant: 'success' });
         } else {
           dispatch(createEvent(newEvent));
-          enqueueSnackbar('Create activity success', { variant: 'success' });
+          enqueueSnackbar('Tambah aktivitas sukses!', { variant: 'success' });
         }
         resetForm();
         onCancel();
@@ -160,7 +161,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
     try {
       onCancel();
       dispatch(isOrganizer ? deleteEvent(event.id) : deleteUserFromEvent(event.id));
-      enqueueSnackbar('Delete activity success', { variant: 'success' });
+      enqueueSnackbar('Hapus aktivitas sukses!', { variant: 'success' });
     } catch (error) {
       console.error(error);
     }
@@ -170,9 +171,9 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
 
   const renderTitle = () => {
     if (event && !isEmpty(event)) {
-      return isReadOnly ? 'Detail Activity' : 'Edit Activity';
+      return isReadOnly ? 'Detail Aktivitas' : 'Edit Aktivitas';
     }
-    return 'Add Activity';
+    return 'Tambah Aktivitas';
   };
 
   const handleClickCancelButton = () => {
@@ -252,13 +253,13 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           />
 
           <Field
-            name="All Day"
-            value={values.allDay ? 'Yes' : 'No'}
+            name="Sehari penuh"
+            value={values.allDay ? 'Ya' : 'Tidak'}
             isReadOnly={isReadOnly}
             field={
               <FormControlLabel
                 control={<Switch checked={values.allDay} {...getFieldProps('allDay')} />}
-                label="All Day"
+                label="Sehari penuh"
                 sx={{ mb: 3 }}
                 disabled={isReadOnly}
               />
@@ -267,16 +268,15 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
 
           {!values.allDay && (
             <Field
-              name="Datetime"
-              value={`${format(new Date(values.start), 'dd/MM/yyyy hh:mm a')} - ${format(
-                new Date(values.end),
-                'dd/MM/yyyy hh:mm a'
-              )}`}
+              name="Waktu"
+              value={`${format(new Date(values.start), 'dd/MM/yyyy hh:mm a', {
+                locale: id
+              })} - ${format(new Date(values.end), 'dd/MM/yyyy hh:mm a', { locale: id })}`}
               isReadOnly={isReadOnly}
               field={
                 <Stack direction="row" spacing={1}>
                   <MobileDateTimePicker
-                    label="Start date"
+                    label="Waktu Mulai"
                     value={values.start}
                     inputFormat="dd/MM/yyyy hh:mm a"
                     onChange={(date) => setFieldValue('start', date)}
@@ -285,7 +285,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
                   />
 
                   <MobileDateTimePicker
-                    label="End date"
+                    label="Waktu Selesai"
                     value={values.end}
                     inputFormat="dd/MM/yyyy hh:mm a"
                     onChange={(date) => setFieldValue('end', date)}
@@ -293,7 +293,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
                       <TextField
                         {...params}
                         error={Boolean(isDateError)}
-                        helperText={isDateError && 'End date must be later than start date'}
+                        helperText={isDateError && 'Waktu selesai harus berada setelah waktu mulai'}
                         sx={{ mb: 3 }}
                       />
                     )}
@@ -306,14 +306,14 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
 
           {event && event.createdBy && (
             <Field
-              name="Organizer"
+              name="Penyelenggara"
               value={`${event.createdBy.displayName} (${event.createdBy.email})`}
               isReadOnly={isReadOnly}
             />
           )}
 
           <Field
-            name="Meeting Link"
+            name="Tautan Meeting"
             value={
               values.meetingLink ? (
                 <Link
@@ -331,7 +331,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
             field={
               <TextField
                 fullWidth
-                label="Meeting Link"
+                label="Tautan Meeting"
                 {...getFieldProps('meetingLink')}
                 error={Boolean(touched.meetingLink && errors.meetingLink)}
                 helperText={touched.meetingLink && errors.meetingLink}
@@ -341,7 +341,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           />
 
           <Field
-            name="User(s)"
+            name="Hadirin"
             value={values.invitedUsersEmail.join(',\n') || '-'}
             isReadOnly={isReadOnly}
             field={
@@ -356,7 +356,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
                   <TextField
                     {...params}
                     fullWidth
-                    label="User(s)"
+                    label="Hadirin"
                     error={Boolean(touched.invitedUsersEmail && errors.invitedUsersEmail)}
                     helperText={touched.invitedUsersEmail && errors.invitedUsersEmail}
                     sx={{ mb: 3, mt: isReadOnly ? 1 : 'auto' }}
@@ -370,13 +370,13 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
         <DialogActions>
           {!isCreating && isReadOnly && (
             <>
-              <Tooltip title={isOrganizer ? 'Delete Activity' : 'Remove Myself'}>
+              <Tooltip title={isOrganizer ? 'Hapus Aktivitas' : 'Hapus Invitasi'}>
                 <IconButton onClick={handleDelete}>
                   <Icon icon={trash2Fill} width={20} height={20} />
                 </IconButton>
               </Tooltip>
               {isOrganizer && (
-                <Tooltip title="Edit Activity">
+                <Tooltip title="Edit Aktivitas">
                   <IconButton onClick={() => setIsReadOnly(false)}>
                     <Icon icon={edit2Fill} width={20} height={20} />
                   </IconButton>
@@ -391,7 +391,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
             color="inherit"
             onClick={handleClickCancelButton}
           >
-            {isReadOnly ? 'Close' : 'Cancel'}
+            {isReadOnly ? 'Tutup' : 'Batal'}
           </Button>
           {!isReadOnly && (
             <LoadingButton
@@ -401,7 +401,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
               loadingIndicator="Loading..."
               disabled={isReadOnly}
             >
-              {isCreating ? 'Add' : 'Edit'}
+              {isCreating ? 'Tambah' : 'Edit'}
             </LoadingButton>
           )}
         </DialogActions>

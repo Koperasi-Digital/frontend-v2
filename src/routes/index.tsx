@@ -10,6 +10,7 @@ import AuthGuard from '../guards/AuthGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import RoleBasedGuard from 'guards/RoleBasedGuard';
+import SellerGuard from 'guards/SellerGuard';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component: React.ElementType) => (props: any) => {
@@ -159,7 +160,14 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
             { path: 'shop', element: <EcommerceShop /> },
-            { path: 'seller', element: <EcommerceSellerCenter /> },
+            {
+              path: 'seller',
+              element: (
+                <SellerGuard>
+                  <EcommerceSellerCenter />
+                </SellerGuard>
+              )
+            },
             { path: 'general-ecommerce', element: <GeneralEcommerce /> },
             { path: 'general-analytics', element: <GeneralAnalytics /> },
             { path: 'order/:id', element: <EcommerceOrderDetails /> },
@@ -256,6 +264,14 @@ export default function Router() {
               )
             },
             { path: 'account', element: <UserAccount /> },
+            {
+              path: 'create-store',
+              element: (
+                <RoleBasedGuard accessibleRoles={['MEMBER']}>
+                  <CreateStore />
+                </RoleBasedGuard>
+              )
+            },
             {
               path: 'member-verification/verify',
               element: (
@@ -357,6 +373,7 @@ const MemberVerification = Loadable(lazy(() => import('../pages/dashboard/Member
 const RequestMemberVerification = Loadable(
   lazy(() => import('../pages/dashboard/RequestMemberVerification'))
 );
+const CreateStore = Loadable(lazy(() => import('../pages/dashboard/CreateStore')));
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));

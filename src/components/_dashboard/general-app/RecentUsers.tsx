@@ -45,7 +45,7 @@ export default function RecentUsers() {
   const handleDeleteUser = async (userId: string) => {
     try {
       await deleteUser(userId);
-      enqueueSnackbar(`Delete User ID: ${userId} success`, { variant: 'success' });
+      enqueueSnackbar(`Pengguna (ID: ${userId}) berhasil dihapus!`, { variant: 'success' });
     } catch (err) {
       console.error(err);
     }
@@ -54,16 +54,16 @@ export default function RecentUsers() {
   return (
     <>
       <Card>
-        <CardHeader title="Recent Users" sx={{ mb: 3 }} />
+        <CardHeader title="Pengguna Terbaru" sx={{ mb: 3 }} />
         <Scrollbar>
           <TableContainer sx={{ minWidth: 720 }}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>
+                  <TableCell>Nama</TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell>Role</TableCell>
-                  <TableCell>Joined At</TableCell>
+                  <TableCell>Waktu Daftar</TableCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
@@ -117,7 +117,7 @@ export default function RecentUsers() {
             component={RouterLink}
             endIcon={<Icon icon={arrowIosForwardFill} />}
           >
-            View All
+            Lihat Semua
           </Button>
         </Box>
       </Card>
