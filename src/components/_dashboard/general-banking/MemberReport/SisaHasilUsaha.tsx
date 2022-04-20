@@ -57,8 +57,7 @@ export default function SisaHasilUsaha(props: { dateValue: Date }) {
           </Stack>
           <Stack direction="row" justifyContent="center">
             <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-              periode {new Date(sisaHasilUsaha.periode).getDate()} -{' '}
-              {1} -{' '}
+              periode {new Date(sisaHasilUsaha.periode).getDate()} - {1} -{' '}
               {new Date(sisaHasilUsaha.periode).getFullYear()}
             </Typography>
           </Stack>
