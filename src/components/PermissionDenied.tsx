@@ -6,8 +6,8 @@ export default function PermissionDenied() {
       sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}
     >
       <Alert severity="error">
-        <AlertTitle>Permission Denied</AlertTitle>
-        You do not have permission to access this page
+        <AlertTitle>Akses Ditolak</AlertTitle>
+        Anda tidak memiliki izin untuk mengakses halaman ini
       </Alert>
     </Container>
   );

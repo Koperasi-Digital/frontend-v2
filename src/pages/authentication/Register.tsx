@@ -33,11 +33,11 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Register() {
   return (
-    <RootStyle title="Register | CoopChick">
+    <RootStyle title="Daftar | CoopChick">
       <AuthLayout>
-        Already have an account? &nbsp;
+        Sudah memiliki akun? &nbsp;
         <Link underline="none" variant="subtitle2" component={RouterLink} to={PATH_AUTH.login}>
-          Login
+          Masuk
         </Link>
       </AuthLayout>
 
@@ -46,9 +46,9 @@ export default function Register() {
           <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="h4" gutterBottom>
-                Register to CoopChick
+                Daftar ke CoopChick
               </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>Masukkan detail akun Anda.</Typography>
             </Box>
           </Box>
 
@@ -56,9 +56,9 @@ export default function Register() {
 
           <MHidden width="smUp">
             <Typography variant="subtitle2" sx={{ mt: 3, textAlign: 'center' }}>
-              Already have an account?&nbsp;
+              Sudah memiliki akun?&nbsp;
               <Link to={PATH_AUTH.login} component={RouterLink}>
-                Login
+                Masuk
               </Link>
             </Typography>
           </MHidden>

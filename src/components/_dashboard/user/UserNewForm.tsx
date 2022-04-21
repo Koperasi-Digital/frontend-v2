@@ -27,14 +27,15 @@ import {
 import { useDispatch, useSelector, RootState } from '../../../redux/store';
 import { getRoles } from '../../../redux/slices/role';
 // utils
-import { fData } from '../../../utils/formatNumber';
+import { fData } from 'utils/formatNumber';
+import { handleUploadFile } from 'utils/bucket';
+import { fTimestamp } from 'utils/formatTime';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
 import { UserManager } from '../../../@types/user';
 //
 import { UploadAvatar } from '../../upload';
-import countries from './countries';
 import useAuth from 'hooks/useAuth';
 import { editUser } from 'redux/slices/user';
 
@@ -58,14 +59,9 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
   }, [dispatch]);
 
   const NewUserSchema = Yup.object().shape({
-    displayName: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email(),
-    phoneNumber: Yup.string().required('Phone number is required'),
-    address: Yup.string().required('Address is required'),
-    country: Yup.string().required('country is required'),
-    state: Yup.string().required('State is required'),
-    city: Yup.string().required('City is required'),
-    roles: Yup.array().required('Assigned Roles is required')
+    displayName: Yup.string().required('Nama harus diisi'),
+    email: Yup.string().required('Email harus diisi').email(),
+    roles: Yup.array().min(1, 'Pengguna minimal harus memiliki satu role')
   });
 
   const formik = useFormik({
@@ -73,18 +69,21 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
     initialValues: {
       displayName: currentUser?.displayName || '',
       email: currentUser?.email || '',
-      phoneNumber: currentUser?.phoneNumber || '',
-      address: currentUser?.address || '',
-      country: currentUser?.country || '',
-      state: currentUser?.state || '',
-      city: currentUser?.city || '',
-      zipCode: currentUser?.zipCode || '',
       photoURL: currentUser?.photoURL || null,
       roles: currentUser?.roles.map((role) => role.name) || []
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
+        if (typeof values.photoURL === 'object') {
+          const photoFile = values.photoURL as unknown as File;
+          const photoUrl = await handleUploadFile(
+            photoFile,
+            `user/${currentUser?.id}/profile`,
+            `${fTimestamp(new Date())}-${photoFile.name}`
+          );
+          values.photoURL = photoUrl;
+        }
         if (isEdit) {
           await editUser(currentUser!.id, {
             ...values,
@@ -93,10 +92,13 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
         }
         resetForm();
         setSubmitting(false);
-        enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
+        enqueueSnackbar(!isEdit ? 'Pengguna berhasil dibuat!' : 'Pengguna berhasil diedit!', {
+          variant: 'success'
+        });
         navigate(PATH_DASHBOARD.user.list);
       } catch (error: any) {
         console.error(error);
+        enqueueSnackbar('Error!', { variant: 'error' });
         setSubmitting(false);
         setErrors(error);
       }
@@ -110,10 +112,12 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file) {
-        setFieldValue('avatarUrl', {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
+        setFieldValue(
+          'photoURL',
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          })
+        );
       }
     },
     [setFieldValue]
@@ -150,8 +154,8 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
                         color: 'text.secondary'
                       }}
                     >
-                      Allowed *.jpeg, *.jpg, *.png, *.gif
-                      <br /> max size of {fData(3145728)}
+                      Ekstensi file: *.jpeg, *.jpg, *.png, *.gif
+                      <br /> dengan ukuran {fData(3145728)}
                     </Typography>
                   }
                 />
@@ -168,86 +172,32 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
                     fullWidth
-                    label="Name"
+                    label="Nama"
                     {...getFieldProps('displayName')}
                     error={Boolean(touched.displayName && errors.displayName)}
                     helperText={touched.displayName && errors.displayName}
                   />
                   <TextField
                     fullWidth
-                    label="Email Address"
+                    label="Email"
                     {...getFieldProps('email')}
                     error={Boolean(touched.email && errors.email)}
                     helperText={touched.email && errors.email}
                   />
                 </Stack>
 
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Phone Number"
-                    {...getFieldProps('phoneNumber')}
-                    error={Boolean(touched.phoneNumber && errors.phoneNumber)}
-                    helperText={touched.phoneNumber && errors.phoneNumber}
-                  />
-                  <TextField
-                    select
-                    fullWidth
-                    label="Country"
-                    placeholder="Country"
-                    {...getFieldProps('country')}
-                    SelectProps={{ native: true }}
-                    error={Boolean(touched.country && errors.country)}
-                    helperText={touched.country && errors.country}
-                  >
-                    <option value="" />
-                    {countries.map((option) => (
-                      <option key={option.code} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </TextField>
-                </Stack>
-
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="State/Region"
-                    {...getFieldProps('state')}
-                    error={Boolean(touched.state && errors.state)}
-                    helperText={touched.state && errors.state}
-                  />
-                  <TextField
-                    fullWidth
-                    label="City"
-                    {...getFieldProps('city')}
-                    error={Boolean(touched.city && errors.city)}
-                    helperText={touched.city && errors.city}
-                  />
-                </Stack>
-
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Address"
-                    {...getFieldProps('address')}
-                    error={Boolean(touched.address && errors.address)}
-                    helperText={touched.address && errors.address}
-                  />
-                  <TextField fullWidth label="Zip/Code" {...getFieldProps('zipCode')} />
-                </Stack>
-
                 <FormControl>
-                  <InputLabel id="assigned-roles-label">Assigned Roles</InputLabel>
+                  <InputLabel id="assigned-roles-label">Role</InputLabel>
                   <Select
                     labelId="assigned-roles-label"
                     id="assigned-roles"
                     multiple
                     value={values.roles}
                     onChange={handleChangeAssignedRole}
-                    input={<OutlinedInput label="Assigned Roles" />}
+                    input={<OutlinedInput label="Role" />}
                     renderValue={(selected) => selected.map(capitalize).join(', ')}
                     disabled={currentUser?.id === loggedInUser?.id}
+                    error={Boolean(touched.roles && errors.roles)}
                   >
                     {roles.map(({ name }) => (
                       <MenuItem key={name} value={name}>
@@ -256,11 +206,14 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
                       </MenuItem>
                     ))}
                   </Select>
+                  <FormHelperText error sx={{ textAlign: 'left' }}>
+                    {touched.roles && errors.roles}
+                  </FormHelperText>
                 </FormControl>
 
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    {!isEdit ? 'Create User' : 'Save Changes'}
+                    Simpan
                   </LoadingButton>
                 </Box>
               </Stack>

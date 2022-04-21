@@ -1,4 +1,3 @@
-import firebase from 'firebase/app';
 import { User } from './account';
 import { Role } from './role';
 
@@ -38,28 +37,15 @@ export type JWTContextType = {
     email: string,
     password: string,
     passwordConfirm: string,
-    firstName: string,
-    lastName: string,
-    isMember: boolean
+    displayName: string,
+    isMember: boolean,
+    identityCardPhoto: File | null,
+    selfiePhoto: File | null
   ) => Promise<void>;
   logout: () => Promise<void>;
   changePassword: (oldPassword: string, newPassword: string, confirmNewPassword: string) => void;
   resetPassword: (email: string) => void;
   updateProfile: (newData: Partial<User>) => void;
+  updateUser: (user: User) => void;
   setCurrentRole: (roleId: number) => void;
-};
-
-export type FirebaseContextType = {
-  isAuthenticated: boolean;
-  isInitialized: boolean;
-  user: AuthUser;
-  method: 'firebase';
-  login: (email: string, password: string) => Promise<firebase.auth.UserCredential>;
-  register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
-  loginWithGoogle: () => Promise<firebase.auth.UserCredential>;
-  loginWithFaceBook: () => Promise<firebase.auth.UserCredential>;
-  loginWithTwitter: () => Promise<firebase.auth.UserCredential>;
-  logout: () => Promise<void>;
-  resetPassword: (email: string) => Promise<void>;
-  updateProfile: VoidFunction;
 };

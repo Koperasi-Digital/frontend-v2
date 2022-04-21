@@ -42,72 +42,92 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
             Buku Alamat
           </Typography>
 
-          {addressBook.map((address) => (
-            <Paper
-              key={address.id}
-              sx={{
-                p: 3,
-                width: 1,
-                bgcolor: 'background.neutral'
-              }}
-            >
-              <Typography variant="body2" gutterBottom>
-                <Typography variant="body2" component="span" sx={{ color: 'text.secondary' }}>
-                  Alamat: &nbsp;
-                </Typography>
-                {`${address.address}, ${address.city}, ${address.state}, ${address.country} ${address.zipCode}`}
-                {address.isDefault && (
-                  <Label color="info" sx={{ ml: 1 }}>
-                    Default
-                  </Label>
-                )}
-              </Typography>
-
-              <Typography variant="body2" gutterBottom>
-                <Typography variant="body2" component="span" sx={{ color: 'text.secondary' }}>
-                  No. Telepon: &nbsp;
-                </Typography>
-                {address.phoneNumber}
-              </Typography>
-
-              {isEdit && (
-                <Box sx={{ mt: 1 }}>
-                  <Button
-                    color="error"
-                    size="small"
-                    startIcon={<Icon icon={trash2Fill} />}
-                    onClick={() => deleteAddress(address.id)}
-                    sx={{ mr: 1 }}
+          {addressBook.length ? (
+            addressBook.map((address) => (
+              <Paper
+                key={address.id}
+                sx={{
+                  p: 3,
+                  width: 1,
+                  bgcolor: 'background.neutral'
+                }}
+              >
+                <Typography variant="body2" gutterBottom>
+                  <Typography
+                    variant="body2"
+                    component="span"
+                    sx={{ color: 'text.secondary', fontWeight: 'bold' }}
                   >
-                    Delete
-                  </Button>
-                  <Button
-                    size="small"
-                    startIcon={<Icon icon={editFill} />}
-                    onClick={() => handleOpen(address)}
-                    sx={{ mr: 1 }}
+                    Alamat: &nbsp;
+                  </Typography>
+                  {`${address.address}, ${address.city}, ${address.state}, ${address.country} ${address.zipCode}`}
+                  {address.isDefault && (
+                    <Label color="info" sx={{ ml: 1 }}>
+                      Utama
+                    </Label>
+                  )}
+                </Typography>
+
+                <Typography variant="body2" gutterBottom>
+                  <Typography
+                    variant="body2"
+                    component="span"
+                    sx={{ color: 'text.secondary', fontWeight: 'bold' }}
                   >
-                    Edit
-                  </Button>
-                  {!address.isDefault && (
+                    No. Telepon: &nbsp;
+                  </Typography>
+                  {address.phoneNumber}
+                </Typography>
+
+                {isEdit && (
+                  <Box sx={{ mt: 1 }}>
+                    <Button
+                      color="error"
+                      size="small"
+                      startIcon={<Icon icon={trash2Fill} />}
+                      onClick={() => deleteAddress(address.id)}
+                      sx={{ mr: 1 }}
+                    >
+                      Hapus
+                    </Button>
                     <Button
                       size="small"
-                      color="info"
-                      startIcon={<Icon icon={checkmarkOutline} />}
-                      onClick={() => setAddressAsDefault(address.id)}
+                      startIcon={<Icon icon={editFill} />}
+                      onClick={() => handleOpen(address)}
+                      sx={{ mr: 1 }}
                     >
-                      Set As Default
+                      Edit
                     </Button>
-                  )}
-                </Box>
-              )}
-            </Paper>
-          ))}
+                    {!address.isDefault && (
+                      <Button
+                        size="small"
+                        color="info"
+                        startIcon={<Icon icon={checkmarkOutline} />}
+                        onClick={() => setAddressAsDefault(address.id)}
+                      >
+                        Jadikan Alamat Utama
+                      </Button>
+                    )}
+                  </Box>
+                )}
+              </Paper>
+            ))
+          ) : (
+            <Box display="flex" justifyContent="center" sx={{ width: '100%', p: 3 }}>
+              <Typography variant="body2">Tidak ada alamat</Typography>
+            </Box>
+          )}
 
           {isEdit && (
-            <Button size="small" startIcon={<Icon icon={plusFill} />} onClick={() => handleOpen()}>
-              Tambah Alamat
-            </Button>
+            <Box display="flex" width="100%" justifyContent="end">
+              <Button
+                variant="contained"
+                startIcon={<Icon icon={plusFill} />}
+                onClick={() => handleOpen()}
+              >
+                Tambah Alamat
+              </Button>
+            </Box>
           )}
         </Stack>
       </Card>

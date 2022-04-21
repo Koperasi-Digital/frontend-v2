@@ -39,6 +39,7 @@
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@fullcalendar/common": "^5.9.0",
+    "@fullcalendar/core": "^5.11.0",
     "@fullcalendar/daygrid": "^5.9.0",
     "@fullcalendar/interaction": "^5.9.0",
     "@fullcalendar/list": "^5.9.0",

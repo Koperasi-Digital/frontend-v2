@@ -35,16 +35,16 @@ export default function AccountAddressForm({
   const isEdit = !isEmpty(existingAddress);
   const AccountAddressSchema = Yup.object().shape({
     phoneNumber: Yup.string()
-      .required('Phone is required')
+      .required('Nomor telepon harus diisi')
       .matches(
         /^\(?(?:\+62|62|0)(?:\d{2,3})?\)?[ .-]?\d{2,4}[ .-]?\d{2,4}[ .-]?\d{2,4}$/,
-        'Phone number is not valid'
+        'Nomor telepon tidak valid'
       ),
-    country: Yup.string().required('State is required'),
-    state: Yup.string().required('State is required'),
-    city: Yup.string().required('City is required'),
-    address: Yup.string().required('Address is required'),
-    zipCode: Yup.string().required('Zip Code is required')
+    country: Yup.string().required('Negara harus diisi'),
+    state: Yup.string().required('Provinsi harus diisi'),
+    city: Yup.string().required('Kota harus diisi'),
+    address: Yup.string().required('Alamat harus diisi'),
+    zipCode: Yup.string().required('Kode pos harus diisi')
   });
 
   const formik = useFormik({
@@ -58,7 +58,7 @@ export default function AccountAddressForm({
     },
     enableReinitialize: true,
     validationSchema: AccountAddressSchema,
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
         setSubmitting(true);
         if (isEdit) {
@@ -67,6 +67,8 @@ export default function AccountAddressForm({
           await addAddress(values);
         }
         onClose();
+        resetForm();
+        setSubmitting(false);
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -159,12 +161,12 @@ export default function AccountAddressForm({
           <Divider />
 
           <DialogActions>
-            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-              Submit
-            </LoadingButton>
             <Button type="button" color="inherit" variant="outlined" onClick={onClose}>
-              Cancel
+              Batal
             </Button>
+            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+              Kirim
+            </LoadingButton>
           </DialogActions>
         </Form>
       </FormikProvider>

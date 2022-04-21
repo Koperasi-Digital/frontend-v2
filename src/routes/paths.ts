@@ -57,6 +57,7 @@ export const PATH_DASHBOARD = {
     detail: path(ROOTS_DASHBOARD, `/user/:name/detail`),
     editById: path(ROOTS_DASHBOARD, `/user/:name/edit`),
     account: path(ROOTS_DASHBOARD, '/user/account'),
+    createStore: path(ROOTS_DASHBOARD, '/user/create-store'),
     memberVerification: {
       request: path(ROOTS_DASHBOARD, '/user/member-verification/request'),
       verify: path(ROOTS_DASHBOARD, '/user/member-verification/verify')

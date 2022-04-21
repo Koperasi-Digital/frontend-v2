@@ -1,7 +1,10 @@
 import { createContext, ReactNode, useEffect, useReducer } from 'react';
+import { isEmpty } from 'lodash';
 // utils
 import { setSession } from 'utils/jwt';
 import axios from 'utils/axios';
+import { handleUploadFile } from 'utils/bucket';
+import { fTimestamp } from 'utils/formatTime';
 // import axiosMock from 'utils/axiosMock';
 // @types
 import {
@@ -13,7 +16,6 @@ import {
 } from '../@types/authentication';
 import { Role } from '../@types/role';
 import { User } from '../@types/account';
-import { isEmpty } from 'lodash';
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +48,8 @@ type JWTAuthPayload = {
   };
   [Types.Update]: {
     user: AuthUser;
+    currentRole: CurrentRole;
+    isSeller: boolean;
   };
   [Types.SetRole]: {
     currentRole: CurrentRole;
@@ -77,26 +81,31 @@ const JWTReducer = (state: AuthState, action: JWTActions) => {
         ...state,
         isAuthenticated: true,
         user: action.payload.user,
-        currentRole: action.payload.currentRole
+        currentRole: action.payload.currentRole,
+        isSeller: action.payload.isSeller
       };
     case Types.Logout:
       return {
         ...state,
         isAuthenticated: false,
         user: null,
-        currentRole: null
+        currentRole: null,
+        isSeller: false
       };
     case Types.Register:
       return {
         ...state,
         isAuthenticated: true,
         user: action.payload.user,
-        currentRole: action.payload.currentRole
+        currentRole: action.payload.currentRole,
+        isSeller: action.payload.isSeller
       };
     case Types.Update:
       return {
         ...state,
-        user: action.payload.user
+        user: action.payload.user,
+        currentRole: action.payload.currentRole,
+        isSeller: action.payload.isSeller
       };
     case Types.SetRole:
       return {
@@ -129,7 +138,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
               isAuthenticated: true,
               user,
               currentRole,
-              isSeller: !isEmpty(user.storeName)
+              isSeller: !isEmpty(user.store)
             }
           });
         } else {
@@ -174,7 +183,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
       payload: {
         user,
         currentRole,
-        isSeller: !isEmpty(user.storeName)
+        isSeller: !isEmpty(user.store)
       }
     });
   };
@@ -183,27 +192,50 @@ function AuthProvider({ children }: { children: ReactNode }) {
     email: string,
     password: string,
     passwordConfirm: string,
-    firstName: string,
-    lastName: string,
-    isMember: boolean
+    displayName: string,
+    isMember: boolean,
+    identityCardPhoto: File | null,
+    selfiePhoto: File | null
   ) => {
     const response = await axios.post('auth/register', {
       email,
       password,
       passwordConfirm,
-      displayName: firstName.concat(' ', lastName),
-      isMember
+      displayName
     });
     const { accessToken, refreshToken, user } = response.data.payload;
     const currentRole = getCurrentRole(user.roles);
-
     setSession(accessToken, refreshToken);
+
+    if (isMember && identityCardPhoto && selfiePhoto) {
+      const fileUrlPromises: Promise<string>[] = [];
+      fileUrlPromises.push(
+        handleUploadFile(
+          identityCardPhoto,
+          `user/${user?.id}/verification`,
+          `${fTimestamp(new Date())}-KTP-${identityCardPhoto.name}`
+        )
+      );
+      fileUrlPromises.push(
+        handleUploadFile(
+          selfiePhoto,
+          `user/${user?.id}/verification`,
+          `${fTimestamp(new Date())}-Selfie-${selfiePhoto.name}`
+        )
+      );
+      const [identityCardPhotoURL, selfiePhotoURL] = await Promise.all(fileUrlPromises);
+      await axios.post(`member-verification/create`, {
+        identityCardPhotoURL,
+        selfiePhotoURL
+      });
+    }
+
     dispatch({
       type: Types.Register,
       payload: {
         user,
         currentRole,
-        isSeller: !isEmpty(user.storeName)
+        isSeller: !isEmpty(user.store)
       }
     });
   };
@@ -227,13 +259,30 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const updateProfile = (newData: Partial<User>) =>
     axios.patch(`/users/${newData.id}`, newData).then((response) => {
       const user = response.data.payload;
+      const currentRole = getCurrentRole(user.roles);
+
       dispatch({
         type: Types.Update,
         payload: {
-          user
+          user,
+          currentRole,
+          isSeller: !isEmpty(user.store)
         }
       });
     });
+
+  const updateUser = (user: User) => {
+    const currentRole = getCurrentRole(user.roles);
+
+    dispatch({
+      type: Types.Update,
+      payload: {
+        user,
+        currentRole,
+        isSeller: !isEmpty(user.store)
+      }
+    });
+  };
 
   const getCurrentRole = (ownedRoles?: Role[]) => {
     if (ownedRoles && ownedRoles.length) {
@@ -279,6 +328,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
         changePassword,
         resetPassword,
         updateProfile,
+        updateUser,
         setCurrentRole
       }}
     >

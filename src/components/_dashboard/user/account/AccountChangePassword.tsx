@@ -14,11 +14,11 @@ export default function AccountChangePassword() {
   const { changePassword } = useAuth();
 
   const ChangePassWordSchema = Yup.object().shape({
-    oldPassword: Yup.string().required('Old Password is required'),
+    oldPassword: Yup.string().required('Password lama harus diisi'),
     newPassword: Yup.string()
-      .min(6, 'Password must be at least 6 characters')
-      .required('New Password is required'),
-    confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
+      .min(6, 'Password berisi minimal 6 karakter')
+      .required('Password baru harus diisi'),
+    confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Password harus sesuai')
   });
 
   const formik = useFormik({
@@ -29,9 +29,14 @@ export default function AccountChangePassword() {
     },
     validationSchema: ChangePassWordSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      await changePassword(values.oldPassword, values.newPassword, values.confirmNewPassword);
-      setSubmitting(false);
-      enqueueSnackbar('Save success', { variant: 'success' });
+      try {
+        await changePassword(values.oldPassword, values.newPassword, values.confirmNewPassword);
+        setSubmitting(false);
+        enqueueSnackbar('Password berhasil diubah!', { variant: 'success' });
+      } catch (err) {
+        setSubmitting(false);
+        enqueueSnackbar('Error, silakan coba lagi nanti', { variant: 'error' });
+      }
     }
   });
 
@@ -47,7 +52,7 @@ export default function AccountChangePassword() {
               fullWidth
               autoComplete="on"
               type="password"
-              label="Old Password"
+              label="Password Lama"
               error={Boolean(touched.oldPassword && errors.oldPassword)}
               helperText={touched.oldPassword && errors.oldPassword}
             />
@@ -57,10 +62,10 @@ export default function AccountChangePassword() {
               fullWidth
               autoComplete="on"
               type="password"
-              label="New Password"
+              label="Password Baru"
               error={Boolean(touched.newPassword && errors.newPassword)}
               helperText={
-                (touched.newPassword && errors.newPassword) || 'Password must be minimum 6+'
+                (touched.newPassword && errors.newPassword) || 'Password berisi minimal 6 karakter'
               }
             />
 
@@ -69,13 +74,13 @@ export default function AccountChangePassword() {
               fullWidth
               autoComplete="on"
               type="password"
-              label="Confirm New Password"
+              label="Konfirmasi Password Baru"
               error={Boolean(touched.confirmNewPassword && errors.confirmNewPassword)}
               helperText={touched.confirmNewPassword && errors.confirmNewPassword}
             />
 
             <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-              Save Changes
+              Simpan
             </LoadingButton>
           </Stack>
         </Form>

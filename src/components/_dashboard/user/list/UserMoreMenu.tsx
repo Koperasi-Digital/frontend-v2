@@ -38,11 +38,15 @@ export default function UserMoreMenu({ onDelete, userName }: UserMoreMenuProps) 
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem onClick={onDelete} sx={{ color: 'text.secondary' }}>
+        <MenuItem
+          component={RouterLink}
+          to={`${PATH_DASHBOARD.user.root}/${paramCase(userName)}/detail`}
+          sx={{ color: 'text.secondary' }}
+        >
           <ListItemIcon>
-            <Icon icon={trash2Outline} width={24} height={24} />
+            <Icon icon={personFill} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Detail" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
         <MenuItem
@@ -56,15 +60,11 @@ export default function UserMoreMenu({ onDelete, userName }: UserMoreMenuProps) 
           <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem
-          component={RouterLink}
-          to={`${PATH_DASHBOARD.user.root}/${paramCase(userName)}/detail`}
-          sx={{ color: 'text.secondary' }}
-        >
+        <MenuItem onClick={onDelete} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
-            <Icon icon={personFill} width={24} height={24} />
+            <Icon icon={trash2Outline} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Detail" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Hapus" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
     </>
