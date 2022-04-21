@@ -32,6 +32,7 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+      state.error = false;
     },
 
     // HAS ERROR
@@ -48,12 +49,14 @@ const slice = createSlice({
 
     // DELETE USERS
     deleteUser(state, action) {
+      state.isLoading = false;
       const deleteUser = filter(state.userList, (user) => user.id !== action.payload);
       state.userList = deleteUser;
     },
 
     // EDIT USER
     editUser(state, action) {
+      state.isLoading = false;
       state.userList = state.userList.map((user) =>
         user.id === action.payload.id ? { ...action.payload, ...user } : user
       );
