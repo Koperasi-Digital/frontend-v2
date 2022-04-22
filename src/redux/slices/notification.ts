@@ -26,6 +26,7 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+      state.error = false;
     },
 
     // HAS ERROR
@@ -92,6 +93,15 @@ export async function addMessagingToken(token: string) {
   dispatch(slice.actions.startLoading());
   try {
     await axios.post('notifications/add-token', { token });
+  } catch (error) {
+    dispatch(slice.actions.hasError(error));
+  }
+}
+
+export async function deleteMessagingToken(token: string) {
+  dispatch(slice.actions.startLoading());
+  try {
+    await axios.post('notifications/delete-token', { token });
   } catch (error) {
     dispatch(slice.actions.hasError(error));
   }

@@ -27,6 +27,7 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+      state.error = false;
     },
 
     // HAS ERROR
@@ -64,6 +65,7 @@ const slice = createSlice({
 
     // DELETE EVENT
     deleteEventSuccess(state, action) {
+      state.isLoading = false;
       const { eventId } = action.payload;
       const deleteEvent = filter(state.events, (user) => user.id !== eventId);
       state.events = deleteEvent;
