@@ -67,17 +67,15 @@ const styles = StyleSheet.create({
 });
 
 type NeracaData = {
-  asetTetap: number;
-  beban: number;
-  harta: number;
-  id: number;
   kas: number;
-  modal: number;
-  modalCalc: number;
-  periode: string;
   persediaan: number;
+  simpananSukarela: number;
+  aset: number;
+  pendapatan: number;
+  modal: number;
   prive: number;
-  user_id: number;
+  beban: number;
+  ekuitas: number;
 };
 
 // Create Document Component
@@ -130,10 +128,10 @@ export default function NeracaReportPDF(props: { neracaData: NeracaData }) {
                 <Text style={styles.subtitle2}>3</Text>
               </View>
               <View style={styles.tableCell_2}>
-                <Text style={styles.subtitle2}>Aset Tetap</Text>
+                <Text style={styles.subtitle2}>Simpanan Sukarela</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text style={styles.subtitle2}>{fCurrency(props.neracaData.asetTetap)}</Text>
+                <Text style={styles.subtitle2}>{fCurrency(props.neracaData.simpananSukarela)}</Text>
               </View>
             </View>
             <View style={styles.tableRow}>
@@ -141,15 +139,26 @@ export default function NeracaReportPDF(props: { neracaData: NeracaData }) {
                 <Text style={styles.subtitle2}></Text>
               </View>
               <View style={styles.tableCell_2}>
-                <Text style={styles.subtitle2}>Total Aset</Text>
+                <Text style={styles.subtitle2}>Aset</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text style={styles.subtitle2}>{fCurrency(props.neracaData.harta)}</Text>
+                <Text style={styles.subtitle2}>{fCurrency(props.neracaData.aset)}</Text>
               </View>
             </View>
             <View style={styles.tableRow}>
               <View style={styles.tableCell_1}>
                 <Text style={styles.subtitle2}>4</Text>
+              </View>
+              <View style={styles.tableCell_2}>
+                <Text style={styles.subtitle2}>Pendapatan</Text>
+              </View>
+              <View style={[styles.tableCell_3, styles.alignRight]}>
+                <Text style={styles.subtitle2}>{fCurrency(props.neracaData.pendapatan)}</Text>
+              </View>
+            </View>
+            <View style={styles.tableRow}>
+              <View style={styles.tableCell_1}>
+                <Text style={styles.subtitle2}>5</Text>
               </View>
               <View style={styles.tableCell_2}>
                 <Text style={styles.subtitle2}>Modal</Text>
@@ -160,7 +169,7 @@ export default function NeracaReportPDF(props: { neracaData: NeracaData }) {
             </View>
             <View style={styles.tableRow}>
               <View style={styles.tableCell_1}>
-                <Text style={styles.subtitle2}>5</Text>
+                <Text style={styles.subtitle2}>6</Text>
               </View>
               <View style={styles.tableCell_2}>
                 <Text style={styles.subtitle2}>Prive</Text>
@@ -171,7 +180,7 @@ export default function NeracaReportPDF(props: { neracaData: NeracaData }) {
             </View>
             <View style={styles.tableRow}>
               <View style={styles.tableCell_1}>
-                <Text style={styles.subtitle2}>6</Text>
+                <Text style={styles.subtitle2}>7</Text>
               </View>
               <View style={styles.tableCell_2}>
                 <Text style={styles.subtitle2}>Beban</Text>
@@ -188,7 +197,7 @@ export default function NeracaReportPDF(props: { neracaData: NeracaData }) {
                 <Text style={styles.subtitle2}>Ekuitas</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text style={styles.subtitle2}>{fCurrency(props.neracaData.modalCalc)}</Text>
+                <Text style={styles.subtitle2}>{fCurrency(props.neracaData.ekuitas)}</Text>
               </View>
             </View>
           </View>

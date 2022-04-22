@@ -11,7 +11,9 @@ import {
   TableContainer,
   TableBody,
   TableHead,
-  TableCell
+  TableCell,
+  Box,
+  Typography
 } from '@mui/material';
 
 import { fCurrency } from 'utils/formatNumber';
@@ -31,15 +33,14 @@ export default function CoopArusKasReport({ dateValue }: CoopArusKasReportProps)
   const { user } = useAuth();
 
   interface ICoopArusKasData {
-    id: number;
-    periode: string;
     jumlahKasAwal: number;
     kasMasuk: number;
-    kasCair: number;
+    kasKeluar: number;
     jumlahKasAkhir: number;
   }
 
   const [coopArusKasData, setCoopArusKasData] = useState<ICoopArusKasData | undefined>(undefined);
+  const [dataNotExist, setDataNotExist] = useState<Boolean>(false);
 
   const RowResultStyle = styled(TableRow)(({ theme }) => ({
     '& td': {
@@ -53,7 +54,12 @@ export default function CoopArusKasReport({ dateValue }: CoopArusKasReportProps)
       let currentPeriodString = dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1';
       if (user) {
         const coopArusKasData = await handleGetCoopArusKasInfo(currentPeriodString);
-        setCoopArusKasData(coopArusKasData);
+        if (coopArusKasData) {
+          setCoopArusKasData(coopArusKasData);
+          setDataNotExist(false);
+        } else {
+          setDataNotExist(true);
+        }
       }
     };
     fetchData();
@@ -61,57 +67,65 @@ export default function CoopArusKasReport({ dateValue }: CoopArusKasReportProps)
 
   return (
     <>
-      <Grid container spacing={3}>
-        {coopArusKasData ? (
-          <Grid item xs={12}>
-            <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-              <CoopArusKasReportToolbar coopArusKasData={coopArusKasData} />
-            </Stack>
-          </Grid>
-        ) : null}
-        {coopArusKasData ? (
-          <Grid item xs={12}>
-            <TableContainer sx={{ minWidth: 100, minHeight: 20, mb: 10 }}>
-              <Table>
-                <TableHead
-                  sx={{
-                    borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
-                    '& th': { backgroundColor: 'transparent' }
-                  }}
-                >
-                  <TableRow>
-                    <TableCell width={10}>#</TableCell>
-                    <TableCell align="left">Komponen</TableCell>
-                    <TableCell align="left">Jumlah</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell align="left">1</TableCell>
-                    <TableCell align="left">Jumlah Kas Awal</TableCell>
-                    <TableCell align="left">{fCurrency(coopArusKasData.jumlahKasAwal)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell align="left">2</TableCell>
-                    <TableCell align="left">Kas Masuk</TableCell>
-                    <TableCell align="left">{fCurrency(coopArusKasData.kasMasuk)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell align="left">3</TableCell>
-                    <TableCell align="left">Kas Cair</TableCell>
-                    <TableCell align="left">{fCurrency(coopArusKasData.kasCair)}</TableCell>
-                  </TableRow>
-                  <RowResultStyle>
-                    <TableCell width={10}></TableCell>
-                    <TableCell align="left">Jumlah Kas Akhir</TableCell>
-                    <TableCell align="left">{fCurrency(coopArusKasData.jumlahKasAkhir)}</TableCell>
-                  </RowResultStyle>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
-        ) : null}
-      </Grid>
+      {dataNotExist ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Typography>Data tidak tersedia</Typography>
+        </Box>
+      ) : (
+        <Grid container spacing={3}>
+          {coopArusKasData ? (
+            <Grid item xs={12}>
+              <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
+                <CoopArusKasReportToolbar coopArusKasData={coopArusKasData} />
+              </Stack>
+            </Grid>
+          ) : null}
+          {coopArusKasData ? (
+            <Grid item xs={12}>
+              <TableContainer sx={{ minWidth: 100, minHeight: 20, mb: 10 }}>
+                <Table>
+                  <TableHead
+                    sx={{
+                      borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                      '& th': { backgroundColor: 'transparent' }
+                    }}
+                  >
+                    <TableRow>
+                      <TableCell width={10}>#</TableCell>
+                      <TableCell align="left">Komponen</TableCell>
+                      <TableCell align="left">Jumlah</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="left">1</TableCell>
+                      <TableCell align="left">Jumlah Kas Awal</TableCell>
+                      <TableCell align="left">{fCurrency(coopArusKasData.jumlahKasAwal)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="left">2</TableCell>
+                      <TableCell align="left">Kas Masuk</TableCell>
+                      <TableCell align="left">{fCurrency(coopArusKasData.kasMasuk)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="left">3</TableCell>
+                      <TableCell align="left">Kas Keluar</TableCell>
+                      <TableCell align="left">{fCurrency(coopArusKasData.kasKeluar)}</TableCell>
+                    </TableRow>
+                    <RowResultStyle>
+                      <TableCell width={10}></TableCell>
+                      <TableCell align="left">Jumlah Kas Akhir</TableCell>
+                      <TableCell align="left">
+                        {fCurrency(coopArusKasData.jumlahKasAkhir)}
+                      </TableCell>
+                    </RowResultStyle>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          ) : null}
+        </Grid>
+      )}
     </>
   );
 }

@@ -67,15 +67,16 @@ const styles = StyleSheet.create({
 });
 
 type CoopNeracaData = {
-  id: number;
-  periode: string;
   kas: number;
   asetTetap: number;
+  aset: number;
+  saldoMember: number;
+  simpananSukarela: number;
+  liabilitas: number;
+  pendapatan: number;
   modal: number;
-  prive: number;
   beban: number;
-  harta: number;
-  modalCalc: number;
+  ekuitas: number;
 };
 
 // Create Document Component
@@ -128,15 +129,61 @@ export default function CoopNeracaReportPDF(props: { coopNeracaData: CoopNeracaD
                 <Text style={styles.subtitle2}></Text>
               </View>
               <View style={styles.tableCell_2}>
-                <Text style={styles.subtitle2}>Total Aset</Text>
+                <Text style={styles.subtitle2}>Aset</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text style={styles.subtitle2}>{fCurrency(props.coopNeracaData.harta)}</Text>
+                <Text style={styles.subtitle2}>{fCurrency(props.coopNeracaData.aset)}</Text>
               </View>
             </View>
             <View style={styles.tableRow}>
               <View style={styles.tableCell_1}>
                 <Text style={styles.subtitle2}>3</Text>
+              </View>
+              <View style={styles.tableCell_2}>
+                <Text style={styles.subtitle2}>Saldo Member</Text>
+              </View>
+              <View style={[styles.tableCell_3, styles.alignRight]}>
+                <Text style={styles.subtitle2}>{fCurrency(props.coopNeracaData.saldoMember)}</Text>
+              </View>
+            </View>
+            <View style={styles.tableRow}>
+              <View style={styles.tableCell_1}>
+                <Text style={styles.subtitle2}>4</Text>
+              </View>
+              <View style={styles.tableCell_2}>
+                <Text style={styles.subtitle2}>Simpanan Sukarela Member</Text>
+              </View>
+              <View style={[styles.tableCell_3, styles.alignRight]}>
+                <Text style={styles.subtitle2}>
+                  {fCurrency(props.coopNeracaData.simpananSukarela)}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.tableRow}>
+              <View style={styles.tableCell_1}>
+                <Text style={styles.subtitle2}></Text>
+              </View>
+              <View style={styles.tableCell_2}>
+                <Text style={styles.subtitle2}>Liabilitas</Text>
+              </View>
+              <View style={[styles.tableCell_3, styles.alignRight]}>
+                <Text style={styles.subtitle2}>{fCurrency(props.coopNeracaData.liabilitas)}</Text>
+              </View>
+            </View>
+            <View style={styles.tableRow}>
+              <View style={styles.tableCell_1}>
+                <Text style={styles.subtitle2}>5</Text>
+              </View>
+              <View style={styles.tableCell_2}>
+                <Text style={styles.subtitle2}>Pendapatan</Text>
+              </View>
+              <View style={[styles.tableCell_3, styles.alignRight]}>
+                <Text style={styles.subtitle2}>{fCurrency(props.coopNeracaData.pendapatan)}</Text>
+              </View>
+            </View>
+            <View style={styles.tableRow}>
+              <View style={styles.tableCell_1}>
+                <Text style={styles.subtitle2}>6</Text>
               </View>
               <View style={styles.tableCell_2}>
                 <Text style={styles.subtitle2}>Modal</Text>
@@ -147,18 +194,7 @@ export default function CoopNeracaReportPDF(props: { coopNeracaData: CoopNeracaD
             </View>
             <View style={styles.tableRow}>
               <View style={styles.tableCell_1}>
-                <Text style={styles.subtitle2}>4</Text>
-              </View>
-              <View style={styles.tableCell_2}>
-                <Text style={styles.subtitle2}>Prive</Text>
-              </View>
-              <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text style={styles.subtitle2}>{fCurrency(props.coopNeracaData.prive)}</Text>
-              </View>
-            </View>
-            <View style={styles.tableRow}>
-              <View style={styles.tableCell_1}>
-                <Text style={styles.subtitle2}>5</Text>
+                <Text style={styles.subtitle2}>7</Text>
               </View>
               <View style={styles.tableCell_2}>
                 <Text style={styles.subtitle2}>Beban</Text>
@@ -175,7 +211,7 @@ export default function CoopNeracaReportPDF(props: { coopNeracaData: CoopNeracaD
                 <Text style={styles.subtitle2}>Ekuitas</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text style={styles.subtitle2}>{fCurrency(props.coopNeracaData.modalCalc)}</Text>
+                <Text style={styles.subtitle2}>{fCurrency(props.coopNeracaData.ekuitas)}</Text>
               </View>
             </View>
           </View>

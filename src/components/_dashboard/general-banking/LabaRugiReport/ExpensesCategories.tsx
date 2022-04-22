@@ -3,6 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 // material
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Card, Divider, CardHeader, useMediaQuery } from '@mui/material';
+import Scrollbar from 'components/Scrollbar';
 
 import { handleGetLabaRugiInfo } from '../../../../utils/financeAxios/financeReport';
 
@@ -36,8 +37,18 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
 
   const [chartOptions] = useState<any>({
     chart: { id: 'banking-expense-categories' },
-    labels: ['Biaya Produksi Produk Terjual', 'Biaya Operasi'],
-    colors: [theme.palette.primary.main, theme.palette.info.darker],
+    labels: [
+      'Biaya Produksi Produk Terjual',
+      'Biaya Simpanan Pokok',
+      'Biaya Simpanan Wajib',
+      'Biaya Operasi'
+    ],
+    colors: [
+      theme.palette.primary.main,
+      theme.palette.info.darker,
+      theme.palette.chart.yellow[0],
+      theme.palette.chart.blue[0]
+    ],
     stroke: {
       colors: [theme.palette.background.paper]
     },
@@ -57,11 +68,15 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
         const currentPeriodString =
           props.dateValue.getFullYear() + '-' + (props.dateValue.getMonth() + 1) + '-1';
         const currentLabaRugiData = await handleGetLabaRugiInfo(user.id, currentPeriodString);
-        const series = [
-          currentLabaRugiData.biayaProduksiProdukTerjual,
-          currentLabaRugiData.biayaOperasi
-        ];
-        setChartData(series);
+        if (currentLabaRugiData) {
+          const series = [
+            currentLabaRugiData.biayaProduksiProdukTerjual,
+            currentLabaRugiData.biayaSimpananPokok,
+            currentLabaRugiData.biayaSimpananWajib,
+            currentLabaRugiData.biayaOperasi
+          ];
+          setChartData(series);
+        }
       }
     };
     fetchData();
@@ -70,16 +85,17 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
   return (
     <RootStyle>
       <CardHeader title="Expenses Categories" />
-
-      <Box sx={{ my: 5 }} dir="ltr">
-        <ReactApexChart
-          options={chartOptions}
-          series={chartData}
-          type="pie"
-          height={isMobile ? 360 : 240}
-        />
-      </Box>
-
+      <Scrollbar>
+        <Box sx={{ my: 5 }} dir="ltr">
+          <ReactApexChart
+            options={chartOptions}
+            series={chartData}
+            type="pie"
+            height={isMobile ? 240 : 250}
+            width={isMobile ? 700 : 800}
+          />
+        </Box>
+      </Scrollbar>
       <Divider />
     </RootStyle>
   );

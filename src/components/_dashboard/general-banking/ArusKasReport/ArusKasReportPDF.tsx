@@ -67,12 +67,9 @@ const styles = StyleSheet.create({
 });
 
 type ArusKasData = {
-  id: number;
-  user_id: number;
-  periode: string;
   jumlahKasAwal: number;
   kasMasuk: number;
-  kasCair: number;
+  kasKeluar: number;
   jumlahKasAkhir: number;
 };
 
@@ -126,10 +123,10 @@ export default function ArusKasReportPDF(props: { arusKasData: ArusKasData }) {
                 <Text style={styles.subtitle2}>3</Text>
               </View>
               <View style={styles.tableCell_2}>
-                <Text style={styles.subtitle2}>Kas Cair</Text>
+                <Text style={styles.subtitle2}>Kas Keluar</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text style={styles.subtitle2}>{fCurrency(props.arusKasData.kasCair)}</Text>
+                <Text style={styles.subtitle2}>{fCurrency(props.arusKasData.kasKeluar)}</Text>
               </View>
             </View>
             <View style={styles.tableRow}>

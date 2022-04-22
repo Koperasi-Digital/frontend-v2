@@ -11,7 +11,9 @@ import {
   TableContainer,
   TableBody,
   TableHead,
-  TableCell
+  TableCell,
+  Box,
+  Typography
 } from '@mui/material';
 
 import { fCurrency } from 'utils/formatNumber';
@@ -31,20 +33,19 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
   const { user } = useAuth();
 
   interface INeracaData {
-    asetTetap: number;
-    beban: number;
-    harta: number;
-    id: number;
     kas: number;
-    modal: number;
-    modalCalc: number;
-    periode: string;
     persediaan: number;
+    simpananSukarela: number;
+    aset: number;
+    pendapatan: number;
+    modal: number;
     prive: number;
-    user_id: number;
+    beban: number;
+    ekuitas: number;
   }
 
   const [neracaData, setNeracaData] = useState<INeracaData | undefined>(undefined);
+  const [dataNotExist, setDataNotExist] = useState<Boolean>(false);
 
   const RowResultStyle = styled(TableRow)(({ theme }) => ({
     '& td': {
@@ -58,7 +59,12 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
       let currentPeriodString = dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1';
       if (user) {
         const neracaData = await handleGetNeracaInfo(user.id, currentPeriodString);
-        setNeracaData(neracaData);
+        if (neracaData) {
+          setNeracaData(neracaData);
+          setDataNotExist(false);
+        } else {
+          setDataNotExist(true);
+        }
       }
     };
     fetchData();
@@ -66,77 +72,88 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
 
   return (
     <>
-      <Grid container spacing={3}>
-        {neracaData ? (
-          <Grid item xs={12}>
-            <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-              <NeracaReportToolbar neracaData={neracaData} />
-            </Stack>
-          </Grid>
-        ) : null}
-        {neracaData ? (
-          <Grid item xs={12}>
-            <TableContainer sx={{ minWidth: 100, minHeight: 20, mb: 10 }}>
-              <Table>
-                <TableHead
-                  sx={{
-                    borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
-                    '& th': { backgroundColor: 'transparent' }
-                  }}
-                >
-                  <TableRow>
-                    <TableCell width={10}>#</TableCell>
-                    <TableCell align="left">Komponen</TableCell>
-                    <TableCell align="left">Jumlah</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell align="left">1</TableCell>
-                    <TableCell align="left">Kas</TableCell>
-                    <TableCell align="left">{fCurrency(neracaData.kas)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell align="left">2</TableCell>
-                    <TableCell align="left">Persediaan</TableCell>
-                    <TableCell align="left">{fCurrency(neracaData.persediaan)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell align="left">3</TableCell>
-                    <TableCell align="left">Aset Tetap</TableCell>
-                    <TableCell align="left">{fCurrency(neracaData.asetTetap)}</TableCell>
-                  </TableRow>
-                  <RowResultStyle>
-                    <TableCell width={10}></TableCell>
-                    <TableCell align="left">Total Aset</TableCell>
-                    <TableCell align="left">{fCurrency(neracaData.harta)}</TableCell>
-                  </RowResultStyle>
-                  <TableRow>
-                    <TableCell align="left">4</TableCell>
-                    <TableCell align="left">Modal</TableCell>
-                    <TableCell align="left">{fCurrency(neracaData.modal)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell align="left">5</TableCell>
-                    <TableCell align="left">Prive</TableCell>
-                    <TableCell align="left">{fCurrency(neracaData.prive)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell align="left">6</TableCell>
-                    <TableCell align="left">Beban</TableCell>
-                    <TableCell align="left">{fCurrency(neracaData.beban)}</TableCell>
-                  </TableRow>
-                  <RowResultStyle>
-                    <TableCell width={10}></TableCell>
-                    <TableCell align="left">Ekuitas</TableCell>
-                    <TableCell align="left">{fCurrency(neracaData.modalCalc)}</TableCell>
-                  </RowResultStyle>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
-        ) : null}
-      </Grid>
+      {dataNotExist ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Typography>Data tidak tersedia</Typography>
+        </Box>
+      ) : (
+        <Grid container spacing={3}>
+          {neracaData ? (
+            <Grid item xs={12}>
+              <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
+                <NeracaReportToolbar neracaData={neracaData} />
+              </Stack>
+            </Grid>
+          ) : null}
+          {neracaData ? (
+            <Grid item xs={12}>
+              <TableContainer sx={{ minWidth: 100, minHeight: 20, mb: 10 }}>
+                <Table>
+                  <TableHead
+                    sx={{
+                      borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                      '& th': { backgroundColor: 'transparent' }
+                    }}
+                  >
+                    <TableRow>
+                      <TableCell width={10}>#</TableCell>
+                      <TableCell align="left">Komponen</TableCell>
+                      <TableCell align="left">Jumlah</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="left">1</TableCell>
+                      <TableCell align="left">Kas</TableCell>
+                      <TableCell align="left">{fCurrency(neracaData.kas)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="left">2</TableCell>
+                      <TableCell align="left">Persediaan</TableCell>
+                      <TableCell align="left">{fCurrency(neracaData.persediaan)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="left">3</TableCell>
+                      <TableCell align="left">Simpanan Sukarela</TableCell>
+                      <TableCell align="left">{fCurrency(neracaData.simpananSukarela)}</TableCell>
+                    </TableRow>
+                    <RowResultStyle>
+                      <TableCell width={10}></TableCell>
+                      <TableCell align="left">Aset</TableCell>
+                      <TableCell align="left">{fCurrency(neracaData.aset)}</TableCell>
+                    </RowResultStyle>
+                    <TableRow>
+                      <TableCell align="left">4</TableCell>
+                      <TableCell align="left">Pendapatan</TableCell>
+                      <TableCell align="left">{fCurrency(neracaData.pendapatan)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="left">5</TableCell>
+                      <TableCell align="left">Modal</TableCell>
+                      <TableCell align="left">{fCurrency(neracaData.modal)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="left">6</TableCell>
+                      <TableCell align="left">Prive</TableCell>
+                      <TableCell align="left">{fCurrency(neracaData.prive)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="left">7</TableCell>
+                      <TableCell align="left">Beban</TableCell>
+                      <TableCell align="left">{fCurrency(neracaData.beban)}</TableCell>
+                    </TableRow>
+                    <RowResultStyle>
+                      <TableCell width={10}></TableCell>
+                      <TableCell align="left">Ekuitas</TableCell>
+                      <TableCell align="left">{fCurrency(neracaData.ekuitas)}</TableCell>
+                    </RowResultStyle>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          ) : null}
+        </Grid>
+      )}
     </>
   );
 }

@@ -13,8 +13,6 @@ import { Stack } from '@mui/material';
 import { fCurrency, fPercent } from 'utils/formatNumber';
 
 type CoopLabaRugiData = {
-  id: number;
-  periode: string;
   jumlahSimpananPokok: number;
   jumlahSimpananWajib: number;
   jumlahBiayaLayanan: number;

@@ -102,8 +102,6 @@ const styles = StyleSheet.create({
 });
 
 type CoopLabaRugiData = {
-  id: number;
-  periode: string;
   jumlahSimpananPokok: number;
   jumlahSimpananWajib: number;
   jumlahBiayaLayanan: number;

@@ -12,15 +12,16 @@ import { ExportToExcel } from 'components/ExportToExcel';
 import { Stack } from '@mui/material';
 
 type CoopNeracaData = {
-  id: number;
-  periode: string;
   kas: number;
   asetTetap: number;
+  aset: number;
+  saldoMember: number;
+  simpananSukarela: number;
+  liabilitas: number;
+  pendapatan: number;
   modal: number;
-  prive: number;
   beban: number;
-  harta: number;
-  modalCalc: number;
+  ekuitas: number;
 };
 
 export default function CoopNeracaReportToolbar(props: {
@@ -33,11 +34,18 @@ export default function CoopNeracaReportToolbar(props: {
       let sheetData = [
         { No: '1', Komponen: 'Kas', Jumlah: props.coopNeracaData.kas },
         { No: '2', Komponen: 'Aset Tetap', Jumlah: props.coopNeracaData.asetTetap },
-        { No: '', Komponen: 'Total Aset', Jumlah: props.coopNeracaData.harta },
-        { No: '3', Komponen: 'Modal', Jumlah: props.coopNeracaData.modal },
-        { No: '4', Komponen: 'Prive', Jumlah: props.coopNeracaData.prive },
-        { No: '5', Komponen: 'Beban', Jumlah: props.coopNeracaData.beban },
-        { No: '', Komponen: 'Ekuitas', Jumlah: props.coopNeracaData.modalCalc }
+        { No: '', Komponen: 'Aset', Jumlah: props.coopNeracaData.aset },
+        { No: '3', Komponen: 'Saldo Member', Jumlah: props.coopNeracaData.saldoMember },
+        {
+          No: '4',
+          Komponen: 'Simpanan Sukarela Member',
+          Jumlah: props.coopNeracaData.simpananSukarela
+        },
+        { No: '', Komponen: 'Liabilitas', Jumlah: props.coopNeracaData.liabilitas },
+        { No: '5', Komponen: 'Pendapatan', Jumlah: props.coopNeracaData.pendapatan },
+        { No: '6', Komponen: 'Modal', Jumlah: props.coopNeracaData.modal },
+        { No: '7', Komponen: 'Beban', Jumlah: props.coopNeracaData.beban },
+        { No: '', Komponen: 'Ekuitas', Jumlah: props.coopNeracaData.ekuitas }
       ];
 
       setSheetData(sheetData);
