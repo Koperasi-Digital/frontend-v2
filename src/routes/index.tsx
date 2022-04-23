@@ -195,7 +195,6 @@ export default function Router() {
             },
             { path: 'report', element: <TransactionsReport /> },
             { path: 'create-disbursement-request', element: <DisbursementRequest /> },
-            { path: 'register-equipment', element: <EquipmentRegister /> },
             {
               path: 'add-simpanan-sukarela',
               element: <AddSimpananSukarela />
@@ -213,6 +212,14 @@ export default function Router() {
               element: (
                 <RoleBasedGuard accessibleRoles={['ADMIN']}>
                   <RepairRegister />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'register-equipment',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <EquipmentRegister />
                 </RoleBasedGuard>
               )
             }

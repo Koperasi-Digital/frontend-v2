@@ -11,17 +11,13 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 
 export default function EquipmentRegister() {
   return (
-    <Page title="Banking: Register Equipment | CoopChick">
+    <Page title="Mendaftarkan Pembelian Peralatan | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={'Register'}
+          heading={'Mendaftarkan Pembelian Peralatan'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Finance',
-              href: PATH_DASHBOARD.finance.root
-            },
-            { name: 'Register Equipment' }
+            { name: 'Mendaftarkan Pembelian Peralatan' }
           ]}
         />
         <Card sx={{ padding: 10 }}>

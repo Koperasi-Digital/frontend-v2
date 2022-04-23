@@ -153,3 +153,75 @@ export async function handleRegisterEquipmentRepairment(value: number, periode: 
     return undefined;
   }
 }
+
+export async function handleRegisterNewEquipment(value: number, source: string, periode: string) {
+  try {
+    const initialCoopLaporanNeraca: CoopNeracaData = (
+      await axios.get('coop-laporan-neraca/' + periode)
+    ).data.payload;
+    await axios.post('coop-laporan-neraca/edit', {
+      periode: periode,
+      field: 'asetTetap',
+      isAdd: 1,
+      amount: value
+    });
+    if (source === 'kas') {
+      await axios.post('coop-laporan-neraca/edit', {
+        periode: periode,
+        field: 'kas',
+        isAdd: 0,
+        amount: value
+      });
+      const finalCoopLaporanNeraca: CoopNeracaData = (
+        await axios.get('coop-laporan-neraca/' + periode)
+      ).data.payload;
+      const initialCoopLaporanArusKas: CoopArusKasData = (
+        await axios.get('coop-laporan-arus-kas/' + periode)
+      ).data.payload;
+      await axios.post('coop-laporan-arus-kas/edit', {
+        periode: periode,
+        field: 'kasKeluar',
+        isAdd: 1,
+        amount: value
+      });
+      const finalCoopLaporanArusKas: CoopArusKasData = (
+        await axios.get('coop-laporan-arus-kas/' + periode)
+      ).data.payload;
+      return [
+        {
+          report: 'Laporan Neraca Koperasi',
+          field: ['aset tetap', 'kas'],
+          initial: [initialCoopLaporanNeraca.asetTetap, initialCoopLaporanNeraca.kas],
+          final: [finalCoopLaporanNeraca.asetTetap, finalCoopLaporanNeraca.kas]
+        },
+        {
+          report: 'Laporan Arus Kas Koperasi',
+          field: ['kas keluar'],
+          initial: [initialCoopLaporanArusKas.kasKeluar],
+          final: [finalCoopLaporanArusKas.kasKeluar]
+        }
+      ];
+    } else {
+      await axios.post('coop-laporan-neraca/edit', {
+        periode: periode,
+        field: 'modal',
+        isAdd: 1,
+        amount: value
+      });
+      const finalCoopLaporanNeraca: CoopNeracaData = (
+        await axios.get('coop-laporan-neraca/' + periode)
+      ).data.payload;
+      return [
+        {
+          report: 'Laporan Neraca Koperasi',
+          field: ['aset tetap', 'modal'],
+          initial: [initialCoopLaporanNeraca.asetTetap, initialCoopLaporanNeraca.modal],
+          final: [finalCoopLaporanNeraca.asetTetap, finalCoopLaporanNeraca.modal]
+        }
+      ];
+    }
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}

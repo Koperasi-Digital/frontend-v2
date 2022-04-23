@@ -153,7 +153,7 @@ const sidebarConfig = [
       {
         title: 'equipment register',
         path: PATH_DASHBOARD.finance.equipmentRegister,
-        accessibleRoles: ['MEMBER'],
+        accessibleRoles: ['ADMIN'],
         icon: ICONS.banking
       }
     ]
