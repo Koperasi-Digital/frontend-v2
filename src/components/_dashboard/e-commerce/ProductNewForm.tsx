@@ -32,6 +32,8 @@ import { UploadMultiFile } from '../../upload';
 // import addProduct from 'utils/products';
 import { handleAddProductReport } from 'utils/financeAxios/financeReport';
 import useAuth from 'hooks/useAuth';
+import { fCurrency } from 'utils/formatNumber';
+import { createNotification } from 'redux/slices/notification';
 
 // ----------------------------------------------------------------------
 
@@ -87,14 +89,43 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
         await fakeRequest(500);
         // await addProduct(values);
         let periodeString = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-1';
-        const prevStock = currentProduct ? currentProduct.available : 0;
-        const productionCost =
-          Number(values.productionCost) * (Number(values.available) - prevStock);
-        await handleAddProductReport(userId, periodeString, productionCost);
-        await resetForm();
-        setSubmitting(false);
-        enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-        navigate(PATH_DASHBOARD.eCommerce.list);
+        const response = await handleAddProductReport(
+          userId,
+          periodeString,
+          currentProduct ? currentProduct.available : 0,
+          Number(values.available),
+          currentProduct ? currentProduct.productionCost : 0,
+          Number(values.productionCost)
+        );
+        if (response) {
+          let notificationDescription = '';
+          for (let i = 0; i < response.length; i++) {
+            notificationDescription += response[i].report + '\n';
+            for (let j = 0; j < response[i].field.length; j++) {
+              notificationDescription +=
+                response[i].field[j] +
+                ' ' +
+                fCurrency(response[i].initial[j]) +
+                '->' +
+                fCurrency(response[i].final[j]) +
+                '\n';
+            }
+
+            if (i < response.length - 1) {
+              notificationDescription += '\n';
+            }
+          }
+          resetForm();
+          setSubmitting(false);
+          createNotification(
+            isEdit
+              ? `Pembaharuan produk ${values.name} berhasil`
+              : `Pembuatan produk ${values.name} berhasil`,
+            notificationDescription
+          );
+          enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
+          navigate(PATH_DASHBOARD.eCommerce.list);
+        }
       } catch (error) {
         console.error(error);
         setSubmitting(false);

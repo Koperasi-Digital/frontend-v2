@@ -1,5 +1,7 @@
 import axios from '../axios';
 
+import { NeracaData } from '../../@types/finance-report';
+
 export async function handleCreateNeracaReport(userId: number, periode: string) {
   try {
     const response = await axios.post('laporan-neraca/create', {
@@ -49,9 +51,15 @@ export async function handleAwalPeriodeNeraca(userId: number, periode: string, k
 export async function handleAddProductReport(
   userId: number,
   periode: string,
-  productionCost: number
+  prevAmount: number,
+  currentAmount: number,
+  prevPrice: number,
+  currentPrice: number
 ) {
   try {
+    const productionCost = (currentAmount - prevAmount) * (currentPrice - prevPrice);
+    const initialNeracaReport: NeracaData = (await axios.get(`laporan-neraca/${userId}/${periode}`))
+      .data.payload;
     await axios.post('laporan-neraca/edit', {
       userId: userId,
       periode: periode,
@@ -59,14 +67,24 @@ export async function handleAddProductReport(
       isAdd: 1,
       amount: productionCost
     });
-    const response = await axios.post('laporan-neraca/edit', {
+    await axios.post('laporan-neraca/edit', {
       userId: userId,
       periode: periode,
       field: 'modal',
       isAdd: 1,
       amount: productionCost
     });
-    return response.data.payload;
+    const finalNeracaReport: NeracaData = (await axios.get(`laporan-neraca/${userId}/${periode}`))
+      .data.payload;
+
+    return [
+      {
+        report: 'Laporan Neraca',
+        field: ['persediaan', 'modal'],
+        initial: [initialNeracaReport.persediaan, initialNeracaReport.modal],
+        final: [finalNeracaReport.persediaan, finalNeracaReport.modal]
+      }
+    ];
   } catch (e) {
     console.log(e);
     return undefined;
