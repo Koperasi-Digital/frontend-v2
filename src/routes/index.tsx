@@ -207,6 +207,14 @@ export default function Router() {
                   <DeprecationRegister />
                 </RoleBasedGuard>
               )
+            },
+            {
+              path: 'register-repair',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <RepairRegister />
+                </RoleBasedGuard>
+              )
             }
           ]
         },
@@ -394,6 +402,7 @@ const DisbursementRequestList = Loadable(
 );
 const DisbursementRequest = Loadable(lazy(() => import('../pages/dashboard/DisbursementRequest')));
 const DeprecationRegister = Loadable(lazy(() => import('../pages/dashboard/DeprecationRegister')));
+const RepairRegister = Loadable(lazy(() => import('../pages/dashboard/RepairRegister')));
 const EquipmentRegister = Loadable(lazy(() => import('../pages/dashboard/EquipmentRegister')));
 const AddSimpananSukarela = Loadable(lazy(() => import('../pages/dashboard/AddSimpananSukarela')));
 // Main

@@ -87,6 +87,7 @@ export const PATH_DASHBOARD = {
     disbursementRequest: path(ROOTS_DASHBOARD, '/finance/create-disbursement-request'),
     disbursementRequestList: path(ROOTS_DASHBOARD, '/finance/disbursement-request-list'),
     deprecationRegister: path(ROOTS_DASHBOARD, '/finance/register-deprecation'),
+    repairRegister: path(ROOTS_DASHBOARD, '/finance/register-repair'),
     equipmentRegister: path(ROOTS_DASHBOARD, '/finance/register-equipment')
   },
   managementFinance: {

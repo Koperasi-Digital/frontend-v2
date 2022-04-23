@@ -60,6 +60,8 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
       let currentPeriodString = dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1';
       if (user) {
         const coopNeracaData = await handleGetCoopNeracaInfo(currentPeriodString);
+        console.log('Result');
+        console.log(coopNeracaData);
         if (coopNeracaData) {
           setDataNotExist(false);
           setCoopNeracaData(coopNeracaData);
