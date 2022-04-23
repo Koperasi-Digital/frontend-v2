@@ -38,12 +38,15 @@ import { MIconButton } from '../../components/@material-extend';
 // ----------------------------------------------------------------------
 
 function NotificationItem({ notification }: { notification: Notification }) {
+  const splittedDescriptions = notification.description.split('\n');
   const title = (
     <>
       <Typography variant="subtitle2">{notification.title}</Typography>
-      <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-        {notification.description}
-      </Typography>
+      {splittedDescriptions.map((descriptionRow, index) => (
+        <Typography key={index} variant="body2" sx={{ color: 'text.secondary' }}>
+          {descriptionRow}
+        </Typography>
+      ))}
     </>
   );
 

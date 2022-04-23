@@ -195,11 +195,18 @@ export default function Router() {
             },
             { path: 'report', element: <TransactionsReport /> },
             { path: 'create-disbursement-request', element: <DisbursementRequest /> },
-            { path: 'register-deprecation', element: <DeprecationRegister /> },
             { path: 'register-equipment', element: <EquipmentRegister /> },
             {
               path: 'add-simpanan-sukarela',
               element: <AddSimpananSukarela />
+            },
+            {
+              path: 'register-deprecation',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DeprecationRegister />
+                </RoleBasedGuard>
+              )
             }
           ]
         },

@@ -1,11 +1,28 @@
-export type LaporanLabaRugi = {
-  periode: string;
+export type CoopNeracaData = {
   kas: number;
-  persediaan: number;
   asetTetap: number;
+  aset: number;
+  saldoMember: number;
+  simpananSukarela: number;
+  liabilitas: number;
+  pendapatan: number;
   modal: number;
-  prive: number;
   beban: number;
-  harta: number;
-  modalCalc: number;
+  ekuitas: number;
+};
+
+export type CoopLabaRugiData = {
+  jumlahSimpananPokok: number;
+  jumlahSimpananWajib: number;
+  jumlahBiayaLayanan: number;
+  biayaSisaHasilUsaha: number;
+  biayaOperasi: number;
+  net: number;
+};
+
+export type CoopArusKasData = {
+  jumlahKasAwal: number;
+  kasMasuk: number;
+  kasKeluar: number;
+  jumlahKasAkhir: number;
 };

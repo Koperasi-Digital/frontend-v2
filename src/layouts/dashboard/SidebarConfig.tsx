@@ -141,7 +141,7 @@ const sidebarConfig = [
       {
         title: 'deprecation register',
         path: PATH_DASHBOARD.finance.deprecationRegister,
-        accessibleRoles: ['MEMBER'],
+        accessibleRoles: ['ADMIN'],
         icon: ICONS.banking
       },
       {

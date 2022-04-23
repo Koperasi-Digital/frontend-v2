@@ -1,5 +1,7 @@
 import axios from '../axios';
 
+import { CoopNeracaData, CoopLabaRugiData } from '../../@types/finance-report';
+
 export async function handleGetCoopNeracaInfo(periode: string) {
   try {
     const response = await axios.get('coop-laporan-neraca/' + periode);
@@ -24,6 +26,58 @@ export async function handleGetCoopArusKasInfo(periode: string) {
   try {
     const response = await axios.get('coop-laporan-arus-kas/' + periode);
     return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
+export async function handleRegisterKerusakanAlat(value: number, periode: string) {
+  try {
+    const initialCoopLaporanNeraca: CoopNeracaData = (
+      await axios.get('coop-laporan-neraca/' + periode)
+    ).data.payload;
+    await axios.post('coop-laporan-neraca/edit', {
+      periode: periode,
+      field: 'beban',
+      isAdd: 1,
+      amount: value
+    });
+    await axios.post('coop-laporan-neraca/edit', {
+      periode: periode,
+      field: 'asetTetap',
+      isAdd: 0,
+      amount: value
+    });
+    const finalCoopLaporanNeraca: CoopNeracaData = (
+      await axios.get('coop-laporan-neraca/' + periode)
+    ).data.payload;
+    const initialCoopLaporanLabaRugi: CoopLabaRugiData = (
+      await axios.get('coop-laporan-laba-rugi/' + periode)
+    ).data.payload;
+    await axios.post('coop-laporan-laba-rugi/edit', {
+      periode: periode,
+      field: 'biayaOperasi',
+      isAdd: 1,
+      amount: value
+    });
+    const finalCoopLaporanLabaRugi: CoopLabaRugiData = (
+      await axios.get('coop-laporan-laba-rugi/' + periode)
+    ).data.payload;
+    return [
+      {
+        report: 'Laporan Neraca Koperasi',
+        field: ['beban', 'aset tetap'],
+        initial: [initialCoopLaporanNeraca.beban, initialCoopLaporanNeraca.asetTetap],
+        final: [finalCoopLaporanNeraca.beban, finalCoopLaporanNeraca.asetTetap]
+      },
+      {
+        report: 'Laporan Laba Rugi Koperasi',
+        field: ['biaya operasi'],
+        initial: [initialCoopLaporanLabaRugi.biayaOperasi],
+        final: [finalCoopLaporanLabaRugi.biayaOperasi]
+      }
+    ];
   } catch (e) {
     console.log(e);
     return undefined;
