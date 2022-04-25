@@ -59,35 +59,12 @@ export default function DeprecationRegisterForm() {
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         if (coopNeracaData) {
-          const response = await handleRegisterKerusakanAlat(Number(values.amount), periode);
-          let notificationDescription = '';
-          if (response) {
-            for (let i = 0; i < response.length; i++) {
-              notificationDescription += response[i].report + '\n';
-              for (let j = 0; j < response[i].field.length; j++) {
-                notificationDescription +=
-                  response[i].field[j] +
-                  ' ' +
-                  fCurrency(response[i].initial[j]) +
-                  '->' +
-                  fCurrency(response[i].final[j]) +
-                  '\n';
-              }
-
-              if (i < response.length - 1) {
-                notificationDescription += '\n';
-              }
-            }
-            createNotification(
-              'Pendaftaran kerusakan peralatan koperasi berhasil',
-              notificationDescription
-            );
-            enqueueSnackbar('Pendaftaran kerusakan peralatan koperasi berhasil', {
-              variant: 'success'
-            });
-            resetForm();
-            setSubmitting(false);
-          }
+          await handleRegisterKerusakanAlat(Number(values.amount), periode);
+          enqueueSnackbar('Pendaftaran kerusakan peralatan koperasi berhasil', {
+            variant: 'success'
+          });
+          resetForm();
+          setSubmitting(false);
         }
       } catch (error) {
         console.error(error);

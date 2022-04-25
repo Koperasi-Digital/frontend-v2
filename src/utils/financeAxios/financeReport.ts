@@ -198,79 +198,20 @@ export async function handleJualProdukNeraca(
   }
 }
 
-export async function handlePencairanSaldo(userId: number, periode: string, amount: number) {
-  try {
-    console.log('Masuk pencairan saldo');
-    // * update laporan neraca
-    await axios.post('laporan-neraca/edit', {
-      userId: userId,
-      periode: periode,
-      field: 'kas',
-      isAdd: 0,
-      amount: amount
-    });
-    await axios.post('laporan-neraca/edit', {
-      userId: userId,
-      periode: periode,
-      field: 'prive',
-      isAdd: 1,
-      amount: amount
-    });
-    // * update laporan arus kas
-    const response = await axios.post('laporan-arus-kas/edit', {
-      userId: userId,
-      periode: periode,
-      field: 'kasCair',
-      isAdd: 1,
-      amount: amount
-    });
-    console.log('Keluar pencairan saldo');
-    return response.data.payload;
-  } catch (e) {
-    console.log(e);
-    return undefined;
-  }
-}
-
-export async function handlePencairanSimpananSukarela(
+export async function handlePencairanDana(
   userId: number,
   periode: string,
-  amount: number
+  amount: number,
+  type: string
 ) {
-  console.log('Masuk pencairan simpanan sukarela');
   try {
-    // * update laporan neraca
-    await axios.post('laporan-neraca/edit', {
-      userId: userId,
+    const response = await axios.post('finance-report-input/approve-disbursement', {
       periode: periode,
-      field: 'simpananSukarela',
-      isAdd: 0,
-      amount: amount
-    });
-    await axios.post('laporan-neraca/edit', {
+      amount: amount,
       userId: userId,
-      periode: periode,
-      field: 'prive',
-      isAdd: 1,
-      amount: amount
+      type: type
     });
-    // * update coop laporan neraca
-    await axios.post('coop-laporan-neraca/edit', {
-      userId: userId,
-      periode: periode,
-      field: 'simpananSukarela',
-      isAdd: 0,
-      amount: amount
-    });
-    const response4 = await axios.post('coop-laporan-neraca/edit', {
-      userId: userId,
-      periode: periode,
-      field: 'kas',
-      isAdd: 0,
-      amount: amount
-    });
-    console.log('Keluar pencairan simpanan sukarela');
-    return response4.data.payload;
+    return response.data.payload;
   } catch (e) {
     console.log(e);
     return undefined;

@@ -19,10 +19,7 @@ import { handleEditSimpananSukarela } from 'utils/financeAxios/financeSimpanan';
 
 import { handleUploadFile } from 'utils/bucket';
 
-import {
-  handlePencairanSaldo,
-  handlePencairanSimpananSukarela
-} from 'utils/financeAxios/financeReport';
+import { handlePencairanDana } from 'utils/financeAxios/financeReport';
 
 // ----------------------------------------------------------------------
 
@@ -85,21 +82,13 @@ export default function DisbursementApprovalForm() {
         );
 
         const currentPeriode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
-        let saldoEditedFinanceReport;
-        let simpananSukarelaEditedFinanceReport;
-        if (reimbursement.type === 'saldo') {
-          saldoEditedFinanceReport = await handlePencairanSaldo(
-            reimbursement.user.id,
-            currentPeriode,
-            reimbursement.total_cost
-          );
-        } else {
-          simpananSukarelaEditedFinanceReport = await handlePencairanSimpananSukarela(
-            reimbursement.user.id,
-            currentPeriode,
-            reimbursement.total_cost
-          );
-        }
+
+        const financeReportInput = await handlePencairanDana(
+          reimbursement.user.id,
+          currentPeriode,
+          reimbursement.total_cost,
+          reimbursement.type
+        );
 
         resetForm();
         setSubmitting(false);
@@ -108,7 +97,7 @@ export default function DisbursementApprovalForm() {
           (editedSaldo || editedSimpananSukarela) &&
           createdCoopTransaction &&
           uploadFileMessage &&
-          (saldoEditedFinanceReport || simpananSukarelaEditedFinanceReport)
+          financeReportInput
         ) {
           enqueueSnackbar('Create success', { variant: 'success' });
         } else {
