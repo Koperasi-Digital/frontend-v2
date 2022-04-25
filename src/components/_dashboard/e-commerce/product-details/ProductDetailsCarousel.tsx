@@ -1,11 +1,8 @@
 import Slider from 'react-slick';
-import { findIndex } from 'lodash';
 import { useState, useRef, useEffect } from 'react';
 // material
 import { alpha, styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
-// @types
-import { Product } from '../../../../@types/products';
 //
 import LightboxModal from '../../../LightboxModal';
 import { CarouselControlsArrowsIndex } from '../../../carousel';
@@ -85,10 +82,10 @@ function ThumbnailItem({ item }: { item: string }) {
 }
 
 type ProductDetailsCarouselProps = {
-  product: Product;
+  productImage: string;
 };
 
-export default function ProductDetailsCarousel({ product }: ProductDetailsCarouselProps) {
+export default function ProductDetailsCarousel({ productImage }: ProductDetailsCarouselProps) {
   const [openLightbox, setOpenLightbox] = useState(false);
   const [selectedImage, setSelectedImage] = useState<number>(0);
 
@@ -97,14 +94,11 @@ export default function ProductDetailsCarousel({ product }: ProductDetailsCarous
   const [nav2, setNav2] = useState<Slider>();
   const slider1 = useRef<Slider | null>(null);
   const slider2 = useRef<Slider | null>(null);
-  const images = [...Array(8)].map(
-    (_, index) =>
-      'http://localhost:3000/static/mock-images/products/product_' + (index + 1) + '.jpg'
-  );
+  const images = [productImage];
   const imagesLightbox = images.map((_image) => _image);
 
-  const handleOpenLightbox = (url: string) => {
-    const selectedImage = findIndex(imagesLightbox, (index) => index === url);
+  const handleOpenLightbox = (imgUrl: string) => {
+    const selectedImage = 0;
     setOpenLightbox(true);
     setSelectedImage(selectedImage);
   };

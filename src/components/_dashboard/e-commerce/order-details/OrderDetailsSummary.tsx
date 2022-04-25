@@ -148,7 +148,7 @@ export default function OrderDetailsSummary({
     ['ID Transaksi', id],
     ['Tanggal Pemesanan', fDateTime(order.timestamp)],
     ['Nama Produk', product.name],
-    ['Nama Toko', seller.storeName],
+    ['Nama Toko', seller.store?.name],
     ['Jumlah', quantity],
     ['Total', fCurrency(subtotal)],
     ['Status', status]

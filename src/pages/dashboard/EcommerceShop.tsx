@@ -27,11 +27,8 @@ import CartWidget from '../../components/_dashboard/e-commerce/CartWidget';
 
 function applyFilter(products: Product[], sortBy: string | null, filters: ProductFilter) {
   // SORT BY
-  if (sortBy === 'featured') {
-    products = orderBy(products, ['sold'], ['desc']);
-  }
   if (sortBy === 'newest') {
-    products = orderBy(products, ['createdAt'], ['desc']);
+    products = orderBy(products, ['created_at'], ['desc']);
   }
   if (sortBy === 'priceDesc') {
     products = orderBy(products, ['price'], ['desc']);
@@ -40,19 +37,19 @@ function applyFilter(products: Product[], sortBy: string | null, filters: Produc
     products = orderBy(products, ['price'], ['asc']);
   }
   // FILTER PRODUCTS
-  if (filters.category !== 'All') {
+  if (filters.category !== 'Semua') {
     products = filter(products, (_product) => _product.category === filters.category);
   }
 
   if (filters.priceRange) {
     products = filter(products, (_product) => {
       if (filters.priceRange === 'below') {
-        return _product.price < 25;
+        return _product.price < 50000;
       }
       if (filters.priceRange === 'between') {
-        return _product.price >= 25 && _product.price <= 75;
+        return _product.price >= 50000 && _product.price <= 100000;
       }
-      return _product.price > 75;
+      return _product.price > 100000;
     });
   }
 

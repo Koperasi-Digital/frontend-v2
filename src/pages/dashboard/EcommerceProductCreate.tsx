@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-import { paramCase } from 'change-case';
 import { useParams, useLocation } from 'react-router-dom';
 // material
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getProducts } from '../../redux/slices/product';
+import { getProduct } from '../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // @types
@@ -21,13 +20,13 @@ export default function EcommerceProductCreate() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { name = '' } = useParams();
-  const { products } = useSelector((state: { product: ProductState }) => state.product);
+  const { product } = useSelector((state: { product: ProductState }) => state.product);
   const isEdit = pathname.includes('edit');
-  const currentProduct = products.find((product) => paramCase(product.name) === name);
+  const currentProduct = product;
 
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+    dispatch(getProduct(name));
+  }, [dispatch, name]);
 
   return (
     <Page title="Ecommerce: Create a new product | CoopChick">
@@ -44,7 +43,7 @@ export default function EcommerceProductCreate() {
           ]}
         />
 
-        <ProductNewForm isEdit={isEdit} currentProduct={currentProduct} />
+        {currentProduct && <ProductNewForm isEdit={isEdit} currentProduct={currentProduct} />}
       </Container>
     </Page>
   );

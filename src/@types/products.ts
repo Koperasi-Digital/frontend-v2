@@ -14,12 +14,6 @@ export type OnCreateBilling = (address: UserAddressBook) => void;
 
 export type FormikPropsShopView = FormikProps<ProductFilter>;
 
-export type ProductRating = {
-  name: string;
-  starCount: number;
-  reviewCount: number;
-};
-
 export type ProductReview = {
   id: string;
   name: string;
@@ -91,6 +85,30 @@ export type ProductFilter = {
   colors: string[];
   priceRange: string;
   rating: string;
+};
+
+export type ProductFormikProps = {
+  sku: string;
+  name: string;
+  category: string;
+  price: string | number;
+  available: string | number;
+  cover: string;
+  description: string;
+  status: string;
+  seller_id: string | number;
+};
+
+export type ProductFormikRaw = {
+  sku: string;
+  name: string;
+  category: string;
+  price: string | number;
+  available: string | number;
+  cover: File | any;
+  description: string;
+  status: string;
+  seller_id: string | number;
 };
 
 export type PaymentFormikProps = FormikProps<{
