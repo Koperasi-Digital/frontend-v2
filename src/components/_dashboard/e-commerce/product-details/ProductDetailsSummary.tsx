@@ -154,7 +154,6 @@ export default function ProductDetailsSummary({
         subtotal: values.price * values.quantity,
         seller_id: seller.id,
         store_name: storeName,
-        product_id: 1,
         shipment_id: 1,
         shipment_price: 10000
       });

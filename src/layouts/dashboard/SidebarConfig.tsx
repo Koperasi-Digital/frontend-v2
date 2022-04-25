@@ -190,7 +190,7 @@ const sidebarConfig = [
         icon: ICONS.banking
       }
     ]
-  },
+  }
 ];
 
 export default sidebarConfig;

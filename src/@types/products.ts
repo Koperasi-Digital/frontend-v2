@@ -90,6 +90,7 @@ export type ProductFormikProps = {
   category: string;
   price: string | number;
   available: string | number;
+  productionCost: string | number;
   cover: string;
   description: string;
   status: string;

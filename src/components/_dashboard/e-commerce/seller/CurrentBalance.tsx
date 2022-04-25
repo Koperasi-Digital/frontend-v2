@@ -5,8 +5,8 @@ import { Card, Typography, Stack } from '@mui/material';
 import { fCurrency } from '../../../../utils/formatNumber';
 import { useEffect, useState } from 'react';
 
-import { handleGetSaldo } from 'utils/financeSaldo';
-import { handleGetLabaRugiInfo } from 'utils/financeReport';
+import { handleGetSaldo } from 'utils/financeAxios/financeSaldo';
+import { handleGetLabaRugiInfo } from 'utils/financeAxios/financeReport';
 
 import useAuth from 'hooks/useAuth';
 
