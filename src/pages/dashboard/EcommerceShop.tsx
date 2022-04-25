@@ -67,11 +67,9 @@ export default function EcommerceShop() {
 
   const formik = useFormik<ProductFilter>({
     initialValues: {
-      gender: filters.gender,
+      city: filters.city,
       category: filters.category,
-      colors: filters.colors,
-      priceRange: filters.priceRange,
-      rating: filters.rating
+      priceRange: filters.priceRange
     },
     onSubmit: async (values, { setSubmitting }) => {
       try {
@@ -86,12 +84,7 @@ export default function EcommerceShop() {
 
   const { values, resetForm, handleSubmit, isSubmitting, initialValues } = formik;
 
-  const isDefault =
-    !values.priceRange &&
-    !values.rating &&
-    values.gender.length === 0 &&
-    values.colors.length === 0 &&
-    values.category === 'All';
+  const isDefault = !values.priceRange && values.city.length === 0 && values.category === 'Semua';
 
   useEffect(() => {
     dispatch(getProducts());

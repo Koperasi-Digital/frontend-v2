@@ -1,12 +1,9 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
-import { sentenceCase } from 'change-case';
 import roundClearAll from '@iconify/icons-ic/round-clear-all';
 // material
-import { useTheme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { Chip, Typography, Stack, Button } from '@mui/material';
-// utils
-import getColorName from '../../../../utils/getColorName';
 //
 import { ProductFilter, FormikPropsShopView } from '../../../../@types/products';
 
@@ -66,26 +63,19 @@ export default function ShopTagFiltered({
   onResetFilter,
   isDefault
 }: ShopTagFilteredProps) {
-  const theme = useTheme();
   const { values, handleSubmit, setFieldValue, initialValues } = formik;
-  const { gender, category, colors, priceRange, rating } = filters;
+  const { city, category, priceRange } = filters;
   const isShow = values !== initialValues && !isShowReset;
 
   const handleRemoveGender = (value: string) => {
-    const newValue = filter(gender, (_item) => _item !== value);
+    const newValue = filter(city, (_item) => _item !== value);
     handleSubmit();
-    setFieldValue('gender', newValue);
+    setFieldValue('city', newValue);
   };
 
   const handleRemoveCategory = () => {
     handleSubmit();
-    setFieldValue('category', 'All');
-  };
-
-  const handleRemoveColor = (value: string) => {
-    const newValue = filter(colors, (_item) => _item !== value);
-    handleSubmit();
-    setFieldValue('colors', newValue);
+    setFieldValue('category', 'Semua');
   };
 
   const handleRemovePrice = () => {
@@ -93,23 +83,18 @@ export default function ShopTagFiltered({
     setFieldValue('priceRange', '');
   };
 
-  const handleRemoveRating = () => {
-    handleSubmit();
-    setFieldValue('rating', '');
-  };
-
   return (
     <RootStyle>
-      {gender.length > 0 && (
+      {city.length > 0 && (
         <WrapperStyle>
           <LabelStyle>Gender:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            {gender.map((_gender) => (
+            {city.map((_city) => (
               <Chip
-                key={_gender}
-                label={_gender}
+                key={_city}
+                label={_city}
                 size="small"
-                onDelete={() => handleRemoveGender(_gender)}
+                onDelete={() => handleRemoveGender(_city)}
                 sx={{ m: 0.5 }}
               />
             ))}
@@ -126,33 +111,6 @@ export default function ShopTagFiltered({
         </WrapperStyle>
       )}
 
-      {colors.length > 0 && (
-        <WrapperStyle>
-          <LabelStyle>Colors:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            {colors.map((color) => (
-              <Chip
-                key={color}
-                label={getColorName(color)}
-                size="small"
-                onDelete={() => handleRemoveColor(color)}
-                sx={{
-                  m: 0.5,
-                  bgcolor: color,
-                  color: theme.palette.getContrastText(color),
-                  ...((color === '#FFFFFF' || color === '#000000') && {
-                    border: `solid 1px ${theme.palette.grey[500_32]}`,
-                    '& .MuiChip-deleteIcon': {
-                      color: 'text.disabled'
-                    }
-                  })
-                }}
-              />
-            ))}
-          </Stack>
-        </WrapperStyle>
-      )}
-
       {priceRange && (
         <WrapperStyle>
           <LabelStyle>Price:</LabelStyle>
@@ -161,20 +119,6 @@ export default function ShopTagFiltered({
               size="small"
               label={labelPriceRange(priceRange)}
               onDelete={handleRemovePrice}
-              sx={{ m: 0.5 }}
-            />
-          </Stack>
-        </WrapperStyle>
-      )}
-
-      {rating && (
-        <WrapperStyle>
-          <LabelStyle>Rating:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            <Chip
-              size="small"
-              label={sentenceCase(rating)}
-              onDelete={handleRemoveRating}
               sx={{ m: 0.5 }}
             />
           </Stack>

@@ -117,9 +117,9 @@ export default function ShopFilterSidebar({
                         key={item}
                         control={
                           <Checkbox
-                            {...getFieldProps('gender')}
+                            {...getFieldProps('city')}
                             value={item}
-                            checked={values.gender.includes(item)}
+                            checked={values.city.includes(item)}
                           />
                         }
                         label={item}

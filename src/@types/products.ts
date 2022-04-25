@@ -61,11 +61,9 @@ export type ProductState = {
   product: Product | null;
   sortBy: string | null;
   filters: {
-    gender: string[];
+    city: string[];
     category: string;
-    colors: string[];
     priceRange: string;
-    rating: string;
   };
   checkout: {
     orderId: number;
@@ -80,11 +78,9 @@ export type ProductState = {
 };
 
 export type ProductFilter = {
-  gender: string[];
+  city: string[];
   category: string;
-  colors: string[];
   priceRange: string;
-  rating: string;
 };
 
 export type ProductFormikProps = {
