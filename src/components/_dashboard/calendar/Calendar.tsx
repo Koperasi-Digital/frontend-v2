@@ -23,12 +23,14 @@ type CalendarProps = {
   injectedView?: 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
   injectedHeight?: number;
   withToolbar?: boolean;
+  clickable?: boolean;
 };
 
 export default function Calendar({
   injectedView,
   injectedHeight,
-  withToolbar = true
+  withToolbar = true,
+  clickable = true
 }: CalendarProps) {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -103,7 +105,9 @@ export default function Calendar({
   };
 
   const handleSelectEvent = (arg: EventClickArg) => {
-    dispatch(selectEvent(arg.event.id));
+    if (clickable) {
+      dispatch(selectEvent(arg.event.id));
+    }
   };
 
   const handleResizeEvent = async ({ event }: EventResizeDoneArg) => {

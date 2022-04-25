@@ -16,6 +16,8 @@ import {
 } from '../@types/authentication';
 import { Role } from '../@types/role';
 import { User } from '../@types/account';
+import { messaging } from 'firebase/firebaseInit';
+import { deleteMessagingToken } from 'redux/slices/notification';
 
 // ----------------------------------------------------------------------
 
@@ -241,7 +243,9 @@ function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () =>
-    axios.post('auth/invalidate-token').then(() => {
+    axios.post('auth/invalidate-token').then(async () => {
+      const messagingToken = await messaging.getToken();
+      deleteMessagingToken(messagingToken);
       setSession(null, null);
       setCurrentRole(null);
       dispatch({ type: Types.Logout });

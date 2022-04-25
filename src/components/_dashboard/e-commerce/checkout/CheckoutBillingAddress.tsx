@@ -1,47 +1,31 @@
 import { Icon } from '@iconify/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import arrowIosBackFill from '@iconify/icons-eva/arrow-ios-back-fill';
 // material
 import { Box, Grid, Card, Button, Typography } from '@mui/material';
 // @types
-import {
-  BillingAddress as Address,
-  OnCreateBilling,
-  ProductState
-} from '../../../../@types/products';
+import { OnCreateBilling, ProductState } from '../../../../@types/products';
+import { UserAddressBook } from '../../../../@types/user';
 // redux
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { onBackStep, onNextStep, createBilling } from '../../../../redux/slices/product';
-// utils
-import mockData from '../../../../utils/mock-data';
-
+import { useDispatch, useSelector, RootState } from 'redux/store';
+import { onBackStep, onNextStep, createBilling } from 'redux/slices/product';
+import { getAddressBook } from 'redux/slices/user';
 //
 import Label from '../../../Label';
 import CheckoutSummary from './CheckoutSummary';
-import CheckoutNewAddressForm from './CheckoutNewAddressForm';
-
-// ----------------------------------------------------------------------
-
-const MOCK_ADDRESS_BOOKS = [...Array(5)].map((_, index) => ({
-  id: mockData.id(index),
-  receiver: mockData.name.fullName(index),
-  fullAddress: mockData.address.fullAddress(index),
-  phone: mockData.phoneNumber(index),
-  addressType: index === 0 ? 'Home' : 'Office',
-  isDefault: index === 0
-}));
+import AccountAddressForm from 'components/_dashboard/user/account/AccountAddressForm';
 
 // ----------------------------------------------------------------------
 
 type AddressItemProps = {
-  address: Address;
+  address: UserAddressBook;
   onNextStep: VoidFunction;
   onCreateBilling: OnCreateBilling;
 };
 
 function AddressItem({ address, onNextStep, onCreateBilling }: AddressItemProps) {
-  const { receiver, fullAddress, addressType, phone, isDefault } = address;
+  const { country, state, city, address: street, zipCode, phoneNumber, isDefault } = address;
 
   const handleCreateBilling = () => {
     onCreateBilling(address);
@@ -51,21 +35,15 @@ function AddressItem({ address, onNextStep, onCreateBilling }: AddressItemProps)
   return (
     <Card sx={{ p: 3, mb: 3, position: 'relative' }}>
       <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-        <Typography variant="subtitle1">{receiver}</Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          &nbsp;({addressType})
-        </Typography>
+        <Typography variant="subtitle1">{phoneNumber}</Typography>
         {isDefault && (
           <Label color="info" sx={{ ml: 1 }}>
-            Default
+            Alamat Utama
           </Label>
         )}
       </Box>
       <Typography variant="body2" gutterBottom>
-        {fullAddress}
-      </Typography>
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        {phone}
+        {`${street}, ${city}, ${state}, ${country} ${zipCode}`}
       </Typography>
 
       <Box
@@ -77,11 +55,6 @@ function AddressItem({ address, onNextStep, onCreateBilling }: AddressItemProps)
           bottom: { sm: 24 }
         }}
       >
-        {!isDefault && (
-          <Button variant="outlined" size="small" color="inherit">
-            Delete
-          </Button>
-        )}
         <Box sx={{ mx: 0.5 }} />
         <Button variant="outlined" size="small" onClick={handleCreateBilling}>
           Deliver to this Address
@@ -96,8 +69,13 @@ export default function CheckoutBillingAddress() {
   const dispatch = useDispatch();
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
   const { total, discount, subtotal } = checkout;
+  const { addressBook } = useSelector((state: RootState) => state.user);
   //
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(getAddressBook());
+  }, [dispatch]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -115,7 +93,7 @@ export default function CheckoutBillingAddress() {
     dispatch(onBackStep());
   };
 
-  const handleCreateBilling = (value: Address) => {
+  const handleCreateBilling = (value: UserAddressBook) => {
     dispatch(createBilling(value));
   };
 
@@ -123,7 +101,7 @@ export default function CheckoutBillingAddress() {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          {MOCK_ADDRESS_BOOKS.map((address, index) => (
+          {addressBook.map((address, index) => (
             <AddressItem
               key={index}
               address={address}
@@ -151,12 +129,7 @@ export default function CheckoutBillingAddress() {
         </Grid>
       </Grid>
 
-      <CheckoutNewAddressForm
-        open={open}
-        onClose={handleClose}
-        onNextStep={handleNextStep}
-        onCreateBilling={handleCreateBilling}
-      />
+      <AccountAddressForm open={open} onClose={handleClose} />
     </>
   );
 }

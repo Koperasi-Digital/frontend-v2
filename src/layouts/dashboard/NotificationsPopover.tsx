@@ -96,7 +96,7 @@ function NotificationItem({ notification }: { notification: Notification }) {
               }}
             >
               <Box component={Icon} icon={clockFill} sx={{ mr: 0.5, width: 16, height: 16 }} />
-              {fToNow(notification.created_at)}
+              {fToNow(notification.sentAt)}
             </Typography>
           }
         />

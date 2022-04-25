@@ -35,7 +35,7 @@ import useAuth from 'hooks/useAuth';
 // types
 import { User } from '../../../@types/account';
 // redux
-import { useDispatch } from '../../../redux/store';
+import { RootState, useDispatch, useSelector } from '../../../redux/store';
 import {
   createEvent,
   updateEvent,
@@ -114,6 +114,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
   const isCreating = !event || isEmpty(event);
   const isOrganizer = isCreating || user?.id === event.createdBy.id;
   const [isReadOnly, setIsReadOnly] = useState(!isCreating);
+  const { error } = useSelector((state: RootState) => state.calendar);
 
   const EventSchema = Yup.object().shape({
     title: Yup.string().max(255).required('Nama aktivitas harus diisi'),
@@ -125,31 +126,29 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
     initialValues: getInitialValues(event, range),
     validationSchema: EventSchema,
     onSubmit: async (values, { resetForm, setSubmitting }) => {
-      try {
-        const newEvent = {
-          name: values.title,
-          description: values.description,
-          type: values.type,
-          allDay: values.allDay,
-          includeNotification: values.includeNotification,
-          startAt: values.start,
-          endAt: values.end,
-          invitedUsersEmail: values.invitedUsersEmail,
-          meetingLink: values.meetingLink
-        };
-        if (event.id) {
-          dispatch(updateEvent(event.id, newEvent));
-          enqueueSnackbar('Edit aktivitas sukses!', { variant: 'success' });
-        } else {
-          dispatch(createEvent(newEvent));
-          enqueueSnackbar('Tambah aktivitas sukses!', { variant: 'success' });
-        }
-        resetForm();
+      const newEvent = {
+        name: values.title,
+        description: values.description,
+        type: values.type,
+        allDay: values.allDay,
+        includeNotification: values.includeNotification,
+        startAt: values.start,
+        endAt: values.end,
+        invitedUsersEmail: values.invitedUsersEmail,
+        meetingLink: values.meetingLink
+      };
+      if (event.id) {
+        dispatch(updateEvent(event.id, newEvent));
+        if (!error) enqueueSnackbar('Edit aktivitas sukses!', { variant: 'success' });
+        setIsReadOnly(true);
+      } else {
+        dispatch(createEvent(newEvent));
+        if (!error) enqueueSnackbar('Tambah aktivitas sukses!', { variant: 'success' });
         onCancel();
-        setSubmitting(false);
-      } catch (error) {
-        console.error(error);
       }
+      resetForm();
+      setSubmitting(false);
+      if (error) enqueueSnackbar('Error!', { variant: 'error' });
     }
   });
 
@@ -158,12 +157,12 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
 
   const handleDelete = async () => {
     if (!event.id) return;
-    try {
-      onCancel();
-      dispatch(isOrganizer ? deleteEvent(event.id) : deleteUserFromEvent(event.id));
+    onCancel();
+    dispatch(isOrganizer ? deleteEvent(event.id) : deleteUserFromEvent(event.id));
+    if (error) {
+      enqueueSnackbar('Error!', { variant: 'error' });
+    } else {
       enqueueSnackbar('Hapus aktivitas sukses!', { variant: 'success' });
-    } catch (error) {
-      console.error(error);
     }
   };
 

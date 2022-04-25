@@ -1,5 +1,6 @@
 import { FormikProps } from 'formik';
 import { User } from './account';
+import { UserAddressBook } from './user';
 
 // ----------------------------------------------------------------------
 
@@ -9,15 +10,9 @@ export type ProductInventoryType = 'Active' | 'Inactive' | 'Low Stock';
 
 export type ProductCategory = 'Ayam' | 'Infrastruktur' | 'Kandang';
 
-export type OnCreateBilling = (address: BillingAddress) => void;
+export type OnCreateBilling = (address: UserAddressBook) => void;
 
 export type FormikPropsShopView = FormikProps<ProductFilter>;
-
-export type ProductRating = {
-  name: string;
-  starCount: number;
-  reviewCount: number;
-};
 
 export type ProductReview = {
   id: string;
@@ -61,14 +56,6 @@ export type CartItem = {
   shipment_price: number | null;
 };
 
-export type BillingAddress = {
-  receiver: string;
-  phone: string;
-  fullAddress: string;
-  addressType: string;
-  isDefault: boolean;
-};
-
 export type ProductState = {
   isLoading: boolean;
   error: boolean;
@@ -76,11 +63,9 @@ export type ProductState = {
   product: Product | null;
   sortBy: string | null;
   filters: {
-    gender: string[];
+    city: string[];
     category: string;
-    colors: string[];
     priceRange: string;
-    rating: string;
   };
   checkout: {
     orderId: number;
@@ -90,16 +75,38 @@ export type ProductState = {
     total: number;
     discount: number;
     shipping: number;
-    billing: BillingAddress | null;
+    billing: UserAddressBook | null;
   };
 };
 
 export type ProductFilter = {
-  gender: string[];
+  city: string[];
   category: string;
-  colors: string[];
   priceRange: string;
-  rating: string;
+};
+
+export type ProductFormikProps = {
+  sku: string;
+  name: string;
+  category: string;
+  price: string | number;
+  available: string | number;
+  cover: string;
+  description: string;
+  status: string;
+  seller_id: string | number;
+};
+
+export type ProductFormikRaw = {
+  sku: string;
+  name: string;
+  category: string;
+  price: string | number;
+  available: string | number;
+  cover: File | any;
+  description: string;
+  status: string;
+  seller_id: string | number;
 };
 
 export type PaymentFormikProps = FormikProps<{

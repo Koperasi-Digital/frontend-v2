@@ -12,10 +12,11 @@ type GuestGuardProps = {
 };
 
 export default function GuestGuard({ children }: GuestGuardProps) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, currentRole } = useAuth();
+  const isCustomer = currentRole?.name === 'CUSTOMER';
 
   if (isAuthenticated) {
-    return <Navigate to={PATH_DASHBOARD.root} />;
+    return <Navigate to={isCustomer ? PATH_DASHBOARD.eCommerce.shop : PATH_DASHBOARD.root} />;
   }
 
   return <>{children}</>;

@@ -1,4 +1,3 @@
-import { sentenceCase } from 'change-case';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // material
@@ -84,7 +83,7 @@ export default function EcommerceProductDetails() {
               name: 'E-Commerce',
               href: PATH_DASHBOARD.eCommerce.root
             },
-            { name: sentenceCase(name) }
+            { name: product?.name || 'Product' }
           ]}
         />
 
@@ -95,7 +94,7 @@ export default function EcommerceProductDetails() {
             <Card>
               <Grid container>
                 <Grid item xs={12} md={6} lg={7}>
-                  <ProductDetailsCarousel product={product} />
+                  <ProductDetailsCarousel productImage={product.cover} />
                 </Grid>
                 <Grid item xs={12} md={6} lg={5}>
                   <ProductDetailsSummary
