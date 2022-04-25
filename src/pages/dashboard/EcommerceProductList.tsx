@@ -252,7 +252,10 @@ export default function EcommerceProductList() {
                           </TableCell>
                           <TableCell align="right">
                             <IconButton>
-                              <Link to={linkTo + paramCase(name) + '/edit'} color="inherit">
+                              <Link
+                                to={linkTo + paramCase(id.toString()) + '/edit'}
+                                color="inherit"
+                              >
                                 <Icon icon={editFill} width={20} height={20} />
                               </Link>
                             </IconButton>
