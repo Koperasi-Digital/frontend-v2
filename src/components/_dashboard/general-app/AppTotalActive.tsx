@@ -32,9 +32,9 @@ export default function AppTotalActive() {
 
   const renderPercentage = () => {
     if (typeof totalLogs !== 'undefined' && typeof totalActivities !== 'undefined') {
-      return totalActivities ? fPercent((totalLogs / totalActivities) * 100) : '100%';
+      return totalActivities ? fPercent((totalLogs / totalActivities) * 100) : '-';
     }
-    return <Skeleton width={50} />;
+    return <Skeleton width={60} height={75} />;
   };
 
   return (
@@ -42,17 +42,29 @@ export default function AppTotalActive() {
       <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
         <Box sx={{ flexGrow: 1 }}>
           <Typography variant="subtitle2">Keaktifan Anggota</Typography>
-          <Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 2, mb: 1 }}>
-            <Typography variant="subtitle2">{`${fNumber(totalLogs)} / ${fNumber(
-              totalActivities
-            )}`}</Typography>
+          <Stack direction="column" justifyContent="center" spacing={1} sx={{ mt: 2, mb: 1 }}>
+            <Stack direction="row" spacing={1} justifyContent="space-between">
+              <Typography variant="subtitle2">{`Presensi Meeting: `}</Typography>
+              <Typography variant="subtitle2">{`${fNumber(totalLogs)} / ${fNumber(
+                totalActivities
+              )}`}</Typography>
+            </Stack>
+            <Stack direction="row" spacing={1} justifyContent="space-between">
+              <Typography variant="subtitle2">{`Total Transaksi: `}</Typography>
+              <Typography variant="subtitle2">{`${fNumber(totalLogs)} / ${fNumber(
+                totalActivities
+              )}`}</Typography>
+            </Stack>
+            {/* TODO: CHANGE USING TOTAL TRANSAKSI */}
           </Stack>
         </Box>
 
-        <Typography component="span" variant="h3">
-          {/* use default 100% to prevent divide by zero */}
-          {renderPercentage()}
-        </Typography>
+        <Box mr={2} ml={8}>
+          <Typography component="span" variant="h3">
+            {/* use default 100% to prevent divide by zero */}
+            {renderPercentage()}
+          </Typography>
+        </Box>
       </Card>
       <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.user.account}>
         <Typography variant="body2" align="right" sx={{ m: '0.5rem', fontWeight: 'bold' }}>
