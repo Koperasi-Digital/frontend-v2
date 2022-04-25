@@ -83,7 +83,7 @@ export default function CreateStoreForm() {
         if (isMountedRef.current) {
           setSubmitting(false);
         }
-        navigate(PATH_DASHBOARD.eCommerce.seller);
+        navigate(PATH_DASHBOARD.eCommerce.seller.center);
       } catch (error: any) {
         console.error(error);
         if (isMountedRef.current) {

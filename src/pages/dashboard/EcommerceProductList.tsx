@@ -103,7 +103,7 @@ export default function EcommerceProductList() {
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const linkTo = `${PATH_DASHBOARD.eCommerce.root}/product/`;
+  const linkTo = `${PATH_DASHBOARD.eCommerce.seller.root}/product/`;
   const { products } = useSelector((state: { product: ProductState }) => state.product);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
