@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getProducts } from '../../redux/slices/product';
+import { getProductsBySeller } from '../../redux/slices/product';
 // utils
 import { fCurrency } from '../../utils/formatNumber';
 // routes
@@ -39,12 +39,13 @@ import {
   ProductListHead,
   ProductListToolbar
 } from '../../components/_dashboard/e-commerce/product-list';
+import useAuth from 'hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Product', alignRight: false },
-  { id: 'id', label: 'SKU', alignRight: false },
+  { id: 'sku', label: 'SKU', alignRight: false },
   { id: 'available', label: 'Available', alignRight: false },
   { id: 'price', label: 'Price', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
@@ -110,11 +111,12 @@ export default function EcommerceProductList() {
   const [selected, setSelected] = useState<string[]>([]);
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [orderBy, setOrderBy] = useState('createdAt');
+  const [orderBy, setOrderBy] = useState('created_at');
+  const { user } = useAuth();
 
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+    dispatch(getProductsBySeller(user?.id));
+  }, [dispatch, user]);
 
   const handleRequestSort = (property: string) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -202,7 +204,7 @@ export default function EcommerceProductList() {
                   {filteredProducts
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
-                      const { id, name, cover, price, available, status } = row;
+                      const { id, name, cover, price, sku, available, status } = row;
 
                       const isItemSelected = selected.indexOf(name) !== -1;
 
@@ -233,7 +235,7 @@ export default function EcommerceProductList() {
                               </Typography>
                             </Box>
                           </TableCell>
-                          <TableCell style={{ minWidth: 100 }}>{id}</TableCell>
+                          <TableCell style={{ minWidth: 100 }}>{sku}</TableCell>
                           <TableCell style={{ minWidth: 100 }}>{available}</TableCell>
                           <TableCell style={{ minWidth: 160 }}>{fCurrency(price)}</TableCell>
                           <TableCell style={{ minWidth: 100 }}>

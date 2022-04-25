@@ -1,27 +1,30 @@
 import { useState, useEffect } from 'react';
 // material
 import { Card, Container, TablePagination, Grid } from '@mui/material';
+// redux
+import { useDispatch, useSelector } from '../../redux/store';
+import { getOrdersByCustomer } from '../../redux/slices/order';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // @types
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { getOrdersByCustomer } from 'utils/ecommerceOrder';
 import { OrderCard } from 'components/_dashboard/e-commerce/order-history';
+import { OrderState } from '../../@types/order';
+import useAuth from 'hooks/useAuth';
 
 export default function EcommerceProductList() {
-  const [orders, setOrders] = useState([]);
+  const dispatch = useDispatch();
+  const { orderDetailsList: orders } = useSelector((state: { order: OrderState }) => state.order);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const { user } = useAuth();
 
   useEffect(() => {
-    async function fetchOrders() {
-      const orderList = await getOrdersByCustomer('2');
-      setOrders(orderList);
-    }
-    fetchOrders();
-  }, []);
+    dispatch(getOrdersByCustomer(user?.id.toString()));
+    dispatch(getOrdersByCustomer('2'));
+  }, [dispatch, user]);
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -46,7 +49,7 @@ export default function EcommerceProductList() {
         <Card sx={{ py: 2 }}>
           <Grid container spacing={3}>
             {orders.map((order) => (
-              <Grid key={order} item xs={12}>
+              <Grid key={order.id} item xs={12}>
                 <OrderCard orderDetails={order} />
               </Grid>
             ))}

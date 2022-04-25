@@ -105,7 +105,7 @@ export default function ProductDetailsSummary({
   const theme = useTheme();
   const navigate = useNavigate();
   const { id, name, category, price, available, cover, status, seller } = product;
-  const storeName = seller.store!.name;
+  const storeName = seller.store?.name || null;
   const sizes = ['KG', 'LUSIN', 'TON'];
 
   const alreadyProduct = cart.map((item) => item.id).includes(id);
@@ -124,14 +124,16 @@ export default function ProductDetailsSummary({
     },
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
+        let subtotal = values.price * values.quantity;
+        console.log(subtotal);
         if (!alreadyProduct) {
           onAddCart({
             ...values,
-            subtotal: values.price * values.quantity,
+            subtotal: subtotal,
             seller_id: seller.id,
             store_name: storeName,
-            shipment_id: null,
-            shipment_price: null
+            shipment_id: 1,
+            shipment_price: 10000
           });
         }
         setSubmitting(false);

@@ -1,27 +1,26 @@
 import Page from '../../components/Page';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getOrderDetails } from 'utils/ecommerceOrder';
 import { OrderDetailsSummary } from 'components/_dashboard/e-commerce/order-details';
-import { OrderDetails } from '../../@types/order';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
 import { PATH_DASHBOARD } from 'routes/paths';
 import { Container } from '@mui/material';
+// redux
+import { useDispatch, useSelector } from '../../redux/store';
+import { getOrderDetails, getOrderDetailsLog } from '../../redux/slices/order';
+import { OrderState } from '../../@types/order';
 
 export default function EcommerceOrderDetails() {
   const { id = '' } = useParams();
-  const [orderDetails, setOrderDetails] = useState<OrderDetails>();
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { orderDetails, orderDetailsLog, isLoading } = useSelector(
+    (state: { order: OrderState }) => state.order
+  );
 
   useEffect(() => {
-    async function fetchOrder() {
-      const orderDetails = await getOrderDetails(id);
-      console.log(orderDetails);
-      setOrderDetails(orderDetails);
-      setIsLoading(false);
-    }
-    fetchOrder();
-  }, [id]);
+    dispatch(getOrderDetails(id));
+    dispatch(getOrderDetailsLog(id));
+  }, [dispatch, id]);
 
   return (
     <Page title="Detail Transaction">
@@ -40,7 +39,9 @@ export default function EcommerceOrderDetails() {
             }
           ]}
         />
-        {!isLoading && orderDetails && <OrderDetailsSummary orderDetails={orderDetails} />}
+        {!isLoading && orderDetails && orderDetailsLog && (
+          <OrderDetailsSummary orderDetails={orderDetails} orderDetailsLog={orderDetailsLog} />
+        )}
       </Container>
     </Page>
   );
