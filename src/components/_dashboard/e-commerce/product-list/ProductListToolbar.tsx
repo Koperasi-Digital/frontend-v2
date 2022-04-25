@@ -53,7 +53,7 @@ export default function ProductListToolbar({
   filterName,
   onFilterName
 }: ProductListToolbarProps) {
-  const linkTo = `${PATH_DASHBOARD.eCommerce.root}/product/new`;
+  const linkTo = `${PATH_DASHBOARD.eCommerce.seller.root}/product/new`;
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
 
