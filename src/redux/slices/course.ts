@@ -10,12 +10,11 @@ import { CourseState } from '../../@types/course';
 const initialState: CourseState = {
   isLoading: false,
   error: false,
-  courseVerificationList: [],
+  courseAdminList: [],
   courseList: [],
   course: null,
   coursePost: null,
   refresh: false,
-  hasMore: true,
   totalPage: 0
 };
 
@@ -52,6 +51,36 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = false;
       state.coursePost = action.payload;
+    },
+
+    addCourse(state) {
+      state.isLoading = false;
+    },
+
+    editCourseItemSuccess(state) {
+      state.isLoading = false;
+      state.refresh = !state.refresh;
+    },
+
+    getCourseAdminSuccess(state, action) {
+      state.isLoading = false;
+      state.error = false;
+      state.courseAdminList = action.payload;
+    },
+
+    setPublishSuccess(state, action) {
+      state.courseAdminList = state.courseAdminList.map((course) => {
+        if (course.id === action.payload) course.is_published = !course.is_published;
+        return course;
+      });
+    },
+
+    delete(state, action) {
+      state.isLoading = false;
+      state.courseAdminList = state.courseAdminList.filter(
+        (course) => course.id !== action.payload
+      );
+      state.refresh = !state.refresh;
     }
   }
 });
@@ -100,6 +129,102 @@ export function getCourseItemById(courseId: number, order: number) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(true));
+    }
+  };
+}
+
+export function getCourseAdminList() {
+  return async () => {
+    const { dispatch } = store;
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`course`);
+      dispatch(slice.actions.getCourseAdminSuccess(response.data.payload));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(true));
+    }
+  };
+}
+
+export function setPublished(id: number) {
+  return async () => {
+    const { dispatch } = store;
+    try {
+      await axios.patch(`course/publish/${id}`);
+      dispatch(slice.actions.setPublishSuccess(id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+}
+
+export function createCourse(userId: number, title: string, description: string, cover: string) {
+  return async () => {
+    const { dispatch } = store;
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.post(`course/create-course`, {
+        userId,
+        title,
+        description,
+        cover
+      });
+      dispatch(slice.actions.addCourse());
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function createCourseItem(
+  userId: number,
+  title: string,
+  description: string,
+  body: string,
+  courseId: number
+) {
+  return async () => {
+    const { dispatch } = store;
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.post(`course/create-item`, {
+        userId,
+        title,
+        description,
+        body,
+        courseId
+      });
+      dispatch(slice.actions.addCourse());
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function deleteCourse(courseId: number) {
+  return async () => {
+    const { dispatch } = store;
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.delete(`course/${courseId}`);
+      dispatch(slice.actions.delete(courseId));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function editCourseItem(id: number, title: string, description: string, body: string) {
+  return async () => {
+    const { dispatch } = store;
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.patch(`course/item/${id}`, { title, description, body });
+      dispatch(slice.actions.editCourseItemSuccess());
+    } catch (error) {
+      console.error(error);
     }
   };
 }

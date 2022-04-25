@@ -156,6 +156,38 @@ export default function Router() {
           )
         },
         {
+          path: 'course/list',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN']}>
+              <CourseList />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'course/create-course',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN']}>
+              <CourseNewPost />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'course/:id/create-item',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN']}>
+              <CourseNewItem />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'course/:courseId/edit/:order',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN']}>
+              <CourseEditItem />
+            </RoleBasedGuard>
+          )
+        },
+        {
           path: 'e-commerce',
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
@@ -359,6 +391,10 @@ const MyBlog = Loadable(lazy(() => import('../pages/dashboard/MyBlog')));
 const Course = Loadable(lazy(() => import('../pages/dashboard/Course')));
 const CourseDetail = Loadable(lazy(() => import('../pages/dashboard/CourseDetail')));
 const CoursePage = Loadable(lazy(() => import('../pages/dashboard/CoursePage')));
+const CourseList = Loadable(lazy(() => import('../pages/dashboard/CourseList')));
+const CourseNewPost = Loadable(lazy(() => import('../pages/dashboard/CourseNewPost')));
+const CourseNewItem = Loadable(lazy(() => import('../pages/dashboard/CourseNewItem')));
+const CourseEditItem = Loadable(lazy(() => import('../pages/dashboard/CourseEditItem')));
 const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
 const FAQ = Loadable(lazy(() => import('../pages/dashboard/FAQ')));
 const FAQPost = Loadable(lazy(() => import('../pages/dashboard/FAQPost')));

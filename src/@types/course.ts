@@ -6,9 +6,13 @@ import { User } from './account';
 export type NewPostFormValues = {
   title: string;
   description: string;
-  content: string;
   cover: File | any;
-  tags: string[];
+};
+
+export type NewPostItemFormValues = {
+  title: string;
+  description: string;
+  content: string;
 };
 
 export type NewPostViewFormikInstance = FormikProps<NewPostFormValues>;
@@ -16,12 +20,11 @@ export type NewPostViewFormikInstance = FormikProps<NewPostFormValues>;
 export type CourseState = {
   isLoading: boolean;
   error: boolean;
-  courseVerificationList: CourseVerificationList[];
+  courseAdminList: CourseAdminList[];
   courseList: CourseList[];
   course: CourseDetailState | null;
   coursePost: CourseItemPost | null;
   refresh: boolean;
-  hasMore: boolean;
   totalPage: number;
 };
 
@@ -86,7 +89,7 @@ export type CourseItemPost = {
   courseIsPublished: boolean;
 };
 
-export type CourseVerificationList = {
+export type CourseAdminList = {
   id: string;
   title: string;
   created_at: Date | string | number;

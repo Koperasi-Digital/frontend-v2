@@ -1,9 +1,7 @@
-import { Icon } from '@iconify/react';
-import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Grid, Card, IconButton, Typography, CardContent, Button, Stack } from '@mui/material';
+import { Box, Grid, Card, Typography, CardContent, Button, Stack } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
 // @types
@@ -37,10 +35,9 @@ const ImgStyle = styled('img')({
 
 type CourseListProps = {
   courseList: CourseList[];
-  isAdmin: boolean;
 };
 
-export default function CourseListCard({ courseList, isAdmin }: CourseListProps) {
+export default function CourseListCard({ courseList }: CourseListProps) {
   return (
     <Box sx={{ mt: 5 }}>
       <Grid container spacing={3}>
@@ -50,8 +47,9 @@ export default function CourseListCard({ courseList, isAdmin }: CourseListProps)
               <ImgStyle alt="Cover" src={course.cover} />
 
               <CaptionStyle>
-                <Button component={RouterLink} to={String(course.id)}>
+                <Button sx={{ width: `100%` }} component={RouterLink} to={String(course.id)}>
                   <Stack
+                    sx={{ width: `100%` }}
                     direction="row"
                     alignItems="center"
                     justifyContent="space-between"
@@ -63,11 +61,6 @@ export default function CourseListCard({ courseList, isAdmin }: CourseListProps)
                     </Typography>
                   </Stack>
                 </Button>
-                {isAdmin ? (
-                  <IconButton color="primary">
-                    <Icon icon={moreVerticalFill} width={20} height={20} />
-                  </IconButton>
-                ) : null}
               </CaptionStyle>
             </Card>
           </Grid>

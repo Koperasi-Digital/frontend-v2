@@ -44,7 +44,11 @@ export const PATH_DASHBOARD = {
     myforum: path(ROOTS_DASHBOARD, '/forum/own'),
     course: path(ROOTS_DASHBOARD, '/course'),
     courseDetail: path(ROOTS_DASHBOARD, '/course/:id'),
-    coursePage: path(ROOTS_DASHBOARD, '/course/:courseId/page/:order')
+    coursePage: path(ROOTS_DASHBOARD, '/course/:courseId/page/:order'),
+    courseList: path(ROOTS_DASHBOARD, '/course/list'),
+    courseNewPost: path(ROOTS_DASHBOARD, '/course/create-course'),
+    courseNewItem: path(ROOTS_DASHBOARD, '/course/:id/create-item'),
+    courseEditItem: path(ROOTS_DASHBOARD, '/course/:courseId/edit/:order')
   },
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),

@@ -103,7 +103,7 @@ export default function Course() {
         </Stack>
 
         {courseList.length > 0 ? (
-          <CourseListCard courseList={courseList} isAdmin={isAdmin} />
+          <CourseListCard courseList={courseList} />
         ) : (
           <Typography>No Course with title "{filterCourse}" found</Typography>
         )}
