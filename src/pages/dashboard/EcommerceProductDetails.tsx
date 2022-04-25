@@ -84,7 +84,7 @@ export default function EcommerceProductDetails() {
               name: 'E-Commerce',
               href: PATH_DASHBOARD.eCommerce.root
             },
-            { name: sentenceCase(product?.name || 'Product') }
+            { name: product?.name || 'Product' }
           ]}
         />
 
