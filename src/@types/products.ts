@@ -51,7 +51,6 @@ export type CartItem = {
   subtotal: number;
   seller_id: number;
   store_name: string | null;
-  product_id: number;
   shipment_id: number | null;
   shipment_price: number | null;
 };
@@ -103,6 +102,7 @@ export type ProductFormikRaw = {
   category: string;
   price: string | number;
   available: string | number;
+  productionCost: string | number;
   cover: File | any;
   description: string;
   status: string;
