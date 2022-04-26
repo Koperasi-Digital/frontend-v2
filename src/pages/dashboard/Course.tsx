@@ -78,7 +78,7 @@ export default function Course() {
               <Button
                 variant="contained"
                 component={RouterLink}
-                to={PATH_DASHBOARD.general.newBlog}
+                to={PATH_DASHBOARD.general.courseNewPost}
                 startIcon={<Icon icon={plusFill} />}
               >
                 Buat Course

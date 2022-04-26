@@ -144,11 +144,12 @@ const sidebarConfig = [
         accessibleRoles: ['ADMIN'],
         children: [{ title: 'verification', path: PATH_DASHBOARD.general.blogVerification }]
       },
-      // MANAGEMENT: KNOWLEDGE
+      // MANAGEMENT: COURSE
       {
         title: 'course',
-        path: PATH_DASHBOARD.general.course,
+        path: PATH_DASHBOARD.general.courseManagement,
         icon: ICONS.course,
+        accessibleRoles: ['ADMIN'],
         children: [
           { title: 'list', path: PATH_DASHBOARD.general.courseList },
           { title: 'create', path: PATH_DASHBOARD.general.courseNewPost }

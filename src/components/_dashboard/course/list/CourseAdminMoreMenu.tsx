@@ -134,7 +134,7 @@ export default function CourseAdminMoreMenu({ onDelete, onPublish, id }: CourseA
 
         <MenuItem
           component={RouterLink}
-          to={`${PATH_DASHBOARD.root}/course/edit/${id}`}
+          to={`${PATH_DASHBOARD.general.courseManagement}/edit/${id}`}
           sx={{ color: 'text.secondary' }}
         >
           <ListItemIcon>

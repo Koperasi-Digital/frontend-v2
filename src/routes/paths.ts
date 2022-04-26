@@ -37,7 +37,7 @@ export const PATH_DASHBOARD = {
     newBlog: path(ROOTS_DASHBOARD, '/blogs/new'),
     editBlog: path(ROOTS_DASHBOARD, '/blogs/edit/:id'),
     myBlog: path(ROOTS_DASHBOARD, '/blogs/own'),
-    blogVerification: path(ROOTS_DASHBOARD, '/blogs/verification'),
+    blogVerification: path(ROOTS_DASHBOARD, '/blog-verification'),
     faq: path(ROOTS_DASHBOARD, '/faq'),
     faqPost: path(ROOTS_DASHBOARD, '/faq/:id'),
     forum: path(ROOTS_DASHBOARD, '/forum'),
@@ -45,11 +45,12 @@ export const PATH_DASHBOARD = {
     course: path(ROOTS_DASHBOARD, '/course'),
     courseDetail: path(ROOTS_DASHBOARD, '/course/:id'),
     coursePage: path(ROOTS_DASHBOARD, '/course/:courseId/page/:order'),
-    courseList: path(ROOTS_DASHBOARD, '/course/list'),
-    courseNewPost: path(ROOTS_DASHBOARD, '/course/create-course'),
-    courseNewItem: path(ROOTS_DASHBOARD, '/course/:id/create-item'),
-    courseEditPost: path(ROOTS_DASHBOARD, '/course/edit/:id'),
-    courseEditItem: path(ROOTS_DASHBOARD, '/course/:courseId/edit/:order')
+    courseManagement: path(ROOTS_DASHBOARD, '/management-course'),
+    courseList: path(ROOTS_DASHBOARD, '/management-course/list'),
+    courseNewPost: path(ROOTS_DASHBOARD, '/management-course/create-course'),
+    courseNewItem: path(ROOTS_DASHBOARD, '/management-course/:id/create-item'),
+    courseEditPost: path(ROOTS_DASHBOARD, '/management-course/edit/:id'),
+    courseEditItem: path(ROOTS_DASHBOARD, '/management-course/:courseId/edit/:order')
   },
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),

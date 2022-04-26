@@ -119,7 +119,7 @@ export default function Router() {
           )
         },
         {
-          path: 'blogs/verification',
+          path: 'blog-verification',
           element: (
             <RoleBasedGuard accessibleRoles={['ADMIN']}>
               <BlogVerification />
@@ -162,7 +162,7 @@ export default function Router() {
           )
         },
         {
-          path: 'course/list',
+          path: 'management-course/list',
           element: (
             <RoleBasedGuard accessibleRoles={['ADMIN']}>
               <CourseList />
@@ -170,7 +170,7 @@ export default function Router() {
           )
         },
         {
-          path: 'course/create-course',
+          path: 'management-course/create-course',
           element: (
             <RoleBasedGuard accessibleRoles={['ADMIN']}>
               <CourseNewPost />
@@ -178,7 +178,7 @@ export default function Router() {
           )
         },
         {
-          path: 'course/:id/create-item',
+          path: 'management-course/:id/create-item',
           element: (
             <RoleBasedGuard accessibleRoles={['ADMIN']}>
               <CourseNewItem />
@@ -186,7 +186,7 @@ export default function Router() {
           )
         },
         {
-          path: 'course/edit/:id',
+          path: 'management-course/edit/:id',
           element: (
             <RoleBasedGuard accessibleRoles={['ADMIN']}>
               <CourseEditPost />
@@ -194,7 +194,7 @@ export default function Router() {
           )
         },
         {
-          path: 'course/:courseId/edit/:order',
+          path: 'management-course/:courseId/edit/:order',
           element: (
             <RoleBasedGuard accessibleRoles={['ADMIN']}>
               <CourseEditItem />

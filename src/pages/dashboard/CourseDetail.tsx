@@ -185,10 +185,10 @@ export default function Course() {
                 <Button
                   variant="contained"
                   component={RouterLink}
-                  to={`${PATH_DASHBOARD.general.course}/${id}/create-item`}
-                  startIcon={<Icon icon={plusFill} />}
+                  to={`${PATH_DASHBOARD.general.courseManagement}/edit/${id}`}
+                  startIcon={<Icon icon={editFill} />}
                 >
-                  Tambah materi
+                  Edit course
                 </Button>
               </Stack>
             ) : null
@@ -223,11 +223,28 @@ export default function Course() {
                 {course.description}
               </Typography>
             </Stack>
-            <Typography
-              variant="h6"
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
               sx={{ my: 2 }}
-              gutterBottom
-            >{`Terdapat ${course.course_items.length} materi dalam course ini`}</Typography>
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+            >
+              <Typography
+                variant="h6"
+                gutterBottom
+              >{`Terdapat ${course.course_items.length} materi dalam course ini`}</Typography>
+              {isAdmin && (
+                <Button
+                  variant="contained"
+                  component={RouterLink}
+                  to={`${PATH_DASHBOARD.general.courseManagement}/${id}/create-item`}
+                  startIcon={<Icon icon={plusFill} />}
+                >
+                  Tambah materi
+                </Button>
+              )}
+            </Stack>
             {isAdmin ? (
               <Scrollbar>
                 <TableContainer sx={{ minWidth: 800 }}>
@@ -261,7 +278,7 @@ export default function Course() {
                             <TableCell align="left">
                               <IconButton
                                 component={RouterLink}
-                                to={`${PATH_DASHBOARD.root}/course/${id}/edit/${row.order}`}
+                                to={`${PATH_DASHBOARD.general.courseManagement}/${id}/edit/${row.order}`}
                               >
                                 <Icon icon={editFill} width={20} height={20} />
                               </IconButton>
