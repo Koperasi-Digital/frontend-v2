@@ -74,8 +74,7 @@ const sidebarConfig = [
         title: 'course',
         accessibleRoles: ['ADMIN', 'MEMBER'],
         path: PATH_DASHBOARD.general.course,
-        icon: ICONS.course,
-        accessibleRoles: ['ADMIN', 'MEMBER']
+        icon: ICONS.course
       },
       { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq },
       {
