@@ -30,8 +30,12 @@ import CheckoutSummary from './CheckoutSummary';
 import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
-import { handleCreateOrder, handleEditOrder, handleGetOrder } from 'utils/financeOrder';
-import { handleCreateTransaction } from 'utils/financeTransaction';
+import {
+  handleCreateOrder,
+  handleEditOrder,
+  handleGetOrder
+} from 'utils/financeAxios/financeOrder';
+import { handleCreateTransaction } from 'utils/financeAxios/financeTransaction';
 import { PATH_DASHBOARD } from 'routes/paths';
 import useAuth from 'hooks/useAuth';
 
@@ -176,7 +180,6 @@ export default function CheckoutPayment() {
       const editedOrder = await handleEditOrder(orderId, Math.floor(total));
       return editedOrder;
     }
-    //TODO: INSERT ORDER DETAIL TO DB
   };
 
   const PaymentSchema = Yup.object().shape({

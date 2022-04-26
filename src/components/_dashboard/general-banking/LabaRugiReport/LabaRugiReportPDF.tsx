@@ -102,11 +102,11 @@ const styles = StyleSheet.create({
 });
 
 type LabaRugiData = {
-  id: number;
-  user_id: number;
-  periode: string;
   jumlahPenjualan: number;
+  sisaHasilUsaha: number;
   biayaProduksiProdukTerjual: number;
+  biayaSimpananPokok: number;
+  biayaSimpananWajib: number;
   biayaOperasi: number;
   net: number;
 };
@@ -160,6 +160,19 @@ export default function LabaRugiReportPDF(props: {
                 <Text style={styles.subtitle2}>2</Text>
               </View>
               <View style={styles.tableCell_2}>
+                <Text style={styles.subtitle2}>Sisa Hasil Usaha</Text>
+              </View>
+              <View style={[styles.tableCell_3, styles.alignRight]}>
+                <Text style={styles.subtitle2}>
+                  {fCurrency(props.currentLabaRugiData.sisaHasilUsaha)}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.tableRow}>
+              <View style={styles.tableCell_1}>
+                <Text style={styles.subtitle2}>3</Text>
+              </View>
+              <View style={styles.tableCell_2}>
                 <Text style={styles.subtitle2}>Biaya Produksi Produk Terjual</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
@@ -170,7 +183,33 @@ export default function LabaRugiReportPDF(props: {
             </View>
             <View style={styles.tableRow}>
               <View style={styles.tableCell_1}>
-                <Text style={styles.subtitle2}>3</Text>
+                <Text style={styles.subtitle2}>4</Text>
+              </View>
+              <View style={styles.tableCell_2}>
+                <Text style={styles.subtitle2}>Biaya Simpanan Pokok</Text>
+              </View>
+              <View style={[styles.tableCell_3, styles.alignRight]}>
+                <Text style={styles.subtitle2}>
+                  {fCurrency(props.currentLabaRugiData.biayaSimpananPokok)}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.tableRow}>
+              <View style={styles.tableCell_1}>
+                <Text style={styles.subtitle2}>5</Text>
+              </View>
+              <View style={styles.tableCell_2}>
+                <Text style={styles.subtitle2}>Biaya Simpanan Wajib</Text>
+              </View>
+              <View style={[styles.tableCell_3, styles.alignRight]}>
+                <Text style={styles.subtitle2}>
+                  {fCurrency(props.currentLabaRugiData.biayaSimpananWajib)}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.tableRow}>
+              <View style={styles.tableCell_1}>
+                <Text style={styles.subtitle2}>6</Text>
               </View>
               <View style={styles.tableCell_2}>
                 <Text style={styles.subtitle2}>Biaya Operasi</Text>
@@ -211,7 +250,10 @@ export default function LabaRugiReportPDF(props: {
                 <View style={styles.col8}>
                   <Text style={styles.subtitle2}>Income</Text>
                   <Text style={styles.h3}>
-                    {fCurrency(props.currentLabaRugiData.jumlahPenjualan)}
+                    {fCurrency(
+                      props.currentLabaRugiData.jumlahPenjualan +
+                        props.currentLabaRugiData.sisaHasilUsaha
+                    )}
                   </Text>
                 </View>
                 <View style={styles.col4}>
@@ -257,6 +299,8 @@ export default function LabaRugiReportPDF(props: {
                   <Text style={styles.h3}>
                     {fCurrency(
                       props.currentLabaRugiData.biayaProduksiProdukTerjual +
+                        props.currentLabaRugiData.biayaSimpananPokok +
+                        props.currentLabaRugiData.biayaSimpananWajib +
                         props.currentLabaRugiData.biayaOperasi
                     )}
                   </Text>

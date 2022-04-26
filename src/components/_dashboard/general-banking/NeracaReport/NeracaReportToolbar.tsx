@@ -11,17 +11,15 @@ import { Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 type NeracaData = {
-  asetTetap: number;
-  beban: number;
-  harta: number;
-  id: number;
   kas: number;
-  modal: number;
-  modalCalc: number;
-  periode: string;
   persediaan: number;
+  simpananSukarela: number;
+  aset: number;
+  pendapatan: number;
+  modal: number;
   prive: number;
-  user_id: number;
+  beban: number;
+  ekuitas: number;
 };
 
 export default function NeracaReportToolbar(props: { neracaData: NeracaData | undefined }) {
@@ -32,12 +30,13 @@ export default function NeracaReportToolbar(props: { neracaData: NeracaData | un
       let sheetData = [
         { No: '1', Komponen: 'Kas', Jumlah: props.neracaData.kas },
         { No: '2', Komponen: 'Persediaan', Jumlah: props.neracaData.persediaan },
-        { No: '3', Komponen: 'Aset Tetap', Jumlah: props.neracaData.asetTetap },
-        { No: '', Komponen: 'Total Aset', Jumlah: props.neracaData.harta },
-        { No: '4', Komponen: 'Modal', Jumlah: props.neracaData.modal },
-        { No: '5', Komponen: 'Prive', Jumlah: props.neracaData.prive },
-        { No: '6', Komponen: 'Beban', Jumlah: props.neracaData.beban },
-        { No: '', Komponen: 'Ekuitas', Jumlah: props.neracaData.modalCalc }
+        { No: '3', Komponen: 'Simpanan Sukarela', Jumlah: props.neracaData.simpananSukarela },
+        { No: '', Komponen: 'Aset', Jumlah: props.neracaData.aset },
+        { No: '4', Komponen: 'Pendapatan', Jumlah: props.neracaData.pendapatan },
+        { No: '5', Komponen: 'Modal', Jumlah: props.neracaData.modal },
+        { No: '6', Komponen: 'Prive', Jumlah: props.neracaData.prive },
+        { No: '7', Komponen: 'Beban', Jumlah: props.neracaData.beban },
+        { No: '', Komponen: 'Ekuitas', Jumlah: props.neracaData.ekuitas }
       ];
 
       setSheetData(sheetData);

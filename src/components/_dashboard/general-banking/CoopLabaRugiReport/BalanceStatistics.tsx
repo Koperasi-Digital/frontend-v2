@@ -3,11 +3,12 @@ import ReactApexChart from 'react-apexcharts';
 // material
 import { useTheme } from '@mui/material/styles';
 import { Card, CardHeader, Box } from '@mui/material';
+import Scrollbar from 'components/Scrollbar';
 
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 
-import { handleGetCoopLabaRugiInfo } from '../../../../utils/financeCoopReport';
+import { handleGetCoopLabaRugiInfo } from '../../../../utils/financeAxios/financeCoopReport';
 
 export default function BalanceStatistics(props: { dateValue: Date }) {
   const [chartData, setChartData] = useState<{ name: string; data: number[] }[]>([
@@ -42,11 +43,7 @@ export default function BalanceStatistics(props: { dateValue: Date }) {
       ]
     },
     legend: {
-      position: 'right' as 'right',
-      itemMargin: {
-        horizontal: 10,
-        vertical: 5
-      }
+      position: 'right' as 'right'
     },
     tooltip: {
       y: {
@@ -68,12 +65,14 @@ export default function BalanceStatistics(props: { dateValue: Date }) {
         if (i <= month) {
           let periodeString = props.dateValue.getFullYear() + '-' + (i + 1) + '-1';
           const coopLabaRugiInfo = await handleGetCoopLabaRugiInfo(periodeString);
-          incomeArray.push(
-            coopLabaRugiInfo.jumlahSimpananPokok +
-              coopLabaRugiInfo.jumlahSimpananWajib +
-              coopLabaRugiInfo.jumlahBiayaLayanan
-          );
-          expenseArray.push(coopLabaRugiInfo.biayaSisaHasilUsaha + coopLabaRugiInfo.biayaOperasi);
+          if (coopLabaRugiInfo) {
+            incomeArray.push(
+              coopLabaRugiInfo.jumlahSimpananPokok +
+                coopLabaRugiInfo.jumlahSimpananWajib +
+                coopLabaRugiInfo.jumlahBiayaLayanan
+            );
+            expenseArray.push(coopLabaRugiInfo.biayaSisaHasilUsaha + coopLabaRugiInfo.biayaOperasi);
+          }
         } else {
           incomeArray.push(0);
           expenseArray.push(0);
@@ -90,13 +89,18 @@ export default function BalanceStatistics(props: { dateValue: Date }) {
   return (
     <>
       <Card>
-        <CardHeader
-          title="Coop Balance Statistics"
-          subheader="(+43% Income | +12% Expense) than last year"
-        />
-        <Box sx={{ mt: 3, mx: 3 }} dir="ltr">
-          <ReactApexChart type="bar" series={chartData} options={chartOptions} height={364} />
-        </Box>
+        <CardHeader title="Coop Balance Statistics" />
+        <Scrollbar>
+          <Box dir="ltr">
+            <ReactApexChart
+              type="bar"
+              series={chartData}
+              options={chartOptions}
+              height={364}
+              width={900}
+            />
+          </Box>
+        </Scrollbar>
       </Card>
     </>
   );

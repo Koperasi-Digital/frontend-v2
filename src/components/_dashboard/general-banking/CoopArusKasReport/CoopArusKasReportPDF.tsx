@@ -67,11 +67,9 @@ const styles = StyleSheet.create({
 });
 
 type CoopArusKasData = {
-  id: number;
-  periode: string;
   jumlahKasAwal: number;
   kasMasuk: number;
-  kasCair: number;
+  kasKeluar: number;
   jumlahKasAkhir: number;
 };
 
@@ -127,10 +125,10 @@ export default function CoopArusKasReportPDF(props: { coopArusKasData: CoopArusK
                 <Text style={styles.subtitle2}>3</Text>
               </View>
               <View style={styles.tableCell_2}>
-                <Text style={styles.subtitle2}>Kas Cair</Text>
+                <Text style={styles.subtitle2}>Kas Keluar</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text style={styles.subtitle2}>{fCurrency(props.coopArusKasData.kasCair)}</Text>
+                <Text style={styles.subtitle2}>{fCurrency(props.coopArusKasData.kasKeluar)}</Text>
               </View>
             </View>
             <View style={styles.tableRow}>

@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react';
 import editFill from '@iconify/icons-eva/edit-fill';
 // material
-import { Card, Button, Typography, CardHeader, CardContent } from '@mui/material';
+import { Card, Button, Typography, CardHeader, CardContent, Box } from '@mui/material';
 // @types
 import { ProductState } from '../../../../@types/products';
 // redux
@@ -33,18 +33,13 @@ export default function CheckoutBillingInfo({ onBackStep }: CheckoutBillingInfoP
         }
       />
       <CardContent>
-        <Typography variant="subtitle2" gutterBottom>
-          {billing?.receiver}&nbsp;
-          <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-            ({billing?.addressType})
-          </Typography>
-        </Typography>
-
         <Typography variant="body2" gutterBottom>
-          {billing?.fullAddress}
+          <Box sx={{ fontWeight: 'bold' }}>Alamat:</Box>
+          {`${billing?.address}, ${billing?.city}, ${billing?.state}, ${billing?.country} ${billing?.zipCode}`}
         </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {billing?.phone}
+        <Typography variant="body2" gutterBottom>
+          <Box sx={{ fontWeight: 'bold', display: 'inline' }}>No. Telepon:{` `}</Box>
+          {billing?.phoneNumber}
         </Typography>
       </CardContent>
     </Card>

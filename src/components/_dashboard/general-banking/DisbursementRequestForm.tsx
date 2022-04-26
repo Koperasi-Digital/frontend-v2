@@ -19,9 +19,9 @@ import {
 // hooks
 import useAuth from 'hooks/useAuth';
 
-import { handleGetSaldo } from 'utils/financeSaldo';
-import { handleCreateReimbursement } from 'utils/financeReimbursement';
-import { handleGetSimpananSukarela } from 'utils/financeSimpanan';
+import { handleGetSaldo } from 'utils/financeAxios/financeSaldo';
+import { handleCreateReimbursement } from 'utils/financeAxios/financeReimbursement';
+import { handleGetSimpananSukarela } from 'utils/financeAxios/financeSimpanan';
 import { fCurrency } from 'utils/formatNumber';
 
 // ----------------------------------------------------------------------
@@ -47,6 +47,7 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
         const saldo = await handleGetSaldo(user.id);
         if (saldo) {
           setSaldo(saldo.amount);
+          setMaxDisbursement(saldo.amount);
         }
         const simpananSukarela = await handleGetSimpananSukarela(user.id);
         if (simpananSukarela) {

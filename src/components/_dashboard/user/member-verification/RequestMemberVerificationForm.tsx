@@ -3,28 +3,33 @@ import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack';
 import { useFormik, Form, FormikProvider } from 'formik';
 import closeFill from '@iconify/icons-eva/close-fill';
+import { isEmpty } from 'lodash';
 // material
 import { Stack, Alert, FormControl, styled, Typography, FormHelperText } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // hooks
+import { fTimestamp } from 'utils/formatTime';
 import useIsMountedRef from 'hooks/useIsMountedRef';
+import useAuth from 'hooks/useAuth';
+// utils
+import { handleUploadFile } from 'utils/bucket';
 //
 import { MIconButton } from '../../../@material-extend';
 import { UploadSingleFile } from 'components/upload';
-// import axios from 'utils/axios';
+import axios from 'utils/axios';
 
 // ----------------------------------------------------------------------
 
 interface InitialValues {
-  identityCardPhotoURL: File | null;
-  selfiePhotoURL: File | null;
+  identityCardPhotoURL: File | string | null;
+  selfiePhotoURL: File | string | null;
   afterSubmit?: string;
 }
 
 interface RequestMemberVerificationFormProps {
   initialData?: {
-    identityCardPhotoURL: File | null;
-    selfiePhotoURL: File | null;
+    identityCardPhotoURL: File | string | null;
+    selfiePhotoURL: File | string | null;
   };
 }
 
@@ -38,7 +43,10 @@ export default function RequestMemberVerificationForm({
   initialData
 }: RequestMemberVerificationFormProps) {
   const isMountedRef = useIsMountedRef();
+  const { user } = useAuth();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const isCreate =
+    isEmpty(initialData?.identityCardPhotoURL) && isEmpty(initialData?.selfiePhotoURL);
 
   const formik = useFormik<InitialValues>({
     enableReinitialize: true,
@@ -47,9 +55,30 @@ export default function RequestMemberVerificationForm({
       selfiePhotoURL: initialData?.selfiePhotoURL || null
     },
     onSubmit: async (values, { setErrors, setSubmitting }) => {
-      // TODO: Handle Upload Image
+      const fileUrlPromises: Promise<string>[] = [];
+      fileUrlPromises.push(
+        handleUploadFile(
+          values.identityCardPhotoURL as File,
+          `user/${user?.id}/verification`,
+          `${fTimestamp(new Date())}-KTP-${(values.identityCardPhotoURL as File).name}`
+        )
+      );
+      fileUrlPromises.push(
+        handleUploadFile(
+          values.selfiePhotoURL as File,
+          `user/${user?.id}/verification`,
+          `${fTimestamp(new Date())}-Selfie-${(values.selfiePhotoURL as File).name}`
+        )
+      );
+      const [identityCardPhotoUrl, selfiePhotoUrl] = await Promise.all(fileUrlPromises);
+      values.identityCardPhotoURL = identityCardPhotoUrl || values.identityCardPhotoURL;
+      values.selfiePhotoURL = selfiePhotoUrl || values.selfiePhotoURL;
       try {
-        // TODO: Handle request based on Image URL and initialData (edit/create)
+        if (isCreate) {
+          await axios.post(`member-verification/create`, values);
+        } else {
+          await axios.patch(`member-verification/${user?.id}`, values);
+        }
         enqueueSnackbar('Request keanggotaan koperasi sukses!', {
           variant: 'success',
           action: (key) => (
@@ -78,10 +107,12 @@ export default function RequestMemberVerificationForm({
     (fieldName: string) => (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
       if (file) {
-        setFieldValue(fieldName, {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
+        setFieldValue(
+          fieldName,
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          })
+        );
       }
     },
     [setFieldValue]

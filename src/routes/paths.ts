@@ -71,15 +71,18 @@ export const PATH_DASHBOARD = {
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
     shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
-    seller: path(ROOTS_DASHBOARD, '/e-commerce/seller'),
+    seller: {
+      root: path(ROOTS_DASHBOARD, '/seller'),
+      center: path(ROOTS_DASHBOARD, '/seller/dashboard'),
+      list: path(ROOTS_DASHBOARD, '/seller/list'),
+      newProduct: path(ROOTS_DASHBOARD, '/seller/product/new'),
+      editById: path(ROOTS_DASHBOARD, '/seller/product/itik-ayam/edit')
+    },
+    orderList: path(ROOTS_DASHBOARD, '/e-commerce/order-list'),
     orderById: path(ROOTS_DASHBOARD, '/e-commerce/order/:id'),
     orderHistory: path(ROOTS_DASHBOARD, '/e-commerce/order-history'),
-    orderList: path(ROOTS_DASHBOARD, '/e-commerce/order-list'),
     product: path(ROOTS_DASHBOARD, '/e-commerce/product/:name'),
     productById: path(ROOTS_DASHBOARD, '/e-commerce/product/itik-ayam'),
-    list: path(ROOTS_DASHBOARD, '/e-commerce/list'),
-    newProduct: path(ROOTS_DASHBOARD, '/e-commerce/product/new'),
-    editById: path(ROOTS_DASHBOARD, '/e-commerce/product/itik-ayam/edit'),
     checkout: path(ROOTS_DASHBOARD, '/e-commerce/checkout'),
     invoice: path(ROOTS_DASHBOARD, '/e-commerce/invoice')
   },
@@ -91,7 +94,9 @@ export const PATH_DASHBOARD = {
     disbursementApproval: path(ROOTS_DASHBOARD, '/finance/disbursement-approval'),
     disbursementRequest: path(ROOTS_DASHBOARD, '/finance/create-disbursement-request'),
     disbursementRequestList: path(ROOTS_DASHBOARD, '/finance/disbursement-request-list'),
-    deprecationRegister: path(ROOTS_DASHBOARD, '/finance/register-deprecation')
+    deprecationRegister: path(ROOTS_DASHBOARD, '/finance/register-deprecation'),
+    repairRegister: path(ROOTS_DASHBOARD, '/finance/register-repair'),
+    equipmentRegister: path(ROOTS_DASHBOARD, '/finance/register-equipment')
   },
   managementFinance: {
     root: path(ROOTS_DASHBOARD, '/management-finance'),

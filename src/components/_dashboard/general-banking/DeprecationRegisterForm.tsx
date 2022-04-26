@@ -3,80 +3,65 @@ import { useSnackbar } from 'notistack';
 import { Form, FormikProvider, useFormik } from 'formik';
 // material
 import { LoadingButton } from '@mui/lab';
-import {
-  Card,
-  FormControlLabel,
-  FormLabel,
-  Grid,
-  Radio,
-  RadioGroup,
-  Stack,
-  TextField
-} from '@mui/material';
-// hooks
-import useAuth from 'hooks/useAuth';
+import { Card, Grid, Stack, TextField } from '@mui/material';
 
+import { useState, useEffect } from 'react';
 import {
-  handleKerusakanAlatNeraca,
-  handleKerusakanAlatLabaRugi,
-  handleKerusakanBahanBakuNeraca,
-  handleKerusakanBahanBakuLabaRugi
-} from 'utils/financeReport';
+  handleGetCoopNeracaInfo,
+  handleRegisterKerusakanAlat
+} from 'utils/financeAxios/financeCoopReport';
+import { fCurrency } from 'utils/formatNumber';
+
+type CoopNeracaData = {
+  kas: number;
+  asetTetap: number;
+  aset: number;
+  saldoMember: number;
+  simpananSukarela: number;
+  liabilitas: number;
+  pendapatan: number;
+  modal: number;
+  beban: number;
+  ekuitas: number;
+};
 
 export default function DeprecationRegisterForm() {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { user } = useAuth();
+  const [coopNeracaData, setCoopNeracaData] = useState<CoopNeracaData | undefined>();
 
-  const DisbursementRequestSchema = Yup.object().shape({
-    amount: Yup.number().required(),
-    category: Yup.string().required().oneOf(['supply', 'equipment'])
+  const periode = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-1';
+
+  const DeprecationRegisterSchema = Yup.object().shape({
+    amount: Yup.number()
+      .required()
+      .min(0, `Jumlah Minimum ${fCurrency(0)}`)
+      .max(
+        coopNeracaData ? coopNeracaData.asetTetap : 0,
+        `Jumlah maksimum ${fCurrency(coopNeracaData ? coopNeracaData.asetTetap : 0)}`
+      )
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setCoopNeracaData(await handleGetCoopNeracaInfo(periode));
+    };
+    fetchData();
+  }, [periode]);
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      amount: '',
-      category: 'supply'
+      amount: ''
     },
-    validationSchema: DisbursementRequestSchema,
+    validationSchema: DeprecationRegisterSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        if (user) {
-          const currentPeriode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
-          if (values.category === 'supply') {
-            const editedNeraca = await handleKerusakanBahanBakuNeraca(
-              user.id,
-              currentPeriode,
-              Number(values.amount)
-            );
-            const editedLabaRugi = await handleKerusakanBahanBakuLabaRugi(
-              user.id,
-              currentPeriode,
-              Number(values.amount)
-            );
-            if (editedNeraca && editedLabaRugi) {
-              enqueueSnackbar('Supply deprecation register success', { variant: 'success' });
-            } else {
-              enqueueSnackbar('Supply deprecation register fail', { variant: 'error' });
-            }
-          } else {
-            const editedNeraca = await handleKerusakanAlatNeraca(
-              user.id,
-              currentPeriode,
-              Number(values.amount)
-            );
-            const editedLabaRugi = await handleKerusakanAlatLabaRugi(
-              user.id,
-              currentPeriode,
-              Number(values.amount)
-            );
-            if (editedNeraca && editedLabaRugi) {
-              enqueueSnackbar('Equipment deprecation register success', { variant: 'success' });
-            } else {
-              enqueueSnackbar('Equipment deprecation register fail', { variant: 'error' });
-            }
-          }
+        if (coopNeracaData) {
+          await handleRegisterKerusakanAlat(Number(values.amount), periode);
+          enqueueSnackbar('Pendaftaran kerusakan peralatan koperasi berhasil', {
+            variant: 'success'
+          });
           resetForm();
           setSubmitting(false);
         }
@@ -95,25 +80,15 @@ export default function DeprecationRegisterForm() {
       <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12}>
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={5}>
-                <Stack spacing={1}>
-                  <TextField
-                    fullWidth
-                    label="Amount"
-                    {...getFieldProps('amount')}
-                    error={Boolean(touched.amount && errors.amount)}
-                    helperText={touched.amount && errors.amount}
-                  />
-                  <FormLabel id="deprecation-type-radio-buttons-group">Type</FormLabel>
-                  <RadioGroup
-                    aria-labelledby="demo-controlled-radio-buttons-group"
-                    {...getFieldProps('category')}
-                  >
-                    <FormControlLabel value="supply" control={<Radio />} label="Supply" />
-                    <FormControlLabel value="equipment" control={<Radio />} label="Equipment" />
-                  </RadioGroup>
-                </Stack>
+            <Card sx={{ p: 1 }}>
+              <Stack spacing={1}>
+                <TextField
+                  fullWidth
+                  label="Amount"
+                  {...getFieldProps('amount')}
+                  error={Boolean(touched.amount && errors.amount)}
+                  helperText={touched.amount && errors.amount}
+                />
               </Stack>
             </Card>
           </Grid>
@@ -124,9 +99,9 @@ export default function DeprecationRegisterForm() {
               variant="contained"
               size="large"
               loading={isSubmitting}
-              disabled={!user}
+              disabled={!coopNeracaData}
             >
-              {user ? 'Create Disbursement Request' : 'Loading'}
+              {coopNeracaData ? 'Daftarkan Kerusakan Peralatan' : 'Loading'}
             </LoadingButton>
           </Grid>
         </Grid>

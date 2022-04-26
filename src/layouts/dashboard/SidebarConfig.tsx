@@ -2,6 +2,9 @@
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import SvgIconStyle from '../../components/SvgIconStyle';
+// icons
+import { Icon } from '@iconify/react';
+import RoundGroups from '@iconify/icons-ic/round-groups';
 
 // ----------------------------------------------------------------------
 
@@ -21,17 +24,46 @@ const ICONS = {
   ecommerce: getIcon('ic_ecommerce'),
   analytics: getIcon('ic_analytics'),
   dashboard: getIcon('ic_dashboard'),
-  booking: getIcon('ic_booking')
+  booking: getIcon('ic_booking'),
+  request: <Icon icon={RoundGroups} width="100%" height="100%" />
 };
 
 const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'general',
+    subheader: 'coopchick',
     items: [
-      { title: 'dashboard', path: PATH_DASHBOARD.general.dashboard, icon: ICONS.dashboard },
-      { title: 'aktivitas', path: PATH_DASHBOARD.general.activities, icon: ICONS.calendar },
+      {
+        title: 'dashboard',
+        path: PATH_DASHBOARD.general.dashboard,
+        icon: ICONS.dashboard,
+        accessibleRoles: ['ADMIN', 'MEMBER']
+      },
+      {
+        title: 'e-commerce',
+        path: PATH_DASHBOARD.eCommerce.root,
+        icon: ICONS.cart,
+        accessibleRoles: ['CUSTOMER', 'MEMBER'],
+        children: [
+          {
+            title: 'shop',
+            path: PATH_DASHBOARD.eCommerce.shop
+          },
+          {
+            title: 'order history',
+            path: PATH_DASHBOARD.eCommerce.orderHistory
+          },
+          { title: 'manage orders', path: PATH_DASHBOARD.eCommerce.orderList }
+        ]
+      },
+      {
+        title: 'aktivitas',
+        path: PATH_DASHBOARD.general.activities,
+        icon: ICONS.calendar,
+        accessibleRoles: ['ADMIN', 'MEMBER']
+      },
+
       { title: 'Forum', path: PATH_DASHBOARD.general.forum, icon: ICONS.chat },
       {
         title: 'blogs',
@@ -42,27 +74,29 @@ const sidebarConfig = [
         title: 'course',
         accessibleRoles: ['ADMIN', 'MEMBER'],
         path: PATH_DASHBOARD.general.course,
-        icon: ICONS.course
+        icon: ICONS.course,
+        accessibleRoles: ['ADMIN', 'MEMBER']
       },
       { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq },
       {
         title: 'Request Keanggotaan',
         accessibleRoles: ['CUSTOMER'],
         path: PATH_DASHBOARD.user.memberVerification.request,
-        icon: ICONS.faq
+        icon: ICONS.request
       }
     ]
   },
   // MANAGEMENT
   {
     subheader: 'manajemen',
-    accessibleRoles: ['ADMIN'],
+    accessibleRoles: ['MEMBER', 'ADMIN'],
     items: [
       // MANAGEMENT : USER
       {
         title: 'pengguna',
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
+        accessibleRoles: ['ADMIN'],
         children: [
           { title: 'list', path: PATH_DASHBOARD.user.list },
           {
@@ -76,6 +110,7 @@ const sidebarConfig = [
         title: 'finance',
         path: PATH_DASHBOARD.managementFinance.root,
         icon: ICONS.banking,
+        accessibleRoles: ['ADMIN'],
         children: [
           {
             title: 'home',
@@ -94,12 +129,12 @@ const sidebarConfig = [
       // MANAGEMENT : E-COMMERCE
       {
         title: 'e-commerce',
-        path: PATH_DASHBOARD.eCommerce.root,
+        path: PATH_DASHBOARD.eCommerce.seller.root,
         icon: ICONS.cart,
+        accessibleRoles: ['MEMBER'],
         children: [
-          { title: 'seller', path: PATH_DASHBOARD.eCommerce.seller },
-          { title: 'manage orders', path: PATH_DASHBOARD.eCommerce.orderList },
-          { title: 'manage products', path: PATH_DASHBOARD.eCommerce.list }
+          { title: 'seller', path: PATH_DASHBOARD.eCommerce.seller.center },
+          { title: 'manage products', path: PATH_DASHBOARD.eCommerce.seller.list }
         ]
       },
       // MANAGEMENT: KNOWLEDGE
@@ -107,6 +142,7 @@ const sidebarConfig = [
         title: 'blogs',
         path: PATH_DASHBOARD.general.blogVerification,
         icon: ICONS.blog,
+        accessibleRoles: ['ADMIN'],
         children: [{ title: 'verification', path: PATH_DASHBOARD.general.blogVerification }]
       },
       // MANAGEMENT: KNOWLEDGE
@@ -123,49 +159,47 @@ const sidebarConfig = [
   },
   // FINANCE
   {
-    subheader: 'finance',
+    subheader: 'keuangan',
+    accessibleRoles: ['MEMBER'],
     items: [
       {
         title: 'home',
         path: PATH_DASHBOARD.finance.home,
-        accessibleRoles: ['MEMBER'],
         icon: ICONS.banking
       },
       {
         title: 'report',
         path: PATH_DASHBOARD.finance.report,
-        accessibleRoles: ['CUSTOMER'],
         icon: ICONS.banking
       },
       {
         title: 'disbursement request',
         path: PATH_DASHBOARD.finance.disbursementRequest,
-        accessibleRoles: ['MEMBER'],
         icon: ICONS.banking
       },
       {
         title: 'add simpanan sukarela',
         path: PATH_DASHBOARD.finance.addSimpananSukarela,
-        accessibleRoles: ['MEMBER'],
         icon: ICONS.banking
       },
       {
         title: 'deprecation register',
         path: PATH_DASHBOARD.finance.deprecationRegister,
-        accessibleRoles: ['CUSTOMER'],
+        accessibleRoles: ['ADMIN'],
+        icon: ICONS.banking
+      },
+      {
+        title: 'repair register',
+        path: PATH_DASHBOARD.finance.repairRegister,
+        accessibleRoles: ['ADMIN'],
+        icon: ICONS.banking
+      },
+      {
+        title: 'equipment register',
+        path: PATH_DASHBOARD.finance.equipmentRegister,
+        accessibleRoles: ['ADMIN'],
         icon: ICONS.banking
       }
-    ]
-  },
-  // E-COMMERCE
-  {
-    subheader: 'e-commerce',
-    accessibleRoles: ['CUSTOMER'],
-    items: [
-      { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop, icon: ICONS.cart },
-      { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout, icon: ICONS.cart },
-      { title: 'invoice', path: PATH_DASHBOARD.eCommerce.invoice, icon: ICONS.cart },
-      { title: 'history', path: PATH_DASHBOARD.eCommerce.orderHistory, icon: ICONS.cart }
     ]
   }
 ];

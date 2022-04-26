@@ -20,20 +20,25 @@ import {
   FormHelperText,
   FormControlLabel
 } from '@mui/material';
-// utils
-import fakeRequest from '../../../utils/fakeRequest';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
-import { Product } from '../../../@types/products';
+import { Product, ProductFormikRaw } from '../../../@types/products';
 //
 import { QuillEditor } from '../../editor';
-import { UploadMultiFile } from '../../upload';
 // import addProduct from 'utils/products';
+
+import { UploadSingleFile } from '../../upload';
+import { addProduct, editProduct } from 'redux/slices/product';
+import { dispatch } from 'redux/store';
+
+import useAuth from 'hooks/useAuth';
+import { handleUploadFile } from 'utils/bucket';
+import { fTimestamp } from 'utils/formatTime';
 
 // ----------------------------------------------------------------------
 
-const CATEGORY_OPTION = ['Ayam', 'Kandang', 'Infrastruktur', 'Pakan', 'Dagin'];
+const CATEGORY_OPTION = ['Ayam', 'Infrastruktur', 'Pakan'];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -51,38 +56,71 @@ type ProductNewFormProps = {
 export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFormProps) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { user } = useAuth();
 
   const NewProductSchema = Yup.object().shape({
+    sku: Yup.string().required('SKU is required'),
     name: Yup.string().required('Name is required'),
     description: Yup.string().required('Description is required'),
     images: Yup.array().min(1, 'Images is required'),
-    price: Yup.number().required('Price is required')
+    price: Yup.number().required('Price is required'),
+    productionCost: Yup.number().required('Production cost is required'),
+    available: Yup.number().required('Quantity is required')
   });
 
-  const formik = useFormik({
+  const product_id = currentProduct?.id || '';
+
+  const formik = useFormik<ProductFormikRaw>({
     enableReinitialize: true,
     initialValues: {
       sku: currentProduct?.sku || '',
       name: currentProduct?.name || '',
       category: currentProduct?.category || CATEGORY_OPTION[0],
       price: currentProduct?.price || '',
+      productionCost: currentProduct?.productionCost || '',
       available: currentProduct?.available || '',
-      cover:
-        currentProduct?.cover || 'http://localhost:3000/static/mock-images/products/product_2.jpg',
       description: currentProduct?.description || '',
       status: currentProduct?.status || 'Active',
-      seller: currentProduct?.seller,
-      images: currentProduct?.images || []
+      seller_id: currentProduct?.seller?.id || user?.id,
+      cover: currentProduct?.cover || null
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        await fakeRequest(500);
-        // await addProduct(values);
+        const uploadFileMessage = await handleUploadFile(
+          values.cover,
+          'products',
+          values.cover.path + fTimestamp(new Date())
+        );
+        console.log(uploadFileMessage);
+        if (isEdit) {
+          let prevProductionCost = currentProduct ? currentProduct.productionCost : 0;
+          let prevAvailable = currentProduct ? currentProduct.available : 0;
+          dispatch(
+            editProduct(
+              {
+                ...values,
+                cover: uploadFileMessage
+              },
+              product_id,
+              prevProductionCost,
+              prevAvailable
+            )
+          );
+        } else {
+          dispatch(
+            addProduct({
+              ...values,
+              cover: uploadFileMessage
+            })
+          );
+        }
         resetForm();
         setSubmitting(false);
-        enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-        navigate(PATH_DASHBOARD.eCommerce.list);
+        enqueueSnackbar(!isEdit ? 'Create product success' : 'Update product success', {
+          variant: 'success'
+        });
+        navigate(PATH_DASHBOARD.eCommerce.seller.list);
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -96,26 +134,13 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
-      setFieldValue(
-        'images',
-        acceptedFiles.map((file: File | string) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file)
-          })
-        )
-      );
+      const file = acceptedFiles[0];
+      if (file) {
+        setFieldValue('cover', Object.assign(file, { preview: URL.createObjectURL(file) }));
+      }
     },
     [setFieldValue]
   );
-
-  const handleRemoveAll = () => {
-    setFieldValue('images', []);
-  };
-
-  const handleRemove = (file: File | string) => {
-    const filteredItems = values.images.filter((_file) => _file !== file);
-    setFieldValue('images', filteredItems);
-  };
 
   return (
     <FormikProvider value={formik}>
@@ -149,20 +174,17 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                 </div>
 
                 <div>
-                  <LabelStyle>Add Images</LabelStyle>
-                  <UploadMultiFile
-                    showPreview
+                  <LabelStyle>Add Image</LabelStyle>
+                  <UploadSingleFile
                     maxSize={3145728}
                     accept="image/*"
-                    files={values.images}
+                    file={values.cover}
                     onDrop={handleDrop}
-                    onRemove={handleRemove}
-                    onRemoveAll={handleRemoveAll}
-                    error={Boolean(touched.images && errors.images)}
+                    error={Boolean(touched.cover && errors.cover)}
                   />
-                  {touched.images && errors.images && (
+                  {touched.cover && errors.cover && (
                     <FormHelperText error sx={{ px: 2 }}>
-                      {touched.images && errors.images}
+                      {touched.cover && errors.cover}
                     </FormHelperText>
                   )}
                 </div>
@@ -211,9 +233,9 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                     fullWidth
                     placeholder="0"
                     label="Jumlah"
-                    {...getFieldProps('quantity')}
+                    {...getFieldProps('available')}
                     InputProps={{
-                      endAdornment: <InputAdornment position="end">kilogram</InputAdornment>,
+                      endAdornment: <InputAdornment position="end">pcs</InputAdornment>,
                       type: 'number'
                     }}
                     error={Boolean(touched.available && errors.available)}
@@ -230,6 +252,18 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                     }}
                     error={Boolean(touched.price && errors.price)}
                     helperText={touched.price && errors.price}
+                  />
+                  <TextField
+                    fullWidth
+                    placeholder="0"
+                    label="Production Cost"
+                    {...getFieldProps('productionCost')}
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+                      type: 'number'
+                    }}
+                    error={Boolean(touched.productionCost && errors.productionCost)}
+                    helperText={touched.productionCost && errors.productionCost}
                   />
                 </Stack>
               </Card>

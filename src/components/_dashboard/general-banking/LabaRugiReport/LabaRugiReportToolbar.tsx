@@ -13,11 +13,11 @@ import { Stack } from '@mui/material';
 import { fCurrency, fPercent } from 'utils/formatNumber';
 
 type LabaRugiData = {
-  id: number;
-  user_id: number;
-  periode: string;
   jumlahPenjualan: number;
+  sisaHasilUsaha: number;
   biayaProduksiProdukTerjual: number;
+  biayaSimpananPokok: number;
+  biayaSimpananWajib: number;
   biayaOperasi: number;
   net: number;
 };
@@ -47,10 +47,25 @@ export default function LaporanLabaRugiToolbar(props: {
         },
         {
           No: '2',
+          Komponen: 'Sisa Hasil Usaha',
+          Jumlah: props.currentLabaRugiData.sisaHasilUsaha
+        },
+        {
+          No: '3',
           Komponen: 'Biaya Produksi Produk Terjual',
           Jumlah: props.currentLabaRugiData.biayaProduksiProdukTerjual
         },
-        { No: '3', Komponen: 'Biaya Operasi', Jumlah: props.currentLabaRugiData.biayaOperasi },
+        {
+          No: '4',
+          Komponen: 'Biaya Simpanan Pokok',
+          Jumlah: props.currentLabaRugiData.biayaSimpananPokok
+        },
+        {
+          No: '5',
+          Komponen: 'Biaya Simpanan Wajib',
+          Jumlah: props.currentLabaRugiData.biayaSimpananWajib
+        },
+        { No: '6', Komponen: 'Biaya Operasi', Jumlah: props.currentLabaRugiData.biayaOperasi },
         { No: '', Komponen: 'Net', Jumlah: props.currentLabaRugiData.net }
       ];
 
@@ -159,6 +174,8 @@ export default function LaporanLabaRugiToolbar(props: {
                 chartInfo: [
                   `Expenses: ${fCurrency(
                     props.currentLabaRugiData.biayaProduksiProdukTerjual +
+                      props.currentLabaRugiData.biayaSimpananPokok +
+                      props.currentLabaRugiData.biayaSimpananWajib +
                       props.currentLabaRugiData.biayaOperasi
                   )}`,
                   `${props.expensePercent > 0 ? '+' : ''} ${fPercent(
@@ -169,7 +186,10 @@ export default function LaporanLabaRugiToolbar(props: {
               },
               {
                 chartInfo: [
-                  `Income: ${fCurrency(props.currentLabaRugiData.jumlahPenjualan)}`,
+                  `Income: ${fCurrency(
+                    props.currentLabaRugiData.jumlahPenjualan +
+                      props.currentLabaRugiData.sisaHasilUsaha
+                  )}`,
                   `${props.incomePercent > 0 ? '+' : ''} ${fPercent(
                     props.incomePercent
                   )} than last month`

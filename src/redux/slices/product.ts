@@ -4,7 +4,9 @@ import { store } from '../store';
 // utils
 // import axiosMock from '../../utils/axiosMock';
 import axios from '../../utils/axios';
-import { CartItem, Product, ProductState } from '../../@types/products';
+import { CartItem, Product, ProductFormikProps, ProductState } from '../../@types/products';
+
+import { handleAddEditProduct } from 'utils/financeAxios/financeReport';
 
 // ----------------------------------------------------------------------
 
@@ -15,11 +17,9 @@ const initialState: ProductState = {
   product: null,
   sortBy: null,
   filters: {
-    gender: [],
-    category: 'All',
-    colors: [],
-    priceRange: '',
-    rating: ''
+    city: [],
+    category: 'Semua',
+    priceRange: ''
   },
   checkout: {
     orderId: 0,
@@ -60,17 +60,21 @@ const slice = createSlice({
       state.product = action.payload;
     },
 
+    // EDIT PRODUCT
+    editProductSuccess(state, action) {
+      state.isLoading = false;
+      state.product = action.payload;
+    },
+
     //  SORT & FILTER PRODUCTS
     sortByProducts(state, action) {
       state.sortBy = action.payload;
     },
 
     filterProducts(state, action) {
-      state.filters.gender = action.payload.gender;
+      state.filters.city = action.payload.city;
       state.filters.category = action.payload.category;
-      state.filters.colors = action.payload.colors;
       state.filters.priceRange = action.payload.priceRange;
-      state.filters.rating = action.payload.rating;
     },
 
     // CHECKOUT
@@ -190,6 +194,10 @@ const slice = createSlice({
       const shipping = action.payload;
       state.checkout.shipping = shipping;
       state.checkout.total = state.checkout.subtotal - state.checkout.discount + shipping;
+    },
+
+    addProductSuccess(state) {
+      state.isLoading = false;
     }
   }
 });
@@ -234,6 +242,22 @@ export function getProducts() {
 
 // ----------------------------------------------------------------------
 
+export function getProductsBySeller(id: String) {
+  return async () => {
+    const { dispatch } = store;
+    dispatch(slice.actions.startLoading());
+    try {
+      const response: { data: { payload: Product[] } } = await axios.get('/products/seller/' + id);
+      dispatch(slice.actions.getProductsSuccess(response.data.payload));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
 export function getProduct(name: string) {
   return async () => {
     const { dispatch } = store;
@@ -241,6 +265,60 @@ export function getProduct(name: string) {
     try {
       const response: { data: { payload: Product } } = await axios.get('/products/' + name);
       dispatch(slice.actions.getProductSuccess(response.data.payload));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+export function addProduct(product: ProductFormikProps) {
+  return async () => {
+    const { dispatch } = store;
+    dispatch(slice.actions.startLoading());
+    try {
+      // Upload product to product table
+      console.log(product);
+      const periode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
+      const response = await axios.post('/products/create', product);
+      await handleAddEditProduct(
+        periode,
+        0,
+        Number(product.available),
+        0,
+        Number(product.productionCost)
+      );
+      console.log(response.data.payload);
+      dispatch(slice.actions.addProductSuccess());
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+export function editProduct(
+  product: ProductFormikProps,
+  id: string,
+  prevProductionCost: number,
+  prevAvailable: number
+) {
+  return async () => {
+    const { dispatch } = store;
+    dispatch(slice.actions.startLoading());
+    try {
+      const periode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
+      await axios.patch(`/products/${id}`, product);
+      await handleAddEditProduct(
+        periode,
+        prevAvailable,
+        Number(product.available),
+        prevProductionCost,
+        Number(product.productionCost)
+      );
+      dispatch(slice.actions.addProductSuccess());
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

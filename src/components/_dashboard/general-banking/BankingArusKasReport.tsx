@@ -7,7 +7,7 @@ import { openModalArusKas, closeModalArusKas } from '../../../redux/slices/finan
 import { DialogAnimate } from '../../animate';
 import Scrollbar from '../../Scrollbar';
 
-import { handleGetArusKasInfo } from '../../../utils/financeReport';
+import { handleGetArusKasInfo } from '../../../utils/financeAxios/financeReport';
 
 import { Icon } from '@iconify/react';
 

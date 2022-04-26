@@ -9,7 +9,7 @@ import Scrollbar from '../../Scrollbar';
 
 import { Icon } from '@iconify/react';
 
-import { handleGetLabaRugiInfo } from '../../../utils/financeReport';
+import { handleGetLabaRugiInfo } from '../../../utils/financeAxios/financeReport';
 
 import { styled } from '@mui/material/styles';
 import {

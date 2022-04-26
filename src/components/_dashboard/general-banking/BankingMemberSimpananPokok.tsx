@@ -38,7 +38,7 @@ import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
 // fetch backend data
-import { handleListSimpananPokok } from 'utils/financeSimpanan';
+import { handleListSimpananPokok } from 'utils/financeAxios/financeSimpanan';
 
 type SimpananPokokProps = {
   id: number;

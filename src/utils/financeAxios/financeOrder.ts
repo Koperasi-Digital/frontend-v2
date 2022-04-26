@@ -1,5 +1,5 @@
-import { CartItem } from '../@types/products';
-import axios from './axios';
+import { CartItem } from '../../@types/products';
+import axios from '../axios';
 
 export async function handleCreateOrder(userId: number, grossAmount: number, cart?: CartItem[]) {
   try {

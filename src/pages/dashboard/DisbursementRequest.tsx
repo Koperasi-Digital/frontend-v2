@@ -7,7 +7,7 @@ import BankAccountRegisterForm from 'components/_dashboard/general-banking/BankA
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { useState, useEffect } from 'react';
 
-import { handleGetBankAccount } from 'utils/financeBankAccount';
+import { handleGetBankAccount } from 'utils/financeAxios/financeBankAccount';
 // hooks
 import useAuth from 'hooks/useAuth';
 

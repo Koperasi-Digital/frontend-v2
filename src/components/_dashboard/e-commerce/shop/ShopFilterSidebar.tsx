@@ -10,7 +10,6 @@ import {
   Stack,
   Button,
   Drawer,
-  Rating,
   Divider,
   Checkbox,
   FormGroup,
@@ -23,7 +22,6 @@ import { FormikPropsShopView } from '../../../../@types/products';
 //
 import { MIconButton } from '../../../@material-extend';
 import Scrollbar from '../../../Scrollbar';
-import ColorManyPicker from '../../../ColorManyPicker';
 
 // ----------------------------------------------------------------------
 
@@ -33,13 +31,12 @@ export const SORT_BY_OPTIONS = [
   { value: 'priceDesc', label: 'Price: High-Low' },
   { value: 'priceAsc', label: 'Price: Low-High' }
 ];
-export const FILTER_GENDER_OPTIONS = ['Men', 'Women', 'Kids'];
-export const FILTER_CATEGORY_OPTIONS = ['All', 'Shose', 'Apparel', 'Accessories'];
-export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
+export const FILTER_GENDER_OPTIONS = ['Bandung', 'Jakarta', 'Surabaya', 'Pati', 'Semarang'];
+export const FILTER_CATEGORY_OPTIONS = ['Semua', 'Ayam', 'Pakan', 'Infrastruktur'];
 export const FILTER_PRICE_OPTIONS = [
-  { value: 'below', label: 'Below $25' },
-  { value: 'between', label: 'Between $25 - $75' },
-  { value: 'above', label: 'Above $75' }
+  { value: 'below', label: '< Rp 50.000' },
+  { value: 'between', label: 'Rp 50.000 - Rp 100.000' },
+  { value: 'above', label: '> Rp 100.000' }
 ];
 export const FILTER_COLOR_OPTIONS = [
   '#00AB55',
@@ -69,7 +66,7 @@ export default function ShopFilterSidebar({
   onCloseFilter,
   formik
 }: ShopFilterSidebarProps) {
-  const { values, getFieldProps, handleChange } = formik;
+  const { values, getFieldProps } = formik;
 
   return (
     <>
@@ -120,9 +117,9 @@ export default function ShopFilterSidebar({
                         key={item}
                         control={
                           <Checkbox
-                            {...getFieldProps('gender')}
+                            {...getFieldProps('city')}
                             value={item}
-                            checked={values.gender.includes(item)}
+                            checked={values.city.includes(item)}
                           />
                         }
                         label={item}
@@ -144,19 +141,6 @@ export default function ShopFilterSidebar({
 
                 <div>
                   <Typography variant="subtitle1" gutterBottom>
-                    Colour
-                  </Typography>
-                  <ColorManyPicker
-                    name="colors"
-                    colors={FILTER_COLOR_OPTIONS}
-                    onChange={handleChange}
-                    onChecked={(color) => values.colors.includes(color)}
-                    sx={{ maxWidth: 36 * 4 }}
-                  />
-                </div>
-
-                <div>
-                  <Typography variant="subtitle1" gutterBottom>
                     Price
                   </Typography>
                   <RadioGroup {...getFieldProps('priceRange')}>
@@ -166,40 +150,6 @@ export default function ShopFilterSidebar({
                         value={item.value}
                         control={<Radio />}
                         label={item.label}
-                      />
-                    ))}
-                  </RadioGroup>
-                </div>
-
-                <div>
-                  <Typography variant="subtitle1" gutterBottom>
-                    Rating
-                  </Typography>
-                  <RadioGroup {...getFieldProps('rating')}>
-                    {FILTER_RATING_OPTIONS.map((item, index) => (
-                      <FormControlLabel
-                        key={item}
-                        value={item}
-                        control={
-                          <Radio
-                            disableRipple
-                            color="default"
-                            icon={<Rating readOnly value={4 - index} />}
-                            checkedIcon={<Rating readOnly value={4 - index} />}
-                            sx={{
-                              '&:hover': { bgcolor: 'transparent' }
-                            }}
-                          />
-                        }
-                        label="& Up"
-                        sx={{
-                          my: 0.5,
-                          borderRadius: 1,
-                          '&:hover': { opacity: 0.48 },
-                          ...(values.rating.includes(item) && {
-                            bgcolor: 'action.selected'
-                          })
-                        }}
                       />
                     ))}
                   </RadioGroup>

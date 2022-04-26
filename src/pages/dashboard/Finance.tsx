@@ -49,7 +49,9 @@ export default function Finance() {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-              <Typography>Pilih laporan yang ingin datanya ditampilkan: </Typography>
+              <Typography variant="body1">
+                Pilih laporan yang ingin datanya ditampilkan:{' '}
+              </Typography>
               <Select
                 labelId="report-name-select-label"
                 id="report-name-select"

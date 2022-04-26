@@ -60,17 +60,14 @@ export default function Router() {
             </GuestGuard>
           )
         },
-        { path: 'login-unprotected', element: <Login /> },
-        { path: 'register-unprotected', element: <Register /> },
-        { path: 'reset-password', element: <ResetPassword /> },
-        { path: 'verify', element: <VerifyCode /> }
+        { path: 'reset-password', element: <ResetPassword /> }
       ]
     },
 
     // Dashboard Routes
     {
       path: '/',
-      element: <Navigate to="/dashboard" replace />
+      element: <Navigate to="/auth/login" replace />
     },
     {
       path: 'dashboard',
@@ -80,9 +77,18 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { element: <Navigate to="/dashboard/app" replace /> },
+        {
+          element: <Navigate to="/dashboard/app" replace />
+        },
         { path: 'app', element: <GeneralApp /> },
-        { path: 'activities', element: <Activities /> },
+        {
+          path: 'activities',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN', 'MEMBER']}>
+              <Activities />
+            </RoleBasedGuard>
+          )
+        },
         {
           path: 'blogs',
           element: <BlogPosts />
@@ -199,26 +205,100 @@ export default function Router() {
           path: 'e-commerce',
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
-            { path: 'shop', element: <EcommerceShop /> },
             {
-              path: 'seller',
+              path: 'shop',
+              element: (
+                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
+                  <EcommerceShop />
+                </RoleBasedGuard>
+              )
+            },
+
+            {
+              path: 'order/:id',
+              element: (
+                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
+                  <EcommerceOrderDetails />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'order-list',
+              element: (
+                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
+                  <EcommerceOrderList />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'order-history',
+              element: (
+                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
+                  <EcommerceOrderHistory />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'product/:name',
+              element: (
+                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
+                  <EcommerceProductDetails />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'checkout',
+              element: (
+                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
+                  <EcommerceCheckout />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'invoice',
+              element: (
+                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
+                  <EcommerceInvoice />
+                </RoleBasedGuard>
+              )
+            }
+          ]
+        },
+        {
+          path: 'seller',
+          children: [
+            {
+              path: 'dashboard',
               element: (
                 <SellerGuard>
                   <EcommerceSellerCenter />
                 </SellerGuard>
               )
             },
-            { path: 'general-ecommerce', element: <GeneralEcommerce /> },
-            { path: 'general-analytics', element: <GeneralAnalytics /> },
-            { path: 'order/:id', element: <EcommerceOrderDetails /> },
-            { path: 'order-list', element: <EcommerceOrderList /> },
-            { path: 'order-history', element: <EcommerceOrderHistory /> },
-            { path: 'product/:name', element: <EcommerceProductDetails /> },
-            { path: 'list', element: <EcommerceProductList /> },
-            { path: 'product/new', element: <EcommerceProductCreate /> },
-            { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
-            { path: 'checkout', element: <EcommerceCheckout /> },
-            { path: 'invoice', element: <EcommerceInvoice /> }
+            {
+              path: 'list',
+              element: (
+                <SellerGuard>
+                  <EcommerceProductList />
+                </SellerGuard>
+              )
+            },
+            {
+              path: 'product/new',
+              element: (
+                <SellerGuard>
+                  <EcommerceProductCreate />
+                </SellerGuard>
+              )
+            },
+            {
+              path: 'product/:name/edit',
+              element: (
+                <SellerGuard>
+                  <EcommerceProductCreate />
+                </SellerGuard>
+              )
+            }
           ]
         },
         {
@@ -235,10 +315,33 @@ export default function Router() {
             },
             { path: 'report', element: <TransactionsReport /> },
             { path: 'create-disbursement-request', element: <DisbursementRequest /> },
-            { path: 'register-deprecation', element: <DeprecationRegister /> },
             {
               path: 'add-simpanan-sukarela',
               element: <AddSimpananSukarela />
+            },
+            {
+              path: 'register-deprecation',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DeprecationRegister />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'register-repair',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <RepairRegister />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'register-equipment',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <EquipmentRegister />
+                </RoleBasedGuard>
+              )
             }
           ]
         },
@@ -302,7 +405,10 @@ export default function Router() {
                 </RoleBasedGuard>
               )
             },
-            { path: 'account', element: <UserAccount /> },
+            {
+              path: 'account',
+              element: <UserAccount />
+            },
             {
               path: 'create-store',
               element: (
@@ -327,14 +433,6 @@ export default function Router() {
                 </RoleBasedGuard>
               )
             }
-          ]
-        },
-        {
-          path: 'chat',
-          children: [
-            { element: <Chat /> },
-            { path: 'new', element: <Chat /> },
-            { path: ':conversationKey', element: <Chat /> }
           ]
         }
       ]
@@ -362,13 +460,8 @@ export default function Router() {
 const Login = Loadable(lazy(() => import('../pages/authentication/Login')));
 const Register = Loadable(lazy(() => import('../pages/authentication/Register')));
 const ResetPassword = Loadable(lazy(() => import('../pages/authentication/ResetPassword')));
-const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCode')));
 // Dashboard
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
-const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));
-const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
-// const GeneralBanking = Loadable(lazy(() => import('../pages/dashboard/GeneralBanking')));
-// const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
 const EcommerceOrderHistory = Loadable(
   lazy(() => import('../pages/dashboard/EcommerceOrderHistory'))
 );
@@ -418,7 +511,6 @@ const RequestMemberVerification = Loadable(
   lazy(() => import('../pages/dashboard/RequestMemberVerification'))
 );
 const CreateStore = Loadable(lazy(() => import('../pages/dashboard/CreateStore')));
-const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
 const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
 const AdminFinance = Loadable(lazy(() => import('../pages/dashboard/AdminFinance')));
@@ -431,6 +523,8 @@ const DisbursementRequestList = Loadable(
 );
 const DisbursementRequest = Loadable(lazy(() => import('../pages/dashboard/DisbursementRequest')));
 const DeprecationRegister = Loadable(lazy(() => import('../pages/dashboard/DeprecationRegister')));
+const RepairRegister = Loadable(lazy(() => import('../pages/dashboard/RepairRegister')));
+const EquipmentRegister = Loadable(lazy(() => import('../pages/dashboard/EquipmentRegister')));
 const AddSimpananSukarela = Loadable(lazy(() => import('../pages/dashboard/AddSimpananSukarela')));
 // Main
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));

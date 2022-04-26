@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Button } from '@mui/material';
-import { handleCreateTransaction } from '../../../utils/financeTransaction';
+import { handleCreateTransaction } from '../../../utils/financeAxios/financeTransaction';
 import { useSnackbar } from 'notistack';
 
 type PaymentCreationProps = {

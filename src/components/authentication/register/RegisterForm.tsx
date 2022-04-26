@@ -38,8 +38,8 @@ type InitialValues = {
   passwordConfirm: string;
   displayName: string;
   registerAsMember: 'yes' | 'no';
-  identityCardPhotoURL: File | null;
-  selfiePhotoURL: File | null;
+  identityCardPhoto: File | null;
+  selfiePhoto: File | null;
   afterSubmit?: string;
 };
 
@@ -75,19 +75,20 @@ export default function RegisterForm() {
       password: '',
       passwordConfirm: '',
       registerAsMember: 'no',
-      identityCardPhotoURL: null,
-      selfiePhotoURL: null
+      identityCardPhoto: null,
+      selfiePhoto: null
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
-      // TODO: Handle Upload Image
       try {
         await register(
           values.email,
           values.password,
           values.passwordConfirm,
           values.displayName,
-          values.registerAsMember === 'yes'
+          values.registerAsMember === 'yes',
+          values.identityCardPhoto,
+          values.selfiePhoto
         );
         enqueueSnackbar('Pendaftaran sukses!', {
           variant: 'success',
@@ -118,10 +119,12 @@ export default function RegisterForm() {
     (fieldName: string) => (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
       if (file) {
-        setFieldValue(fieldName, {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
+        setFieldValue(
+          fieldName,
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          })
+        );
       }
     },
     [setFieldValue]
@@ -209,35 +212,35 @@ export default function RegisterForm() {
           {registerAsMember === 'yes' && (
             <>
               <FormControl>
-                <LabelStyle>Upload KTP</LabelStyle>
+                <LabelStyle>Upload Foto KTP</LabelStyle>
                 <UploadSingleFile
                   maxSize={10485760} // 10MB
                   accept="image/*"
-                  file={values.identityCardPhotoURL}
+                  file={values.identityCardPhoto}
                   withIllustration={false}
-                  onDrop={handleDrop('identityCardPhotoURL')}
-                  error={Boolean(touched.identityCardPhotoURL && errors.identityCardPhotoURL)}
+                  onDrop={handleDrop('identityCardPhoto')}
+                  error={Boolean(touched.identityCardPhoto && errors.identityCardPhoto)}
                 />
-                {touched.identityCardPhotoURL && errors.identityCardPhotoURL && (
+                {touched.identityCardPhoto && errors.identityCardPhoto && (
                   <FormHelperText error sx={{ px: 2 }}>
-                    {touched.identityCardPhotoURL && errors.identityCardPhotoURL}
+                    {touched.identityCardPhoto && errors.identityCardPhoto}
                   </FormHelperText>
                 )}
               </FormControl>
 
               <FormControl>
-                <LabelStyle>Upload Selfie dengan KTP</LabelStyle>
+                <LabelStyle>Upload Foto Selfie dengan KTP</LabelStyle>
                 <UploadSingleFile
                   maxSize={10485760} // 10MB
                   accept="image/*"
-                  file={values.selfiePhotoURL}
+                  file={values.selfiePhoto}
                   withIllustration={false}
-                  onDrop={handleDrop('selfiePhotoURL')}
-                  error={Boolean(touched.selfiePhotoURL && errors.selfiePhotoURL)}
+                  onDrop={handleDrop('selfiePhoto')}
+                  error={Boolean(touched.selfiePhoto && errors.selfiePhoto)}
                 />
-                {touched.selfiePhotoURL && errors.selfiePhotoURL && (
+                {touched.selfiePhoto && errors.selfiePhoto && (
                   <FormHelperText error sx={{ px: 2 }}>
-                    {touched.selfiePhotoURL && errors.selfiePhotoURL}
+                    {touched.selfiePhoto && errors.selfiePhoto}
                   </FormHelperText>
                 )}
               </FormControl>

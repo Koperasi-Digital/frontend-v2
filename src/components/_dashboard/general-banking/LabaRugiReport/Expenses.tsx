@@ -35,11 +35,11 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 }));
 
 type LabaRugiData = {
-  id: number;
-  user_id: number;
-  periode: string;
   jumlahPenjualan: number;
+  sisaHasilUsaha: number;
   biayaProduksiProdukTerjual: number;
+  biayaSimpananPokok: number;
+  biayaSimpananWajib: number;
   biayaOperasi: number;
   net: number;
 };
@@ -84,6 +84,8 @@ export default function Expenses(props: {
             <Typography sx={{ typography: 'h3' }}>
               {fCurrency(
                 props.currentLabaRugiData.biayaProduksiProdukTerjual +
+                  props.currentLabaRugiData.biayaSimpananPokok +
+                  props.currentLabaRugiData.biayaSimpananWajib +
                   props.currentLabaRugiData.biayaOperasi
               )}
             </Typography>
@@ -108,8 +110,12 @@ export default function Expenses(props: {
               {
                 data: [
                   props.prevLabaRugiData.biayaProduksiProdukTerjual +
+                    props.prevLabaRugiData.biayaSimpananPokok +
+                    props.prevLabaRugiData.biayaSimpananWajib +
                     props.prevLabaRugiData.biayaOperasi,
                   props.currentLabaRugiData.biayaProduksiProdukTerjual +
+                    props.currentLabaRugiData.biayaSimpananPokok +
+                    props.currentLabaRugiData.biayaSimpananWajib +
                     props.currentLabaRugiData.biayaOperasi
                 ]
               }

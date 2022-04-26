@@ -12,3 +12,18 @@ export type OrderDetails = {
   product: Product;
   shipment: any;
 };
+
+export type OrderDetailsLog = {
+  id: string;
+  status: string;
+  created_at: Date;
+  description: string;
+};
+
+export type OrderState = {
+  isLoading: boolean;
+  error: boolean;
+  orderDetails: OrderDetails | null;
+  orderDetailsList: OrderDetails[];
+  orderDetailsLog: OrderDetailsLog[];
+};

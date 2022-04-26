@@ -44,7 +44,7 @@ import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
 // fetch backend data
-import { handleListSimpananWajib } from 'utils/financeSimpanan';
+import { handleListSimpananWajib } from 'utils/financeAxios/financeSimpanan';
 
 type SimpananWajibProps = {
   id: number;

@@ -83,7 +83,12 @@ export default function GeneralApp() {
             <Typography gutterBottom variant="h6" sx={{ mx: '0.5rem' }}>
               Aktivitas Minggu Ini
             </Typography>
-            <Calendar injectedView="listWeek" withToolbar={false} injectedHeight={240} />
+            <Calendar
+              injectedView="listWeek"
+              withToolbar={false}
+              injectedHeight={240}
+              clickable={false}
+            />
             <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.general.activities}>
               <Typography variant="body2" align="right" sx={{ m: '0.5rem', fontWeight: 'bold' }}>
                 Lebih Lanjut
