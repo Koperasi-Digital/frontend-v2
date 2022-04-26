@@ -39,7 +39,7 @@ export const PATH_DASHBOARD = {
     myBlog: path(ROOTS_DASHBOARD, '/blogs/own'),
     blogVerification: path(ROOTS_DASHBOARD, '/blogs/verification'),
     faq: path(ROOTS_DASHBOARD, '/faq'),
-    faqPost: path(ROOTS_DASHBOARD, '/faq/:number'),
+    faqPost: path(ROOTS_DASHBOARD, '/faq/:id'),
     forum: path(ROOTS_DASHBOARD, '/forum'),
     myforum: path(ROOTS_DASHBOARD, '/forum/own'),
     course: path(ROOTS_DASHBOARD, '/course'),

@@ -121,7 +121,7 @@ export default function Router() {
           )
         },
         { path: 'faq', element: <FAQ /> },
-        { path: 'faq/:number', element: <FAQPost /> },
+        { path: 'faq/:id', element: <FAQPost /> },
         { path: 'forum', element: <Forum /> },
         {
           path: 'forum/own',
