@@ -130,7 +130,7 @@ export default function CourseList() {
   const handlePublishCourse = async (courseId: number) => {
     try {
       await dispatch(setPublished(courseId));
-      enqueueSnackbar(`course berhasil dipublish dan dapat dilihat oleh member koperasi`, {
+      enqueueSnackbar(`Publikasi Course berhasil diubah`, {
         variant: 'success'
       });
     } catch (err) {
@@ -182,7 +182,7 @@ export default function CourseList() {
                         : createAvatar(author.displayName);
 
                       return (
-                        <TableRow hover key={index + 'blog'} tabIndex={-1}>
+                        <TableRow hover key={index + 'course'} tabIndex={-1}>
                           <TableCell align="left">
                             <Typography
                               component={RouterLink}

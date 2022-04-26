@@ -69,10 +69,16 @@ const slice = createSlice({
     },
 
     setPublishSuccess(state, action) {
+      state.isLoading = false;
       state.courseAdminList = state.courseAdminList.map((course) => {
         if (course.id === action.payload) course.is_published = !course.is_published;
         return course;
       });
+    },
+
+    setOrderSuccess(state) {
+      state.isLoading = false;
+      state.refresh = !state.refresh;
     },
 
     delete(state, action) {
@@ -80,6 +86,10 @@ const slice = createSlice({
       state.courseAdminList = state.courseAdminList.filter(
         (course) => course.id !== action.payload
       );
+      state.refresh = !state.refresh;
+    },
+    deleteCourseItemId(state) {
+      state.isLoading = false;
       state.refresh = !state.refresh;
     }
   }
@@ -216,6 +226,20 @@ export function deleteCourse(courseId: number) {
   };
 }
 
+export function deleteCourseItem(courseItemId: number) {
+  return async () => {
+    const { dispatch } = store;
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.delete(`course/item/${courseItemId}`);
+      dispatch(slice.actions.deleteCourseItemId());
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
 export function editCourse(id: number, title: string, description: string, cover: string) {
   return async () => {
     const { dispatch } = store;
@@ -236,6 +260,18 @@ export function editCourseItem(id: number, title: string, description: string, b
     try {
       await axios.patch(`course/item/${id}`, { title, description, body });
       dispatch(slice.actions.editCourseItemSuccess());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+}
+
+export function setOrder(id: number, orderArray: string) {
+  return async () => {
+    const { dispatch } = store;
+    try {
+      await axios.patch(`course/order/${id}`, { orderArray });
+      dispatch(slice.actions.setOrderSuccess());
     } catch (error) {
       console.error(error);
     }
