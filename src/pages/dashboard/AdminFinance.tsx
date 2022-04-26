@@ -48,7 +48,9 @@ export default function AdminFinance() {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-              <Typography>Pilih laporan yang ingin datanya ditampilkan: </Typography>
+              <Typography variant="body1">
+                Pilih laporan yang ingin datanya ditampilkan:{' '}
+              </Typography>
               <Select
                 labelId="report-name-select-label"
                 id="report-name-select"
@@ -58,15 +60,23 @@ export default function AdminFinance() {
                   setMenuName(event.target.value);
                 }}
               >
-                <MenuItem value={'laporanNeraca'}>Laporan Neraca</MenuItem>
-                <MenuItem value={'laporanLabaRugi'}>Laporan Laba Rugi</MenuItem>
-                <MenuItem value={'laporanArusKas'}>Laporan Arus Kas</MenuItem>
+                <MenuItem value={'laporanNeraca'}>
+                  <Typography variant="body1">Laporan Neraca</Typography>
+                </MenuItem>
+                <MenuItem value={'laporanLabaRugi'}>
+                  <Typography variant="body1">Laporan Laba Rugi</Typography>
+                </MenuItem>
+                <MenuItem value={'laporanArusKas'}>
+                  <Typography variant="body1">Laporan Arus Kas</Typography>
+                </MenuItem>
               </Select>
             </Stack>
           </Grid>
           <Grid item xs={12}>
             <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-              <Typography>Pilih rentang waktu laporan untuk ditampilkan: </Typography>
+              <Typography variant="body1">
+                Pilih rentang waktu laporan untuk ditampilkan:{' '}
+              </Typography>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Box
                   display="flex"

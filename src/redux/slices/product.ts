@@ -6,6 +6,8 @@ import { store } from '../store';
 import axios from '../../utils/axios';
 import { CartItem, Product, ProductFormikProps, ProductState } from '../../@types/products';
 
+import { handleAddEditProduct } from 'utils/financeAxios/financeReport';
+
 // ----------------------------------------------------------------------
 
 const initialState: ProductState = {
@@ -278,7 +280,15 @@ export function addProduct(product: ProductFormikProps) {
     try {
       // Upload product to product table
       console.log(product);
+      const periode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
       const response = await axios.post('/products/create', product);
+      await handleAddEditProduct(
+        periode,
+        0,
+        Number(product.available),
+        0,
+        Number(product.productionCost)
+      );
       console.log(response.data.payload);
       dispatch(slice.actions.addProductSuccess());
     } catch (error) {
@@ -289,12 +299,25 @@ export function addProduct(product: ProductFormikProps) {
 }
 
 // ----------------------------------------------------------------------
-export function editProduct(product: ProductFormikProps, id: string) {
+export function editProduct(
+  product: ProductFormikProps,
+  id: string,
+  prevProductionCost: number,
+  prevAvailable: number
+) {
   return async () => {
     const { dispatch } = store;
     dispatch(slice.actions.startLoading());
     try {
+      const periode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
       await axios.patch(`/products/${id}`, product);
+      await handleAddEditProduct(
+        periode,
+        prevAvailable,
+        Number(product.available),
+        prevProductionCost,
+        Number(product.productionCost)
+      );
       dispatch(slice.actions.addProductSuccess());
     } catch (error) {
       console.error(error);

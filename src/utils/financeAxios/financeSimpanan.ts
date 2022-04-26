@@ -1,4 +1,4 @@
-import axios from './axios';
+import axios from '../axios';
 
 export async function handleListSimpananPokok() {
   try {
@@ -96,6 +96,18 @@ export async function handleEditSimpananSukarela(userId: number, amount: number,
       userId: userId,
       amount: amount,
       isAdd: isAdd
+    });
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
+export async function handleCreateSimpananSukarela(userId: number) {
+  try {
+    const response = await axios.post('simpanan-sukarela/create', {
+      userId: userId
     });
     return response.data.payload;
   } catch (e) {

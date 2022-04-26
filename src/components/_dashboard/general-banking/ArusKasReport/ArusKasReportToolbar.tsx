@@ -12,12 +12,9 @@ import { ExportToExcel } from 'components/ExportToExcel';
 import { Stack } from '@mui/material';
 
 type ArusKasData = {
-  id: number;
-  user_id: number;
-  periode: string;
   jumlahKasAwal: number;
   kasMasuk: number;
-  kasCair: number;
+  kasKeluar: number;
   jumlahKasAkhir: number;
 };
 
@@ -29,7 +26,7 @@ export default function ArusKasReportToolbar(props: { arusKasData: ArusKasData |
       let sheetData = [
         { No: '1', Komponen: 'Jumlah Kas Awal', Jumlah: props.arusKasData.jumlahKasAwal },
         { No: '2', Komponen: 'Kas Masuk', Jumlah: props.arusKasData.kasMasuk },
-        { No: '3', Komponen: 'Kas Cair', Jumlah: props.arusKasData.kasCair },
+        { No: '3', Komponen: 'Kas Keluar', Jumlah: props.arusKasData.kasKeluar },
         { No: '', Komponen: 'Jumlah Kas Akhir', Jumlah: props.arusKasData.jumlahKasAkhir }
       ];
 

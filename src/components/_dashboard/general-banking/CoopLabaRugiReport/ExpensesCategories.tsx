@@ -3,8 +3,9 @@ import ReactApexChart from 'react-apexcharts';
 // material
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Card, Divider, CardHeader, useMediaQuery } from '@mui/material';
+import Scrollbar from 'components/Scrollbar';
 
-import { handleGetCoopLabaRugiInfo } from '../../../../utils/financeCoopReport';
+import { handleGetCoopLabaRugiInfo } from '../../../../utils/financeAxios/financeCoopReport';
 
 const RootStyle = styled(Card)(({ theme }) => ({
   '& .apexcharts-legend': {
@@ -49,11 +50,14 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
       const currentPeriodString =
         props.dateValue.getFullYear() + '-' + (props.dateValue.getMonth() + 1) + '-1';
       const currentCoopLabaRugiData = await handleGetCoopLabaRugiInfo(currentPeriodString);
-      const series = [
-        currentCoopLabaRugiData.biayaSisaHasilUsaha,
-        currentCoopLabaRugiData.biayaOperasi
-      ];
-      setChartData(series);
+      if (currentCoopLabaRugiData) {
+        const series = [
+          currentCoopLabaRugiData.biayaSisaHasilUsaha,
+          currentCoopLabaRugiData.biayaOperasi
+        ];
+
+        setChartData(series);
+      }
     };
     fetchData();
   }, [props.dateValue]);
@@ -62,14 +66,17 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
     <RootStyle>
       <CardHeader title="Expenses Categories" />
 
-      <Box sx={{ my: 5 }} dir="ltr">
-        <ReactApexChart
-          options={chartOptions}
-          series={chartData}
-          type="pie"
-          height={isMobile ? 360 : 240}
-        />
-      </Box>
+      <Scrollbar>
+        <Box dir="ltr">
+          <ReactApexChart
+            options={chartOptions}
+            series={chartData}
+            type="pie"
+            height={isMobile ? 240 : 250}
+            width={isMobile ? 700 : 800}
+          />
+        </Box>
+      </Scrollbar>
 
       <Divider />
     </RootStyle>

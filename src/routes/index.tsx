@@ -275,10 +275,33 @@ export default function Router() {
             },
             { path: 'report', element: <TransactionsReport /> },
             { path: 'create-disbursement-request', element: <DisbursementRequest /> },
-            { path: 'register-deprecation', element: <DeprecationRegister /> },
             {
               path: 'add-simpanan-sukarela',
               element: <AddSimpananSukarela />
+            },
+            {
+              path: 'register-deprecation',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DeprecationRegister />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'register-repair',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <RepairRegister />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'register-equipment',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <EquipmentRegister />
+                </RoleBasedGuard>
+              )
             }
           ]
         },
@@ -455,6 +478,8 @@ const DisbursementRequestList = Loadable(
 );
 const DisbursementRequest = Loadable(lazy(() => import('../pages/dashboard/DisbursementRequest')));
 const DeprecationRegister = Loadable(lazy(() => import('../pages/dashboard/DeprecationRegister')));
+const RepairRegister = Loadable(lazy(() => import('../pages/dashboard/RepairRegister')));
+const EquipmentRegister = Loadable(lazy(() => import('../pages/dashboard/EquipmentRegister')));
 const AddSimpananSukarela = Loadable(lazy(() => import('../pages/dashboard/AddSimpananSukarela')));
 // Main
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));

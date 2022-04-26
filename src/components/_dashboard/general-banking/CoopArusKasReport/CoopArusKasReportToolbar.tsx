@@ -12,11 +12,9 @@ import { ExportToExcel } from 'components/ExportToExcel';
 import { Stack } from '@mui/material';
 
 type CoopArusKasData = {
-  id: number;
-  periode: string;
   jumlahKasAwal: number;
   kasMasuk: number;
-  kasCair: number;
+  kasKeluar: number;
   jumlahKasAkhir: number;
 };
 
@@ -30,7 +28,7 @@ export default function CoopArusKasReportToolbar(props: {
       let sheetData = [
         { No: '1', Komponen: 'Jumlah Kas Awal', Jumlah: props.coopArusKasData.jumlahKasAwal },
         { No: '2', Komponen: 'Kas Masuk', Jumlah: props.coopArusKasData.kasMasuk },
-        { No: '3', Komponen: 'Kas Cair', Jumlah: props.coopArusKasData.kasCair },
+        { No: '3', Komponen: 'Kas Keluar', Jumlah: props.coopArusKasData.kasKeluar },
         { No: '', Komponen: 'Jumlah Kas Akhir', Jumlah: props.coopArusKasData.jumlahKasAkhir }
       ];
 

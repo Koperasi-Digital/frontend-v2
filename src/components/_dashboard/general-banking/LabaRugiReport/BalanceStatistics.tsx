@@ -3,11 +3,12 @@ import ReactApexChart from 'react-apexcharts';
 // material
 import { useTheme } from '@mui/material/styles';
 import { Card, CardHeader, Box } from '@mui/material';
+import Scrollbar from 'components/Scrollbar';
 
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 
-import { handleGetLabaRugiInfo } from '../../../../utils/financeReport';
+import { handleGetLabaRugiInfo } from '../../../../utils/financeAxios/financeReport';
 
 // hooks
 import useAuth from 'hooks/useAuth';
@@ -61,7 +62,6 @@ export default function BalanceStatistics(props: { dateValue: Date }) {
   };
 
   useEffect(() => {
-    console.log('Masuk useeffect sini');
     const handleSetChartData = async () => {
       if (user) {
         let month = props.dateValue.getMonth();
@@ -75,8 +75,15 @@ export default function BalanceStatistics(props: { dateValue: Date }) {
           if (i <= month) {
             let periodeString = props.dateValue.getFullYear() + '-' + (i + 1) + '-1';
             const labaRugiInfo = await handleGetLabaRugiInfo(user.id, periodeString);
-            incomeArray.push(labaRugiInfo.jumlahPenjualan);
-            expenseArray.push(labaRugiInfo.biayaProduksiProdukTerjual + labaRugiInfo.biayaOperasi);
+            if (labaRugiInfo) {
+              incomeArray.push(labaRugiInfo.jumlahPenjualan + labaRugiInfo.sisaHasilUsaha);
+              expenseArray.push(
+                labaRugiInfo.biayaProduksiProdukTerjual +
+                  labaRugiInfo.biayaSimpananPokok +
+                  labaRugiInfo.biayaSimpananWajib +
+                  labaRugiInfo.biayaOperasi
+              );
+            }
           } else {
             incomeArray.push(0);
             expenseArray.push(0);
@@ -94,13 +101,18 @@ export default function BalanceStatistics(props: { dateValue: Date }) {
   return (
     <>
       <Card>
-        <CardHeader
-          title="Balance Statistics"
-          subheader="(+43% Income | +12% Expense) than last year"
-        />
-        <Box sx={{ mt: 3, mx: 3 }} dir="ltr">
-          <ReactApexChart type="bar" series={chartData} options={chartOptions} height={364} />
-        </Box>
+        <CardHeader title="Balance Statistics" />
+        <Scrollbar>
+          <Box dir="ltr">
+            <ReactApexChart
+              type="bar"
+              series={chartData}
+              options={chartOptions}
+              height={364}
+              width={900}
+            />
+          </Box>
+        </Scrollbar>
       </Card>
     </>
   );

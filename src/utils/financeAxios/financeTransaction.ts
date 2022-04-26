@@ -1,4 +1,4 @@
-import axios from './axios';
+import axios from '../axios';
 
 type transaction_details = {
   order_id: number;

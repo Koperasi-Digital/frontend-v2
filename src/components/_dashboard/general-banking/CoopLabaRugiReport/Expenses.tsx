@@ -35,8 +35,6 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 }));
 
 type CoopLabaRugiData = {
-  id: number;
-  periode: string;
   jumlahSimpananPokok: number;
   jumlahSimpananWajib: number;
   jumlahBiayaLayanan: number;

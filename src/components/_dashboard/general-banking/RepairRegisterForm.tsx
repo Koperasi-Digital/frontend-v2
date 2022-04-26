@@ -5,66 +5,34 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, TextField } from '@mui/material';
 
-import { useState, useEffect } from 'react';
-import {
-  handleGetCoopNeracaInfo,
-  handleRegisterKerusakanAlat
-} from 'utils/financeAxios/financeCoopReport';
+import { handleRegisterEquipmentRepairment } from 'utils/financeAxios/financeCoopReport';
 import { fCurrency } from 'utils/formatNumber';
 
-type CoopNeracaData = {
-  kas: number;
-  asetTetap: number;
-  aset: number;
-  saldoMember: number;
-  simpananSukarela: number;
-  liabilitas: number;
-  pendapatan: number;
-  modal: number;
-  beban: number;
-  ekuitas: number;
-};
-
-export default function DeprecationRegisterForm() {
+export default function RepairRegisterForm() {
   const { enqueueSnackbar } = useSnackbar();
-
-  const [coopNeracaData, setCoopNeracaData] = useState<CoopNeracaData | undefined>();
 
   const periode = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-1';
 
-  const DeprecationRegisterSchema = Yup.object().shape({
+  const RepairRegisterSchema = Yup.object().shape({
     amount: Yup.number()
       .required()
       .min(0, `Jumlah Minimum ${fCurrency(0)}`)
-      .max(
-        coopNeracaData ? coopNeracaData.asetTetap : 0,
-        `Jumlah maksimum ${fCurrency(coopNeracaData ? coopNeracaData.asetTetap : 0)}`
-      )
   });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setCoopNeracaData(await handleGetCoopNeracaInfo(periode));
-    };
-    fetchData();
-  }, [periode]);
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       amount: ''
     },
-    validationSchema: DeprecationRegisterSchema,
+    validationSchema: RepairRegisterSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        if (coopNeracaData) {
-          await handleRegisterKerusakanAlat(Number(values.amount), periode);
-          enqueueSnackbar('Pendaftaran kerusakan peralatan koperasi berhasil', {
-            variant: 'success'
-          });
-          resetForm();
-          setSubmitting(false);
-        }
+        await handleRegisterEquipmentRepairment(Number(values.amount), periode);
+        enqueueSnackbar('Pendaftaran perbaikan peralatan koperasi berhasil', {
+          variant: 'success'
+        });
+        resetForm();
+        setSubmitting(false);
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -99,9 +67,8 @@ export default function DeprecationRegisterForm() {
               variant="contained"
               size="large"
               loading={isSubmitting}
-              disabled={!coopNeracaData}
             >
-              {coopNeracaData ? 'Daftarkan Kerusakan Peralatan' : 'Loading'}
+              Daftarkan Perbaikan Peralatan
             </LoadingButton>
           </Grid>
         </Grid>

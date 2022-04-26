@@ -30,6 +30,7 @@ export type Product = {
   sku: string;
   name: string;
   price: number;
+  productionCost: number;
   category: ProductCategory;
   available: number;
   cover: string;
@@ -89,6 +90,7 @@ export type ProductFormikProps = {
   category: string;
   price: string | number;
   available: string | number;
+  productionCost: string | number;
   cover: string;
   description: string;
   status: string;
@@ -101,6 +103,7 @@ export type ProductFormikRaw = {
   category: string;
   price: string | number;
   available: string | number;
+  productionCost: string | number;
   cover: File | any;
   description: string;
   status: string;

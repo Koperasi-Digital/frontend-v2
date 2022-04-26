@@ -9,14 +9,17 @@ import { Card, Grid, Stack, TextField, Typography, FormHelperText } from '@mui/m
 // utils
 import { UploadSingleFile } from '../../upload';
 
-import { handleEditReimbursement, handleShowOneReimbursement } from 'utils/financeReimbursement';
-import { handleCreateCoopTransaction } from 'utils/financeCoopTransaction';
-import { handleEditSaldo } from 'utils/financeSaldo';
-import { handleEditSimpananSukarela } from 'utils/financeSimpanan';
+import {
+  handleEditReimbursement,
+  handleShowOneReimbursement
+} from 'utils/financeAxios/financeReimbursement';
+import { handleCreateCoopTransaction } from 'utils/financeAxios/financeCoopTransaction';
+import { handleEditSaldo } from 'utils/financeAxios/financeSaldo';
+import { handleEditSimpananSukarela } from 'utils/financeAxios/financeSimpanan';
 
 import { handleUploadFile } from 'utils/bucket';
 
-import { handlePencairanSaldoNeraca, handlePencairanSaldoArusKas } from 'utils/financeReport';
+import { handlePencairanDana } from 'utils/financeAxios/financeReport';
 
 // ----------------------------------------------------------------------
 
@@ -79,16 +82,14 @@ export default function DisbursementApprovalForm() {
         );
 
         const currentPeriode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
-        const neracaReportEdited = await handlePencairanSaldoNeraca(
+
+        const financeReportInput = await handlePencairanDana(
           reimbursement.user.id,
           currentPeriode,
-          reimbursement.total_cost
+          reimbursement.total_cost,
+          reimbursement.type
         );
-        const arusKasReportEdited = await handlePencairanSaldoArusKas(
-          reimbursement.user.id,
-          currentPeriode,
-          reimbursement.total_cost
-        );
+
         resetForm();
         setSubmitting(false);
         if (
@@ -96,8 +97,7 @@ export default function DisbursementApprovalForm() {
           (editedSaldo || editedSimpananSukarela) &&
           createdCoopTransaction &&
           uploadFileMessage &&
-          neracaReportEdited &&
-          arusKasReportEdited
+          financeReportInput
         ) {
           enqueueSnackbar('Create success', { variant: 'success' });
         } else {

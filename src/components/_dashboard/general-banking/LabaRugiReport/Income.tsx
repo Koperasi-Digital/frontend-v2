@@ -35,11 +35,11 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 }));
 
 type LabaRugiData = {
-  id: number;
-  user_id: number;
-  periode: string;
   jumlahPenjualan: number;
+  sisaHasilUsaha: number;
   biayaProduksiProdukTerjual: number;
+  biayaSimpananPokok: number;
+  biayaSimpananWajib: number;
   biayaOperasi: number;
   net: number;
 };
@@ -79,7 +79,9 @@ export default function Income(props: {
           <Stack spacing={1} sx={{ p: 3 }}>
             <Typography sx={{ typography: 'subtitle2' }}>Income</Typography>
             <Typography sx={{ typography: 'h3' }}>
-              {fCurrency(props.currentLabaRugiData.jumlahPenjualan)}
+              {fCurrency(
+                props.currentLabaRugiData.jumlahPenjualan + props.currentLabaRugiData.sisaHasilUsaha
+              )}
             </Typography>
             <Stack direction="row" alignItems="center" flexWrap="wrap">
               <Icon
@@ -101,8 +103,9 @@ export default function Income(props: {
             series={[
               {
                 data: [
-                  props.prevLabaRugiData.jumlahPenjualan,
-                  props.currentLabaRugiData.jumlahPenjualan
+                  props.prevLabaRugiData.jumlahPenjualan + props.prevLabaRugiData.sisaHasilUsaha,
+                  props.currentLabaRugiData.jumlahPenjualan +
+                    props.currentLabaRugiData.sisaHasilUsaha
                 ]
               }
             ]}

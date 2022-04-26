@@ -26,9 +26,12 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { Product, ProductFormikRaw } from '../../../@types/products';
 //
 import { QuillEditor } from '../../editor';
+// import addProduct from 'utils/products';
+
 import { UploadSingleFile } from '../../upload';
 import { addProduct, editProduct } from 'redux/slices/product';
 import { dispatch } from 'redux/store';
+
 import useAuth from 'hooks/useAuth';
 import { handleUploadFile } from 'utils/bucket';
 import { fTimestamp } from 'utils/formatTime';
@@ -61,6 +64,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
     description: Yup.string().required('Description is required'),
     images: Yup.array().min(1, 'Images is required'),
     price: Yup.number().required('Price is required'),
+    productionCost: Yup.number().required('Production cost is required'),
     available: Yup.number().required('Quantity is required')
   });
 
@@ -73,6 +77,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
       name: currentProduct?.name || '',
       category: currentProduct?.category || CATEGORY_OPTION[0],
       price: currentProduct?.price || '',
+      productionCost: currentProduct?.productionCost || '',
       available: currentProduct?.available || '',
       description: currentProduct?.description || '',
       status: currentProduct?.status || 'Active',
@@ -89,13 +94,17 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
         );
         console.log(uploadFileMessage);
         if (isEdit) {
+          let prevProductionCost = currentProduct ? currentProduct.productionCost : 0;
+          let prevAvailable = currentProduct ? currentProduct.available : 0;
           dispatch(
             editProduct(
               {
                 ...values,
                 cover: uploadFileMessage
               },
-              product_id
+              product_id,
+              prevProductionCost,
+              prevAvailable
             )
           );
         } else {
@@ -243,6 +252,18 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                     }}
                     error={Boolean(touched.price && errors.price)}
                     helperText={touched.price && errors.price}
+                  />
+                  <TextField
+                    fullWidth
+                    placeholder="0"
+                    label="Production Cost"
+                    {...getFieldProps('productionCost')}
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+                      type: 'number'
+                    }}
+                    error={Boolean(touched.productionCost && errors.productionCost)}
+                    helperText={touched.productionCost && errors.productionCost}
                   />
                 </Stack>
               </Card>

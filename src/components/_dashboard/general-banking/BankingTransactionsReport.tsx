@@ -47,8 +47,8 @@ import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
-import { handleShowTransaction } from 'utils/financeTransaction';
-import { handleShowCoopTransaction } from 'utils/financeCoopTransaction';
+import { handleShowTransaction } from 'utils/financeAxios/financeTransaction';
+import { handleShowCoopTransaction } from 'utils/financeAxios/financeCoopTransaction';
 import useAuth from 'hooks/useAuth';
 
 type AvatarIconProps = {

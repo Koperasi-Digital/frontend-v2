@@ -125,7 +125,6 @@ export default function ProductDetailsSummary({
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
         let subtotal = values.price * values.quantity;
-        console.log(subtotal);
         if (!alreadyProduct) {
           onAddCart({
             ...values,
@@ -148,15 +147,17 @@ export default function ProductDetailsSummary({
   const { values, touched, errors, getFieldProps, handleSubmit } = formik;
 
   const handleAddCart = async () => {
+    // TODO: change this dummy product_id, shipment_id, and shipment_price
     try {
       onAddCart({
         ...values,
         subtotal: values.price * values.quantity,
         seller_id: seller.id,
         store_name: storeName,
-        shipment_id: null,
-        shipment_price: null
+        shipment_id: 1,
+        shipment_price: 10000
       });
+      // TODO: END OF TODO
     } catch (error) {
       console.error(error);
     }
