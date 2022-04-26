@@ -25,6 +25,36 @@ export async function handleGetNeracaInfo(userId: number, periode: string) {
   }
 }
 
+export async function handleGetAnnualNeracaInfo() {
+  try {
+    const response = await axios.get('laporan-neraca/get-annual-data');
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
+export async function handleGetAnnualArusKasInfo() {
+  try {
+    const response = await axios.get('laporan-arus-kas/get-annual-data');
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
+export async function handleGetAnnualLabaRugiInfo() {
+  try {
+    const response = await axios.get('laporan-laba-rugi/get-annual-data');
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
 export async function handleAwalPeriodeNeraca(userId: number, periode: string, kasAwal: number) {
   try {
     await axios.post('laporan-neraca/edit', {

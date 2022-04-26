@@ -1,10 +1,16 @@
 import { merge } from 'lodash';
-import { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 // material
 import { Card, CardHeader, Box, TextField } from '@mui/material';
 //
 import { BaseOptionChart } from '../../../charts';
+import {
+  handleGetAnnualNeracaInfo,
+  handleGetAnnualArusKasInfo,
+  handleGetAnnualLabaRugiInfo
+} from 'utils/financeAxios/financeReport';
+
+import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -12,15 +18,15 @@ const CHART_DATA = [
   {
     year: 2019,
     data: [
-      { name: 'Total Income', data: [10, 41, 35, 151, 49, 62, 69, 91, 48] },
-      { name: 'Total Expenses', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] }
+      { name: 'Total Penjualan', data: [10, 41, 35, 151, 49, 62, 69, 91, 48] },
+      { name: 'Total Biaya Modal', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] }
     ]
   },
   {
     year: 2020,
     data: [
-      { name: 'Total Income', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
-      { name: 'Total Expenses', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] }
+      { name: 'Total Penjualan', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
+      { name: 'Total Biaya Modal', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] }
     ]
   }
 ];
