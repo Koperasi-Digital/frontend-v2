@@ -180,6 +180,14 @@ export default function Router() {
           )
         },
         {
+          path: 'course/edit/:id',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN']}>
+              <CourseEditPost />
+            </RoleBasedGuard>
+          )
+        },
+        {
           path: 'course/:courseId/edit/:order',
           element: (
             <RoleBasedGuard accessibleRoles={['ADMIN']}>
@@ -394,6 +402,7 @@ const CoursePage = Loadable(lazy(() => import('../pages/dashboard/CoursePage')))
 const CourseList = Loadable(lazy(() => import('../pages/dashboard/CourseList')));
 const CourseNewPost = Loadable(lazy(() => import('../pages/dashboard/CourseNewPost')));
 const CourseNewItem = Loadable(lazy(() => import('../pages/dashboard/CourseNewItem')));
+const CourseEditPost = Loadable(lazy(() => import('../pages/dashboard/CourseEditPost')));
 const CourseEditItem = Loadable(lazy(() => import('../pages/dashboard/CourseEditItem')));
 const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
 const FAQ = Loadable(lazy(() => import('../pages/dashboard/FAQ')));

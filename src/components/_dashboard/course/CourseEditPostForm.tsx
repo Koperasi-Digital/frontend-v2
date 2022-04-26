@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { useCallback } from 'react';
 import { useSnackbar } from 'notistack';
 import { useFormik, Form, FormikProvider } from 'formik';
 // material
@@ -8,11 +9,13 @@ import { useDispatch } from '../../../redux/store';
 import { Grid, Card, Stack, TextField, Typography, FormHelperText } from '@mui/material';
 // utils
 // @types
-import { NewPostItemFormValues } from '../../../@types/course';
+import { NewPostFormValues } from '../../../@types/course';
 //
-import { QuillEditor } from '../../editor';
-import { editCourseItem } from 'redux/slices/course';
-import { CourseItemPost } from '../../../@types/course';
+import { UploadSingleFile } from '../../upload';
+import { editCourse } from 'redux/slices/course';
+import { handleUploadFile } from 'utils/bucket';
+import { fTimestamp } from 'utils/formatTime';
+import { CourseDetailState } from '../../../@types/course';
 
 // ----------------------------------------------------------------------
 
@@ -24,44 +27,60 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-type CourseEditItemProps = {
-  post: CourseItemPost;
+type CourseEditPostProps = {
+  post: CourseDetailState;
+  id: string;
 };
 
-export default function CourseEditItemForm({ post }: CourseEditItemProps) {
+export default function CourseEditPostForm({ post, id }: CourseEditPostProps) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
   const NewCourseSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
-    content: Yup.string().min(100).required('Content is required')
+    cover: Yup.mixed().required('Cover is required')
   });
 
-  const formik = useFormik<NewPostItemFormValues>({
+  const formik = useFormik<NewPostFormValues>({
     initialValues: {
-      title: post?.course.title || '',
-      description: post?.course.description || '',
-      content: post?.course.body || ''
+      title: post.title || '',
+      description: post.description || '',
+      cover: post.cover || null
     },
     validationSchema: NewCourseSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
+        const uploadFileMessage = await handleUploadFile(
+          values.cover,
+          'course',
+          values.cover.path + fTimestamp(new Date())
+        );
         await dispatch(
-          editCourseItem(parseInt(post.course.id), values.title, values.description, values.content)
+          editCourse(parseInt(id), values.title, values.description, uploadFileMessage)
         );
         setSubmitting(false);
-        enqueueSnackbar('Edit Course Item success', { variant: 'success' });
+        enqueueSnackbar('Edit Course success', { variant: 'success' });
       } catch (error) {
         console.error(error);
         setSubmitting(false);
-        enqueueSnackbar('Edit Course Item failed', { variant: 'error' });
+        enqueueSnackbar('Edit Course failed', { variant: 'error' });
       }
     }
   });
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } =
     formik;
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      if (file) {
+        setFieldValue('cover', Object.assign(file, { preview: URL.createObjectURL(file) }));
+      }
+    },
+    [setFieldValue]
+  );
 
   return (
     <>
@@ -89,17 +108,19 @@ export default function CourseEditItemForm({ post }: CourseEditItemProps) {
                     error={Boolean(touched.description && errors.description)}
                     helperText={touched.description && errors.description}
                   />
+
                   <div>
-                    <LabelStyle>Konten Course</LabelStyle>
-                    <QuillEditor
-                      id="post-content"
-                      value={values.content}
-                      onChange={(val) => setFieldValue('content', val)}
-                      error={Boolean(touched.content && errors.content)}
+                    <LabelStyle>Cover</LabelStyle>
+                    <UploadSingleFile
+                      maxSize={3145728}
+                      accept="image/*"
+                      file={values.cover}
+                      onDrop={handleDrop}
+                      error={Boolean(touched.cover && errors.cover)}
                     />
-                    {touched.content && errors.content && (
-                      <FormHelperText error sx={{ px: 2, textTransform: 'capitalize' }}>
-                        {touched.content && errors.content}
+                    {touched.cover && errors.cover && (
+                      <FormHelperText error sx={{ px: 2 }}>
+                        {touched.cover && errors.cover}
                       </FormHelperText>
                     )}
                   </div>

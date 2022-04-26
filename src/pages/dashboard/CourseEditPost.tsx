@@ -5,46 +5,41 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { CourseEditItemForm } from '../../components/_dashboard/course';
+import { CourseEditPostForm } from '../../components/_dashboard/course';
 import { useParams } from 'react-router-dom';
 import { RootState, useDispatch, useSelector } from '../../redux/store';
-import { getCourseItemById } from '../../redux/slices/course';
+import { getCourseById } from '../../redux/slices/course';
 import { useEffect } from 'react';
 import { Typography, Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-export default function CourseEditItem() {
+export default function CourseEditPost() {
   const dispatch = useDispatch();
-  const { courseId = '', order = '' } = useParams();
-  const { coursePost, refresh } = useSelector((state: RootState) => state.course);
+  const { id = '' } = useParams();
+  const { course } = useSelector((state: RootState) => state.course);
 
   useEffect(() => {
-    if (parseInt(order) > 0 && parseInt(courseId)) {
-      dispatch(getCourseItemById(parseInt(courseId), parseInt(order)));
+    if (parseInt(id) > 0) {
+      dispatch(getCourseById(parseInt(id)));
     }
-  }, [dispatch, courseId, order, refresh]);
-
+  }, [dispatch, id]);
   return (
-    <Page title="Edit Course Item | CoopChick">
+    <Page title="Edit Course | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Edit course item"
+          heading="Edit course"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Course List',
               href: PATH_DASHBOARD.general.courseList
             },
-            {
-              name: coursePost ? coursePost.courseParentTitle : 'Title',
-              href: `${PATH_DASHBOARD.general.course}/${courseId}`
-            },
-            { name: 'Edit Course Item' }
+            { name: 'Edit course' }
           ]}
         />
-        {coursePost != null ? (
-          <CourseEditItemForm post={coursePost} />
+        {course != null ? (
+          <CourseEditPostForm post={course} id={id} />
         ) : (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Typography variant="h6">Course not found</Typography>

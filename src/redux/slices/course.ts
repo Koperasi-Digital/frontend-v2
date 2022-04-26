@@ -216,6 +216,19 @@ export function deleteCourse(courseId: number) {
   };
 }
 
+export function editCourse(id: number, title: string, description: string, cover: string) {
+  return async () => {
+    const { dispatch } = store;
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.patch(`course/${id}`, { title, description, cover });
+      dispatch(slice.actions.editCourseItemSuccess());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+}
+
 export function editCourseItem(id: number, title: string, description: string, body: string) {
   return async () => {
     const { dispatch } = store;

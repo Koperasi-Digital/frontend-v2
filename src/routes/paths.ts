@@ -48,6 +48,7 @@ export const PATH_DASHBOARD = {
     courseList: path(ROOTS_DASHBOARD, '/course/list'),
     courseNewPost: path(ROOTS_DASHBOARD, '/course/create-course'),
     courseNewItem: path(ROOTS_DASHBOARD, '/course/:id/create-item'),
+    courseEditPost: path(ROOTS_DASHBOARD, '/course/edit/:id'),
     courseEditItem: path(ROOTS_DASHBOARD, '/course/:courseId/edit/:order')
   },
   chat: {
