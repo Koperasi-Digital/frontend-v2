@@ -27,10 +27,7 @@ import { Product, ProductFormikRaw } from '../../../@types/products';
 //
 import { QuillEditor } from '../../editor';
 // import addProduct from 'utils/products';
-import { handleAddProductReport } from 'utils/financeAxios/financeReport';
 
-import { fCurrency } from 'utils/formatNumber';
-import { createNotification } from 'redux/slices/notification';
 import { UploadSingleFile } from '../../upload';
 import { addProduct, editProduct } from 'redux/slices/product';
 import { dispatch } from 'redux/store';
@@ -60,8 +57,6 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
-
-  const userId = user?.id;
 
   const NewProductSchema = Yup.object().shape({
     sku: Yup.string().required('SKU is required'),
@@ -99,13 +94,17 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
         );
         console.log(uploadFileMessage);
         if (isEdit) {
+          let prevProductionCost = currentProduct ? currentProduct.productionCost : 0;
+          let prevAvailable = currentProduct ? currentProduct.available : 0;
           dispatch(
             editProduct(
               {
                 ...values,
                 cover: uploadFileMessage
               },
-              product_id
+              product_id,
+              prevProductionCost,
+              prevAvailable
             )
           );
         } else {

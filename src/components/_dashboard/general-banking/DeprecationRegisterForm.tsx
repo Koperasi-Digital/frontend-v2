@@ -11,7 +11,6 @@ import {
   handleRegisterKerusakanAlat
 } from 'utils/financeAxios/financeCoopReport';
 import { fCurrency } from 'utils/formatNumber';
-import { createNotification } from 'redux/slices/notification';
 
 type CoopNeracaData = {
   kas: number;

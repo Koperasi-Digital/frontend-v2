@@ -4,13 +4,13 @@ import ReactApexChart from 'react-apexcharts';
 import { Card, CardHeader, Box, TextField } from '@mui/material';
 //
 import { BaseOptionChart } from '../../../charts';
-import {
-  handleGetAnnualNeracaInfo,
-  handleGetAnnualArusKasInfo,
-  handleGetAnnualLabaRugiInfo
-} from 'utils/financeAxios/financeReport';
+// import {
+//   handleGetAnnualNeracaInfo,
+//   handleGetAnnualArusKasInfo,
+//   handleGetAnnualLabaRugiInfo
+// } from 'utils/financeAxios/financeReport';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 

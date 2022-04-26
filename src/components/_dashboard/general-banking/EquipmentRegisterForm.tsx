@@ -14,8 +14,6 @@ import {
   TextField
 } from '@mui/material';
 
-import { fCurrency } from 'utils/formatNumber';
-import { createNotification } from 'redux/slices/notification';
 import { handleRegisterNewEquipment } from 'utils/financeAxios/financeCoopReport';
 
 export default function EquipmentRegisterForm() {

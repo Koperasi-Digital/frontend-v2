@@ -7,7 +7,6 @@ import { Card, Grid, Stack, TextField } from '@mui/material';
 
 import { handleRegisterEquipmentRepairment } from 'utils/financeAxios/financeCoopReport';
 import { fCurrency } from 'utils/formatNumber';
-import { createNotification } from 'redux/slices/notification';
 
 export default function RepairRegisterForm() {
   const { enqueueSnackbar } = useSnackbar();

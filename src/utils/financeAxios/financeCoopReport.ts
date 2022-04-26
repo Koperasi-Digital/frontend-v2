@@ -1,7 +1,5 @@
 import axios from '../axios';
 
-import { CoopNeracaData, CoopLabaRugiData, CoopArusKasData } from '../../@types/finance-report';
-
 export async function handleGetCoopNeracaInfo(periode: string) {
   try {
     const response = await axios.get('coop-laporan-neraca/' + periode);
