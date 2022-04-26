@@ -2,7 +2,7 @@ import { isString } from 'lodash';
 // material
 import { LoadingButton } from '@mui/lab';
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Button, Container, Typography, DialogActions } from '@mui/material';
+import { Box, Button, Container, Typography, DialogActions, Divider, Chip } from '@mui/material';
 // @types
 import { NewPostViewFormikInstance } from '../../../@types/blog';
 //
@@ -70,7 +70,7 @@ export default function BlogNewPostPreview({
   onClosePreview
 }: BlogNewPostPreviewProps) {
   const { values, handleSubmit, isSubmitting, isValid } = formik;
-  const { title, description, content } = values;
+  const { title, description, content, tags } = values;
   const cover = isString(values.cover) ? values.cover : values.cover?.preview;
   const hasContent = title || description || content || cover;
   const hasHero = title || cover;
@@ -101,6 +101,12 @@ export default function BlogNewPostPreview({
                 {description}
               </Typography>
               <Markdown children={content} />
+              <Box sx={{ my: 5 }}>
+                <Divider />
+                <Box sx={{ py: 3 }}>
+                  {tags ? tags.map((tag) => <Chip key={tag} label={tag} sx={{ m: 0.5 }} />) : null}
+                </Box>
+              </Box>
             </Box>
           </Container>
         </Scrollbar>

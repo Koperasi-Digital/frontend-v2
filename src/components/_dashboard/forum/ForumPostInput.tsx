@@ -4,13 +4,28 @@ import { useDispatch } from '../../../redux/store';
 import { createForum } from '../../../redux/slices/forum';
 import { useSnackbar } from 'notistack';
 import roundAddPhotoAlternate from '@iconify/icons-ic/round-add-photo-alternate';
+import closeOutline from '@iconify/icons-eva/close-fill';
 // material
 import { Box, Card, Button, TextField, IconButton, Stack } from '@mui/material';
 import useAuth from '../../../hooks/useAuth';
 import { handleUploadFile } from 'utils/bucket';
 import { fTimestamp } from 'utils/formatTime';
+import { styled } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
+
+const CardMediaStyle = styled('div')(({ theme }) => ({
+  position: 'relative',
+  paddingTop: 'calc(100% * 3 / 4)'
+}));
+
+const CoverImgStyle = styled('img')(({ theme }) => ({
+  top: 0,
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  position: 'absolute'
+}));
 
 export default function ForumPostInput() {
   const { user } = useAuth();
@@ -35,7 +50,7 @@ export default function ForumPostInput() {
   const postForum = async () => {
     try {
       let uploadFileMessage = '';
-      if (image) {
+      if (image && preview) {
         uploadFileMessage = await handleUploadFile(
           image,
           'forum',
@@ -47,6 +62,7 @@ export default function ForumPostInput() {
       setTopic('');
       setMessage('');
       setImage(undefined);
+      fileInputRef!.current!.value = '';
       setPreview('');
     } catch (err) {
       console.error(err);
@@ -60,6 +76,12 @@ export default function ForumPostInput() {
     } else {
       postForum();
     }
+  };
+
+  const handleClosePreview = () => {
+    setPreview('');
+    setImage(undefined);
+    fileInputRef!.current!.value = '';
   };
 
   return (
@@ -107,16 +129,32 @@ export default function ForumPostInput() {
               <Icon icon={roundAddPhotoAlternate} width={24} height={24} />
             </IconButton>
           </Box>
-          <Box
-            component="img"
-            alt="preview"
-            src={preview}
+          <Card
             sx={{
-              height: 100,
+              width: 150,
               borderRadius: 1,
               visibility: preview ? undefined : 'hidden'
             }}
-          />
+          >
+            <CardMediaStyle>
+              <IconButton
+                sx={{
+                  bgcolor: 'background.paper',
+                  zIndex: 9,
+                  width: 28,
+                  height: 28,
+                  position: 'absolute',
+                  top: 10,
+                  right: 10
+                }}
+                onClick={() => handleClosePreview()}
+              >
+                <Icon icon={closeOutline} />
+              </IconButton>
+
+              <CoverImgStyle alt={'preview'} src={preview} />
+            </CardMediaStyle>
+          </Card>
         </Stack>
         <Button onClick={() => handlePostForum()} variant="contained">
           Post
