@@ -148,6 +148,7 @@ export default function OrderDetailsSummary({
     ['Tanggal Pemesanan', fDateTime(order.timestamp)],
     ['Nama Produk', product.name],
     ['Nama Toko', product.store.name],
+    ['Nama Pembeli', order.user.displayName],
     ['Jumlah', quantity],
     ['Total', fCurrency(subtotal)],
     ['Status', status]

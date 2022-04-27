@@ -53,8 +53,7 @@ const sidebarConfig = [
           {
             title: 'order history',
             path: PATH_DASHBOARD.eCommerce.orderHistory
-          },
-          { title: 'manage orders', path: PATH_DASHBOARD.eCommerce.orderList }
+          }
         ]
       },
       {
@@ -133,7 +132,8 @@ const sidebarConfig = [
         accessibleRoles: ['MEMBER'],
         children: [
           { title: 'seller', path: PATH_DASHBOARD.eCommerce.seller.center },
-          { title: 'manage products', path: PATH_DASHBOARD.eCommerce.seller.list }
+          { title: 'manage products', path: PATH_DASHBOARD.eCommerce.seller.list },
+          { title: 'manage orders', path: PATH_DASHBOARD.eCommerce.orderList }
         ]
       },
       // MANAGEMENT: KNOWLEDGE
