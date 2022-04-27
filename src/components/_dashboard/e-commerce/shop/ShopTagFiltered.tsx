@@ -75,7 +75,7 @@ export default function ShopTagFiltered({
 
   const handleRemoveCategory = () => {
     handleSubmit();
-    setFieldValue('category', 'Semua');
+    setFieldValue('category', '');
   };
 
   const handleRemovePrice = () => {
@@ -102,7 +102,7 @@ export default function ShopTagFiltered({
         </WrapperStyle>
       )}
 
-      {category !== 'All' && (
+      {category !== '' && (
         <WrapperStyle>
           <LabelStyle>Category:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>

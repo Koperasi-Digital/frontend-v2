@@ -12,20 +12,24 @@ import { ProductState } from '../../../../@types/products';
 
 // ----------------------------------------------------------------------
 
-const SORT_BY_OPTIONS = [
-  { value: 'newest', label: 'Newest' },
-  { value: 'priceDesc', label: 'Price: High-Low' },
-  { value: 'priceAsc', label: 'Price: Low-High' }
+export const SORT_BY_OPTIONS = [
+  { value: 'oldest', label: 'Terlama' },
+  { value: 'newest', label: 'Terbaru' },
+  { value: 'priceDesc', label: 'Dari termahal' },
+  { value: 'priceAsc', label: 'Dari termurah' }
 ];
 
 function renderLabel(label: string | null) {
+  if (label === 'oldest') {
+    return 'Terlama';
+  }
   if (label === 'newest') {
-    return 'Newest';
+    return 'Terbaru';
   }
   if (label === 'priceDesc') {
-    return 'Price: High-Low';
+    return 'Dari termahal';
   }
-  return 'Price: Low-High';
+  return 'Dari termurah';
 }
 
 export default function ShopProductSort() {
