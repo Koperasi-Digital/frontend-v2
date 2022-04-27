@@ -1,17 +1,29 @@
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
-import { filter, orderBy } from 'lodash';
+import { Icon } from '@iconify/react';
+import searchFill from '@iconify/icons-eva/search-fill';
+
 // material
-import { Backdrop, Container, Typography, CircularProgress, Stack } from '@mui/material';
+import {
+  Backdrop,
+  Container,
+  Typography,
+  CircularProgress,
+  Stack,
+  InputAdornment,
+  Box,
+  styled,
+  OutlinedInput
+} from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getProducts, filterProducts } from '../../redux/slices/product';
+import { getProducts } from '../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // utils
 import fakeRequest from '../../utils/fakeRequest';
 // @types
-import { Product, ProductState, ProductFilter } from '../../@types/products';
+import { ProductState, ProductFilter } from '../../@types/products';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -25,45 +37,26 @@ import CartWidget from '../../components/_dashboard/e-commerce/CartWidget';
 
 // ----------------------------------------------------------------------
 
-function applyFilter(products: Product[], sortBy: string | null, filters: ProductFilter) {
-  // SORT BY
-  if (sortBy === 'newest') {
-    products = orderBy(products, ['created_at'], ['desc']);
+const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
+  width: 300,
+  transition: theme.transitions.create(['box-shadow', 'width'], {
+    easing: theme.transitions.easing.easeInOut,
+    duration: theme.transitions.duration.shorter
+  }),
+  '&.Mui-focused': { width: 320, boxShadow: theme.customShadows.z8 },
+  '& fieldset': {
+    borderWidth: `1px !important`,
+    borderColor: `${theme.palette.grey[500_32]} !important`
   }
-  if (sortBy === 'priceDesc') {
-    products = orderBy(products, ['price'], ['desc']);
-  }
-  if (sortBy === 'priceAsc') {
-    products = orderBy(products, ['price'], ['asc']);
-  }
-  // FILTER PRODUCTS
-  if (filters.category !== 'Semua') {
-    products = filter(products, (_product) => _product.category === filters.category);
-  }
-
-  if (filters.priceRange) {
-    products = filter(products, (_product) => {
-      if (filters.priceRange === 'below') {
-        return _product.price < 50000;
-      }
-      if (filters.priceRange === 'between') {
-        return _product.price >= 50000 && _product.price <= 100000;
-      }
-      return _product.price > 100000;
-    });
-  }
-
-  return products;
-}
+}));
 
 export default function EcommerceShop() {
   const dispatch = useDispatch();
   const [openFilter, setOpenFilter] = useState(false);
+  const [filterName, setFilterName] = useState('');
   const { products, sortBy, filters } = useSelector(
     (state: { product: ProductState }) => state.product
   );
-
-  const filteredProducts = applyFilter(products, sortBy, filters);
 
   const formik = useFormik<ProductFilter>({
     initialValues: {
@@ -84,15 +77,12 @@ export default function EcommerceShop() {
 
   const { values, resetForm, handleSubmit, isSubmitting, initialValues } = formik;
 
-  const isDefault = !values.priceRange && values.city.length === 0 && values.category === 'Semua';
+  const isDefault =
+    filterName === '' && !values.priceRange && values.city.length === 0 && values.category === '';
 
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(filterProducts(values));
-  }, [dispatch, values]);
+    dispatch(getProducts(values, filterName, sortBy));
+  }, [dispatch, values, filterName, sortBy]);
 
   const handleOpenFilter = () => {
     setOpenFilter(true);
@@ -105,6 +95,7 @@ export default function EcommerceShop() {
   const handleResetFilter = () => {
     handleSubmit();
     resetForm();
+    setFilterName('');
   };
 
   return (
@@ -131,7 +122,7 @@ export default function EcommerceShop() {
         {!isDefault && (
           <Typography gutterBottom>
             <Typography component="span" variant="subtitle1">
-              {filteredProducts.length}
+              {products.length}
             </Typography>
             &nbsp;Products found
           </Typography>
@@ -144,6 +135,17 @@ export default function EcommerceShop() {
           justifyContent="flex-end"
           sx={{ mb: 5 }}
         >
+          <SearchStyle
+            value={filterName}
+            onChange={(e) => setFilterName(e.target.value)}
+            placeholder="Cari produk..."
+            startAdornment={
+              <InputAdornment position="start">
+                <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
+              </InputAdornment>
+            }
+          />
+
           <ShopTagFiltered
             filters={filters}
             formik={formik}
@@ -164,7 +166,7 @@ export default function EcommerceShop() {
           </Stack>
         </Stack>
 
-        <ShopProductList products={filteredProducts} isLoad={!filteredProducts && !initialValues} />
+        <ShopProductList products={products} isLoad={!products && !initialValues} />
         <CartWidget />
       </Container>
     </Page>

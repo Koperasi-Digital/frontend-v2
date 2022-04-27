@@ -4,7 +4,13 @@ import { store } from '../store';
 // utils
 // import axiosMock from '../../utils/axiosMock';
 import axios from '../../utils/axios';
-import { CartItem, Product, ProductFormikProps, ProductState } from '../../@types/products';
+import {
+  CartItem,
+  Product,
+  ProductFilter,
+  ProductFormikProps,
+  ProductState
+} from '../../@types/products';
 
 import { handleAddEditProduct } from 'utils/financeAxios/financeReport';
 
@@ -18,7 +24,7 @@ const initialState: ProductState = {
   sortBy: null,
   filters: {
     city: [],
-    category: 'Semua',
+    category: '',
     priceRange: ''
   },
   checkout: {
@@ -226,12 +232,22 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getProducts() {
+export function getProducts(filter: ProductFilter, name: string | null, sortBy: string | null) {
   return async () => {
     const { dispatch } = store;
     dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.filterProducts(filter));
+    console.log(sortBy);
     try {
-      const response: { data: { payload: Product[] } } = await axios.get('/products/');
+      const response: { data: { payload: Product[] } } = await axios.get('/products/', {
+        params: {
+          name,
+          sortBy,
+          category: filter.category === '' ? undefined : filter.category,
+          city: filter.city === [] ? undefined : filter.city[0],
+          price: filter.priceRange === '' ? undefined : filter.priceRange
+        }
+      });
       dispatch(slice.actions.getProductsSuccess(response.data.payload));
     } catch (error) {
       console.log(error);

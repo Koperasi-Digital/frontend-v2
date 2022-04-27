@@ -25,28 +25,12 @@ import Scrollbar from '../../../Scrollbar';
 
 // ----------------------------------------------------------------------
 
-export const SORT_BY_OPTIONS = [
-  { value: 'featured', label: 'Featured' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'priceDesc', label: 'Price: High-Low' },
-  { value: 'priceAsc', label: 'Price: Low-High' }
-];
 export const FILTER_GENDER_OPTIONS = ['Bandung', 'Jakarta', 'Surabaya', 'Pati', 'Semarang'];
-export const FILTER_CATEGORY_OPTIONS = ['Semua', 'Ayam', 'Pakan', 'Infrastruktur'];
+export const FILTER_CATEGORY_OPTIONS = ['Ayam', 'Pakan', 'Infrastruktur'];
 export const FILTER_PRICE_OPTIONS = [
-  { value: 'below', label: '< Rp 50.000' },
-  { value: 'between', label: 'Rp 50.000 - Rp 100.000' },
-  { value: 'above', label: '> Rp 100.000' }
-];
-export const FILTER_COLOR_OPTIONS = [
-  '#00AB55',
-  '#000000',
-  '#FFFFFF',
-  '#FFC0CB',
-  '#FF4842',
-  '#1890FF',
-  '#94D82D',
-  '#FFC107'
+  { value: '1', label: '< Rp 50.000' },
+  { value: '2', label: 'Rp 50.000 - Rp 100.000' },
+  { value: '3', label: '> Rp 100.000' }
 ];
 
 // ----------------------------------------------------------------------
@@ -109,7 +93,7 @@ export default function ShopFilterSidebar({
               <Stack spacing={3} sx={{ p: 3 }}>
                 <div>
                   <Typography variant="subtitle1" gutterBottom>
-                    Gender
+                    Kota
                   </Typography>
                   <FormGroup>
                     {FILTER_GENDER_OPTIONS.map((item) => (
@@ -130,7 +114,7 @@ export default function ShopFilterSidebar({
 
                 <div>
                   <Typography variant="subtitle1" gutterBottom>
-                    Category
+                    Kategori
                   </Typography>
                   <RadioGroup {...getFieldProps('category')}>
                     {FILTER_CATEGORY_OPTIONS.map((item) => (
@@ -141,7 +125,7 @@ export default function ShopFilterSidebar({
 
                 <div>
                   <Typography variant="subtitle1" gutterBottom>
-                    Price
+                    Harga
                   </Typography>
                   <RadioGroup {...getFieldProps('priceRange')}>
                     {FILTER_PRICE_OPTIONS.map((item) => (
