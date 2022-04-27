@@ -141,14 +141,13 @@ export default function OrderDetailsSummary({
   orderDetails,
   orderDetailsLog
 }: OrderDetailsSummaryProps) {
-  const { id, order, product, seller, quantity, subtotal, status, shipment, shipment_price } =
-    orderDetails;
+  const { id, order, product, quantity, subtotal, status, shipment, shipment_price } = orderDetails;
 
   const summaryInfo = [
     ['ID Transaksi', id],
     ['Tanggal Pemesanan', fDateTime(order.timestamp)],
     ['Nama Produk', product.name],
-    ['Nama Toko', seller.store?.name],
+    ['Nama Toko', product.store.name],
     ['Jumlah', quantity],
     ['Total', fCurrency(subtotal)],
     ['Status', status]
