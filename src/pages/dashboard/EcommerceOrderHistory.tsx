@@ -23,7 +23,6 @@ export default function EcommerceProductList() {
 
   useEffect(() => {
     dispatch(getOrdersByCustomer(user?.id.toString()));
-    dispatch(getOrdersByCustomer('2'));
   }, [dispatch, user]);
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {

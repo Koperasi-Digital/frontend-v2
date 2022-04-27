@@ -39,7 +39,7 @@ export default function EcommerceProductCreate() {
               name: 'E-Commerce',
               href: PATH_DASHBOARD.eCommerce.root
             },
-            { name: !isEdit ? 'New product' : name }
+            { name: !isEdit ? 'New product' : currentProduct?.name || 'Product' }
           ]}
         />
 

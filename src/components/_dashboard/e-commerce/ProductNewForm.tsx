@@ -65,7 +65,8 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
     images: Yup.array().min(1, 'Images is required'),
     price: Yup.number().required('Price is required'),
     productionCost: Yup.number().required('Production cost is required'),
-    available: Yup.number().required('Quantity is required')
+    available: Yup.number().required('Quantity is required'),
+    weight: Yup.number().required('Weight is required')
   });
 
   const product_id = currentProduct?.id || '';
@@ -81,7 +82,8 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
       available: currentProduct?.available || '',
       description: currentProduct?.description || '',
       status: currentProduct?.status || 'Active',
-      seller_id: currentProduct?.seller?.id || user?.id,
+      store_id: currentProduct?.store?.id || user?.store?.id,
+      weight: currentProduct?.weight || '',
       cover: currentProduct?.cover || null
     },
     validationSchema: NewProductSchema,
@@ -229,6 +231,18 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
 
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
+                  <TextField
+                    fullWidth
+                    placeholder="0"
+                    label="Berat"
+                    {...getFieldProps('weight')}
+                    InputProps={{
+                      endAdornment: <InputAdornment position="end">kg</InputAdornment>,
+                      type: 'number'
+                    }}
+                    error={Boolean(touched.weight && errors.weight)}
+                    helperText={touched.weight && errors.weight}
+                  />
                   <TextField
                     fullWidth
                     placeholder="0"

@@ -1,5 +1,5 @@
 import { FormikProps } from 'formik';
-import { User } from './account';
+import { Store } from './store';
 import { UserAddressBook } from './user';
 
 // ----------------------------------------------------------------------
@@ -36,7 +36,8 @@ export type Product = {
   cover: string;
   images: string[];
   description: string;
-  seller: User;
+  store: Store;
+  weight: number;
   status: ProductInventoryType;
   createdAt: Date | string | number;
 };
@@ -49,7 +50,6 @@ export type CartItem = {
   price: number;
   quantity: number;
   subtotal: number;
-  seller_id: number;
   store_name: string | null;
   shipment_id: number | null;
   shipment_price: number | null;
@@ -94,7 +94,8 @@ export type ProductFormikProps = {
   cover: string;
   description: string;
   status: string;
-  seller_id: string | number;
+  weight: string | number;
+  store_id: string | number;
 };
 
 export type ProductFormikRaw = {
@@ -107,7 +108,8 @@ export type ProductFormikRaw = {
   cover: File | any;
   description: string;
   status: string;
-  seller_id: string | number;
+  weight: string | number;
+  store_id: string | number;
 };
 
 export type PaymentFormikProps = FormikProps<{
