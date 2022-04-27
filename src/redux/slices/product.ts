@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import { sum, map, filter, uniqBy } from 'lodash';
 import { store } from '../store';
 // utils
-// import axiosMock from '../../utils/axiosMock';
 import axios from '../../utils/axios';
 import {
   CartItem,

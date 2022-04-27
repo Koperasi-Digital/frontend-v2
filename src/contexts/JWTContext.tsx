@@ -5,7 +5,6 @@ import { setSession } from 'utils/jwt';
 import axios from 'utils/axios';
 import { handleUploadFile } from 'utils/bucket';
 import { fTimestamp } from 'utils/formatTime';
-// import axiosMock from 'utils/axiosMock';
 // @types
 import {
   ActionMap,

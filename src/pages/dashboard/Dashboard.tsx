@@ -8,7 +8,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import { Calendar } from 'components/_dashboard/calendar';
-import { AppWelcome, AppTotalActive, RecentUsers } from 'components/_dashboard/general-app';
+import { AppWelcome } from 'components/_dashboard/general-app';
 import {
   BankingSavings,
   BankingSaldo,
@@ -16,6 +16,7 @@ import {
   BankingMemberSimpananPokok,
   BankingMemberSimpananWajib
 } from 'components/_dashboard/general-banking';
+import { RecentUsers, UserActiveness } from 'components/_dashboard/user';
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +40,7 @@ function MemberDashboard() {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={4}>
-        <AppTotalActive />
+        <UserActiveness />
       </Grid>
       <Grid item xs={12} md={4}>
         <BankingSavings />
@@ -56,7 +57,7 @@ function CustomerDashboard() {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={6}>
-        <AppTotalActive />
+        <UserActiveness />
       </Grid>
       <Grid item xs={12} md={6}>
         <BankingSaldo />
@@ -66,7 +67,7 @@ function CustomerDashboard() {
   );
 }
 
-export default function GeneralApp() {
+export default function Dashboard() {
   const { user, currentRole } = useAuth();
   const role = currentRole?.name;
 

@@ -10,7 +10,7 @@ import { fNumber, fPercent } from 'utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
-export default function AppTotalActive() {
+export default function UserActiveness() {
   const [totalActive, setTotalActive] = useState({ totalLogs: 0, totalActivities: 0 });
   const { totalLogs, totalActivities } = totalActive;
 
