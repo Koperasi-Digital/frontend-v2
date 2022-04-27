@@ -1,10 +1,8 @@
-export { default as BankingContacts } from './BankingContacts';
 export { default as BankingTransactionsReport } from './BankingTransactionsReport';
 export { default as BankingSavings } from './BankingSavings';
 export { default as DisbursementApprovalForm } from './DisbursementApprovalForm';
 export { default as DisbursementRequestList } from './DisbursementRequestListTable';
 export { default as PaymentCreation } from './PaymentCreation';
-export { default as BankingReport } from './BankingReport';
 export { default as BankingEMoney } from './BankingEMoney';
 export { default as BankingSaldo } from './BankingSaldo';
 export { default as BankingMemberSimpananPokok } from './BankingMemberSimpananPokok';

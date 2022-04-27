@@ -59,8 +59,7 @@ export default function Router() {
               <Register />
             </GuestGuard>
           )
-        },
-        { path: 'reset-password', element: <ResetPassword /> }
+        }
       ]
     },
 
@@ -80,7 +79,7 @@ export default function Router() {
         {
           element: <Navigate to="/dashboard/app" replace />
         },
-        { path: 'app', element: <GeneralApp /> },
+        { path: 'app', element: <Dashboard /> },
         {
           path: 'activities',
           element: (
@@ -251,14 +250,6 @@ export default function Router() {
               element: (
                 <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
                   <EcommerceCheckout />
-                </RoleBasedGuard>
-              )
-            },
-            {
-              path: 'invoice',
-              element: (
-                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
-                  <EcommerceInvoice />
                 </RoleBasedGuard>
               )
             }
@@ -443,9 +434,6 @@ export default function Router() {
       path: '*',
       element: <LogoOnlyLayout />,
       children: [
-        { path: 'coming-soon', element: <ComingSoon /> },
-        { path: 'maintenance', element: <Maintenance /> },
-        { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" replace /> }
       ]
@@ -459,9 +447,8 @@ export default function Router() {
 // Authentication
 const Login = Loadable(lazy(() => import('../pages/authentication/Login')));
 const Register = Loadable(lazy(() => import('../pages/authentication/Register')));
-const ResetPassword = Loadable(lazy(() => import('../pages/authentication/ResetPassword')));
 // Dashboard
-const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
+const Dashboard = Loadable(lazy(() => import('../pages/dashboard/Dashboard')));
 const EcommerceOrderHistory = Loadable(
   lazy(() => import('../pages/dashboard/EcommerceOrderHistory'))
 );
@@ -483,7 +470,6 @@ const EcommerceProductCreate = Loadable(
   lazy(() => import('../pages/dashboard/EcommerceProductCreate'))
 );
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
-const EcommerceInvoice = Loadable(lazy(() => import('../pages/dashboard/EcommerceInvoice')));
 const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
 const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
@@ -527,7 +513,4 @@ const RepairRegister = Loadable(lazy(() => import('../pages/dashboard/RepairRegi
 const EquipmentRegister = Loadable(lazy(() => import('../pages/dashboard/EquipmentRegister')));
 const AddSimpananSukarela = Loadable(lazy(() => import('../pages/dashboard/AddSimpananSukarela')));
 // Main
-const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
-const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
-const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));

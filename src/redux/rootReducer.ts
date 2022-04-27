@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 // slices
-import chatReducer from './slices/chat';
 import blogReducer from './slices/blog';
 import courseReducer from './slices/course';
 import forumReducer from './slices/forum';
@@ -11,7 +10,6 @@ import roleReducer from './slices/role';
 import productReducer from './slices/product';
 import calendarReducer from './slices/calendar';
 import notificationReducer from './slices/notification';
-import financeReportReducer from './slices/financeReport';
 import orderReducer from './slices/order';
 
 // ----------------------------------------------------------------------
@@ -31,7 +29,6 @@ const productPersistConfig = {
 };
 
 const rootReducer = combineReducers({
-  chat: chatReducer,
   blog: blogReducer,
   course: courseReducer,
   forum: forumReducer,
@@ -39,7 +36,6 @@ const rootReducer = combineReducers({
   role: roleReducer,
   calendar: calendarReducer,
   notification: notificationReducer,
-  financeReport: financeReportReducer,
   order: orderReducer,
   product: persistReducer(productPersistConfig, productReducer)
 });
