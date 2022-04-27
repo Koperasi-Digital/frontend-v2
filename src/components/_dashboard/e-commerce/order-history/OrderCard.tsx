@@ -19,7 +19,7 @@ const ProductImgStyle = styled('img')({
 export default function OrderCard({ orderDetails }: { orderDetails: OrderDetails }) {
   const linkTo = `${PATH_DASHBOARD.eCommerce.root}/order/`;
   const { id, order, product, quantity, subtotal, status } = orderDetails;
-  const store_name = product.store.name;
+  const store_name = product && product.store && product.store.name;
   const timestamp = order.timestamp;
   const product_name = product.name;
   const cover = product.cover;

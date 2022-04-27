@@ -67,8 +67,6 @@ function ProductItem({ product }: ProductItemProps) {
           </Typography>
         </Stack>
       </Box>
-
-      {/* <ColorPreview limit={3} colors={product.colors} sx={{ minWidth: 72, pr: 3 }} /> */}
     </Stack>
   );
 }

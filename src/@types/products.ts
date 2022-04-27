@@ -14,17 +14,6 @@ export type OnCreateBilling = (address: UserAddressBook) => void;
 
 export type FormikPropsShopView = FormikProps<ProductFilter>;
 
-export type ProductReview = {
-  id: string;
-  name: string;
-  avatarUrl: string;
-  comment: string;
-  rating: number;
-  isPurchased: boolean;
-  helpful: number;
-  postedAt: Date | string | number;
-};
-
 export type Product = {
   id: string;
   sku: string;

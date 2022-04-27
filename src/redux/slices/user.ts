@@ -3,16 +3,14 @@ import { createSlice } from '@reduxjs/toolkit';
 import { dispatch } from '../store';
 // utils
 import axios from '../../utils/axios';
-import axiosMock from '../../utils/axiosMock';
 // types
-import { UserData, UserManager, UserAddressBook } from '../../@types/user';
+import { UserManager, UserAddressBook } from '../../@types/user';
 
 // ----------------------------------------------------------------------
 
 type UserState = {
   isLoading: boolean;
   error: boolean;
-  users: UserData[];
   userList: UserManager[];
   addressBook: UserAddressBook[];
 };
@@ -20,7 +18,6 @@ type UserState = {
 const initialState: UserState = {
   isLoading: false,
   error: false,
-  users: [],
   userList: [],
   addressBook: []
 };
@@ -39,12 +36,6 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-    },
-
-    // GET USERS
-    getUsersSuccess(state, action) {
-      state.isLoading = false;
-      state.users = action.payload;
     },
 
     // DELETE USERS
@@ -188,18 +179,6 @@ export async function deleteAddress(id: number) {
 }
 
 // ----------------------------------------------------------------------
-
-export function getUsers() {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axiosMock.get('/api/user/all');
-      dispatch(slice.actions.getUsersSuccess(response.data.users));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
 
 export async function editUser(userId: string, data: Partial<UserManager>) {
   dispatch(slice.actions.startLoading());
