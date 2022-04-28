@@ -15,6 +15,8 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import Page from '../../components/Page';
 import Markdown from '../../components/Markdown';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import useAuth from 'hooks/useAuth';
+import PermissionDenied from 'components/PermissionDenied';
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +38,8 @@ export default function CoursePage() {
   const dispatch = useDispatch();
   const { courseId = '', order = '' } = useParams();
   const { coursePost, error } = useSelector((state: RootState) => state.course);
-  console.log(coursePost);
+  const { currentRole } = useAuth();
+  const isAdmin = currentRole?.name === 'ADMIN';
 
   useEffect(() => {
     if (parseInt(order) > 0 && parseInt(courseId)) {
@@ -65,7 +68,11 @@ export default function CoursePage() {
           ]}
         />
 
-        {coursePost && (
+        {!coursePost && SkeletonLoad}
+
+        {error ? (
+          <Typography variant="h6">404 Post not found</Typography>
+        ) : coursePost && (coursePost?.courseIsPublished || isAdmin) ? (
           <>
             <Card>
               <Box sx={{ p: { xs: 3, md: 5 } }}>
@@ -127,11 +134,9 @@ export default function CoursePage() {
               </Button>
             </Stack>
           </>
+        ) : (
+          <PermissionDenied />
         )}
-
-        {!coursePost && SkeletonLoad}
-
-        {error && <Typography variant="h6">404 Post not found</Typography>}
       </Container>
     </Page>
   );

@@ -25,6 +25,8 @@ import { Grid } from '@mui/material';
 
 import CoopArusKasReportToolbar from './CoopArusKasReportToolbar';
 
+import { CoopArusKasData } from '../../../../@types/finance-report';
+
 type CoopArusKasReportProps = {
   dateValue: Date;
 };
@@ -32,14 +34,7 @@ type CoopArusKasReportProps = {
 export default function CoopArusKasReport({ dateValue }: CoopArusKasReportProps) {
   const { user } = useAuth();
 
-  interface ICoopArusKasData {
-    jumlahKasAwal: number;
-    kasMasuk: number;
-    kasKeluar: number;
-    jumlahKasAkhir: number;
-  }
-
-  const [coopArusKasData, setCoopArusKasData] = useState<ICoopArusKasData | undefined>(undefined);
+  const [coopArusKasData, setCoopArusKasData] = useState<CoopArusKasData | undefined>(undefined);
   const [dataNotExist, setDataNotExist] = useState<Boolean>(false);
 
   const RowResultStyle = styled(TableRow)(({ theme }) => ({

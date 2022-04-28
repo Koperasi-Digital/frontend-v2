@@ -14,12 +14,18 @@ import {
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
+// hooks
+import useAuth from '../../hooks/useAuth';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { faqData } from '../../components/_dashboard/faq/FAQData';
 
 export default function FAQ() {
+  const { currentRole } = useAuth();
+  const newData = faqData.filter((data) => {
+    return currentRole && data.role.includes(currentRole?.name) ? data : null;
+  });
   return (
     <Page title="FAQ | CoopChick">
       <Container maxWidth={false}>
@@ -35,9 +41,9 @@ export default function FAQ() {
             Pertanyaan dan jawaban yang sering ditanyakan tentang aplikasi
           </Typography>
         </Stack>
-        {faqData.map((data, index) => (
+        {newData.map((data, index) => (
           <Card sx={{ mb: 3 }} key={index}>
-            <CardActionArea component={RouterLink} to={`${index + 1}`}>
+            <CardActionArea component={RouterLink} to={`${data.id}`}>
               <CardContent>
                 <Typography variant="h6">
                   <Grid
@@ -51,7 +57,7 @@ export default function FAQ() {
                       <Stack alignItems="center">{index + 1}.</Stack>
                     </Grid>
                     <Grid item xs={10}>
-                      {data.title}
+                      {data?.title}
                     </Grid>
                     <Grid item xs={1}>
                       <Stack alignItems="center">

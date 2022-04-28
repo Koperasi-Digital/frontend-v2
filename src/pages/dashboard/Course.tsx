@@ -78,7 +78,7 @@ export default function Course() {
               <Button
                 variant="contained"
                 component={RouterLink}
-                to={PATH_DASHBOARD.general.newBlog}
+                to={PATH_DASHBOARD.general.courseNewPost}
                 startIcon={<Icon icon={plusFill} />}
               >
                 Buat Course
@@ -103,7 +103,7 @@ export default function Course() {
         </Stack>
 
         {courseList.length > 0 ? (
-          <CourseListCard courseList={courseList} isAdmin={isAdmin} />
+          <CourseListCard courseList={courseList} />
         ) : (
           <Typography>No Course with title "{filterCourse}" found</Typography>
         )}

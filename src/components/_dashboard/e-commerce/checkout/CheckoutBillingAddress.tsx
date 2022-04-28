@@ -68,7 +68,7 @@ export default function CheckoutBillingAddress() {
   //
   const dispatch = useDispatch();
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
-  const { total, discount, subtotal } = checkout;
+  const { total, subtotal } = checkout;
   const { addressBook } = useSelector((state: RootState) => state.user);
   //
   const [open, setOpen] = useState(false);
@@ -125,7 +125,7 @@ export default function CheckoutBillingAddress() {
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <CheckoutSummary subtotal={subtotal} total={total} discount={discount} />
+          <CheckoutSummary subtotal={subtotal} total={total} />
         </Grid>
       </Grid>
 

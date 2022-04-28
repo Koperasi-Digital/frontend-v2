@@ -4,7 +4,6 @@ import { EventInput } from '@fullcalendar/common';
 import { dispatch } from '../store';
 // utils
 import axios from '../../utils/axios';
-// import axiosMock from '../../utils/axiosMock';
 //
 import { CalendarApiEvent, CalendarState } from '../../@types/calendar';
 import { toCalendarEvent } from 'utils/calendar';

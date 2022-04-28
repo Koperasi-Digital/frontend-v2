@@ -44,10 +44,11 @@ import useAuth from 'hooks/useAuth';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Product', alignRight: false },
+  { id: 'name', label: 'Produk', alignRight: false },
   { id: 'sku', label: 'SKU', alignRight: false },
-  { id: 'available', label: 'Available', alignRight: false },
-  { id: 'price', label: 'Price', alignRight: false },
+  { id: 'available', label: 'Persediaan', alignRight: false },
+  { id: 'price', label: 'Harga Jual', alignRight: false },
+  { id: 'productionCost', label: 'Harga Beli', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
 ];
@@ -204,7 +205,8 @@ export default function EcommerceProductList() {
                   {filteredProducts
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
-                      const { id, name, cover, price, sku, available, status } = row;
+                      const { id, name, cover, price, productionCost, sku, available, status } =
+                        row;
 
                       const isItemSelected = selected.indexOf(name) !== -1;
 
@@ -237,7 +239,10 @@ export default function EcommerceProductList() {
                           </TableCell>
                           <TableCell style={{ minWidth: 100 }}>{sku}</TableCell>
                           <TableCell style={{ minWidth: 100 }}>{available}</TableCell>
-                          <TableCell style={{ minWidth: 160 }}>{fCurrency(price)}</TableCell>
+                          <TableCell style={{ minWidth: 120 }}>{fCurrency(price)}</TableCell>
+                          <TableCell style={{ minWidth: 120 }}>
+                            {fCurrency(productionCost)}
+                          </TableCell>
                           <TableCell style={{ minWidth: 100 }}>
                             <Label
                               variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}

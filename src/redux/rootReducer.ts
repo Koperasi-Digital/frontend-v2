@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 // slices
-import chatReducer from './slices/chat';
 import blogReducer from './slices/blog';
 import courseReducer from './slices/course';
 import forumReducer from './slices/forum';
@@ -30,7 +29,6 @@ const productPersistConfig = {
 };
 
 const rootReducer = combineReducers({
-  chat: chatReducer,
   blog: blogReducer,
   course: courseReducer,
   forum: forumReducer,

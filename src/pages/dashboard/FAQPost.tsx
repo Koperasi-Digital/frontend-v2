@@ -18,18 +18,18 @@ type faqType = {
 export default function FAQPost() {
   const [postData, setPostData] = useState<faqType>();
   const [error, setError] = useState(false);
-  const { number = '' } = useParams();
+  const { id = '' } = useParams();
 
   useEffect(() => {
-    if (number !== '') {
-      const dataLength = faqData.length;
-      if (dataLength >= parseInt(number) && parseInt(number) > 0) {
-        setPostData(faqData[parseInt(number) - 1]);
-      } else {
+    if (id !== '') {
+      const index = faqData.findIndex((data) => data.id === id);
+      if (index === -1) {
         setError(true);
+      } else {
+        setPostData(faqData[index]);
       }
     }
-  }, [number]);
+  }, [id]);
 
   return (
     <Page title="FAQ Post | CoopChick">

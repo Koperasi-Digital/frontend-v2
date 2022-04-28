@@ -1,6 +1,3 @@
-// mock api
-import './_apis_';
-
 // highlight
 import './utils/highlight';
 

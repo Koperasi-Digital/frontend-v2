@@ -53,8 +53,7 @@ const sidebarConfig = [
           {
             title: 'order history',
             path: PATH_DASHBOARD.eCommerce.orderHistory
-          },
-          { title: 'manage orders', path: PATH_DASHBOARD.eCommerce.orderList }
+          }
         ]
       },
       {
@@ -72,9 +71,9 @@ const sidebarConfig = [
       },
       {
         title: 'course',
+        accessibleRoles: ['ADMIN', 'MEMBER'],
         path: PATH_DASHBOARD.general.course,
-        icon: ICONS.course,
-        accessibleRoles: ['ADMIN', 'MEMBER']
+        icon: ICONS.course
       },
       { title: 'FAQ', path: PATH_DASHBOARD.general.faq, icon: ICONS.faq },
       {
@@ -133,7 +132,8 @@ const sidebarConfig = [
         accessibleRoles: ['MEMBER'],
         children: [
           { title: 'seller', path: PATH_DASHBOARD.eCommerce.seller.center },
-          { title: 'manage products', path: PATH_DASHBOARD.eCommerce.seller.list }
+          { title: 'manage products', path: PATH_DASHBOARD.eCommerce.seller.list },
+          { title: 'manage orders', path: PATH_DASHBOARD.eCommerce.orderList }
         ]
       },
       // MANAGEMENT: KNOWLEDGE
@@ -143,6 +143,17 @@ const sidebarConfig = [
         icon: ICONS.blog,
         accessibleRoles: ['ADMIN'],
         children: [{ title: 'verification', path: PATH_DASHBOARD.general.blogVerification }]
+      },
+      // MANAGEMENT: COURSE
+      {
+        title: 'course',
+        path: PATH_DASHBOARD.general.courseManagement,
+        icon: ICONS.course,
+        accessibleRoles: ['ADMIN'],
+        children: [
+          { title: 'list', path: PATH_DASHBOARD.general.courseList },
+          { title: 'create', path: PATH_DASHBOARD.general.courseNewPost }
+        ]
       }
     ]
   },

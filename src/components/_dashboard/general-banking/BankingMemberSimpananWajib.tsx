@@ -1,11 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { sentenceCase } from 'change-case';
 import { Icon } from '@iconify/react';
-import shareFill from '@iconify/icons-eva/share-fill';
-import printerFill from '@iconify/icons-eva/printer-fill';
-import downloadFill from '@iconify/icons-eva/download-fill';
-import trash2Outline from '@iconify/icons-eva/trash-2-outline';
-import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 import arrowDownOutline from '@iconify/icons-eva/arrow-down-outline';
 // material
 import { useTheme } from '@mui/material/styles';
@@ -14,10 +9,8 @@ import {
   Card,
   CardHeader,
   Stack,
-  Menu,
   Table,
   Button,
-  Divider,
   MenuItem,
   TableRow,
   TableBody,
@@ -41,7 +34,6 @@ import DatePicker from '@mui/lab/DatePicker';
 
 import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
-import { MIconButton } from '../../@material-extend';
 
 // fetch backend data
 import { handleListSimpananWajib } from 'utils/financeAxios/financeSimpanan';
@@ -66,73 +58,6 @@ type SimpananWajibProps = {
     status: string;
   };
 };
-
-type MoreMenuButtonProps = {
-  onDownload: VoidFunction;
-  onPrint: VoidFunction;
-  onShare: VoidFunction;
-  onDelete: VoidFunction;
-};
-
-function MoreMenuButton({ onDownload, onPrint, onShare, onDelete }: MoreMenuButtonProps) {
-  const menuRef = useRef(null);
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <>
-      <>
-        <MIconButton ref={menuRef} size="large" onClick={handleOpen}>
-          <Icon icon={moreVerticalFill} width={20} height={20} />
-        </MIconButton>
-      </>
-
-      <Menu
-        open={open}
-        anchorEl={menuRef.current}
-        onClose={handleClose}
-        PaperProps={{
-          sx: { width: 200, maxWidth: '100%' }
-        }}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <MenuItem onClick={onDownload}>
-          <Icon icon={downloadFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Download
-          </Typography>
-        </MenuItem>
-        <MenuItem onClick={onPrint}>
-          <Icon icon={printerFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Print
-          </Typography>
-        </MenuItem>
-        <MenuItem onClick={onShare}>
-          <Icon icon={shareFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Share
-          </Typography>
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={onDelete} sx={{ color: 'error.main' }}>
-          <Icon icon={trash2Outline} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Delete
-          </Typography>
-        </MenuItem>
-      </Menu>
-    </>
-  );
-}
 
 export default function BankingMemberSimpananWajib() {
   // Transactions Filter
@@ -197,11 +122,6 @@ export default function BankingMemberSimpananWajib() {
 
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
-
-  const handleClickDownload = () => {};
-  const handleClickPrint = () => {};
-  const handleClickShare = () => {};
-  const handleClickDelete = () => {};
 
   return (
     <>
@@ -312,15 +232,6 @@ export default function BankingMemberSimpananWajib() {
                             : 'No order data'
                         )}
                       </Label>
-                    </TableCell>
-
-                    <TableCell align="right">
-                      <MoreMenuButton
-                        onDownload={handleClickDownload}
-                        onPrint={handleClickPrint}
-                        onShare={handleClickShare}
-                        onDelete={handleClickDelete}
-                      />
                     </TableCell>
                   </TableRow>
                 ))}

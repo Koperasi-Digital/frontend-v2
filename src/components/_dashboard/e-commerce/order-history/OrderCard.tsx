@@ -18,8 +18,8 @@ const ProductImgStyle = styled('img')({
 
 export default function OrderCard({ orderDetails }: { orderDetails: OrderDetails }) {
   const linkTo = `${PATH_DASHBOARD.eCommerce.root}/order/`;
-  const { id, seller, order, product, quantity, subtotal, status } = orderDetails;
-  const seller_name = seller.displayName;
+  const { id, order, product, quantity, subtotal, status } = orderDetails;
+  const store_name = product && product.store && product.store.name;
   const timestamp = order.timestamp;
   const product_name = product.name;
   const cover = product.cover;
@@ -48,7 +48,7 @@ export default function OrderCard({ orderDetails }: { orderDetails: OrderDetails
             <Typography variant="subtitle1" noWrap>
               <h3>{product_name}</h3>
             </Typography>
-            <Typography noWrap>{seller_name}</Typography>
+            <Typography noWrap>{store_name}</Typography>
             <Typography noWrap>Quantity: {quantity}</Typography>
           </Grid>
           <Grid item xs>

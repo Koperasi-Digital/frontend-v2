@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // material
-import { Card, Container, TablePagination, Grid } from '@mui/material';
+import { Card, Container, TablePagination, Grid, Typography, Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getOrdersByCustomer } from '../../redux/slices/order';
@@ -23,7 +23,6 @@ export default function EcommerceProductList() {
 
   useEffect(() => {
     dispatch(getOrdersByCustomer(user?.id.toString()));
-    dispatch(getOrdersByCustomer('2'));
   }, [dispatch, user]);
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,23 +46,31 @@ export default function EcommerceProductList() {
         />
 
         <Card sx={{ py: 2 }}>
-          <Grid container spacing={3}>
-            {orders.map((order) => (
-              <Grid key={order.id} item xs={12}>
-                <OrderCard orderDetails={order} />
+          {orders.length === 0 ? (
+            <Box display="flex" justifyContent="center" sx={{ width: '100%', p: 3 }}>
+              <Typography variant="body2">Kamu belum pernah melakukan pemesanan.</Typography>
+            </Box>
+          ) : (
+            <>
+              <Grid container spacing={3}>
+                {orders.map((order) => (
+                  <Grid key={order.id} item xs={12}>
+                    <OrderCard orderDetails={order} />
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
 
-          <TablePagination
-            rowsPerPageOptions={[10, 20, 30]}
-            component="div"
-            count={orders.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={(event, value) => setPage(value)}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 15]}
+                component="div"
+                count={orders.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={(event, value) => setPage(value)}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </>
+          )}
         </Card>
       </Container>
     </Page>

@@ -24,14 +24,3 @@ export type UserManager = {
   created_at: string;
   updated_at: string;
 };
-
-export type UserData = {
-  id: string;
-  avatarUrl: string;
-  cover: string;
-  name: string;
-  follower: number;
-  following: number;
-  totalPost: number;
-  position: string;
-};

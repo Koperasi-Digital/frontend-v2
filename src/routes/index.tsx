@@ -59,8 +59,7 @@ export default function Router() {
               <Register />
             </GuestGuard>
           )
-        },
-        { path: 'reset-password', element: <ResetPassword /> }
+        }
       ]
     },
 
@@ -80,7 +79,7 @@ export default function Router() {
         {
           element: <Navigate to="/dashboard/app" replace />
         },
-        { path: 'app', element: <GeneralApp /> },
+        { path: 'app', element: <Dashboard /> },
         {
           path: 'activities',
           element: (
@@ -119,7 +118,7 @@ export default function Router() {
           )
         },
         {
-          path: 'blogs/verification',
+          path: 'blog-verification',
           element: (
             <RoleBasedGuard accessibleRoles={['ADMIN']}>
               <BlogVerification />
@@ -127,7 +126,7 @@ export default function Router() {
           )
         },
         { path: 'faq', element: <FAQ /> },
-        { path: 'faq/:number', element: <FAQPost /> },
+        { path: 'faq/:id', element: <FAQPost /> },
         { path: 'forum', element: <Forum /> },
         {
           path: 'forum/own',
@@ -162,6 +161,46 @@ export default function Router() {
           )
         },
         {
+          path: 'management-course/list',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN']}>
+              <CourseList />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'management-course/create-course',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN']}>
+              <CourseNewPost />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'management-course/:id/create-item',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN']}>
+              <CourseNewItem />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'management-course/edit/:id',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN']}>
+              <CourseEditPost />
+            </RoleBasedGuard>
+          )
+        },
+        {
+          path: 'management-course/:courseId/edit/:order',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN']}>
+              <CourseEditItem />
+            </RoleBasedGuard>
+          )
+        },
+        {
           path: 'e-commerce',
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
@@ -179,6 +218,14 @@ export default function Router() {
               element: (
                 <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
                   <EcommerceOrderDetails />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'order/:id/payment',
+              element: (
+                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
+                  <PaymentPage />
                 </RoleBasedGuard>
               )
             },
@@ -211,14 +258,6 @@ export default function Router() {
               element: (
                 <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
                   <EcommerceCheckout />
-                </RoleBasedGuard>
-              )
-            },
-            {
-              path: 'invoice',
-              element: (
-                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
-                  <EcommerceInvoice />
                 </RoleBasedGuard>
               )
             }
@@ -403,9 +442,6 @@ export default function Router() {
       path: '*',
       element: <LogoOnlyLayout />,
       children: [
-        { path: 'coming-soon', element: <ComingSoon /> },
-        { path: 'maintenance', element: <Maintenance /> },
-        { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" replace /> }
       ]
@@ -419,9 +455,8 @@ export default function Router() {
 // Authentication
 const Login = Loadable(lazy(() => import('../pages/authentication/Login')));
 const Register = Loadable(lazy(() => import('../pages/authentication/Register')));
-const ResetPassword = Loadable(lazy(() => import('../pages/authentication/ResetPassword')));
 // Dashboard
-const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
+const Dashboard = Loadable(lazy(() => import('../pages/dashboard/Dashboard')));
 const EcommerceOrderHistory = Loadable(
   lazy(() => import('../pages/dashboard/EcommerceOrderHistory'))
 );
@@ -443,7 +478,7 @@ const EcommerceProductCreate = Loadable(
   lazy(() => import('../pages/dashboard/EcommerceProductCreate'))
 );
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
-const EcommerceInvoice = Loadable(lazy(() => import('../pages/dashboard/EcommerceInvoice')));
+const PaymentPage = Loadable(lazy(() => import('../pages/dashboard/PaymentPage')));
 const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
 const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
@@ -452,6 +487,11 @@ const MyBlog = Loadable(lazy(() => import('../pages/dashboard/MyBlog')));
 const Course = Loadable(lazy(() => import('../pages/dashboard/Course')));
 const CourseDetail = Loadable(lazy(() => import('../pages/dashboard/CourseDetail')));
 const CoursePage = Loadable(lazy(() => import('../pages/dashboard/CoursePage')));
+const CourseList = Loadable(lazy(() => import('../pages/dashboard/CourseList')));
+const CourseNewPost = Loadable(lazy(() => import('../pages/dashboard/CourseNewPost')));
+const CourseNewItem = Loadable(lazy(() => import('../pages/dashboard/CourseNewItem')));
+const CourseEditPost = Loadable(lazy(() => import('../pages/dashboard/CourseEditPost')));
+const CourseEditItem = Loadable(lazy(() => import('../pages/dashboard/CourseEditItem')));
 const BlogVerification = Loadable(lazy(() => import('../pages/dashboard/BlogVerification')));
 const FAQ = Loadable(lazy(() => import('../pages/dashboard/FAQ')));
 const FAQPost = Loadable(lazy(() => import('../pages/dashboard/FAQPost')));
@@ -482,7 +522,4 @@ const RepairRegister = Loadable(lazy(() => import('../pages/dashboard/RepairRegi
 const EquipmentRegister = Loadable(lazy(() => import('../pages/dashboard/EquipmentRegister')));
 const AddSimpananSukarela = Loadable(lazy(() => import('../pages/dashboard/AddSimpananSukarela')));
 // Main
-const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
-const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
-const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));

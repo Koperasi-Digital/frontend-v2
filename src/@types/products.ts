@@ -1,10 +1,10 @@
 import { FormikProps } from 'formik';
-import { User } from './account';
+import { Store } from './store';
 import { UserAddressBook } from './user';
 
 // ----------------------------------------------------------------------
 
-export type PaymentType = 'paypal' | 'credit_card' | 'cash';
+export type PaymentType = 'OTHER' | 'GOPAY';
 
 export type ProductInventoryType = 'Active' | 'Inactive' | 'Low Stock';
 
@@ -13,17 +13,6 @@ export type ProductCategory = 'Ayam' | 'Infrastruktur' | 'Kandang';
 export type OnCreateBilling = (address: UserAddressBook) => void;
 
 export type FormikPropsShopView = FormikProps<ProductFilter>;
-
-export type ProductReview = {
-  id: string;
-  name: string;
-  avatarUrl: string;
-  comment: string;
-  rating: number;
-  isPurchased: boolean;
-  helpful: number;
-  postedAt: Date | string | number;
-};
 
 export type Product = {
   id: string;
@@ -36,7 +25,8 @@ export type Product = {
   cover: string;
   images: string[];
   description: string;
-  seller: User;
+  store: Store;
+  weight: number;
   status: ProductInventoryType;
   createdAt: Date | string | number;
 };
@@ -49,7 +39,6 @@ export type CartItem = {
   price: number;
   quantity: number;
   subtotal: number;
-  seller_id: number;
   store_name: string | null;
   shipment_id: number | null;
   shipment_price: number | null;
@@ -67,12 +56,11 @@ export type ProductState = {
     priceRange: string;
   };
   checkout: {
-    orderId: number;
+    orderId: string;
     activeStep: number;
     cart: CartItem[];
     subtotal: number;
     total: number;
-    discount: number;
     shipping: number;
     billing: UserAddressBook | null;
   };
@@ -94,7 +82,8 @@ export type ProductFormikProps = {
   cover: string;
   description: string;
   status: string;
-  seller_id: string | number;
+  weight: string | number;
+  store_id: string | number;
 };
 
 export type ProductFormikRaw = {
@@ -107,7 +96,8 @@ export type ProductFormikRaw = {
   cover: File | any;
   description: string;
   status: string;
-  seller_id: string | number;
+  weight: string | number;
+  store_id: string | number;
 };
 
 export type PaymentFormikProps = FormikProps<{

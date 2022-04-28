@@ -11,12 +11,7 @@ import CoopArusKasReportPDF from './CoopArusKasReportPDF';
 import { ExportToExcel } from 'components/ExportToExcel';
 import { Stack } from '@mui/material';
 
-type CoopArusKasData = {
-  jumlahKasAwal: number;
-  kasMasuk: number;
-  kasKeluar: number;
-  jumlahKasAkhir: number;
-};
+import { CoopArusKasData } from '../../../../@types/finance-report';
 
 export default function CoopArusKasReportToolbar(props: {
   coopArusKasData: CoopArusKasData | undefined;

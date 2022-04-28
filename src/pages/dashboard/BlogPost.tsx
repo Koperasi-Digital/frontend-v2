@@ -12,8 +12,10 @@ import { BlogState } from '../../@types/blog';
 // components
 import Page from '../../components/Page';
 import Markdown from '../../components/Markdown';
+import useAuth from 'hooks/useAuth';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { BlogPostHero, BlogPostTags } from '../../components/_dashboard/blog';
+import PermissionDenied from 'components/PermissionDenied';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +37,9 @@ export default function BlogPost() {
   const dispatch = useDispatch();
   const { id = '' } = useParams();
   const { post, error } = useSelector((state: { blog: BlogState }) => state.blog);
+  const { user, currentRole } = useAuth();
+  const isAdmin = currentRole?.name === 'ADMIN';
+  const userPermitted = post?.author.id === user?.id || isAdmin ? true : false;
 
   useEffect(() => {
     if (parseInt(id) > 0) {
@@ -58,7 +63,13 @@ export default function BlogPost() {
           ]}
         />
 
-        {post && (
+        {!post && SkeletonLoad}
+
+        {error ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Typography variant="h6">404 Post not found</Typography>
+          </Box>
+        ) : post && (post.is_verified || userPermitted) ? (
           <Card>
             <BlogPostHero post={post} />
 
@@ -75,14 +86,8 @@ export default function BlogPost() {
               </Box>
             </Box>
           </Card>
-        )}
-
-        {!post && SkeletonLoad}
-
-        {error && (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Typography variant="h6">404 Post not found</Typography>
-          </Box>
+        ) : (
+          <PermissionDenied />
         )}
       </Container>
     </Page>

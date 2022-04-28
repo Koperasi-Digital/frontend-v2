@@ -11,6 +11,7 @@ import { Card, Typography, Stack } from '@mui/material';
 import { fCurrency, fPercent } from '../../../../utils/formatNumber';
 //
 import BaseOptionChart from '../../../charts/BaseOptionChart';
+import { CoopLabaRugiData } from '../../../../@types/finance-report';
 
 const RootStyle = styled(Card)(({ theme }) => ({
   width: '100%',
@@ -33,15 +34,6 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
   color: theme.palette.primary.lighter,
   backgroundColor: theme.palette.primary.dark
 }));
-
-type CoopLabaRugiData = {
-  jumlahSimpananPokok: number;
-  jumlahSimpananWajib: number;
-  jumlahBiayaLayanan: number;
-  biayaSisaHasilUsaha: number;
-  biayaOperasi: number;
-  net: number;
-};
 
 export default function Income(props: {
   currentCoopLabaRugiData: CoopLabaRugiData | undefined;
