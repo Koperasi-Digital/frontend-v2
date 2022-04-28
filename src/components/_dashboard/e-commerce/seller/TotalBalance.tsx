@@ -10,6 +10,8 @@ import { Box, Card, Typography, Stack } from '@mui/material';
 import { fNumber, fPercent } from '../../../../utils/formatNumber';
 //
 import { BaseOptionChart } from '../../../charts';
+import { handleGetAnnualArusKasInfo } from 'utils/financeAxios/financeReport';
+import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -27,12 +29,35 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
+type ChartData = {
+  data: number[];
+};
+
+function createTotalBalance(arusKasData: any) {
+  const balanceData = arusKasData.map(
+    (item: any) => item.jumlahKasAwal + item.kasMasuk - item.kasKeluar
+  );
+  console.log(balanceData);
+  return [{ data: balanceData }];
+}
+
 const PERCENT = -0.06;
-const TOTAL_BALANCE = 18765.093383;
-const CHART_DATA = [{ data: [56, 47, 40, 62, 73, 30, 23, 54, 67, 68] }];
+const YEAR = new Date().getFullYear().toString();
 
 export default function TotalBalance() {
   const theme = useTheme();
+
+  const [chartData, setChartData] = useState<ChartData[]>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const arusKasData = await handleGetAnnualArusKasInfo(YEAR);
+      const data = createTotalBalance(arusKasData);
+      setChartData(data);
+    };
+    fetchData();
+  }, [YEAR]);
+
   const chartOptions = merge(BaseOptionChart(), {
     colors: [theme.palette.chart.green[0]],
     chart: { animations: { enabled: true }, sparkline: { enabled: true } },
@@ -56,7 +81,11 @@ export default function TotalBalance() {
           Total Balance
         </Typography>
         <Typography variant="h3" gutterBottom>
-          {fNumber(TOTAL_BALANCE)}
+          {fNumber(
+            chartData && chartData[0].data[chartData[0].data.length - 1]
+              ? chartData[0].data[chartData[0].data.length - 1]
+              : 0
+          )}
         </Typography>
 
         <Stack direction="row" alignItems="center" flexWrap="wrap">
@@ -81,13 +110,15 @@ export default function TotalBalance() {
         </Stack>
       </Box>
 
-      <ReactApexChart
-        type="line"
-        series={CHART_DATA}
-        options={chartOptions}
-        width={120}
-        height={80}
-      />
+      {chartData && (
+        <ReactApexChart
+          type="line"
+          series={chartData}
+          options={chartOptions}
+          width={120}
+          height={80}
+        />
+      )}
     </Card>
   );
 }
