@@ -12,8 +12,6 @@ export default function BankingEMoneyForm({
   handleCloseModal,
   handleRegisterEMoney
 }: BankingEMoneyFormProps) {
-  const user_id = 3;
-
   const getInitialValues = () => {
     const _event = {
       payment_type: 'gopay',
@@ -35,14 +33,8 @@ export default function BankingEMoneyForm({
     validationSchema: EventSchema,
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       try {
-        await handleRegisterEMoney(
-          user_id,
-          values.payment_type,
-          values.phone_number,
-          values.country_code
-        );
+        await handleRegisterEMoney(values.payment_type, values.phone_number, values.country_code);
         handleCloseModal();
-        window.localStorage.setItem('isRegisterJustNow', '1'); //for notification
       } catch (err) {
         console.log(err);
       }
