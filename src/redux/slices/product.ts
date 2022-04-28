@@ -231,20 +231,22 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getProducts(filter: ProductFilter, name: string | null, sortBy: string | null) {
+export function getProducts(filter?: ProductFilter, name?: string | null, sortBy?: string | null) {
   return async () => {
     const { dispatch } = store;
     dispatch(slice.actions.startLoading());
-    dispatch(slice.actions.filterProducts(filter));
+    if (filter) {
+      dispatch(slice.actions.filterProducts(filter));
+    }
     console.log(sortBy);
     try {
       const response: { data: { payload: Product[] } } = await axios.get('/products/', {
         params: {
           name,
           sortBy,
-          category: filter.category === '' ? undefined : filter.category,
-          city: filter.city === [] ? undefined : filter.city[0],
-          price: filter.priceRange === '' ? undefined : filter.priceRange
+          category: filter?.category === '' ? undefined : filter?.category,
+          city: filter?.city === [] ? undefined : filter?.city[0],
+          price: filter?.priceRange === '' ? undefined : filter?.priceRange
         }
       });
       dispatch(slice.actions.getProductsSuccess(response.data.payload));

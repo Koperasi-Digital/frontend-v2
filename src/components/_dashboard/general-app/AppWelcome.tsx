@@ -1,14 +1,9 @@
-// import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import {
-  Typography,
-  // Button,
-  Card,
-  CardContent,
-  CardProps
-} from '@mui/material';
-import { SeoIllustration } from '../../../assets';
+import { Typography, Button, Card, CardContent, Stack, Box } from '@mui/material';
+import useAuth from 'hooks/useAuth';
+import { PATH_DASHBOARD } from 'routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -26,11 +21,9 @@ const RootStyle = styled(Card)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-interface AppWelcomeProps extends CardProps {
-  displayName?: string;
-}
-
-export default function AppWelcome({ displayName }: AppWelcomeProps) {
+export default function AppWelcome() {
+  const { user } = useAuth();
+  const isCustomer = user?.roles.length === 1 && user.roles[0].name === 'CUSTOMER';
   return (
     <RootStyle>
       <CardContent
@@ -41,25 +34,44 @@ export default function AppWelcome({ displayName }: AppWelcomeProps) {
         }}
       >
         <Typography gutterBottom variant="h4">
-          Welcome back,
-          <br /> {!displayName ? '...' : displayName}!
+          Selamat datang,
+          <br /> {user?.displayName || 'Pengunjung'}!
         </Typography>
 
-        <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }}>
-          If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything
+        <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 560, mx: 'auto' }}>
+          Segala kebutuhan Anda terkait peternakan ayam bisa Anda dapatkan dari aplikasi ini.
         </Typography>
 
-        {/* <Button variant="contained" to="#" component={RouterLink}>
-          Go Now
-        </Button> */}
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{
+            justifyContent: {
+              xs: 'center',
+              lg: 'initial'
+            }
+          }}
+        >
+          {isCustomer && (
+            <Button
+              variant="contained"
+              to={PATH_DASHBOARD.user.memberVerification.request}
+              component={RouterLink}
+            >
+              Upgrade Akun
+            </Button>
+          )}
+          <Button variant="contained" to={PATH_DASHBOARD.general.faq} component={RouterLink}>
+            Pelajari Lebih Lanjut
+          </Button>
+        </Stack>
       </CardContent>
 
-      <SeoIllustration
-        sx={{
-          p: 3,
-          width: 360,
-          margin: { xs: 'auto', md: 'inherit' }
-        }}
+      <Box
+        sx={{ width: 320, height: 320, p: 3, margin: { xs: 'auto', md: 'inherit' } }}
+        component="img"
+        alt="coopchick logo"
+        src={'/CoopChick_Logo.png'}
       />
     </RootStyle>
   );

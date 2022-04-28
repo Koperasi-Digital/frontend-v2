@@ -1,9 +1,10 @@
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // components
 import SvgIconStyle from '../../components/SvgIconStyle';
 // icons
 import { Icon } from '@iconify/react';
+import RoundHome from '@iconify/icons-ic/round-home';
 import RoundGroups from '@iconify/icons-ic/round-groups';
 
 // ----------------------------------------------------------------------
@@ -25,7 +26,8 @@ const ICONS = {
   analytics: getIcon('ic_analytics'),
   dashboard: getIcon('ic_dashboard'),
   booking: getIcon('ic_booking'),
-  request: <Icon icon={RoundGroups} width="100%" height="100%" />
+  request: <Icon icon={RoundGroups} width="100%" height="100%" />,
+  homepage: <Icon icon={RoundHome} width="100%" height="100%" />
 };
 
 const sidebarConfig = [
@@ -34,6 +36,11 @@ const sidebarConfig = [
   {
     subheader: 'coopchick',
     items: [
+      {
+        title: 'beranda',
+        path: PATH_PAGE.homepage,
+        icon: ICONS.homepage
+      },
       {
         title: 'dashboard',
         path: PATH_DASHBOARD.general.dashboard,

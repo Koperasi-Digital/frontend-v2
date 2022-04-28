@@ -20,6 +20,7 @@ export const PATH_AUTH = {
 };
 
 export const PATH_PAGE = {
+  homepage: '/home',
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
   page404: '/404',
@@ -51,11 +52,6 @@ export const PATH_DASHBOARD = {
     courseNewItem: path(ROOTS_DASHBOARD, '/management-course/:id/create-item'),
     courseEditPost: path(ROOTS_DASHBOARD, '/management-course/edit/:id'),
     courseEditItem: path(ROOTS_DASHBOARD, '/management-course/:courseId/edit/:order')
-  },
-  chat: {
-    root: path(ROOTS_DASHBOARD, '/chat'),
-    new: path(ROOTS_DASHBOARD, '/chat/new'),
-    conversation: path(ROOTS_DASHBOARD, '/chat/:conversationKey')
   },
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),

@@ -8,7 +8,6 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import { Calendar } from 'components/_dashboard/calendar';
-import { AppWelcome } from 'components/_dashboard/general-app';
 import {
   BankingSavings,
   BankingSaldo,
@@ -68,18 +67,13 @@ function CustomerDashboard() {
 }
 
 export default function Dashboard() {
-  const { user, currentRole } = useAuth();
+  const { currentRole } = useAuth();
   const role = currentRole?.name;
 
   return (
     <Page title="Dashboard | CoopChick">
       <Container maxWidth={false}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <div>
-              <AppWelcome displayName={user?.displayName} />
-            </div>
-          </Grid>
           <Grid item xs={12} md={4}>
             <Typography gutterBottom variant="h6" sx={{ mx: '0.5rem' }}>
               Aktivitas Minggu Ini

@@ -60,7 +60,7 @@ export default function CreateStoreForm() {
       name: '',
       description: '',
       phoneNumber: '',
-      country: countries[99].label,
+      country: countries[0].label,
       state: '',
       city: '',
       address: '',

@@ -2,19 +2,13 @@ import { last } from 'lodash';
 import { ReactElement } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Link, Typography, Breadcrumbs, BreadcrumbsProps } from '@mui/material';
+import { Icon } from '@iconify/react';
+import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
 
 // ----------------------------------------------------------------------
 
 const Separator = (
-  <Box
-    component="span"
-    sx={{
-      width: 4,
-      height: 4,
-      borderRadius: '50%',
-      bgcolor: 'text.disabled'
-    }}
-  />
+  <Box component={Icon} icon={arrowIosForwardFill} sx={{ width: 14, height: 14 }} />
 );
 
 type TLink = {

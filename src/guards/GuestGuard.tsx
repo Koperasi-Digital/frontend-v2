@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 // hooks
 import useAuth from '../hooks/useAuth';
 // routes
-import { PATH_DASHBOARD } from '../routes/paths';
+import { PATH_PAGE } from '../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -12,11 +12,10 @@ type GuestGuardProps = {
 };
 
 export default function GuestGuard({ children }: GuestGuardProps) {
-  const { isAuthenticated, currentRole } = useAuth();
-  const isCustomer = currentRole?.name === 'CUSTOMER';
+  const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
-    return <Navigate to={isCustomer ? PATH_DASHBOARD.eCommerce.shop : PATH_DASHBOARD.root} />;
+    return <Navigate to={PATH_PAGE.homepage} />;
   }
 
   return <>{children}</>;

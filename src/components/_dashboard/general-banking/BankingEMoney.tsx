@@ -64,37 +64,34 @@ export default function BankingEMoney() {
     setOpenModalEMoney(false);
   };
 
-  useEffect(() => {
-    const handleCheckEMoney = async () => {
-      const fetchedRegisterData = window.localStorage.getItem('registerData');
-      if (fetchedRegisterData) {
-        const { payment_type, phone_number, country_code } = JSON.parse(fetchedRegisterData);
-        const response = await handleRegister(userId, payment_type, phone_number, country_code);
-        console.log(response);
-        if (response.account_status === 'ENABLED') {
-          setDoesExist(true);
-          const response1 = await handleRegister(userId, payment_type, phone_number, country_code);
-          const response2 = await handleGetPayAccountInfo(response1.account_id);
-          setSaldo(response2.metadata.payment_options[0].balance.value);
-          if (window.localStorage.getItem('isRegisterJustNow')) {
-            window.localStorage.removeItem('isRegisterJustNow');
-            enqueueSnackbar('Register Payment Account success', { variant: 'success' });
-          }
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const handleCheckEMoney = async () => {
+  //     const fetchedRegisterData = window.localStorage.getItem('registerData');
+  //     if (fetchedRegisterData) {
+  //       const { payment_type, phone_number, country_code } = JSON.parse(fetchedRegisterData);
+  //       const response = await handleRegister(userId, payment_type, phone_number, country_code);
+  //       console.log(response);
+  //       if (response.account_status === 'ENABLED') {
+  //         setDoesExist(true);
+  //         const response1 = await handleRegister(userId, payment_type, phone_number, country_code);
+  //         const response2 = await handleGetPayAccountInfo(response1.account_id);
+  //         setSaldo(response2.metadata.payment_options[0].balance.value);
+  //         if (window.localStorage.getItem('isRegisterJustNow')) {
+  //           window.localStorage.removeItem('isRegisterJustNow');
+  //           enqueueSnackbar('Register Payment Account success', { variant: 'success' });
+  //         }
+  //       }
+  //     }
+  //   };
 
-    handleCheckEMoney();
-  }, [userId, enqueueSnackbar]);
+  //   handleCheckEMoney();
+  // }, [userId, enqueueSnackbar]);
 
   return (
     <>
-      <Box sx={{ mb: 5 }}>
+      <Box sx={{}}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="overline" sx={{ color: 'text.primary' }}>
-            Gopay
-          </Typography>
-          {doesExist ? (
+          {/* {doesExist ? (
             <div>
               <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                 {saldo ? fCurrency(saldo) : null}
@@ -107,9 +104,13 @@ export default function BankingEMoney() {
                 setOpenModalEMoney(true);
               }}
             >
-              Register GoPay
+              Register E-Money
             </Button>
-          )}
+          )} */}
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Typography variant="body2">E-Money</Typography>
+            <Typography variant="body2">{fCurrency(100000)}</Typography>
+          </Box>
         </Stack>
         <DialogAnimate
           open={openModalEMoney}
