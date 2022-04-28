@@ -42,7 +42,7 @@ export default function BankingSimpananPokok() {
     const fetchData = async () => {
       const fetchedSimpananPokok = await handleGetSimpananPokok(userId);
       if (fetchedSimpananPokok && fetchedSimpananPokok.order === null) {
-        const createdOrder = await handleCreateOrder(userId, fetchedSimpananPokok.amount);
+        const createdOrder = await handleCreateOrder(userId, fetchedSimpananPokok.amount, 'OTHER');
         const temp = await handleAddOrderSimpananPokok(userId, createdOrder.id);
         fetchedSimpananPokok.order = temp.order;
       }
@@ -64,7 +64,7 @@ export default function BankingSimpananPokok() {
                 user_id={2}
                 buttonName="Bayar"
                 transaction_details={{
-                  order_id: simpananPokok.order.id,
+                  order_id: simpananPokok.order.id.toString(),
                   gross_amount: simpananPokok.amount
                 }}
               />

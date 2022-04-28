@@ -18,24 +18,18 @@ import { fCurrency } from '../../../../utils/formatNumber';
 
 type CheckoutSummaryProps = {
   total: number;
-  discount?: number;
   subtotal: number;
   shipping?: number;
   onEdit?: VoidFunction;
   enableEdit?: boolean;
-  onApplyDiscount?: (discount: number) => void;
-  enableDiscount?: boolean;
 };
 
 export default function CheckoutSummary({
   total,
   onEdit,
-  discount,
   subtotal,
   shipping,
-  onApplyDiscount,
-  enableEdit = false,
-  enableDiscount = false
+  enableEdit = false
 }: CheckoutSummaryProps) {
   const displayShipping = shipping !== null ? 'Free' : '-';
 
@@ -65,14 +59,6 @@ export default function CheckoutSummary({
             </Typography>
             <Typography variant="subtitle2">{fCurrency(subtotal)}</Typography>
           </Stack>
-
-          {/* <Stack direction="row" justifyContent="space-between">
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Discount
-            </Typography>
-            <Typography variant="subtitle2">{discount ? fCurrency(-discount) : '-'}</Typography>
-          </Stack> */}
-
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Shipping
@@ -81,9 +67,7 @@ export default function CheckoutSummary({
               {shipping ? fCurrency(shipping) : displayShipping}
             </Typography>
           </Stack>
-
           <Divider />
-
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="subtitle1">Total</Typography>
             <Box sx={{ textAlign: 'right' }}>
@@ -95,23 +79,6 @@ export default function CheckoutSummary({
               </Typography>
             </Box>
           </Stack>
-
-          {/* {enableDiscount && onApplyDiscount && (
-            <TextField
-              fullWidth
-              placeholder="Discount codes / Gifts"
-              value="DISCOUNT5"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Button type="button" onClick={() => onApplyDiscount(5)} sx={{ mr: -0.5 }}>
-                      Apply
-                    </Button>
-                  </InputAdornment>
-                )
-              }}
-            />
-          )} */}
         </Stack>
       </CardContent>
     </Card>

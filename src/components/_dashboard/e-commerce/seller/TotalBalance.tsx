@@ -56,7 +56,7 @@ export default function TotalBalance() {
       setChartData(data);
     };
     fetchData();
-  }, [YEAR]);
+  }, []);
 
   const chartOptions = merge(BaseOptionChart(), {
     colors: [theme.palette.chart.green[0]],

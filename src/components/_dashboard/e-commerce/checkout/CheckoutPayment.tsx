@@ -2,7 +2,6 @@ import * as Yup from 'yup';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import arrowIosBackFill from '@iconify/icons-eva/arrow-ios-back-fill';
-import { useEffect } from 'react';
 // material
 import { Grid, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -22,33 +21,17 @@ import {
   onGotoStep,
   onBackStep,
   onNextStep,
-  applyShipping,
-  addCheckoutOrder
+  applyShipping
 } from '../../../../redux/slices/product';
 //
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
-import {
-  handleCreateOrder,
-  handleEditOrder,
-  handleGetOrder
-} from 'utils/financeAxios/financeOrder';
-import { handleCreateTransaction } from 'utils/financeAxios/financeTransaction';
+import { handleCreateOrder } from 'utils/financeAxios/financeOrder';
 import { PATH_DASHBOARD } from 'routes/paths';
 import useAuth from 'hooks/useAuth';
-
-type transaction_details = {
-  order_id: number;
-  gross_amount: number;
-};
-
-declare global {
-  interface Window {
-    snap: any;
-  }
-}
+import { useNavigate } from 'react-router';
 
 const DELIVERY_OPTIONS: DeliveryOption[] = [
   {
@@ -65,19 +48,19 @@ const DELIVERY_OPTIONS: DeliveryOption[] = [
 
 const PAYMENT_OPTIONS: PaymentOption[] = [
   {
-    value: 'paypal',
+    value: 'OTHER',
     title: 'Pay with Paypal',
     description: 'You will be redirected to PayPal website to complete your purchase securely.',
     icons: ['/static/icons/ic_paypal.svg']
   },
   {
-    value: 'credit_card',
+    value: 'OTHER',
     title: 'Credit / Debit Card',
     description: 'We support Mastercard, Visa, Discover and Stripe.',
     icons: ['/static/icons/ic_mastercard.svg', '/static/icons/ic_visa.svg']
   },
   {
-    value: 'cash',
+    value: 'OTHER',
     title: 'Cash on CheckoutDelivery',
     description: 'Pay with cash when your order is delivered.',
     icons: []
@@ -91,15 +74,13 @@ const CARDS_OPTIONS: CardOption[] = [
 ];
 
 export default function CheckoutPayment() {
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-
   const { user } = useAuth();
   const userId = user?.id;
-
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
-
   const dispatch = useDispatch();
-  const { total, discount, subtotal, shipping, orderId, cart } = checkout;
+  const { total, subtotal, shipping, cart, billing: address } = checkout;
 
   const handleBackStep = () => {
     dispatch(onBackStep());
@@ -113,76 +94,12 @@ export default function CheckoutPayment() {
     dispatch(applyShipping(value));
   };
 
-  useEffect(() => {
-    //for payment
-    const snapSrcUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
-    const myMidtransClientKey = 'SB-Mid-client-hGP5UBKXCE-VIit4'; //change this according to your client-key
-
-    const script = document.createElement('script');
-    script.src = snapSrcUrl;
-    script.setAttribute('data-client-key', myMidtransClientKey);
-    script.async = true;
-
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleNextStep = () => {
-      dispatch(onNextStep());
-    };
-
-    const handleCheckOrderStatus = async () => {
-      if (orderId) {
-        const order = await handleGetOrder(orderId);
-        if (order && order.status === 'LUNAS') {
-          handleNextStep();
-        }
-      }
-    };
-
-    handleCheckOrderStatus();
-  }, [dispatch, orderId]);
-
-  const paymentFunction = async (user_id: number, transaction_details: transaction_details) => {
-    const snapOptions = {
-      onSuccess: function (result: any) {
-        //TODO: PUSH NOTIFICATION
-        window.location.href = PATH_DASHBOARD.eCommerce.checkout;
-        enqueueSnackbar('Payment success', { variant: 'success' });
-      },
-      onPending: function (result: any) {
-        //TODO: PUSH NOTIFICATION
-        window.location.href = PATH_DASHBOARD.eCommerce.checkout;
-        enqueueSnackbar('Payment pending', { variant: 'warning' });
-      },
-      onError: function (result: any) {
-        //TODO: PUSH NOTIFICATION
-        window.location.href = PATH_DASHBOARD.eCommerce.checkout;
-        enqueueSnackbar('Payment error', { variant: 'error' });
-      },
-      onClose: function () {}
-    };
-
-    const tokenName = await handleCreateTransaction(transaction_details);
-    window.snap.pay(tokenName, snapOptions);
-  };
-
-  const fetchData = async () => {
-    if (!orderId) {
-      const createdOrder = await handleCreateOrder(userId, Math.floor(total), cart);
-      dispatch(addCheckoutOrder(createdOrder.id));
-      return createdOrder;
-    } else {
-      const editedOrder = await handleEditOrder(orderId, Math.floor(total));
-      return editedOrder;
-    }
+  const handleNextStep = () => {
+    dispatch(onNextStep());
   };
 
   const PaymentSchema = Yup.object().shape({
+    delivery: Yup.mixed().required('Shipment delivery is required'),
     payment: Yup.mixed().required('Payment is required')
   });
 
@@ -194,16 +111,19 @@ export default function CheckoutPayment() {
     validationSchema: PaymentSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        const order = await fetchData();
-        await paymentFunction(userId, {
-          order_id: order.id,
-          gross_amount: order.total_cost
-        });
-        // handleNextStep();
+        const createdOrder = await handleCreateOrder(
+          userId,
+          Math.floor(total),
+          values.payment,
+          cart,
+          address ? address : undefined
+        );
+        enqueueSnackbar('Pesanan berhasil dibuat.', { variant: 'success' });
+        handleNextStep();
+        navigate(PATH_DASHBOARD.eCommerce.root + '/order/' + createdOrder.id + '/payment');
       } catch (error) {
-        console.error(error);
         setSubmitting(false);
-        setErrors(error.message);
+        setErrors(error);
       }
     }
   });
@@ -242,7 +162,6 @@ export default function CheckoutPayment() {
               enableEdit
               total={total}
               subtotal={subtotal}
-              discount={discount}
               shipping={shipping}
               onEdit={() => handleGotoStep(0)}
             />

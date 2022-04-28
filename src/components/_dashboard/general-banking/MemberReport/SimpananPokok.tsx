@@ -13,29 +13,7 @@ import { fCurrency } from 'utils/formatNumber';
 
 import LoadingScreen from 'components/LoadingScreen';
 
-type SimpananPokokType = {
-  id: number;
-  status: string;
-  amount: number;
-  userId: number;
-  user: {
-    id: number;
-    email: string;
-    password: string;
-    username: string;
-    name: string;
-    role: string;
-    language: string;
-    created_at: string;
-    updated_at: string;
-  };
-  order: {
-    id: number;
-    user_id: number;
-    total_cost: number;
-    status: string;
-  };
-};
+import { SimpananPokokType } from '../../../../@types/simpanan';
 
 export default function SimpananPokok() {
   const { user } = useAuth();
@@ -48,7 +26,11 @@ export default function SimpananPokok() {
       if (user) {
         const fetchedSimpananPokok = await handleGetSimpananPokok(user.id);
         if (fetchedSimpananPokok && fetchedSimpananPokok.order === null) {
-          const createdOrder = await handleCreateOrder(user.id, fetchedSimpananPokok.amount);
+          const createdOrder = await handleCreateOrder(
+            user.id,
+            fetchedSimpananPokok.amount,
+            'OTHER'
+          );
           const temp = await handleAddOrderSimpananPokok(user.id, createdOrder.id);
           fetchedSimpananPokok.order = temp.order;
         }
@@ -74,7 +56,7 @@ export default function SimpananPokok() {
                 user_id={2}
                 buttonName="Bayar"
                 transaction_details={{
-                  order_id: simpananPokok.order.id,
+                  order_id: simpananPokok.order.id.toString(),
                   gross_amount: simpananPokok.amount
                 }}
               />

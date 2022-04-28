@@ -58,7 +58,7 @@ export default function CheckoutPaymentMethods({
           <Grid container spacing={2}>
             {paymentOptions.map((method) => {
               const { value, title, icons, description } = method;
-              const hasChildren = value === 'credit_card';
+              const hasChildren = value === 'OTHER';
 
               return (
                 <Grid key={title} item xs={12}>

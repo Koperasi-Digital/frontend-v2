@@ -25,6 +25,8 @@ import { Grid } from '@mui/material';
 
 import ArusKasReportToolbar from './ArusKasReportToolbar';
 
+import { ArusKasData } from '../../../../@types/finance-report';
+
 type ArusKasReportProps = {
   dateValue: Date;
 };
@@ -32,14 +34,7 @@ type ArusKasReportProps = {
 export default function ArusKasReport({ dateValue }: ArusKasReportProps) {
   const { user } = useAuth();
 
-  interface IArusKasData {
-    jumlahKasAwal: number;
-    kasMasuk: number;
-    kasKeluar: number;
-    jumlahKasAkhir: number;
-  }
-
-  const [arusKasData, setArusKasData] = useState<IArusKasData | undefined>(undefined);
+  const [arusKasData, setArusKasData] = useState<ArusKasData | undefined>(undefined);
   const [dataNotExist, setDataNotExist] = useState<Boolean>(false);
 
   const RowResultStyle = styled(TableRow)(({ theme }) => ({
