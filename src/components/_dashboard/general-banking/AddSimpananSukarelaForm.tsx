@@ -16,11 +16,7 @@ import {
   handleGetSimpananSukarela,
   handleCreateSimpananSukarela
 } from 'utils/financeAxios/financeSimpanan';
-
-type transaction_details = {
-  order_id: number;
-  gross_amount: number;
-};
+import { TransactionDetails } from '../../../@types/transaction';
 
 declare global {
   interface Window {
@@ -63,7 +59,7 @@ export default function AddSimpananSukarelaForm() {
     validationSchema: AddSimpananSukarelaSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        const createdOrder = await handleCreateOrder(userId, Number(values.amount));
+        const createdOrder = await handleCreateOrder(userId, Number(values.amount), 'OTHER');
         console.log('Created order: ', createdOrder);
         const fetchedSimpananSukarela = await handleGetSimpananSukarela(userId);
         if (!fetchedSimpananSukarela) {
@@ -86,7 +82,7 @@ export default function AddSimpananSukarelaForm() {
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
-  const paymentFunction = async (user_id: number, transaction_details: transaction_details) => {
+  const paymentFunction = async (user_id: number, transaction_details: TransactionDetails) => {
     const snapOptions = {
       onSuccess: function (result: any) {
         //TODO: PUSH NOTIFICATION

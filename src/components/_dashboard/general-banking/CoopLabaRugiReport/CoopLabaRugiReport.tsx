@@ -27,24 +27,17 @@ import { Grid } from '@mui/material';
 
 import CoopLabaRugiReportToolbar from './CoopLabaRugiReportToolbar';
 
+import { CoopLabaRugiData } from '../../../../@types/finance-report';
+
 type CoopLabaRugiReportProps = {
   dateValue: Date;
 };
 
 export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProps) {
-  interface ICoopLabaRugiData {
-    jumlahSimpananPokok: number;
-    jumlahSimpananWajib: number;
-    jumlahBiayaLayanan: number;
-    biayaSisaHasilUsaha: number;
-    biayaOperasi: number;
-    net: number;
-  }
-
   const [currentCoopLabaRugiData, setCurrentCoopLabaRugiData] = useState<
-    ICoopLabaRugiData | undefined
+    CoopLabaRugiData | undefined
   >(undefined);
-  const [prevCoopLabaRugiData, setPrevCoopLabaRugiData] = useState<ICoopLabaRugiData | undefined>();
+  const [prevCoopLabaRugiData, setPrevCoopLabaRugiData] = useState<CoopLabaRugiData | undefined>();
   const [incomePercent, setIncomePercent] = useState<number>(0);
   const [expensePercent, setExpensePercent] = useState<number>(0);
   const [dataNotExist, setDataNotExist] = useState<Boolean>(false);

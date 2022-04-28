@@ -2,16 +2,12 @@ import { useEffect } from 'react';
 import { Button } from '@mui/material';
 import { handleCreateTransaction } from '../../../utils/financeAxios/financeTransaction';
 import { useSnackbar } from 'notistack';
+import { TransactionDetails } from '../../../@types/transaction';
 
 type PaymentCreationProps = {
   user_id: number;
   buttonName: string;
-  transaction_details: transaction_details;
-};
-
-type transaction_details = {
-  order_id: number;
-  gross_amount: number;
+  transaction_details: TransactionDetails;
 };
 
 declare global {

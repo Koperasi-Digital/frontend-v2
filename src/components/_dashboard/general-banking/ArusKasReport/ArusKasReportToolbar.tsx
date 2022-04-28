@@ -11,12 +11,7 @@ import ArusKasReportPDF from './ArusKasReportPDF';
 import { ExportToExcel } from 'components/ExportToExcel';
 import { Stack } from '@mui/material';
 
-type ArusKasData = {
-  jumlahKasAwal: number;
-  kasMasuk: number;
-  kasKeluar: number;
-  jumlahKasAkhir: number;
-};
+import { ArusKasData } from '../../../../@types/finance-report';
 
 export default function ArusKasReportToolbar(props: { arusKasData: ArusKasData | undefined }) {
   const [sheetData, setSheetData] = useState<{ No: string; Komponen: string; Jumlah: number }[]>();

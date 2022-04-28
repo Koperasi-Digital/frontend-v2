@@ -43,7 +43,7 @@ export default function BankingSimpananWajib() {
     const fetchData = async () => {
       const fetchedSimpananWajib = await handleGetSimpananWajib(userId, new Date());
       if (fetchedSimpananWajib && fetchedSimpananWajib.order === null) {
-        const createdOrder = await handleCreateOrder(userId, fetchedSimpananWajib.amount);
+        const createdOrder = await handleCreateOrder(userId, fetchedSimpananWajib.amount, 'OTHER');
         const temp = await handleAddOrderSimpananWajib(userId, new Date(), createdOrder.id);
         fetchedSimpananWajib.order = temp.order;
       }
@@ -67,7 +67,7 @@ export default function BankingSimpananWajib() {
                 user_id={2}
                 buttonName="Bayar"
                 transaction_details={{
-                  order_id: simpananWajib.order.id,
+                  order_id: simpananWajib.order.id.toString(),
                   gross_amount: simpananWajib.amount
                 }}
               />

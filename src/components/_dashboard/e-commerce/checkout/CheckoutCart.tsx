@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from '../../../../redux/store';
 import {
   deleteCart,
   onNextStep,
-  applyDiscount,
   increaseQuantity,
   decreaseQuantity
 } from '../../../../redux/slices/product';
@@ -29,7 +28,7 @@ import CheckoutProductList from './CheckoutProductList';
 export default function CheckoutCart() {
   const dispatch = useDispatch();
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
-  const { cart, total, discount, subtotal } = checkout;
+  const { cart, total, subtotal } = checkout;
   const isEmptyCart = cart.length === 0;
 
   const handleDeleteCart = (productId: string) => {
@@ -46,10 +45,6 @@ export default function CheckoutCart() {
 
   const handleDecreaseQuantity = (productId: string) => {
     dispatch(decreaseQuantity(productId));
-  };
-
-  const handleApplyDiscount = (value: number) => {
-    dispatch(applyDiscount(value));
   };
 
   const formik = useFormik({
@@ -116,13 +111,7 @@ export default function CheckoutCart() {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <CheckoutSummary
-              total={total}
-              enableDiscount
-              discount={discount}
-              subtotal={subtotal}
-              onApplyDiscount={handleApplyDiscount}
-            />
+            <CheckoutSummary total={total} subtotal={subtotal} />
             <Button
               fullWidth
               size="large"
