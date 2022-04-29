@@ -10,7 +10,6 @@ import Page from '../../components/Page';
 import { Calendar } from 'components/_dashboard/calendar';
 import { AppWelcome } from 'components/_dashboard/general-app';
 import {
-  BankingSavings,
   BankingSaldo,
   BankingEMoney,
   BankingMemberSimpananPokok,
@@ -42,10 +41,7 @@ function MemberDashboard() {
       <Grid item xs={12} md={4}>
         <UserActiveness />
       </Grid>
-      <Grid item xs={12} md={4}>
-        <BankingSavings />
-      </Grid>
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={6}>
         <BankingSaldo />
         <BankingEMoney />
       </Grid>
