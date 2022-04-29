@@ -32,6 +32,14 @@ export type ProductInventoryType = 'Active' | 'Inactive' | 'Low Stock';
 
 export type ProductCategory = 'Ayam' | 'Infrastruktur' | 'Kandang | Pakan';
 
+export type IconType = { tiki: string; jne: string; pos: string };
+
+export type ApplyShipping = {
+  chosenItem: number;
+  shipment: string;
+  shipment_price: number;
+};
+
 export type OnCreateBilling = (address: UserAddressBook) => void;
 
 export type FormikPropsShopView = FormikProps<ProductFilter>;
@@ -58,6 +66,7 @@ export type CartItem = {
   name: string;
   cover: string;
   available: number;
+  weight: number;
   price: number;
   quantity: number;
   subtotal: number;
@@ -126,6 +135,7 @@ export type ProductFormikRaw = {
 export type PaymentFormikProps = FormikProps<{
   delivery: number;
   payment: string;
+  shipment: string;
 }>;
 
 export type DeliveryOption = {

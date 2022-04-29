@@ -104,7 +104,7 @@ export default function ProductDetailsSummary({
 }: ProductDetailsSumaryprops) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { id, name, category, price, available, cover, status, store } = product;
+  const { id, name, category, price, available, cover, status, store, weight } = product;
   const storeName = store.name || null;
   const storeCity = store.city || null;
   const sizes = ['KG', 'LUSIN', 'TON'];
@@ -126,9 +126,11 @@ export default function ProductDetailsSummary({
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
         let subtotal = values.price * values.quantity;
+        let weightTotal = weight * values.quantity;
         if (!alreadyProduct) {
           onAddCart({
             ...values,
+            weight: weightTotal,
             subtotal: subtotal,
             store_name: storeName,
             store_city: storeCity,
@@ -150,9 +152,12 @@ export default function ProductDetailsSummary({
   const handleAddCart = async () => {
     // TODO: change this dummy product_id, shipment_id, and shipment_price
     try {
+      let subtotal = values.price * values.quantity;
+      let weightTotal = weight * values.quantity;
       onAddCart({
         ...values,
-        subtotal: values.price * values.quantity,
+        weight: weightTotal,
+        subtotal: subtotal,
         store_name: storeName,
         store_city: storeCity,
         shipment: null,

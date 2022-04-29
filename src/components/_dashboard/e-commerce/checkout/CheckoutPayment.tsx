@@ -9,21 +9,15 @@ import { useSnackbar } from 'notistack';
 import { LoadingButton } from '@mui/lab';
 
 // @types
-import {
-  DeliveryOption,
-  PaymentOption,
-  CardOption,
-  ProductState,
-  ShipmentForm,
-  ShipmentOptions
-} from '../../../../@types/products';
+import { PaymentOption, ProductState } from '../../../../@types/products';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import {
   onGotoStep,
   onBackStep,
   onNextStep,
-  applyShipping
+  applyShipping,
+  resetShipment
 } from '../../../../redux/slices/product';
 //
 import CheckoutSummary from './CheckoutSummary';
@@ -34,22 +28,6 @@ import { handleCreateOrder } from 'utils/financeAxios/financeOrder';
 import { PATH_DASHBOARD } from 'routes/paths';
 import useAuth from 'hooks/useAuth';
 import { useNavigate } from 'react-router';
-import { useEffect, useState } from 'react';
-import { getAllShipmentCost } from 'utils/checkoutAxios/shipment';
-import { getCityIDByName } from 'components/_dashboard/user/cities';
-
-const DELIVERY_OPTIONS: DeliveryOption[] = [
-  {
-    value: 0,
-    title: 'Standard delivery (Free)',
-    description: 'Delivered on Monday, August 12'
-  },
-  {
-    value: 2,
-    title: 'Fast delivery ($2,00)',
-    description: 'Delivered on Monday, August 5'
-  }
-];
 
 const PAYMENT_OPTIONS: PaymentOption[] = [
   {
@@ -66,35 +44,14 @@ const PAYMENT_OPTIONS: PaymentOption[] = [
   }
 ];
 
-const CARDS_OPTIONS: CardOption[] = [
-  { value: 'ViSa1', label: '**** **** **** 1212 - Jimmy Holland' },
-  { value: 'ViSa2', label: '**** **** **** 2424 - Shawn Stokes' },
-  { value: 'MasterCard', label: '**** **** **** 4545 - Cole Armstrong' }
-];
-
 export default function CheckoutPayment() {
   const navigate = useNavigate();
-  const [deliveryOptions, setDeliveryOptions] = useState<ShipmentOptions[]>([]);
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
   const userId = user?.id;
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
   const dispatch = useDispatch();
   const { total, subtotal, shipping, cart, billing: address } = checkout;
-
-  // Retrieve all delivery options
-  useEffect(() => {
-    const shipmentInfo: ShipmentForm = {
-      origin: 2,
-      destination: getCityIDByName(address!.city),
-      weight: 15
-    };
-    const fetchShippingData = async (shipmentInfo: ShipmentForm) => {
-      const response: ShipmentOptions[] = await getAllShipmentCost(shipmentInfo);
-      setDeliveryOptions(response);
-    };
-    fetchShippingData(shipmentInfo);
-  }, [cart]);
 
   const handleBackStep = () => {
     dispatch(onBackStep());
@@ -104,8 +61,17 @@ export default function CheckoutPayment() {
     dispatch(onGotoStep(step));
   };
 
-  const handleApplyShipping = (value: number) => {
+  const handleApplyShipping = (value: {
+    chosenItem: number;
+    shipment: string;
+    shipment_price: number;
+  }) => {
     dispatch(applyShipping(value));
+  };
+
+  const handleResetShipment = (value: number) => {
+    dispatch(resetShipment(value));
+    setFieldValue('shipment', '');
   };
 
   const handleNextStep = () => {
@@ -113,14 +79,18 @@ export default function CheckoutPayment() {
   };
 
   const PaymentSchema = Yup.object().shape({
-    delivery: Yup.mixed().required('Shipment delivery is required'),
-    payment: Yup.mixed().required('Payment is required')
+    delivery: Yup.number()
+      .positive('Must be more than 0')
+      .required('Shipment delivery is required'),
+    payment: Yup.mixed().required('Payment is required'),
+    shipment: Yup.mixed().required('Shipment is required')
   });
 
   const formik = useFormik({
     initialValues: {
       delivery: shipping,
-      payment: ''
+      payment: '',
+      shipment: ''
     },
     validationSchema: PaymentSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
@@ -142,7 +112,7 @@ export default function CheckoutPayment() {
     }
   });
 
-  const { isSubmitting, handleSubmit } = formik;
+  const { isSubmitting, handleSubmit, setFieldValue } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -151,14 +121,13 @@ export default function CheckoutPayment() {
           <Grid item xs={12} md={8}>
             <CheckoutDelivery
               formik={formik}
+              cart={cart}
+              user_address={address}
               onApplyShipping={handleApplyShipping}
-              deliveryOptions={deliveryOptions}
+              onReset={handleResetShipment}
             />
-            <CheckoutPaymentMethods
-              formik={formik}
-              cardOptions={CARDS_OPTIONS}
-              paymentOptions={PAYMENT_OPTIONS}
-            />
+
+            <CheckoutPaymentMethods formik={formik} paymentOptions={PAYMENT_OPTIONS} />
             <Button
               type="button"
               size="small"
