@@ -45,7 +45,7 @@ export default function BankingEMoney() {
     };
 
     handleCheckEMoney();
-  }, []);
+  }, [dispatch, eMoney]);
 
   useEffect(() => {
     const fetchSaldo = async () => {
