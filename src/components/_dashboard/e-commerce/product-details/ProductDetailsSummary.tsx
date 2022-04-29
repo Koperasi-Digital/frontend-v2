@@ -106,6 +106,7 @@ export default function ProductDetailsSummary({
   const navigate = useNavigate();
   const { id, name, category, price, available, cover, status, store } = product;
   const storeName = store.name || null;
+  const storeCity = store.city || null;
   const sizes = ['KG', 'LUSIN', 'TON'];
 
   const alreadyProduct = cart.map((item) => item.id).includes(id);
@@ -130,8 +131,9 @@ export default function ProductDetailsSummary({
             ...values,
             subtotal: subtotal,
             store_name: storeName,
-            shipment_id: 1,
-            shipment_price: 10000
+            store_city: storeCity,
+            shipment: null,
+            shipment_price: null
           });
         }
         setSubmitting(false);
@@ -152,8 +154,9 @@ export default function ProductDetailsSummary({
         ...values,
         subtotal: values.price * values.quantity,
         store_name: storeName,
-        shipment_id: 1,
-        shipment_price: 10000
+        store_city: storeCity,
+        shipment: null,
+        shipment_price: null
       });
       // TODO: END OF TODO
     } catch (error) {

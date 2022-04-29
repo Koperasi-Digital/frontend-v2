@@ -11,10 +11,13 @@ import {
   RadioGroup,
   CardHeader,
   CardContent,
-  FormControlLabel
+  FormControlLabel,
+  CircularProgress
 } from '@mui/material';
 // @types
-import { DeliveryOption, PaymentFormikProps } from '../../../../@types/products';
+import { PaymentFormikProps, ShipmentOptions } from '../../../../@types/products';
+import { fCurrency } from '../../../../utils/formatNumber';
+import { MHidden } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -28,11 +31,18 @@ const OptionStyle = styled('div')(({ theme }) => ({
   border: `solid 1px ${theme.palette.grey[500_32]}`
 }));
 
+type IconType = { tiki: string; jne: string; pos: string };
+const icons: IconType = {
+  tiki: '/static/icons/ic_tiki.png',
+  jne: '/static/icons/ic_jne.png',
+  pos: '/static/icons/ic_pos.png'
+};
+
 // ----------------------------------------------------------------------
 
 type CheckoutDeliveryProps = {
   formik: PaymentFormikProps;
-  deliveryOptions: DeliveryOption[];
+  deliveryOptions: ShipmentOptions[];
   onApplyShipping: (shipping: number) => void;
 };
 
@@ -47,6 +57,11 @@ export default function CheckoutDelivery({
   return (
     <Card {...other}>
       <CardHeader title="Delivery options" />
+      {deliveryOptions.length === 0 && (
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <CircularProgress />
+        </Box>
+      )}
       <CardContent>
         <RadioGroup
           name="delivery"
@@ -58,34 +73,50 @@ export default function CheckoutDelivery({
           }}
         >
           <Grid container spacing={2}>
-            {deliveryOptions.map((delivery) => {
-              const { value, title, description } = delivery;
-              return (
-                <Grid key={value} item xs={12} md={6}>
-                  <OptionStyle
-                    sx={{
-                      ...(values.delivery === value && {
-                        boxShadow: (theme) => theme.customShadows.z8
-                      })
-                    }}
-                  >
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio checkedIcon={<Icon icon={checkmarkCircle2Fill} />} />}
-                      label={
-                        <Box sx={{ ml: 1 }}>
-                          <Typography variant="subtitle2">{title}</Typography>
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            {description}
-                          </Typography>
-                        </Box>
-                      }
-                      sx={{ py: 3, flexGrow: 1, mr: 0 }}
-                    />
-                  </OptionStyle>
-                </Grid>
-              );
-            })}
+            {deliveryOptions.length !== 0 &&
+              deliveryOptions.map((delivery, index) => {
+                const { code, costs } = delivery[0];
+                return costs.map((shipmentDetail) => {
+                  const { service, cost } = shipmentDetail;
+                  return (
+                    <Grid key={index} item xs={12}>
+                      <OptionStyle
+                        sx={{
+                          ...(values.delivery === index && {
+                            boxShadow: (theme) => theme.customShadows.z8
+                          })
+                        }}
+                      >
+                        <FormControlLabel
+                          value={index}
+                          control={<Radio checkedIcon={<Icon icon={checkmarkCircle2Fill} />} />}
+                          label={
+                            <Box sx={{ ml: 1 }}>
+                              <Typography variant="subtitle2">
+                                {code.toUpperCase()}&nbsp;{service}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                {fCurrency(cost[0].value)}&nbsp;-&nbsp;{parseInt(cost[0].etd)} HARI
+                              </Typography>
+                            </Box>
+                          }
+                          sx={{ py: 3, flexGrow: 1, mr: 0 }}
+                        />
+                        <MHidden width="smDown">
+                          <Box sx={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                            <Box
+                              component="img"
+                              alt="logo card"
+                              src={icons[code as keyof IconType]}
+                              sx={{ mr: 1, maxHeight: 40 }}
+                            />
+                          </Box>
+                        </MHidden>
+                      </OptionStyle>
+                    </Grid>
+                  );
+                });
+              })}
           </Grid>
         </RadioGroup>
       </CardContent>

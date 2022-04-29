@@ -4,11 +4,33 @@ import { UserAddressBook } from './user';
 
 // ----------------------------------------------------------------------
 
+export type ShipmentCourier = 'tiki' | 'jne' | 'pos';
+
+export type ShipmentForm = {
+  origin: number;
+  destination: number;
+  weight: number;
+};
+
+export type ShipmentOptions = [
+  {
+    code: string;
+    name: string;
+    costs: ShipmentDetail[];
+  }
+];
+
+export type ShipmentDetail = {
+  service: string;
+  description: string;
+  cost: [{ value: number; etd: string; note: string }];
+};
+
 export type PaymentType = 'OTHER' | 'GOPAY';
 
 export type ProductInventoryType = 'Active' | 'Inactive' | 'Low Stock';
 
-export type ProductCategory = 'Ayam' | 'Infrastruktur' | 'Kandang';
+export type ProductCategory = 'Ayam' | 'Infrastruktur' | 'Kandang | Pakan';
 
 export type OnCreateBilling = (address: UserAddressBook) => void;
 
@@ -40,7 +62,8 @@ export type CartItem = {
   quantity: number;
   subtotal: number;
   store_name: string | null;
-  shipment_id: number | null;
+  store_city: string | null;
+  shipment: string | null;
   shipment_price: number | null;
 };
 

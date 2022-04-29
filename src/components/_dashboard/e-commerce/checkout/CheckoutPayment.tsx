@@ -13,7 +13,9 @@ import {
   DeliveryOption,
   PaymentOption,
   CardOption,
-  ProductState
+  ProductState,
+  ShipmentForm,
+  ShipmentOptions
 } from '../../../../@types/products';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -32,6 +34,9 @@ import { handleCreateOrder } from 'utils/financeAxios/financeOrder';
 import { PATH_DASHBOARD } from 'routes/paths';
 import useAuth from 'hooks/useAuth';
 import { useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
+import { getAllShipmentCost } from 'utils/checkoutAxios/shipment';
+import { getCityIDByName } from 'components/_dashboard/user/cities';
 
 const DELIVERY_OPTIONS: DeliveryOption[] = [
   {
@@ -48,22 +53,16 @@ const DELIVERY_OPTIONS: DeliveryOption[] = [
 
 const PAYMENT_OPTIONS: PaymentOption[] = [
   {
-    value: 'OTHER',
-    title: 'Pay with Paypal',
-    description: 'You will be redirected to PayPal website to complete your purchase securely.',
-    icons: ['/static/icons/ic_paypal.svg']
+    value: 'GOPAY',
+    title: 'GO-PAY',
+    description: 'Pembayaran akan menggunakan saldo GO-PAY terdaftar.',
+    icons: ['/static/icons/ic_gopay.png']
   },
   {
     value: 'OTHER',
-    title: 'Credit / Debit Card',
-    description: 'We support Mastercard, Visa, Discover and Stripe.',
+    title: 'Credit / Debit Card / Lainnya',
+    description: 'Pembayaran menggunakan Kartu Credit / Debit',
     icons: ['/static/icons/ic_mastercard.svg', '/static/icons/ic_visa.svg']
-  },
-  {
-    value: 'OTHER',
-    title: 'Cash on CheckoutDelivery',
-    description: 'Pay with cash when your order is delivered.',
-    icons: []
   }
 ];
 
@@ -75,12 +74,27 @@ const CARDS_OPTIONS: CardOption[] = [
 
 export default function CheckoutPayment() {
   const navigate = useNavigate();
+  const [deliveryOptions, setDeliveryOptions] = useState<ShipmentOptions[]>([]);
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
   const userId = user?.id;
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
   const dispatch = useDispatch();
   const { total, subtotal, shipping, cart, billing: address } = checkout;
+
+  // Retrieve all delivery options
+  useEffect(() => {
+    const shipmentInfo: ShipmentForm = {
+      origin: 2,
+      destination: getCityIDByName(address!.city),
+      weight: 15
+    };
+    const fetchShippingData = async (shipmentInfo: ShipmentForm) => {
+      const response: ShipmentOptions[] = await getAllShipmentCost(shipmentInfo);
+      setDeliveryOptions(response);
+    };
+    fetchShippingData(shipmentInfo);
+  }, [cart]);
 
   const handleBackStep = () => {
     dispatch(onBackStep());
@@ -138,7 +152,7 @@ export default function CheckoutPayment() {
             <CheckoutDelivery
               formik={formik}
               onApplyShipping={handleApplyShipping}
-              deliveryOptions={DELIVERY_OPTIONS}
+              deliveryOptions={deliveryOptions}
             />
             <CheckoutPaymentMethods
               formik={formik}

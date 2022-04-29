@@ -100,7 +100,7 @@ export default function CheckoutPaymentMethods({
                     </MHidden>
 
                     {hasChildren && (
-                      <Collapse in={values.payment === 'credit_card'} sx={{ width: '100%' }}>
+                      <Collapse in={values.payment === 'OTHER'} sx={{ width: '100%' }}>
                         <TextField
                           select
                           fullWidth
