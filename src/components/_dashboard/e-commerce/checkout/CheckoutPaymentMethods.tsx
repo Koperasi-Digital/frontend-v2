@@ -1,5 +1,4 @@
 import { Icon } from '@iconify/react';
-import plusFill from '@iconify/icons-eva/plus-fill';
 import checkmarkCircle2Fill from '@iconify/icons-eva/checkmark-circle-2-fill';
 // material
 import { styled } from '@mui/material/styles';
@@ -8,9 +7,6 @@ import {
   Card,
   Grid,
   Radio,
-  Button,
-  Collapse,
-  TextField,
   Typography,
   RadioGroup,
   CardHeader,
@@ -19,7 +15,7 @@ import {
   FormControlLabel
 } from '@mui/material';
 // @types
-import { CardOption, PaymentOption, PaymentFormikProps } from '../../../../@types/products';
+import { PaymentOption, PaymentFormikProps } from '../../../../@types/products';
 //
 import { MHidden } from '../../../@material-extend';
 
@@ -40,12 +36,10 @@ const OptionStyle = styled('div')(({ theme }) => ({
 type CheckoutPaymentMethodsProps = {
   formik: PaymentFormikProps;
   paymentOptions: PaymentOption[];
-  cardOptions: CardOption[];
 };
 
 export default function CheckoutPaymentMethods({
   paymentOptions,
-  cardOptions,
   formik
 }: CheckoutPaymentMethodsProps) {
   const { errors, touched, values, getFieldProps } = formik;
@@ -98,34 +92,6 @@ export default function CheckoutPaymentMethods({
                         ))}
                       </Box>
                     </MHidden>
-
-                    {hasChildren && (
-                      <Collapse in={values.payment === 'credit_card'} sx={{ width: '100%' }}>
-                        <TextField
-                          select
-                          fullWidth
-                          label="Card"
-                          {...getFieldProps('card')}
-                          SelectProps={{ native: true }}
-                        >
-                          {cardOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </TextField>
-
-                        <Button
-                          id="add-card"
-                          type="button"
-                          size="small"
-                          startIcon={<Icon icon={plusFill} width={20} height={20} />}
-                          sx={{ my: 3 }}
-                        >
-                          Add new card
-                        </Button>
-                      </Collapse>
-                    )}
                   </OptionStyle>
                 </Grid>
               );
