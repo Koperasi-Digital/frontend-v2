@@ -33,15 +33,19 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 172;
+type InfoDeliveringOrdersProps = {
+  total: number | undefined;
+};
 
-export default function InfoDeliveringOrders() {
+export default function InfoDeliveringOrders({ total }: InfoDeliveringOrdersProps) {
   return (
     <RootStyle>
       <IconWrapperStyle>
         <Icon icon="fa-solid:truck" width={24} height={24} />
       </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">
+        {fShortenNumber(typeof total === 'undefined' ? 0 : total)}
+      </Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         Dalam Pengiriman
       </Typography>

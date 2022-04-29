@@ -33,15 +33,19 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 200;
+type InfoFinishedOrdersProps = {
+  total: number | undefined;
+};
 
-export default function InfoFinishedOrders() {
+export default function InfoFinishedOrders({ total }: InfoFinishedOrdersProps) {
   return (
     <RootStyle>
       <IconWrapperStyle>
         <Icon icon="akar-icons:circle-check-fill" width={24} height={24} />
       </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">
+        {fShortenNumber(typeof total === 'undefined' ? 0 : total)}
+      </Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         Pesanan Selesai
       </Typography>

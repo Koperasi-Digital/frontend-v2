@@ -138,22 +138,11 @@ export type PaymentFormikProps = FormikProps<{
   shipment: string;
 }>;
 
-export type DeliveryOption = {
-  value: number;
-  title: string;
-  description: string;
-};
-
 export type PaymentOption = {
   value: PaymentType;
   title: string;
   description: string;
   icons: string[];
-};
-
-export type CardOption = {
-  value: string;
-  label: string;
 };
 
 export type Invoice = {

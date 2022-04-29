@@ -10,6 +10,10 @@ import { Box, Card, Typography, Stack } from '@mui/material';
 import { fNumber, fPercent } from '../../../../utils/formatNumber';
 //
 import { BaseOptionChart } from '../../../charts';
+import { ProductAnnualReportItem } from '../../../../@types/seller-center';
+import useAuth from 'hooks/useAuth';
+import { useEffect, useState } from 'react';
+import { getProductAnnualReport } from 'utils/sellerCenterAxios/sellerDashboard';
 
 // ----------------------------------------------------------------------
 
@@ -28,10 +32,22 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 const PERCENT = 2.6;
-const TOTAL_SOLD = 765;
-const CHART_DATA = [{ data: [22, 8, 35, 50, 82, 84, 77, 12, 87, 43] }];
 
 export default function ProductSold() {
+  const { user } = useAuth();
+  const storeId = user!.store.id;
+  const [productAnnualReport, setProductAnnualReport] = useState<ProductAnnualReportItem[]>([]);
+  const [totalSold, setTotalSold] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getProductAnnualReport(storeId);
+      setProductAnnualReport(response);
+      setTotalSold(response[0].total);
+    };
+    fetchData();
+  }, [storeId]);
+
   const chartOptions = merge(BaseOptionChart(), {
     chart: { animations: { enabled: true }, sparkline: { enabled: true } },
     stroke: { width: 2 },
@@ -54,7 +70,7 @@ export default function ProductSold() {
           Product Sold
         </Typography>
         <Typography variant="h3" gutterBottom>
-          {fNumber(TOTAL_SOLD)}
+          {fNumber(totalSold)}
         </Typography>
 
         <Stack direction="row" alignItems="center" flexWrap="wrap">
@@ -81,7 +97,7 @@ export default function ProductSold() {
 
       <ReactApexChart
         type="line"
-        series={CHART_DATA}
+        series={[{ data: productAnnualReport.map((item) => item.total) }]}
         options={chartOptions}
         width={120}
         height={80}
