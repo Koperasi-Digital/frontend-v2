@@ -13,7 +13,7 @@ import { registerEMoney, unbindEMoney, getPayAccount } from 'redux/slices/emoney
 
 export default function BankingEMoney() {
   const dispatch = useDispatch();
-  const { isLoading, eMoney, hasRegistered, error } = useSelector(
+  const { isLoading, paymentType, phoneNumber, countryCode, hasRegistered, error } = useSelector(
     (state: RootState) => state.emoney
   );
 
@@ -37,17 +37,19 @@ export default function BankingEMoney() {
   };
 
   useEffect(() => {
+    console.log('Begin register emoney');
     const handleCheckEMoney = async () => {
       let payAccount = await getPayAccount();
-      if (!payAccount && eMoney) {
-        dispatch(registerEMoney(eMoney.phoneNumber, eMoney.paymentType, eMoney.countryCode));
+      if (!payAccount && paymentType && phoneNumber && countryCode) {
+        dispatch(registerEMoney(phoneNumber, paymentType, countryCode));
       }
     };
 
     handleCheckEMoney();
-  }, [dispatch, eMoney]);
+  }, [dispatch, paymentType, phoneNumber, countryCode]);
 
   useEffect(() => {
+    console.log('Begin fetch emoney saldo');
     const fetchSaldo = async () => {
       const payAccount = await getPayAccount();
       if (payAccount && payAccount.metadata && payAccount.metadata.payment_options) {

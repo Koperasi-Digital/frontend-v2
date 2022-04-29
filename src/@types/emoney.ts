@@ -1,5 +1,7 @@
 export type EMoneyState = {
-  eMoney: EMoney | null;
+  paymentType: string | null;
+  phoneNumber: string | null;
+  countryCode: string | null;
   hasRegistered: boolean;
   hasPaymentAccountFetched: boolean;
   isLoading: boolean;
