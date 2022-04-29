@@ -1,97 +1,81 @@
 import { Box, Stack, Typography, Button, DialogTitle } from '@mui/material';
 import { useEffect, useState } from 'react';
 import BankingEMoneyForm from './BankingEMoneyForm';
-import { useSnackbar } from 'notistack';
 
-import {
-  handleRegister,
-  handleGetPayAccountInfo,
-  handleUnbindPayAccount
-} from 'utils/financeAxios/financeEMoney';
 import { fCurrency } from '../../../utils/formatNumber';
+import LoadingScreen from '../../LoadingScreen';
 
 import { DialogAnimate } from '../../animate';
-import useAuth from 'hooks/useAuth';
+
+// redux
+import { RootState, useDispatch, useSelector } from 'redux/store';
+import { registerEMoney, unbindEMoney, getPayAccount } from 'redux/slices/emoney';
 
 export default function BankingEMoney() {
-  const { user } = useAuth();
-  const userId = user?.id;
+  const dispatch = useDispatch();
+  const { isLoading, eMoney, hasRegistered, error } = useSelector(
+    (state: RootState) => state.emoney
+  );
 
   const [saldo, setSaldo] = useState<number>();
   const [openModalEMoney, setOpenModalEMoney] = useState<boolean>(false);
-  const [doesExist, setDoesExist] = useState<Boolean>(false);
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const handleRegisterEMoney = async (
-    userId: number,
     payment_type: string,
     phone_number: string,
     country_code: string
   ) => {
-    window.localStorage.setItem(
-      'registerData',
-      JSON.stringify({
-        payment_type: payment_type,
-        phone_number: phone_number,
-        country_code: country_code
-      })
-    );
-    const response = await handleRegister(userId, payment_type, phone_number, country_code);
-    if (response.actions) {
-      const activationURL = response.actions[0].url;
-      window.location.href = activationURL;
-    } else {
-      //for mock request
-      window.location.href = './';
-    }
+    dispatch(registerEMoney(phone_number, payment_type, country_code));
   };
 
   const handleUnregisterEMoney = async () => {
-    const fetchedRegisterData = window.localStorage.getItem('registerData');
-    if (fetchedRegisterData) {
-      const { payment_type, phone_number, country_code } = JSON.parse(fetchedRegisterData);
-      const response1 = await handleRegister(userId, payment_type, phone_number, country_code);
-      const response2 = await handleUnbindPayAccount(response1.account_id);
-      if (!response2.mock) {
-        window.localStorage.removeItem('registerData');
-      }
-      setDoesExist(false);
-    }
+    dispatch(unbindEMoney());
   };
 
   const handleCloseModal = () => {
     setOpenModalEMoney(false);
   };
 
-  // useEffect(() => {
-  //   const handleCheckEMoney = async () => {
-  //     const fetchedRegisterData = window.localStorage.getItem('registerData');
-  //     if (fetchedRegisterData) {
-  //       const { payment_type, phone_number, country_code } = JSON.parse(fetchedRegisterData);
-  //       const response = await handleRegister(userId, payment_type, phone_number, country_code);
-  //       console.log(response);
-  //       if (response.account_status === 'ENABLED') {
-  //         setDoesExist(true);
-  //         const response1 = await handleRegister(userId, payment_type, phone_number, country_code);
-  //         const response2 = await handleGetPayAccountInfo(response1.account_id);
-  //         setSaldo(response2.metadata.payment_options[0].balance.value);
-  //         if (window.localStorage.getItem('isRegisterJustNow')) {
-  //           window.localStorage.removeItem('isRegisterJustNow');
-  //           enqueueSnackbar('Register Payment Account success', { variant: 'success' });
-  //         }
-  //       }
-  //     }
-  //   };
+  useEffect(() => {
+    const handleCheckEMoney = async () => {
+      let payAccount = await getPayAccount();
+      if (!payAccount && eMoney) {
+        dispatch(registerEMoney(eMoney.phoneNumber, eMoney.paymentType, eMoney.countryCode));
+      }
+    };
 
-  //   handleCheckEMoney();
-  // }, [userId, enqueueSnackbar]);
+    handleCheckEMoney();
+  }, [dispatch, eMoney]);
+
+  useEffect(() => {
+    const fetchSaldo = async () => {
+      const payAccount = await getPayAccount();
+      if (payAccount && payAccount.metadata && payAccount.metadata.payment_options) {
+        for (let i = 0; i < payAccount.metadata.payment_options.length; i++) {
+          if (payAccount.metadata.payment_options[i].name === 'GOPAY_WALLET') {
+            setSaldo(payAccount.metadata.payment_options[i].balance.value);
+          }
+        }
+      }
+    };
+
+    fetchSaldo();
+  }, [hasRegistered]);
 
   return (
     <>
-      <Box sx={{}}>
+      <Box sx={{ mb: 5 }}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          {/* {doesExist ? (
+          <Typography variant="overline" sx={{ color: 'text.primary' }}>
+            Gopay
+          </Typography>
+          {error ? (
+            <Typography>An Error occurs</Typography>
+          ) : isLoading ? (
+            <>
+              <LoadingScreen />
+            </>
+          ) : hasRegistered && saldo ? (
             <div>
               <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                 {saldo ? fCurrency(saldo) : null}
@@ -106,11 +90,7 @@ export default function BankingEMoney() {
             >
               Register E-Money
             </Button>
-          )} */}
-          <Box display="flex" justifyContent="space-between" width="100%">
-            <Typography variant="body2">E-Money</Typography>
-            <Typography variant="body2">{fCurrency(100000)}</Typography>
-          </Box>
+          )}
         </Stack>
         <DialogAnimate
           open={openModalEMoney}

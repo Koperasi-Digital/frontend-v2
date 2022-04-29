@@ -12,6 +12,8 @@ import {
 
 import { fCurrency, fPercent } from 'utils/formatNumber';
 
+import { CoopLabaRugiData } from '../../../../@types/finance-report';
+
 Font.register({
   family: 'Roboto',
   fonts: [{ src: '/fonts/Roboto-Regular.ttf' }, { src: '/fonts/Roboto-Bold.ttf' }]
@@ -100,15 +102,6 @@ const styles = StyleSheet.create({
   tableCell_2: { width: '50%', paddingRight: 16 },
   tableCell_3: { width: '15%' }
 });
-
-type CoopLabaRugiData = {
-  jumlahSimpananPokok: number;
-  jumlahSimpananWajib: number;
-  jumlahBiayaLayanan: number;
-  biayaSisaHasilUsaha: number;
-  biayaOperasi: number;
-  net: number;
-};
 
 // Create Document Component
 export default function CoopLabaRugiReportPDF(props: {

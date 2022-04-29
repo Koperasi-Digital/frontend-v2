@@ -4,7 +4,7 @@ import { UserAddressBook } from './user';
 
 // ----------------------------------------------------------------------
 
-export type PaymentType = 'paypal' | 'credit_card' | 'cash';
+export type PaymentType = 'OTHER' | 'GOPAY';
 
 export type ProductInventoryType = 'Active' | 'Inactive' | 'Low Stock';
 
@@ -56,12 +56,11 @@ export type ProductState = {
     priceRange: string;
   };
   checkout: {
-    orderId: number;
+    orderId: string;
     activeStep: number;
     cart: CartItem[];
     subtotal: number;
     total: number;
-    discount: number;
     shipping: number;
     billing: UserAddressBook | null;
   };

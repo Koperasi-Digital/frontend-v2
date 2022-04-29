@@ -237,6 +237,14 @@ export default function Router() {
               )
             },
             {
+              path: 'order/:id/payment',
+              element: (
+                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
+                  <PaymentPage />
+                </RoleBasedGuard>
+              )
+            },
+            {
               path: 'order-list',
               element: (
                 <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
@@ -485,6 +493,7 @@ const EcommerceProductCreate = Loadable(
   lazy(() => import('../pages/dashboard/EcommerceProductCreate'))
 );
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
+const PaymentPage = Loadable(lazy(() => import('../pages/dashboard/PaymentPage')));
 const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
 const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));

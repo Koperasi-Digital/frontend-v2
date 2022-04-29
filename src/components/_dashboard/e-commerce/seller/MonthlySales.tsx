@@ -4,44 +4,81 @@ import ReactApexChart from 'react-apexcharts';
 import { Card, CardHeader, Box, TextField } from '@mui/material';
 //
 import { BaseOptionChart } from '../../../charts';
-// import {
-//   handleGetAnnualNeracaInfo,
-//   handleGetAnnualArusKasInfo,
-//   handleGetAnnualLabaRugiInfo
-// } from 'utils/financeAxios/financeReport';
+import { handleGetAnnualLabaRugiInfo } from 'utils/financeAxios/financeReport';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
-const CHART_DATA = [
-  {
-    year: 2019,
-    data: [
-      { name: 'Total Penjualan', data: [10, 41, 35, 151, 49, 62, 69, 91, 48] },
-      { name: 'Total Biaya Modal', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] }
-    ]
-  },
-  {
-    year: 2020,
-    data: [
-      { name: 'Total Penjualan', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
-      { name: 'Total Biaya Modal', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] }
-    ]
+function createMonthlySales(labaRugiData: any, year: string) {
+  let i = 0;
+  let dataPenjualan = [];
+  let dataModal = [];
+  while (i < labaRugiData.length) {
+    dataPenjualan.push(labaRugiData[i].jumlahPenjualan);
+    dataModal.push(labaRugiData[i].biayaOperasi + labaRugiData[i].biayaProduksiProdukTerjual);
+    i++;
   }
-];
+  while (i < 12) {
+    dataPenjualan.push(0);
+    dataModal.push(0);
+    i++;
+  }
+
+  return {
+    year: year,
+    data: [
+      { name: 'Total Penjualan', data: dataPenjualan },
+      { name: 'Total Biaya Modal', data: dataModal }
+    ]
+  };
+}
+
+type ChartItem = {
+  name: string;
+  data: number[];
+};
+
+type ChartData = {
+  year: string;
+  data: ChartItem[];
+};
 
 export default function MonthlySales() {
-  const [seriesData, setSeriesData] = useState(2019);
+  const YEARS = ['2020', '2021', '2022'];
+  const [seriesData, setSeriesData] = useState('2022');
+  const [chartData, setChartData] = useState<ChartData>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const labaRugiData = await handleGetAnnualLabaRugiInfo(seriesData);
+      const data = createMonthlySales(labaRugiData, seriesData);
+      setChartData(data);
+    };
+    fetchData();
+  }, [seriesData]);
 
   const handleChangeSeriesData = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSeriesData(Number(event.target.value));
+    setSeriesData(event.target.value);
   };
 
   const chartOptions = merge(BaseOptionChart(), {
     legend: { position: 'top', horizontalAlign: 'right' },
     xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+      categories: [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Okt',
+        'Nov',
+        'Des'
+      ]
     }
   });
 
@@ -64,22 +101,20 @@ export default function MonthlySales() {
               '& .MuiNativeSelect-icon': { top: 4, right: 0, width: 20, height: 20 }
             }}
           >
-            {CHART_DATA.map((option) => (
-              <option key={option.year} value={option.year}>
-                {option.year}
+            {YEARS.map((option) => (
+              <option key={option} value={option}>
+                {option}
               </option>
             ))}
           </TextField>
         }
       />
 
-      {CHART_DATA.map((item) => (
-        <Box key={item.year} sx={{ mt: 3, mx: 3 }} dir="ltr">
-          {item.year === seriesData && (
-            <ReactApexChart type="area" series={item.data} options={chartOptions} height={364} />
-          )}
+      {chartData && (
+        <Box sx={{ mt: 3, mx: 3 }} dir="ltr">
+          <ReactApexChart type="area" series={chartData.data} options={chartOptions} height={364} />
         </Box>
-      ))}
+      )}
     </Card>
   );
 }

@@ -77,6 +77,7 @@ export const PATH_DASHBOARD = {
     },
     orderList: path(ROOTS_DASHBOARD, '/e-commerce/order-list'),
     orderById: path(ROOTS_DASHBOARD, '/e-commerce/order/:id'),
+    orderPayment: path(ROOTS_DASHBOARD, '/e-commerce/order/:id/payment'),
     orderHistory: path(ROOTS_DASHBOARD, '/e-commerce/order-history'),
     product: path(ROOTS_DASHBOARD, '/e-commerce/product/:name'),
     productById: path(ROOTS_DASHBOARD, '/e-commerce/product/itik-ayam'),

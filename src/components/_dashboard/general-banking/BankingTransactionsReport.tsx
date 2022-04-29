@@ -256,8 +256,10 @@ export default function BankingTransactionsReport() {
           fromDateString,
           toDateString
         );
-        setAllTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
-        setFilteredTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+        if (fetchedTransactionList && fetchedCoopTransactionList) {
+          setAllTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+          setFilteredTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+        }
       }
     };
     fetchData();

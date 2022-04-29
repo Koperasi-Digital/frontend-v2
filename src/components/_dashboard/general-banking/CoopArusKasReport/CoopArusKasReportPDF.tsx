@@ -2,6 +2,8 @@ import { Page, Text, View, Document, Font, StyleSheet } from '@react-pdf/rendere
 
 import { fCurrency } from 'utils/formatNumber';
 
+import { CoopArusKasData } from '../../../../@types/finance-report';
+
 Font.register({
   family: 'Roboto',
   fonts: [{ src: '/fonts/Roboto-Regular.ttf' }, { src: '/fonts/Roboto-Bold.ttf' }]
@@ -65,13 +67,6 @@ const styles = StyleSheet.create({
   tableCell_2: { width: '50%', paddingRight: 16 },
   tableCell_3: { width: '15%' }
 });
-
-type CoopArusKasData = {
-  jumlahKasAwal: number;
-  kasMasuk: number;
-  kasKeluar: number;
-  jumlahKasAkhir: number;
-};
 
 // Create Document Component
 export default function CoopArusKasReportPDF(props: { coopArusKasData: CoopArusKasData }) {

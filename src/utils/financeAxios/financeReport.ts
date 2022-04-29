@@ -23,9 +23,9 @@ export async function handleGetNeracaInfo(userId: number, periode: string) {
   }
 }
 
-export async function handleGetAnnualNeracaInfo() {
+export async function handleGetAnnualNeracaInfo(year: string) {
   try {
-    const response = await axios.get('laporan-neraca/get-annual-data');
+    const response = await axios.get('laporan-neraca/get-annual-data/' + year);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -33,9 +33,9 @@ export async function handleGetAnnualNeracaInfo() {
   }
 }
 
-export async function handleGetAnnualArusKasInfo() {
+export async function handleGetAnnualArusKasInfo(year: string) {
   try {
-    const response = await axios.get('laporan-arus-kas/get-annual-data');
+    const response = await axios.get('laporan-arus-kas/get-annual-data/' + year);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -43,9 +43,9 @@ export async function handleGetAnnualArusKasInfo() {
   }
 }
 
-export async function handleGetAnnualLabaRugiInfo() {
+export async function handleGetAnnualLabaRugiInfo(year: string) {
   try {
-    const response = await axios.get('laporan-laba-rugi/get-annual-data');
+    const response = await axios.get('laporan-laba-rugi/get-annual-data/' + year);
     return response.data.payload;
   } catch (e) {
     console.log(e);

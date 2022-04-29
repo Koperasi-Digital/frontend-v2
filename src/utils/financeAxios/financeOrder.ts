@@ -1,13 +1,26 @@
+import { UserAddressBook } from '../../@types/user';
 import { CartItem } from '../../@types/products';
 import axios from '../axios';
 
-export async function handleCreateOrder(userId: number, grossAmount: number, cart?: CartItem[]) {
+export async function handleCreateOrder(
+  userId: number,
+  grossAmount: number,
+  paymentType: string,
+  cart?: CartItem[],
+  address?: UserAddressBook
+) {
   try {
     console.log(cart);
+    console.log(userId);
+    console.log(grossAmount);
+    console.log(paymentType);
+    console.log(address);
     const response = await axios.post('order/create', {
       user_id: userId,
       total_cost: grossAmount,
-      cart: cart
+      cart: cart,
+      address: address?.id,
+      paymentType: paymentType
     });
     return response.data.payload;
   } catch (e) {
@@ -16,20 +29,7 @@ export async function handleCreateOrder(userId: number, grossAmount: number, car
   }
 }
 
-export async function handleEditOrder(orderId: number, total_cost: number) {
-  try {
-    const response = await axios.post('order/edit-total-cost', {
-      id: orderId,
-      total_cost: total_cost
-    });
-    return response.data.payload;
-  } catch (e) {
-    console.log(e);
-    return undefined;
-  }
-}
-
-export async function handleGetOrder(orderId: number) {
+export async function handleGetOrder(orderId: string) {
   try {
     const response = await axios.get('order/' + orderId);
     return response.data.payload;

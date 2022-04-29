@@ -12,14 +12,7 @@ import { Stack } from '@mui/material';
 
 import { fCurrency, fPercent } from 'utils/formatNumber';
 
-type CoopLabaRugiData = {
-  jumlahSimpananPokok: number;
-  jumlahSimpananWajib: number;
-  jumlahBiayaLayanan: number;
-  biayaSisaHasilUsaha: number;
-  biayaOperasi: number;
-  net: number;
-};
+import { CoopLabaRugiData } from '../../../../@types/finance-report';
 
 export default function CoopLabaRugiReportToolbar(props: {
   currentCoopLabaRugiData: CoopLabaRugiData | undefined;

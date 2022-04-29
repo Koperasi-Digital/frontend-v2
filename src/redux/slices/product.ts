@@ -27,12 +27,11 @@ const initialState: ProductState = {
     priceRange: ''
   },
   checkout: {
-    orderId: 0,
+    orderId: '',
     activeStep: 0,
     cart: [],
     subtotal: 0,
     total: 0,
-    discount: 0,
     shipping: 0,
     billing: null
   }
@@ -87,16 +86,14 @@ const slice = createSlice({
       const cart = action.payload;
 
       const subtotal = sum(cart.map((cartItem: CartItem) => cartItem.price * cartItem.quantity));
-      const discount = cart.length === 0 ? 0 : state.checkout.discount;
       const shipping = cart.length === 0 ? 0 : state.checkout.shipping;
       const billing = cart.length === 0 ? null : state.checkout.billing;
 
       state.checkout.cart = cart;
-      state.checkout.discount = discount;
       state.checkout.shipping = shipping;
       state.checkout.billing = billing;
       state.checkout.subtotal = subtotal;
-      state.checkout.total = subtotal - discount;
+      state.checkout.total = subtotal;
     },
 
     addCart(state, action) {
@@ -120,11 +117,6 @@ const slice = createSlice({
       state.checkout.cart = uniqBy([...state.checkout.cart, product], 'id');
     },
 
-    addCheckoutOrder(state, action) {
-      const orderId = action.payload;
-      state.checkout.orderId = orderId;
-    },
-
     deleteCart(state, action) {
       const updateCart = filter(state.checkout.cart, (item) => item.id !== action.payload);
 
@@ -132,12 +124,11 @@ const slice = createSlice({
     },
 
     resetCart(state) {
-      state.checkout.orderId = 0;
+      state.checkout.orderId = '';
       state.checkout.activeStep = 0;
       state.checkout.cart = [];
       state.checkout.total = 0;
       state.checkout.subtotal = 0;
-      state.checkout.discount = 0;
       state.checkout.shipping = 0;
       state.checkout.billing = null;
     },
@@ -189,20 +180,18 @@ const slice = createSlice({
       state.checkout.billing = action.payload;
     },
 
-    applyDiscount(state, action) {
-      const discount = action.payload;
-      state.checkout.discount = discount;
-      state.checkout.total = state.checkout.subtotal - discount;
-    },
-
     applyShipping(state, action) {
       const shipping = action.payload;
       state.checkout.shipping = shipping;
-      state.checkout.total = state.checkout.subtotal - state.checkout.discount + shipping;
+      state.checkout.total = state.checkout.subtotal + shipping;
     },
 
     addProductSuccess(state) {
       state.isLoading = false;
+    },
+
+    setCheckoutOrder(state, action) {
+      state.checkout.orderId = action.payload;
     }
   }
 });
@@ -214,7 +203,6 @@ export default slice.reducer;
 export const {
   getCart,
   addCart,
-  addCheckoutOrder,
   resetCart,
   onGotoStep,
   onBackStep,
@@ -222,11 +210,11 @@ export const {
   deleteCart,
   createBilling,
   applyShipping,
-  applyDiscount,
   increaseQuantity,
   decreaseQuantity,
   sortByProducts,
-  filterProducts
+  filterProducts,
+  setCheckoutOrder
 } = slice.actions;
 
 // ----------------------------------------------------------------------
