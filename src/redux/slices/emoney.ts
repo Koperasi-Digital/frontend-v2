@@ -7,7 +7,9 @@ import { EMoneyState } from '../../@types/emoney';
 
 const initialState: EMoneyState = {
   isLoading: false,
-  eMoney: null,
+  paymentType: null,
+  phoneNumber: null,
+  countryCode: null,
   hasRegistered: false,
   hasPaymentAccountFetched: false,
   saldo: null,
@@ -35,7 +37,9 @@ const slice = createSlice({
     },
     addEmoney(state, action) {
       const emoney = action.payload;
-      state.eMoney = emoney;
+      state.paymentType = emoney.paymentType;
+      state.phoneNumber = emoney.phoneNumber;
+      state.countryCode = emoney.countryCode;
       state.isLoading = false;
       state.error = false;
     },
@@ -45,7 +49,9 @@ const slice = createSlice({
       state.error = false;
     },
     unbindEmoney(state) {
-      state.eMoney = null;
+      state.paymentType = null;
+      state.phoneNumber = null;
+      state.countryCode = null;
       state.hasRegistered = false;
       state.isLoading = false;
       state.error = false;
@@ -67,13 +73,14 @@ export function registerEMoney(phoneNumber: string, paymentType: string, country
           countryCode: countryCode
         })
       );
+      const currentURL = window.location.href;
       const responseData = (
         await axios.post('emoney/create-pay-account', {
           payment_type: paymentType,
           gopay_partner: {
             phone_number: phoneNumber,
             country_code: countryCode,
-            redirect_url: 'http://localhost:3000/dashboard/app'
+            redirect_url: currentURL
           }
         })
       ).data.payload;
