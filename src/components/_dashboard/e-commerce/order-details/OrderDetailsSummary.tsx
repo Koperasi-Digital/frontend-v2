@@ -155,7 +155,7 @@ export default function OrderDetailsSummary({
   ];
 
   const shipmentInfo = [
-    ['Jenis Pengiriman', shipment],
+    ['Jenis Pengiriman', shipment.name],
     ['Ongkos Kirim', fCurrency(shipment_price)],
     ['Alamat', 'Jalan Ganesha No. 10, Dago, Coblong, Bandung']
   ];

@@ -4,41 +4,11 @@ import { UserAddressBook } from './user';
 
 // ----------------------------------------------------------------------
 
-export type ShipmentCourier = 'tiki' | 'jne' | 'pos';
-
-export type ShipmentForm = {
-  origin: number;
-  destination: number;
-  weight: number;
-};
-
-export type ShipmentOptions = [
-  {
-    code: string;
-    name: string;
-    costs: ShipmentDetail[];
-  }
-];
-
-export type ShipmentDetail = {
-  service: string;
-  description: string;
-  cost: [{ value: number; etd: string; note: string }];
-};
-
 export type PaymentType = 'OTHER' | 'GOPAY';
 
 export type ProductInventoryType = 'Active' | 'Inactive' | 'Low Stock';
 
-export type ProductCategory = 'Ayam' | 'Infrastruktur' | 'Kandang | Pakan';
-
-export type IconType = { tiki: string; jne: string; pos: string };
-
-export type ApplyShipping = {
-  chosenItem: number;
-  shipment: string;
-  shipment_price: number;
-};
+export type ProductCategory = 'Ayam' | 'Infrastruktur' | 'Kandang';
 
 export type OnCreateBilling = (address: UserAddressBook) => void;
 
@@ -66,13 +36,11 @@ export type CartItem = {
   name: string;
   cover: string;
   available: number;
-  weight: number;
   price: number;
   quantity: number;
   subtotal: number;
   store_name: string | null;
-  store_city: string | null;
-  shipment: string | null;
+  shipment_id: number | null;
   shipment_price: number | null;
 };
 
@@ -135,7 +103,6 @@ export type ProductFormikRaw = {
 export type PaymentFormikProps = FormikProps<{
   delivery: number;
   payment: string;
-  shipment: string;
 }>;
 
 export type DeliveryOption = {

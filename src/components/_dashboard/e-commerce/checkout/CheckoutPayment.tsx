@@ -9,15 +9,19 @@ import { useSnackbar } from 'notistack';
 import { LoadingButton } from '@mui/lab';
 
 // @types
-import { PaymentOption, ProductState } from '../../../../@types/products';
+import {
+  DeliveryOption,
+  PaymentOption,
+  CardOption,
+  ProductState
+} from '../../../../@types/products';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import {
   onGotoStep,
   onBackStep,
   onNextStep,
-  applyShipping,
-  resetShipment
+  applyShipping
 } from '../../../../redux/slices/product';
 //
 import CheckoutSummary from './CheckoutSummary';
@@ -29,19 +33,44 @@ import { PATH_DASHBOARD } from 'routes/paths';
 import useAuth from 'hooks/useAuth';
 import { useNavigate } from 'react-router';
 
+const DELIVERY_OPTIONS: DeliveryOption[] = [
+  {
+    value: 0,
+    title: 'Standard delivery (Free)',
+    description: 'Delivered on Monday, August 12'
+  },
+  {
+    value: 2,
+    title: 'Fast delivery ($2,00)',
+    description: 'Delivered on Monday, August 5'
+  }
+];
+
 const PAYMENT_OPTIONS: PaymentOption[] = [
   {
-    value: 'GOPAY',
-    title: 'GO-PAY',
-    description: 'Pembayaran akan menggunakan saldo GO-PAY terdaftar.',
-    icons: ['/static/icons/ic_gopay.png']
+    value: 'OTHER',
+    title: 'Pay with Paypal',
+    description: 'You will be redirected to PayPal website to complete your purchase securely.',
+    icons: ['/static/icons/ic_paypal.svg']
   },
   {
     value: 'OTHER',
-    title: 'Credit / Debit Card / Lainnya',
-    description: 'Pembayaran menggunakan Kartu Credit / Debit',
+    title: 'Credit / Debit Card',
+    description: 'We support Mastercard, Visa, Discover and Stripe.',
     icons: ['/static/icons/ic_mastercard.svg', '/static/icons/ic_visa.svg']
+  },
+  {
+    value: 'OTHER',
+    title: 'Cash on CheckoutDelivery',
+    description: 'Pay with cash when your order is delivered.',
+    icons: []
   }
+];
+
+const CARDS_OPTIONS: CardOption[] = [
+  { value: 'ViSa1', label: '**** **** **** 1212 - Jimmy Holland' },
+  { value: 'ViSa2', label: '**** **** **** 2424 - Shawn Stokes' },
+  { value: 'MasterCard', label: '**** **** **** 4545 - Cole Armstrong' }
 ];
 
 export default function CheckoutPayment() {
@@ -61,17 +90,8 @@ export default function CheckoutPayment() {
     dispatch(onGotoStep(step));
   };
 
-  const handleApplyShipping = (value: {
-    chosenItem: number;
-    shipment: string;
-    shipment_price: number;
-  }) => {
+  const handleApplyShipping = (value: number) => {
     dispatch(applyShipping(value));
-  };
-
-  const handleResetShipment = (value: number) => {
-    dispatch(resetShipment(value));
-    setFieldValue('shipment', '');
   };
 
   const handleNextStep = () => {
@@ -79,18 +99,14 @@ export default function CheckoutPayment() {
   };
 
   const PaymentSchema = Yup.object().shape({
-    delivery: Yup.number()
-      .positive('Must be more than 0')
-      .required('Shipment delivery is required'),
-    payment: Yup.mixed().required('Payment is required'),
-    shipment: Yup.mixed().required('Shipment is required')
+    delivery: Yup.mixed().required('Shipment delivery is required'),
+    payment: Yup.mixed().required('Payment is required')
   });
 
   const formik = useFormik({
     initialValues: {
       delivery: shipping,
-      payment: '',
-      shipment: ''
+      payment: ''
     },
     validationSchema: PaymentSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
@@ -112,7 +128,7 @@ export default function CheckoutPayment() {
     }
   });
 
-  const { isSubmitting, handleSubmit, setFieldValue } = formik;
+  const { isSubmitting, handleSubmit } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -121,13 +137,14 @@ export default function CheckoutPayment() {
           <Grid item xs={12} md={8}>
             <CheckoutDelivery
               formik={formik}
-              cart={cart}
-              user_address={address}
               onApplyShipping={handleApplyShipping}
-              onReset={handleResetShipment}
+              deliveryOptions={DELIVERY_OPTIONS}
             />
-
-            <CheckoutPaymentMethods formik={formik} paymentOptions={PAYMENT_OPTIONS} />
+            <CheckoutPaymentMethods
+              formik={formik}
+              cardOptions={CARDS_OPTIONS}
+              paymentOptions={PAYMENT_OPTIONS}
+            />
             <Button
               type="button"
               size="small"

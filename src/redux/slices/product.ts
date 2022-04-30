@@ -133,12 +133,6 @@ const slice = createSlice({
       state.checkout.billing = null;
     },
 
-    resetShipment(state, action) {
-      const cartID = action.payload;
-      state.checkout.cart[cartID].shipment = null;
-      state.checkout.cart[cartID].shipment_price = null;
-    },
-
     onBackStep(state) {
       state.checkout.activeStep -= 1;
     },
@@ -187,13 +181,9 @@ const slice = createSlice({
     },
 
     applyShipping(state, action) {
-      const { chosenItem, shipment, shipment_price } = action.payload;
-      state.checkout.cart[chosenItem].shipment = shipment;
-      state.checkout.cart[chosenItem].shipment_price = shipment_price;
-      const totalShipping = state.checkout.cart.reduce((a, b) => a + (b.shipment_price || 0), 0);
-      console.log(totalShipping);
-      state.checkout.shipping = totalShipping;
-      state.checkout.total = state.checkout.subtotal + totalShipping;
+      const shipping = action.payload;
+      state.checkout.shipping = shipping;
+      state.checkout.total = state.checkout.subtotal + shipping;
     },
 
     addProductSuccess(state) {
@@ -214,7 +204,6 @@ export const {
   getCart,
   addCart,
   resetCart,
-  resetShipment,
   onGotoStep,
   onBackStep,
   onNextStep,
