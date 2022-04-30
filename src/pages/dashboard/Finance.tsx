@@ -1,25 +1,22 @@
 // material
 import {
   Grid,
-  Container,
   Stack,
   Select,
   MenuItem,
   SelectChangeEvent,
   Typography,
   Box,
-  TextField
+  TextField,
+  Card,
+  CardHeader,
+  FormControl,
+  InputLabel
 } from '@mui/material';
-// components
-import Page from '../../components/Page';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 //for calendar
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
-
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
 
 import { LabaRugiReport } from 'components/_dashboard/general-banking/LabaRugiReport';
 import { NeracaReport } from 'components/_dashboard/general-banking/NeracaReport';
@@ -33,30 +30,22 @@ export default function Finance() {
   const [dateValue, setDateValue] = useState<Date | null>(new Date());
 
   return (
-    <Page title="General: Finance | CoopChick">
-      <Container maxWidth={false}>
-        <HeaderBreadcrumbs
-          heading={'Finance Dashboard'}
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Finance',
-              href: PATH_DASHBOARD.finance.root
-            },
-            { name: 'Home' }
-          ]}
-        />
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-              <Typography variant="body1">
-                Pilih laporan yang ingin datanya ditampilkan:{' '}
-              </Typography>
+    <Card sx={{ padding: 5 }}>
+      <CardHeader
+        title={<Typography variant="h6">Laporan Keuangan Anggota</Typography>}
+        sx={{ mb: 3 }}
+      />
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
+            <Typography variant="body1">Pilih laporan yang ingin datanya ditampilkan: </Typography>
+            <FormControl>
+              <InputLabel>Nama Laporan</InputLabel>
               <Select
                 labelId="report-name-select-label"
                 id="report-name-select"
                 value={menuName}
-                label="Report Name"
+                label="Nama Laporan"
                 onChange={(event: SelectChangeEvent<String>) => {
                   setMenuName(event.target.value);
                 }}
@@ -66,63 +55,58 @@ export default function Finance() {
                 <MenuItem value={'laporanArusKas'}>Laporan Arus Kas</MenuItem>
                 <MenuItem value={'simpananDanSHU'}>Simpanan dan SHU</MenuItem>
               </Select>
-            </Stack>
-          </Grid>
-          <Grid item xs={12}>
-            <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-              <Typography>Pilih rentang waktu laporan untuk ditampilkan: </Typography>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  sx={{ mt: 2, mb: 2 }}
-                >
-                  <DatePicker
-                    disableFuture
-                    label="Pilih bulan"
-                    openTo="year"
-                    views={['year', 'month']}
-                    value={dateValue}
-                    onChange={(newValue) => {
-                      setDateValue(newValue);
-                    }}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </Box>
-              </LocalizationProvider>
-            </Stack>
-          </Grid>
-          {menuName === 'laporanNeraca' ? (
-            <>
-              <Grid item xs={12}>
-                <NeracaReport dateValue={dateValue ? dateValue : new Date()} />
-              </Grid>
-            </>
-          ) : null}
-          {menuName === 'laporanLabaRugi' ? (
-            <>
-              <Grid item xs={12}>
-                <LabaRugiReport dateValue={dateValue ? dateValue : new Date()} />
-              </Grid>
-            </>
-          ) : null}
-          {menuName === 'laporanArusKas' ? (
-            <>
-              <Grid item xs={12}>
-                <ArusKasReport dateValue={dateValue ? dateValue : new Date()} />
-              </Grid>
-            </>
-          ) : null}
-          {menuName === 'simpananDanSHU' ? (
-            <>
-              <Grid item xs={12}>
-                <MemberReport dateValue={dateValue ? dateValue : new Date()} />
-              </Grid>
-            </>
-          ) : null}
+            </FormControl>
+          </Stack>
         </Grid>
-      </Container>
-    </Page>
+        <Grid item xs={12}>
+          <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
+            <Typography>Pilih rentang waktu laporan untuk ditampilkan: </Typography>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 2, mb: 2 }}>
+                <DatePicker
+                  disableFuture
+                  label="Pilih bulan"
+                  openTo="year"
+                  views={['year', 'month']}
+                  value={dateValue}
+                  onChange={(newValue) => {
+                    setDateValue(newValue);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </Box>
+            </LocalizationProvider>
+          </Stack>
+        </Grid>
+        {menuName === 'laporanNeraca' ? (
+          <>
+            <Grid item xs={12}>
+              <NeracaReport dateValue={dateValue ? dateValue : new Date()} />
+            </Grid>
+          </>
+        ) : null}
+        {menuName === 'laporanLabaRugi' ? (
+          <>
+            <Grid item xs={12}>
+              <LabaRugiReport dateValue={dateValue ? dateValue : new Date()} />
+            </Grid>
+          </>
+        ) : null}
+        {menuName === 'laporanArusKas' ? (
+          <>
+            <Grid item xs={12}>
+              <ArusKasReport dateValue={dateValue ? dateValue : new Date()} />
+            </Grid>
+          </>
+        ) : null}
+        {menuName === 'simpananDanSHU' ? (
+          <>
+            <Grid item xs={12}>
+              <MemberReport dateValue={dateValue ? dateValue : new Date()} />
+            </Grid>
+          </>
+        ) : null}
+      </Grid>
+    </Card>
   );
 }

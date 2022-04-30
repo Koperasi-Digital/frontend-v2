@@ -3,6 +3,7 @@ import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
+import RoundGroups from '@iconify/icons-ic/round-groups';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import { alpha } from '@mui/material/styles';
@@ -17,6 +18,7 @@ import { MIconButton } from '../../components/@material-extend';
 import MyAvatar from '../../components/MyAvatar';
 import MenuPopover from '../../components/MenuPopover';
 import CurrentRoleSwitch from './CurrentRoleSwitch';
+import BankingEMoney from 'components/_dashboard/general-banking/BankingEMoney';
 
 // ----------------------------------------------------------------------
 
@@ -24,12 +26,20 @@ const MENU_OPTIONS = [
   {
     label: 'Beranda',
     icon: homeFill,
-    linkTo: '/'
+    linkTo: '/',
+    accessibleRoles: ['CUSTOMER', 'MEMBER', 'ADMIN']
   },
   {
     label: 'Akun Saya',
     icon: personFill,
-    linkTo: PATH_DASHBOARD.user.account
+    linkTo: PATH_DASHBOARD.user.account,
+    accessibleRoles: ['CUSTOMER', 'MEMBER', 'ADMIN']
+  },
+  {
+    label: 'Request Anggota Koperasi',
+    icon: RoundGroups,
+    linkTo: PATH_DASHBOARD.user.memberVerification.request,
+    accessibleRoles: ['CUSTOMER']
   }
 ];
 
@@ -38,7 +48,7 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const navigate = useNavigate();
   const anchorRef = useRef(null);
-  const { user, logout } = useAuth();
+  const { user, logout, currentRole } = useAuth();
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
@@ -105,19 +115,27 @@ export default function AccountPopover() {
 
         <Divider sx={{ my: 1 }} />
 
+        <Box sx={{ py: 1, px: 2.5 }}>
+          <BankingEMoney />
+        </Box>
+
+        <Divider sx={{ my: 1 }} />
+
         <Box sx={{ p: 2, pt: 1.5 }}>
           <CurrentRoleSwitch />
         </Box>
 
         <Divider sx={{ my: 1 }} />
 
-        {MENU_OPTIONS.map((option) => (
+        {MENU_OPTIONS.filter((option) =>
+          currentRole ? option.accessibleRoles.includes(currentRole.name) : true
+        ).map((option) => (
           <MenuItem
             key={option.label}
             to={option.linkTo}
             component={RouterLink}
             onClick={handleClose}
-            sx={{ typography: 'body2', py: 1, px: 2.5 }}
+            sx={{ typography: 'body2', py: 1, px: 2.5, whiteSpace: 'inherit' }}
           >
             <Box
               component={Icon}

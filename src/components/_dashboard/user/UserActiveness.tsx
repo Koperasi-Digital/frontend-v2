@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Typography, Stack, Link, Skeleton } from '@mui/material';
+import { Box, Card, Typography, Stack, Link } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from 'routes/paths';
 // utils
@@ -11,58 +11,97 @@ import { fNumber, fPercent } from 'utils/formatNumber';
 // ----------------------------------------------------------------------
 
 export default function UserActiveness() {
-  const [totalActive, setTotalActive] = useState({ totalLogs: 0, totalActivities: 0 });
-  const { totalLogs, totalActivities } = totalActive;
+  const [totalActive, setTotalActive] = useState({
+    userActivities: 0,
+    totalActivities: 0,
+    userTransactions: 0,
+    totalTransactions: 0,
+    finalActiveness: 0
+  });
+  const { userActivities, totalActivities, userTransactions, totalTransactions, finalActiveness } =
+    totalActive;
+  const ecommerceActivity = totalTransactions ? userTransactions / totalTransactions : 1;
+  const meetingActivity = totalActivities ? userActivities / totalActivities : 1;
+  const netActivity = (ecommerceActivity + meetingActivity) / 2;
 
   const getTotalActive = () =>
     axios
-      .get('activity-logs/summary', {
+      .get('activity-logs/annual-summary', {
         params: {
           type: 'presensi_meeting'
         }
       })
       .then((response) => {
         const { totalLogs, totalActivities } = response.data.payload;
-        setTotalActive({ totalLogs, totalActivities });
+        setTotalActive((prev) => ({
+          ...prev,
+          userActivities: totalLogs,
+          totalActivities
+        }));
       });
+
+  const getTotalTransaction = () =>
+    axios.get('order/annual-summary').then((response) => {
+      const { totalEcommerceActivities, userEcommerceActivites } = response.data.payload;
+      setTotalActive((prev) => ({
+        ...prev,
+        userTransactions: userEcommerceActivites,
+        totalTransactions: totalEcommerceActivities
+      }));
+    });
+
+  const getUserFinalTotalActiveness = () =>
+    axios.get('sisa-hasil-usaha/percentage').then((response) => {
+      const finalActiveness = response.data.payload;
+      setTotalActive((prev) => ({ ...prev, finalActiveness }));
+    });
 
   useEffect(() => {
     getTotalActive();
+    getTotalTransaction();
+    getUserFinalTotalActiveness();
   }, []);
-
-  const renderPercentage = () => {
-    if (typeof totalLogs !== 'undefined' && typeof totalActivities !== 'undefined') {
-      return totalActivities ? fPercent((totalLogs / totalActivities) * 100) : '-';
-    }
-    return <Skeleton width={60} height={75} />;
-  };
 
   return (
     <>
-      <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
+      <Typography gutterBottom variant="h6" sx={{ mx: '0.5rem' }}>
+        Keaktifan Anggota
+      </Typography>
+      <Card
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          p: 3,
+          flexDirection: { xs: 'column', lg: 'row' }
+        }}
+      >
         <Box sx={{ flexGrow: 1 }}>
-          <Typography variant="subtitle2">Keaktifan Anggota</Typography>
           <Stack direction="column" justifyContent="center" spacing={1} sx={{ mt: 2, mb: 1 }}>
             <Stack direction="row" spacing={1} justifyContent="space-between">
-              <Typography variant="subtitle2">{`Presensi Meeting: `}</Typography>
-              <Typography variant="subtitle2">{`${fNumber(totalLogs)} / ${fNumber(
+              <Typography variant="subtitle2">{`Presensi Meeting `}</Typography>
+              <Typography variant="subtitle2">{`${fNumber(userActivities)} / ${fNumber(
                 totalActivities
               )}`}</Typography>
             </Stack>
             <Stack direction="row" spacing={1} justifyContent="space-between">
-              <Typography variant="subtitle2">{`Total Transaksi: `}</Typography>
-              <Typography variant="subtitle2">{`${fNumber(totalLogs)} / ${fNumber(
-                totalActivities
+              <Typography variant="subtitle2">{`Total Transaksi `}</Typography>
+              <Typography variant="subtitle2">{`${fNumber(userTransactions)} / ${fNumber(
+                totalTransactions
               )}`}</Typography>
             </Stack>
-            {/* TODO: CHANGE USING TOTAL TRANSAKSI */}
+            <Stack direction="row" spacing={1} justifyContent="space-between">
+              <Typography variant="subtitle2">{`Persentase Keaktifan Anggota (Personal) `}</Typography>
+              <Typography variant="subtitle2">{`${fPercent(netActivity * 100)}`}</Typography>
+            </Stack>
+            <Stack direction="row" spacing={1} justifyContent="space-between">
+              <Typography variant="subtitle2">{`Persentase Keaktifan Anggota (SHU) `}</Typography>
+              <Typography variant="subtitle2">{`${fPercent(finalActiveness * 100)}`}</Typography>
+            </Stack>
           </Stack>
         </Box>
-
-        <Box mr={2} ml={8}>
+        <Box sx={{ mr: { lg: 3 }, ml: { lg: 8 }, mt: { xs: 2, lg: 0 } }}>
           <Typography component="span" variant="h3">
-            {/* use default 100% to prevent divide by zero */}
-            {renderPercentage()}
+            {fPercent(finalActiveness * 100)}
           </Typography>
         </Box>
       </Card>

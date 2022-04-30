@@ -134,7 +134,7 @@ export default function AddSimpananSukarelaForm() {
               loading={isSubmitting}
               disabled={!user}
             >
-              {user ? 'Add Simpanan Sukarela' : 'Loading'}
+              {user ? 'Penambahan Simpanan Sukarela' : 'Loading'}
             </LoadingButton>
           </Grid>
         </Grid>

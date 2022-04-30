@@ -10,7 +10,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 
 export default function TransactionsReport() {
   return (
-    <Page title="Banking: Transaction Report | CoopChick">
+    <Page title="Transaction Report | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading={'Transactions Report'}

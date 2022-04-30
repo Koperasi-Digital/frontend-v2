@@ -23,4 +23,5 @@ export type UserManager = {
   store: Store | null;
   created_at: string;
   updated_at: string;
+  password?: string | null;
 };

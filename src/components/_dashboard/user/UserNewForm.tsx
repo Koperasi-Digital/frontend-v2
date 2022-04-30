@@ -46,6 +46,15 @@ type UserNewFormProps = {
   currentUser?: UserManager;
 };
 
+type InitialValues = {
+  displayName: string;
+  email: string;
+  photoURL: string | null;
+  password: null | string;
+  confirmPassword: string;
+  roles: string[];
+};
+
 export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -61,32 +70,43 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
   const NewUserSchema = Yup.object().shape({
     displayName: Yup.string().required('Nama harus diisi'),
     email: Yup.string().required('Email harus diisi').email(),
-    roles: Yup.array().min(1, 'Pengguna minimal harus memiliki satu role')
+    roles: Yup.array().min(1, 'Pengguna minimal harus memiliki satu role'),
+    password: Yup.string().min(6, 'Password berisi minimal 6 karakter').nullable(),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password')], 'Password harus sesuai')
+      .nullable()
   });
 
-  const formik = useFormik({
+  const formik = useFormik<InitialValues>({
     enableReinitialize: true,
     initialValues: {
       displayName: currentUser?.displayName || '',
       email: currentUser?.email || '',
       photoURL: currentUser?.photoURL || null,
-      roles: currentUser?.roles.map((role) => role.name) || []
+      roles: currentUser?.roles.map((role) => role.name) || [],
+      password: '',
+      confirmPassword: ''
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { confirmPassword, ...otherValues } = values;
+      if (otherValues.password === '') {
+        otherValues.password = null;
+      }
       try {
-        if (typeof values.photoURL === 'object') {
-          const photoFile = values.photoURL as unknown as File;
+        if (otherValues.photoURL && typeof otherValues.photoURL === 'object') {
+          const photoFile = otherValues.photoURL as unknown as File;
           const photoUrl = await handleUploadFile(
             photoFile,
             `user/${currentUser?.id}/profile`,
             `${fTimestamp(new Date())}-${photoFile.name}`
           );
-          values.photoURL = photoUrl;
+          otherValues.photoURL = photoUrl;
         }
         if (isEdit) {
           await editUser(currentUser!.id, {
-            ...values,
+            ...otherValues,
             roles: roles.filter((_role) => values.roles.includes(_role.name))
           });
         }
@@ -183,6 +203,28 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
                     {...getFieldProps('email')}
                     error={Boolean(touched.email && errors.email)}
                     helperText={touched.email && errors.email}
+                  />
+                </Stack>
+
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                  <TextField
+                    {...getFieldProps('password')}
+                    fullWidth
+                    type="password"
+                    label="Password Baru"
+                    error={Boolean(touched.password && errors.password)}
+                    helperText={
+                      (touched.password && errors.password) || 'Password berisi minimal 6 karakter'
+                    }
+                  />
+
+                  <TextField
+                    {...getFieldProps('confirmPassword')}
+                    fullWidth
+                    type="password"
+                    label="Konfirmasi Password"
+                    error={Boolean(touched.confirmPassword && errors.confirmPassword)}
+                    helperText={touched.confirmPassword && errors.confirmPassword}
                   />
                 </Stack>
 

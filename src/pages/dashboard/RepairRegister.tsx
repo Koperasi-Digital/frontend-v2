@@ -15,13 +15,13 @@ export default function RepairRegister() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
-    <Page title="Mendaftarkan Perbaikan Peralatan | CoopChick">
+    <Page title="Pendaftaran Perbaikan Peralatan | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={'Mendaftarkan Perbaikan Peralatan'}
+          heading={'Pendaftaran Perbaikan Peralatan'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Mendaftarkan Perbaikan Peralatan' }
+            { name: 'Pendaftaran Perbaikan Peralatan' }
           ]}
         />
         <Card sx={{ padding: isMobile ? 2 : 10, paddingTop: 10 }}>

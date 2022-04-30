@@ -127,7 +127,7 @@ export default function BankingMemberSimpananWajib() {
     <>
       <Card sx={{ padding: 5 }}>
         <CardHeader
-          title={<Typography variant="h6">Member Simpanan Wajib</Typography>}
+          title={<Typography variant="h6">Simpanan Wajib Anggota</Typography>}
           sx={{ mb: 3 }}
         />
         <Stack direction="row" spacing={10} justifyContent="center">

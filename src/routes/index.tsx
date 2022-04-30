@@ -42,6 +42,10 @@ const Loadable = (Component: React.ElementType) => (props: any) => {
 export default function Router() {
   return useRoutes([
     {
+      path: '/',
+      element: <Navigate to="/auth/login" replace />
+    },
+    {
       path: 'auth',
       children: [
         {
@@ -62,12 +66,16 @@ export default function Router() {
         }
       ]
     },
-
-    // Dashboard Routes
     {
-      path: '/',
-      element: <Navigate to="/auth/login" replace />
+      path: '/home',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [{ element: <Home /> }]
     },
+    // Dashboard Routes
     {
       path: 'dashboard',
       element: (
@@ -79,7 +87,14 @@ export default function Router() {
         {
           element: <Navigate to="/dashboard/app" replace />
         },
-        { path: 'app', element: <Dashboard /> },
+        {
+          path: 'app',
+          element: (
+            <RoleBasedGuard accessibleRoles={['ADMIN', 'MEMBER']}>
+              <Dashboard />
+            </RoleBasedGuard>
+          )
+        },
         {
           path: 'activities',
           element: (
@@ -523,3 +538,4 @@ const EquipmentRegister = Loadable(lazy(() => import('../pages/dashboard/Equipme
 const AddSimpananSukarela = Loadable(lazy(() => import('../pages/dashboard/AddSimpananSukarela')));
 // Main
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
+const Home = Loadable(lazy(() => import('../pages/Homepage')));

@@ -30,7 +30,7 @@ type CollapseDrawerProviderProps = {
 
 function CollapseDrawerProvider({ children }: CollapseDrawerProviderProps) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const isMobile = useMediaQuery(theme.breakpoints.up('xs'));
   const [collapse, setCollapse] = useState({
     click: false,
     hover: false

@@ -1,9 +1,10 @@
-import { Box, Stack, Typography, Link } from '@mui/material';
+import { Typography, Link, Card } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { handleGetSaldo } from 'utils/financeAxios/financeSaldo';
 import { fCurrency } from 'utils/formatNumber';
+import { PATH_DASHBOARD } from 'routes/paths';
 
 // hooks
 import useAuth from 'hooks/useAuth';
@@ -27,23 +28,28 @@ export default function BankingSaldo() {
 
   return (
     <>
-      <Box sx={{ mb: 5 }}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="overline" sx={{ color: 'text.primary' }}>
-            Saldo
-          </Typography>
-          <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-            {saldo ? fCurrency(saldo) : ''}
-          </Typography>
-        </Stack>
-        <Link
-          component={RouterLink}
-          to="./../finance/create-disbursement-request"
-          sx={{ typography: 'button' }}
-        >
-          Add disbursement request
-        </Link>
-      </Box>
+      <Typography gutterBottom variant="h6" sx={{ mx: '0.5rem' }}>
+        Saldo
+      </Typography>
+      <Card
+        sx={{
+          p: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          height: '185px',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Typography component="span" variant="h3">
+          {saldo ? fCurrency(saldo) : ''}
+        </Typography>
+      </Card>
+      <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.finance.disbursementRequest}>
+        <Typography variant="body2" align="right" sx={{ m: '0.5rem', fontWeight: 'bold' }}>
+          Pencairan saldo
+        </Typography>
+      </Link>
     </>
   );
 }
