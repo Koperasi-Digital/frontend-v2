@@ -75,14 +75,13 @@ export function registerEMoney(phoneNumber: string, paymentType: string, country
           countryCode: countryCode
         })
       );
-      const currentURL = window.location.href;
       const responseData = (
         await axios.post('emoney/create-pay-account', {
           payment_type: paymentType,
           gopay_partner: {
             phone_number: phoneNumber,
             country_code: countryCode,
-            redirect_url: currentURL
+            redirect_url: 'http://localhost:3000/dashboard/app'
           }
         })
       ).data.payload;
