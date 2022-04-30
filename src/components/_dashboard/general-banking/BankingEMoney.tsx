@@ -9,6 +9,7 @@ import { DialogAnimate } from '../../animate';
 // redux
 import { RootState, useDispatch, useSelector } from 'redux/store';
 import { registerEMoney, unbindEMoney, getPayAccount } from 'redux/slices/emoney';
+// import { resetState } from 'redux/slices/emoney';
 
 export default function BankingEMoney() {
   const dispatch = useDispatch();

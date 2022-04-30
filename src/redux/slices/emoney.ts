@@ -57,12 +57,22 @@ const slice = createSlice({
       state.isLoadingCharge = false;
       state.isLoadingGetPaymentAccount = false;
       state.registerStep = 0;
+    },
+    resetState(state) {
+      state.paymentType = null;
+      state.phoneNumber = null;
+      state.countryCode = null;
+      state.registerStep = 0;
+      state.isLoadingCharge = false;
+      state.isLoadingGetPaymentAccount = false;
     }
   }
 });
 
 // Reducer
 export default slice.reducer;
+
+export const { resetState } = slice.actions;
 
 export function registerEMoney(phoneNumber: string, paymentType: string, countryCode: string) {
   return async () => {
