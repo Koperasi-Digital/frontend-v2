@@ -10,7 +10,7 @@ export type OrderDetails = {
   seller: User;
   order: any;
   product: Product;
-  shipment: any;
+  shipment: string;
 };
 
 export type OrderDetailsLog = {

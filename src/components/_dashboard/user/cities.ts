@@ -2506,4 +2506,11 @@ const cities = [
   }
 ];
 
-export default cities;
+export function getCityIDByName(target: string) {
+  const result = cities.find((city) => city.city_name === target);
+  if (result) {
+    return parseInt(result.city_id);
+  } else {
+    return 0;
+  }
+}

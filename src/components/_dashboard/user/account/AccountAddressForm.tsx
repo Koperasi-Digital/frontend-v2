@@ -52,7 +52,7 @@ export default function AccountAddressForm({
   const formik = useFormik({
     initialValues: {
       phoneNumber: existingAddress?.phoneNumber || '',
-      country: existingAddress?.country || countries[0].label,
+      country: existingAddress?.country || 'Indonesia',
       state: existingAddress?.state || '',
       city: existingAddress?.city || '',
       address: existingAddress?.address || '',
