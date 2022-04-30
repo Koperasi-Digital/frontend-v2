@@ -29,6 +29,7 @@ import { IconifyIcon } from '@iconify/types';
 import { AppWelcome } from 'components/_dashboard/general-app';
 //Footer
 import MainFooter from 'layouts/main/MainFooter';
+import { ProductFilter } from '../@types/products';
 // ----------------------------------------------------------------------
 
 const RedirectCardStyle = styled(Card)(({ theme }) => ({
@@ -72,7 +73,12 @@ export default function Dashboard() {
   const isCustomer = user ? user.roles.length === 1 && user.roles[0].name === 'CUSTOMER' : false;
 
   useEffect(() => {
-    dispatch(getProducts());
+    const productFilter: ProductFilter = {
+      city: ['Bandung'],
+      category: 'Ayam',
+      priceRange: '100000-200000'
+    };
+    dispatch(getProducts(productFilter, null, null));
     dispatch(getPostsBlogList('', 0, 'POPULER'));
   }, [dispatch]);
 

@@ -12,8 +12,6 @@ import axios from 'utils/axios';
 // @types
 import { Store } from '../../../../@types/store';
 import countries from '../countries';
-import provinces from '../provinces';
-import cities from '../cities';
 
 // ----------------------------------------------------------------------
 
@@ -128,37 +126,19 @@ export default function AccountInformationEdit() {
 
                 <Stack spacing={{ xs: 2, md: 3 }} direction={{ xs: 'column', md: 'row' }}>
                   <TextField
-                    select
                     fullWidth
                     label="Kota"
-                    placeholder="Kota"
                     {...getFieldProps('city')}
-                    SelectProps={{ native: true }}
                     error={Boolean(touched.city && errors.city)}
                     helperText={touched.city && errors.city}
-                  >
-                    {cities.map((option) => (
-                      <option key={option.city_id} value={option.city_name}>
-                        {option.city_name}
-                      </option>
-                    ))}
-                  </TextField>
+                  />
                   <TextField
-                    select
                     fullWidth
                     label="Provinsi"
-                    placeholder="Provinsi"
                     {...getFieldProps('state')}
-                    SelectProps={{ native: true }}
                     error={Boolean(touched.state && errors.state)}
                     helperText={touched.state && errors.state}
-                  >
-                    {provinces.map((option) => (
-                      <option key={option.province_id} value={option.province}>
-                        {option.province}
-                      </option>
-                    ))}
-                  </TextField>
+                  />
                   <TextField
                     fullWidth
                     label="Kode Pos"
