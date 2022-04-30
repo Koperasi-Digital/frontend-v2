@@ -71,8 +71,6 @@ export default function Dashboard() {
   const { user } = useAuth();
   const isCustomer = user ? user.roles.length === 1 && user.roles[0].name === 'CUSTOMER' : false;
 
-  console.log(isCustomer);
-
   useEffect(() => {
     dispatch(getProducts());
     dispatch(getPostsBlogList('', 0, 'POPULER'));

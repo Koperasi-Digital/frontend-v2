@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import BankingEMoneyForm from './BankingEMoneyForm';
 
 import { fCurrency } from '../../../utils/formatNumber';
-import LoadingScreen from '../../LoadingScreen';
 
 import { DialogAnimate } from '../../animate';
 
@@ -13,11 +12,17 @@ import { registerEMoney, unbindEMoney, getPayAccount } from 'redux/slices/emoney
 
 export default function BankingEMoney() {
   const dispatch = useDispatch();
-  const { isLoading, paymentType, phoneNumber, countryCode, hasRegistered, error } = useSelector(
-    (state: RootState) => state.emoney
-  );
+  const {
+    isLoadingGetPaymentAccount,
+    isLoadingCharge,
+    isLoadingUnbind,
+    registerStep,
+    paymentType,
+    phoneNumber,
+    countryCode
+  } = useSelector((state: RootState) => state.emoney);
 
-  const [saldo, setSaldo] = useState<number>();
+  const [saldo, setSaldo] = useState<number | undefined>(undefined);
   const [openModalEMoney, setOpenModalEMoney] = useState<boolean>(false);
 
   const handleRegisterEMoney = async (
@@ -37,19 +42,20 @@ export default function BankingEMoney() {
   };
 
   useEffect(() => {
-    console.log('Begin register emoney');
-    const handleCheckEMoney = async () => {
-      let payAccount = await getPayAccount();
-      if (!payAccount && paymentType && phoneNumber && countryCode) {
-        dispatch(registerEMoney(phoneNumber, paymentType, countryCode));
-      }
+    const handleCheckEMoney = async (
+      phoneNumber: string,
+      paymentType: string,
+      countryCode: string
+    ) => {
+      dispatch(registerEMoney(phoneNumber, paymentType, countryCode));
     };
 
-    handleCheckEMoney();
-  }, [dispatch, paymentType, phoneNumber, countryCode]);
+    if (paymentType && phoneNumber && countryCode && registerStep === 1) {
+      handleCheckEMoney(phoneNumber, paymentType, countryCode);
+    }
+  }, [dispatch, paymentType, phoneNumber, countryCode, registerStep]);
 
   useEffect(() => {
-    console.log('Begin fetch emoney saldo');
     const fetchSaldo = async () => {
       const payAccount = await getPayAccount();
       if (payAccount && payAccount.metadata && payAccount.metadata.payment_options) {
@@ -61,8 +67,10 @@ export default function BankingEMoney() {
       }
     };
 
-    fetchSaldo();
-  }, [hasRegistered]);
+    if (registerStep === 2) {
+      fetchSaldo();
+    }
+  }, [registerStep, saldo]);
 
   return (
     <>
@@ -71,20 +79,21 @@ export default function BankingEMoney() {
           <Typography variant="overline" sx={{ color: 'text.primary' }}>
             Gopay
           </Typography>
-          {error ? (
-            <Typography>An Error occurs</Typography>
-          ) : isLoading ? (
-            <>
-              <LoadingScreen />
-            </>
-          ) : hasRegistered && saldo ? (
+          {saldo &&
+          !isLoadingGetPaymentAccount &&
+          !isLoadingCharge &&
+          registerStep === 2 &&
+          !isLoadingUnbind ? (
             <div>
               <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                 {saldo ? fCurrency(saldo) : null}
               </Typography>
               <Button onClick={handleUnregisterEMoney}>Unregister Gopay</Button>
             </div>
-          ) : (
+          ) : !isLoadingGetPaymentAccount &&
+            !isLoadingCharge &&
+            registerStep === 0 &&
+            !isLoadingUnbind ? (
             <Button
               onClick={() => {
                 setOpenModalEMoney(true);
@@ -92,6 +101,13 @@ export default function BankingEMoney() {
             >
               Register E-Money
             </Button>
+          ) : isLoadingGetPaymentAccount ||
+            isLoadingCharge ||
+            registerStep === 1 ||
+            isLoadingUnbind ? (
+            <Typography>Loading</Typography>
+          ) : (
+            <Typography>Terjadi error</Typography>
           )}
         </Stack>
         <DialogAnimate

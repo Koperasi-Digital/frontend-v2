@@ -2,10 +2,10 @@ export type EMoneyState = {
   paymentType: string | null;
   phoneNumber: string | null;
   countryCode: string | null;
-  hasRegistered: boolean;
-  hasPaymentAccountFetched: boolean;
-  isLoading: boolean;
-  saldo: number | null;
+  registerStep: number;
+  isLoadingGetPaymentAccount: boolean;
+  isLoadingCharge: boolean;
+  isLoadingUnbind: boolean;
   error: boolean;
 };
 
