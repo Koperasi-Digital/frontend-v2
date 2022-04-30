@@ -15,13 +15,13 @@ export default function EquipmentRegister() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
-    <Page title="Mendaftarkan Pembelian Peralatan | CoopChick">
+    <Page title="Pendaftaran Peralatan Baru | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={'Mendaftarkan Pembelian Peralatan'}
+          heading={'Pendaftaran Peralatan Baru'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Mendaftarkan Pembelian Peralatan' }
+            { name: 'Pendaftaran Peralatan Baru' }
           ]}
         />
         <Card sx={{ padding: isMobile ? 2 : 10, paddingTop: 10 }}>

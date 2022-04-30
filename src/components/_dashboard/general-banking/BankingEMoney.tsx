@@ -75,55 +75,58 @@ export default function BankingEMoney() {
 
   return (
     <>
-      <Box sx={{ mb: 5 }}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="overline" sx={{ color: 'text.primary' }}>
-            Gopay
-          </Typography>
-          {saldo &&
-          !isLoadingGetPaymentAccount &&
-          !isLoadingCharge &&
-          registerStep === 2 &&
-          !isLoadingUnbind ? (
-            <div>
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        {saldo &&
+        !isLoadingGetPaymentAccount &&
+        !isLoadingCharge &&
+        registerStep === 2 &&
+        !isLoadingUnbind ? (
+          <Box width="100%" display="flex" flexDirection="column" gap={2} justifyContent="center">
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Typography variant="overline" sx={{ color: 'text.primary' }}>
+                Gopay
+              </Typography>
               <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                 {saldo ? fCurrency(saldo) : null}
               </Typography>
-              <Button onClick={handleUnregisterEMoney}>Unregister Gopay</Button>
-            </div>
-          ) : !isLoadingGetPaymentAccount &&
-            !isLoadingCharge &&
-            registerStep === 0 &&
-            !isLoadingUnbind ? (
-            <Button
-              onClick={() => {
-                setOpenModalEMoney(true);
-              }}
-            >
-              Register E-Money
+            </Stack>
+            <Button variant="contained" onClick={handleUnregisterEMoney}>
+              Unregister Gopay
             </Button>
-          ) : isLoadingGetPaymentAccount ||
-            isLoadingCharge ||
-            registerStep === 1 ||
-            isLoadingUnbind ? (
-            <Typography>Loading</Typography>
-          ) : (
-            <Typography>Terjadi error</Typography>
-          )}
-        </Stack>
-        <DialogAnimate
-          open={openModalEMoney}
-          onClose={() => {
-            setOpenModalEMoney(false);
-          }}
-        >
-          <DialogTitle>Register EMoney</DialogTitle>
-          <BankingEMoneyForm
-            handleCloseModal={handleCloseModal}
-            handleRegisterEMoney={handleRegisterEMoney}
-          />
-        </DialogAnimate>
-      </Box>
+          </Box>
+        ) : !isLoadingGetPaymentAccount &&
+          !isLoadingCharge &&
+          registerStep === 0 &&
+          !isLoadingUnbind ? (
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpenModalEMoney(true);
+            }}
+          >
+            Register E-Money
+          </Button>
+        ) : isLoadingGetPaymentAccount ||
+          isLoadingCharge ||
+          registerStep === 1 ||
+          isLoadingUnbind ? (
+          <Typography>Loading</Typography>
+        ) : (
+          <Typography>Terjadi error</Typography>
+        )}
+      </Stack>
+      <DialogAnimate
+        open={openModalEMoney}
+        onClose={() => {
+          setOpenModalEMoney(false);
+        }}
+      >
+        <DialogTitle>Register EMoney</DialogTitle>
+        <BankingEMoneyForm
+          handleCloseModal={handleCloseModal}
+          handleRegisterEMoney={handleRegisterEMoney}
+        />
+      </DialogAnimate>
     </>
   );
 }

@@ -16,6 +16,7 @@ import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Card,
+  CardHeader,
   Grid,
   Menu,
   Table,
@@ -268,6 +269,10 @@ export default function BankingTransactionsReport() {
   return (
     <>
       <Card sx={{ padding: 5 }}>
+        <CardHeader
+          title={<Typography variant="h6">Riwayat transaksi</Typography>}
+          sx={{ mb: 3 }}
+        />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <Grid
             container

@@ -37,17 +37,17 @@ export default function DisbursementRequest() {
   }, [user]);
 
   return (
-    <Page title="Banking: Transaction Report | CoopChick">
+    <Page title="Transaction Report | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={'Create Disbursement Request'}
+          heading={'Pengajuan Pencairan'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Finance',
+              name: 'Keuangan',
               href: PATH_DASHBOARD.finance.root
             },
-            { name: 'Create Disbursement Request' }
+            { name: 'Pengajuan Pencairan' }
           ]}
         />
         <Card sx={{ padding: 10 }}>

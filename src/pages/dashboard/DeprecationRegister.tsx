@@ -15,13 +15,13 @@ export default function DeprecationRegister() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
-    <Page title="Mendaftarkan Kerusakan Peralatan | CoopChick">
+    <Page title="Pendaftaran Depresiasi Peralatan | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={'Mendaftarkan Kerusakan Peralatan'}
+          heading={'Pendaftaran Depresiasi Peralatan'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Mendaftarkan Kerusakan Peralatan' }
+            { name: 'Pendaftaran Depresiasi Peralatan' }
           ]}
         />
         <Card sx={{ padding: isMobile ? 2 : 10, paddingTop: 10 }}>

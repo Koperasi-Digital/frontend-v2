@@ -58,8 +58,44 @@ const sidebarConfig = [
             path: PATH_DASHBOARD.eCommerce.shop
           },
           {
-            title: 'order history',
+            title: 'riwayat pesanan',
             path: PATH_DASHBOARD.eCommerce.orderHistory
+          }
+        ]
+      },
+      {
+        title: 'keuangan',
+        icon: ICONS.banking,
+        accessibleRoles: ['MEMBER'],
+        path: PATH_DASHBOARD.finance.home,
+        children: [
+          {
+            title: 'simpanan sukarela',
+            path: PATH_DASHBOARD.finance.addSimpananSukarela
+          },
+          {
+            title: 'pencairan saldo',
+            path: PATH_DASHBOARD.finance.disbursementRequest
+          }
+        ]
+      },
+      {
+        title: 'keuangan',
+        path: PATH_DASHBOARD.finance.home,
+        icon: ICONS.banking,
+        accessibleRoles: ['ADMIN'],
+        children: [
+          {
+            title: 'pendaftaran depresiasi',
+            path: PATH_DASHBOARD.finance.deprecationRegister
+          },
+          {
+            title: 'pendaftaran perbaikan',
+            path: PATH_DASHBOARD.finance.repairRegister
+          },
+          {
+            title: 'pendaftaran peralatan',
+            path: PATH_DASHBOARD.finance.equipmentRegister
           }
         ]
       },
@@ -103,7 +139,7 @@ const sidebarConfig = [
         icon: ICONS.user,
         accessibleRoles: ['ADMIN'],
         children: [
-          { title: 'list', path: PATH_DASHBOARD.user.list },
+          { title: 'daftar pengguna', path: PATH_DASHBOARD.user.list },
           {
             title: 'verifikasi calon anggota',
             path: PATH_DASHBOARD.user.memberVerification.verify
@@ -112,21 +148,17 @@ const sidebarConfig = [
       },
       // MANAGEMENT : FINANCE
       {
-        title: 'finance',
+        title: 'keuangan',
         path: PATH_DASHBOARD.managementFinance.root,
         icon: ICONS.banking,
         accessibleRoles: ['ADMIN'],
         children: [
           {
-            title: 'home',
-            path: PATH_DASHBOARD.managementFinance.home
-          },
-          {
-            title: 'disbursement approval',
+            title: 'penyetujuan pencairan',
             path: PATH_DASHBOARD.managementFinance.disbursementApproval
           },
           {
-            title: 'disbursement request list',
+            title: 'daftar pengajuan pencairan',
             path: PATH_DASHBOARD.managementFinance.disbursementRequestList
           }
         ]
@@ -161,51 +193,6 @@ const sidebarConfig = [
           { title: 'list', path: PATH_DASHBOARD.general.courseList },
           { title: 'create', path: PATH_DASHBOARD.general.courseNewPost }
         ]
-      }
-    ]
-  },
-  // FINANCE
-  {
-    subheader: 'keuangan',
-    accessibleRoles: ['MEMBER'],
-    items: [
-      {
-        title: 'home',
-        path: PATH_DASHBOARD.finance.home,
-        icon: ICONS.banking
-      },
-      {
-        title: 'report',
-        path: PATH_DASHBOARD.finance.report,
-        icon: ICONS.banking
-      },
-      {
-        title: 'disbursement request',
-        path: PATH_DASHBOARD.finance.disbursementRequest,
-        icon: ICONS.banking
-      },
-      {
-        title: 'add simpanan sukarela',
-        path: PATH_DASHBOARD.finance.addSimpananSukarela,
-        icon: ICONS.banking
-      },
-      {
-        title: 'deprecation register',
-        path: PATH_DASHBOARD.finance.deprecationRegister,
-        accessibleRoles: ['ADMIN'],
-        icon: ICONS.banking
-      },
-      {
-        title: 'repair register',
-        path: PATH_DASHBOARD.finance.repairRegister,
-        accessibleRoles: ['ADMIN'],
-        icon: ICONS.banking
-      },
-      {
-        title: 'equipment register',
-        path: PATH_DASHBOARD.finance.equipmentRegister,
-        accessibleRoles: ['ADMIN'],
-        icon: ICONS.banking
       }
     ]
   }
