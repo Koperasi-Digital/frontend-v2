@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { capitalize } from 'lodash';
 import {
   Card,
@@ -10,8 +11,12 @@ import {
   TableContainer,
   TablePagination,
   CardHeader,
-  Chip
+  Chip,
+  Link,
+  Typography
 } from '@mui/material';
+// routes
+import { PATH_DASHBOARD } from 'routes/paths';
 // utils
 import axios from 'utils/axios';
 import { fDateTime } from 'utils/formatTime';
@@ -73,79 +78,86 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - activityLogList.length) : 0;
 
   return (
-    <Card>
-      <CardHeader title="Keaktifan Anggota" sx={{ mb: 3 }} />
-      <Scrollbar>
-        <TableContainer sx={{ minWidth: 800 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Nama</TableCell>
-                <TableCell>Tipe</TableCell>
-                <TableCell>Waktu Mulai</TableCell>
-                <TableCell>Waktu Selesai</TableCell>
-                <TableCell>Waktu Hadir</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {activityLogList
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  const { id, name, type, startAt, endAt, attendingAt } = row;
-
-                  return (
-                    <TableRow hover key={id} tabIndex={-1}>
-                      <TableCell align="left">{id}</TableCell>
-                      <TableCell align="left">{name}</TableCell>
-                      <TableCell align="left">
-                        <Chip
-                          label={capitalize(type)}
-                          color={type === 'koperasi' ? 'primary' : 'secondary'}
-                          sx={{ fontWeight: 'bold' }}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell align="left">{fDateTime(new Date(startAt))}</TableCell>
-                      <TableCell align="left">{fDateTime(new Date(endAt))}</TableCell>
-                      <TableCell align="left">
-                        {attendingAt ? (
-                          fDateTime(new Date(attendingAt))
-                        ) : (
-                          <Chip label="Tidak hadir" color="error" size="small" />
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-            {!activityLogList.length && (
-              <TableBody>
+    <>
+      <Card>
+        <CardHeader title="Keaktifan Anggota (Presensi Meeting)" sx={{ mb: 3 }} />
+        <Scrollbar>
+          <TableContainer sx={{ minWidth: 800 }}>
+            <Table>
+              <TableHead>
                 <TableRow>
-                  <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                    Kosong
-                  </TableCell>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Nama</TableCell>
+                  <TableCell>Tipe</TableCell>
+                  <TableCell>Waktu Mulai</TableCell>
+                  <TableCell>Waktu Selesai</TableCell>
+                  <TableCell>Waktu Hadir</TableCell>
                 </TableRow>
-              </TableBody>
-            )}
-          </Table>
-        </TableContainer>
-      </Scrollbar>
+              </TableHead>
+              <TableBody>
+                {activityLogList
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => {
+                    const { id, name, type, startAt, endAt, attendingAt } = row;
 
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={activityLogList.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={(e, page) => setPage(page)}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Card>
+                    return (
+                      <TableRow hover key={id} tabIndex={-1}>
+                        <TableCell align="left">{id}</TableCell>
+                        <TableCell align="left">{name}</TableCell>
+                        <TableCell align="left">
+                          <Chip
+                            label={capitalize(type)}
+                            color={type === 'koperasi' ? 'primary' : 'secondary'}
+                            sx={{ fontWeight: 'bold' }}
+                            size="small"
+                          />
+                        </TableCell>
+                        <TableCell align="left">{fDateTime(new Date(startAt))}</TableCell>
+                        <TableCell align="left">{fDateTime(new Date(endAt))}</TableCell>
+                        <TableCell align="left">
+                          {attendingAt ? (
+                            fDateTime(new Date(attendingAt))
+                          ) : (
+                            <Chip label="Tidak hadir" color="error" size="small" />
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+              {!activityLogList.length && (
+                <TableBody>
+                  <TableRow>
+                    <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                      Kosong
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
+        </Scrollbar>
+
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={activityLogList.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(e, page) => setPage(page)}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Card>
+      <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.eCommerce.orderHistory}>
+        <Typography variant="body2" align="right" sx={{ m: '0.5rem', fontWeight: 'bold' }}>
+          Lihat keaktifan transaksi
+        </Typography>
+      </Link>
+    </>
   );
 }

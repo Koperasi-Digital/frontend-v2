@@ -10,17 +10,17 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 
 export default function AddSimpananSukarela() {
   return (
-    <Page title="Banking: Add Simpanan Sukarela | CoopChick">
+    <Page title="Penambahan Simpanan Sukarela | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={'Add Simpanan Sukarela'}
+          heading={'Penambahan Simpanan Sukarela'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Finance',
               href: PATH_DASHBOARD.finance.root
             },
-            { name: 'Add Simpanan Sukarela' }
+            { name: 'Penambahan Simpanan Sukarela' }
           ]}
         />
         <Card sx={{ padding: 10 }}>

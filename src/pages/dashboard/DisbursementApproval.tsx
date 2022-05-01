@@ -14,14 +14,14 @@ export default function DisbursementApproval() {
     <Page title="Finance: Disbursement | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={'Create disbursement approval'}
+          heading={'Pembuatan Persetujuan Pencairan'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Finance',
+              name: 'Keuangan',
               href: PATH_DASHBOARD.managementFinance.root
             },
-            { name: 'Disbursement Approval' }
+            { name: 'Persetujuan Pencairan' }
           ]}
         />
 

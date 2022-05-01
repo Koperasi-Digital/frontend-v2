@@ -168,7 +168,7 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
               loading={isSubmitting}
               disabled={!user}
             >
-              {user ? 'Create Disbursement Request' : 'Loading'}
+              {user ? 'Pengajuan Pencairan' : 'Loading'}
             </LoadingButton>
           </Grid>
         </Grid>

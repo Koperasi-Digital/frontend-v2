@@ -35,7 +35,7 @@ export default function FAQ() {
         />
         <Stack direction="column" alignItems="center" mb={5}>
           <Typography variant="h3" gutterBottom>
-            Frequently Asked Questions(FAQ)
+            Frequently Asked Questions (FAQ)
           </Typography>
           <Typography variant="h6" gutterBottom>
             Pertanyaan dan jawaban yang sering ditanyakan tentang aplikasi

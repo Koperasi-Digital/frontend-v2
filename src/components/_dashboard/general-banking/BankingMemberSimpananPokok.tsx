@@ -116,7 +116,7 @@ export default function BankingMemberSimpananPokok() {
     <>
       <Card sx={{ padding: 5 }}>
         <CardHeader
-          title={<Typography variant="h6">Member Simpanan Pokok</Typography>}
+          title={<Typography variant="h6">Simpanan Pokok Anggota</Typography>}
           sx={{ mb: 3 }}
         />
         <Stack direction="row" justifyContent="center" sx={{ mb: 3 }}>

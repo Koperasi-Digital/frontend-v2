@@ -11,6 +11,7 @@ import productReducer from './slices/product';
 import calendarReducer from './slices/calendar';
 import notificationReducer from './slices/notification';
 import orderReducer from './slices/order';
+import emoneyReducer from './slices/emoney';
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +29,13 @@ const productPersistConfig = {
   whitelist: ['sortBy', 'checkout']
 };
 
+const emoneyPersistConfig = {
+  key: 'emoney',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['paymentType', 'phoneNumber', 'countryCode', 'registerStep']
+};
+
 const rootReducer = combineReducers({
   blog: blogReducer,
   course: courseReducer,
@@ -37,6 +45,7 @@ const rootReducer = combineReducers({
   calendar: calendarReducer,
   notification: notificationReducer,
   order: orderReducer,
+  emoney: persistReducer(emoneyPersistConfig, emoneyReducer),
   product: persistReducer(productPersistConfig, productReducer)
 });
 

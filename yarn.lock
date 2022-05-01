@@ -1943,6 +1943,20 @@
   resolved "https://registry.npmjs.org/@iconify/icons-ant-design/-/icons-ant-design-1.1.0.tgz"
   integrity sha512-sE4NKXMfN9arTFmfvt4zARoS+hjhd8P0z5osjWYxVkQPCri1RYpF+NRa9MsDh3ScqAcSU9wfUeQ3X4Gf8GrcNQ==
 
+"@iconify/icons-cib@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-cib/-/icons-cib-1.2.2.tgz#e843be98aa25a574a4ca64873c7f97508cdc7563"
+  integrity sha512-gqDCvCFyOJzIwQn/I63xibAPgXtckgJCWri/3UZjn3R5RIuwkWLNSr3U9+Uzqktb3qlopruaozE/FF0BNZiQzA==
+  dependencies:
+    "@iconify/types" "^1.0.12"
+
+"@iconify/icons-emojione-monotone@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-emojione-monotone/-/icons-emojione-monotone-1.2.2.tgz#b353083116c54a48237283eee67feff9eb84f8fd"
+  integrity sha512-BIuqlVmIxROceBwo4zC+a8jgkLNt6Fo7O3ZEGQKQNQAzDcjzVeictqfJTtUJCMx9o5RAHgrRhoJk7m9/8mBwRQ==
+  dependencies:
+    "@iconify/types" "^1.0.12"
+
 "@iconify/icons-eva@^1.1.0":
   version "1.1.0"
   resolved "https://registry.npmjs.org/@iconify/icons-eva/-/icons-eva-1.1.0.tgz"
