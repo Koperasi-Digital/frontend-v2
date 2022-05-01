@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
-import { Container } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 // components
 import Page from '../../components/Page';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,8 +8,11 @@ import { handleCreateTransaction } from 'utils/financeAxios/financeTransaction';
 import { handleGetOrder } from 'utils/financeAxios/financeOrder';
 import { TransactionDetails } from '../../@types/transaction';
 import { PATH_DASHBOARD } from 'routes/paths';
-import { dispatch } from 'redux/store';
 import { setCheckoutOrder } from 'redux/slices/product';
+
+//redux
+import { RootState, useDispatch, useSelector } from 'redux/store';
+import { getPayAccount, chargePayAccount } from 'redux/slices/emoney';
 
 declare global {
   interface Window {
@@ -20,9 +23,12 @@ declare global {
 // ----------------------------------------------------------------------
 export default function PaymentPage() {
   const navigate = useNavigate();
-  const { id: orderId = '' } = useParams();
+  const dispatch = useDispatch();
+  const { isLoadingCharge } = useSelector((state: RootState) => state.emoney);
+  const { id: orderId = '', paymentType } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const [transactionDetails, setTransactionDetails] = useState<TransactionDetails>();
+  const [payAccountExist, setPayAccountExist] = useState<Boolean>(false);
 
   useEffect(() => {
     dispatch(setCheckoutOrder(orderId));
@@ -39,7 +45,7 @@ export default function PaymentPage() {
     return () => {
       document.body.removeChild(script);
     };
-  }, [orderId]);
+  }, [orderId, dispatch]);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -56,42 +62,78 @@ export default function PaymentPage() {
   }, [orderId]);
 
   useEffect(() => {
-    const path = PATH_DASHBOARD.eCommerce.checkout;
-    const payFun = async () => {
-      if (transactionDetails) {
-        const snapOptions = {
-          onSuccess: function (result: any) {
-            //TODO: PUSH NOTIFICATION
-            enqueueSnackbar('Payment success', { variant: 'success' });
-            navigate(path);
-          },
-          onPending: function (result: any) {
-            //TODO: PUSH NOTIFICATION
-            enqueueSnackbar('Payment pending', { variant: 'warning' });
-            navigate(path);
-          },
-          onError: function (result: any) {
-            //TODO: PUSH NOTIFICATION
-            enqueueSnackbar('Payment error', { variant: 'error' });
-            navigate(path);
-          },
-          onClose: function () {
-            //TODO: PUSH NOTIFICATION
-            enqueueSnackbar('Payment pending', { variant: 'warning' });
-            navigate(path);
-          }
-        };
+    const payWithOthers = () => {
+      const path = PATH_DASHBOARD.eCommerce.checkout;
+      const payFun = async () => {
+        if (transactionDetails) {
+          const snapOptions = {
+            onSuccess: function (result: any) {
+              //TODO: PUSH NOTIFICATION
+              enqueueSnackbar('Payment success', { variant: 'success' });
+              navigate(path);
+            },
+            onPending: function (result: any) {
+              //TODO: PUSH NOTIFICATION
+              enqueueSnackbar('Payment pending', { variant: 'warning' });
+              navigate(path);
+            },
+            onError: function (result: any) {
+              //TODO: PUSH NOTIFICATION
+              enqueueSnackbar('Payment error', { variant: 'error' });
+              navigate(path);
+            },
+            onClose: function () {
+              //TODO: PUSH NOTIFICATION
+              enqueueSnackbar('Payment pending', { variant: 'warning' });
+              navigate(path);
+            }
+          };
 
-        const tokenName = await handleCreateTransaction(transactionDetails);
-        window.snap.pay(tokenName, snapOptions);
+          const tokenName = await handleCreateTransaction(transactionDetails);
+          window.snap.pay(tokenName, snapOptions);
+        }
+      };
+      payFun();
+    };
+
+    const payWithGopay = async () => {
+      const path = PATH_DASHBOARD.eCommerce.checkout;
+      const payAccount = await getPayAccount();
+      if (payAccount) {
+        setPayAccountExist(true);
+        const response = await chargePayAccount(orderId, window.location.href);
+        if (response.status_code === '200') {
+          navigate(path);
+        }
+      } else {
+        setPayAccountExist(false);
       }
     };
-    payFun();
-  }, [transactionDetails, enqueueSnackbar, navigate]);
+
+    if (paymentType === 'OTHER') {
+      payWithOthers();
+    } else {
+      payWithGopay();
+    }
+  }, [transactionDetails, enqueueSnackbar, navigate, orderId, paymentType]);
 
   return (
     <Page title="Payment">
-      <Container maxWidth="xl"></Container>
+      <Container maxWidth="xl">
+        {paymentType === 'OTHER' ? null : !payAccountExist ? (
+          <>
+            <Typography>
+              Akun pembayaran tidak tersedia. Silahkan daftarkan akun pembayaran terlebih dahulu
+            </Typography>
+          </>
+        ) : isLoadingCharge ? (
+          <>
+            <Typography>Pembayaran sedang diproses</Typography>
+          </>
+        ) : (
+          <Typography>Terjadi error</Typography>
+        )}
+      </Container>
     </Page>
   );
 }

@@ -10,11 +10,6 @@ export async function handleCreateOrder(
   address?: UserAddressBook
 ) {
   try {
-    console.log(cart);
-    console.log(userId);
-    console.log(grossAmount);
-    console.log(paymentType);
-    console.log(address);
     const response = await axios.post('order/create', {
       user_id: userId,
       total_cost: grossAmount,
