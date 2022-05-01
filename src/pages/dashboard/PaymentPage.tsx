@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
-import { Container, Typography } from '@mui/material';
+import { Typography, Box, Stack } from '@mui/material';
 // components
 import Page from '../../components/Page';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -119,21 +119,34 @@ export default function PaymentPage() {
 
   return (
     <Page title="Payment">
-      <Container maxWidth="xl">
-        {paymentType === 'OTHER' ? null : !payAccountExist ? (
-          <>
-            <Typography>
-              Akun pembayaran tidak tersedia. Silahkan daftarkan akun pembayaran terlebih dahulu
-            </Typography>
-          </>
-        ) : isLoadingCharge ? (
-          <>
-            <Typography>Pembayaran sedang diproses</Typography>
-          </>
-        ) : (
-          <Typography>Terjadi error</Typography>
-        )}
-      </Container>
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignContent: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          height: '100vh'
+        }}
+      >
+        <Stack alignItems="center" spacing={2}>
+          <Box
+            sx={{ width: 320, height: 320, p: 3, margin: { xs: 'auto', md: 'inherit' } }}
+            component="img"
+            alt="coopchick logo"
+            src={'/CoopChick_Logo.png'}
+          />
+          <Typography variant="h3">
+            {paymentType === 'OTHER'
+              ? null
+              : !payAccountExist
+              ? 'Akun pembayaran tidak tersedia. Silahkan daftarkan akun pembayaran terlebih dahulu'
+              : isLoadingCharge
+              ? 'Pembayaran sedang diproses'
+              : 'Terjadi error'}
+          </Typography>
+        </Stack>
+      </Box>
     </Page>
   );
 }
