@@ -47,46 +47,48 @@ export default function SimpananWajib(props: { dateValue: Date }) {
     <>
       {simpananWajib ? (
         <>
-          <Stack direction="row" spacing={5} justifyContent="center" sx={{ mb: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Simpanan wajib : {fCurrency(simpananWajib.amount)}
-            </Typography>
-
-            {simpananWajib.order && simpananWajib.order.status !== 'LUNAS' ? (
-              <PaymentButton
-                user_id={2}
-                buttonName="Bayar"
-                transaction_details={{
-                  order_id: simpananWajib.order.id.toString(),
-                  gross_amount: simpananWajib.amount
-                }}
-              />
-            ) : (
-              <Typography variant="body1" gutterBottom>
-                Lunas
+          <Stack direction="column" spacing={0.5} alignItems="center">
+            <Stack direction="row" spacing={5} justifyContent="center" sx={{ mb: 0.5 }}>
+              <Typography variant="h5" gutterBottom>
+                Simpanan wajib : {fCurrency(simpananWajib.amount)}
               </Typography>
-            )}
-          </Stack>
-          <Stack direction="row" justifyContent="center">
-            <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+              <Typography variant="h5" gutterBottom>
+                {simpananWajib.order.status}
+              </Typography>
+            </Stack>
+            <Typography variant="h6">
               periode {new Date(simpananWajib.period).getDate()} -{' '}
               {new Date(simpananWajib.period).getMonth() + 1} -{' '}
               {new Date(simpananWajib.period).getFullYear()}
             </Typography>
+            {simpananWajib.order && simpananWajib.order.status !== 'LUNAS' && (
+              <>
+                <Typography>Bayar dengan</Typography>
+                <PaymentButton
+                  buttonName="Gopay terdaftar"
+                  transaction_details={{
+                    order_id: simpananWajib.order.id,
+                    gross_amount: simpananWajib.amount
+                  }}
+                  paymentType="GOPAY"
+                />
+                <PaymentButton
+                  buttonName="Alternatif lain"
+                  transaction_details={{
+                    order_id: simpananWajib.order.id,
+                    gross_amount: simpananWajib.amount
+                  }}
+                  paymentType="OTHER"
+                />
+              </>
+            )}
           </Stack>
         </>
       ) : dataNotExist ? (
         <>
-          <Stack direction="row" justifyContent="center">
-            <Typography variant="body1" gutterBottom>
-              Data tidak tersedia
-            </Typography>
-          </Stack>
-          <Stack direction="row" justifyContent="center">
-            <Typography variant="body1" gutterBottom>
-              (Coba refresh jika yakin memang data ada)
-            </Typography>
-          </Stack>
+          <Typography variant="body1" gutterBottom>
+            Data tidak tersedia (silakan coba muat ulang halaman ini)
+          </Typography>
         </>
       ) : (
         <LoadingScreen />

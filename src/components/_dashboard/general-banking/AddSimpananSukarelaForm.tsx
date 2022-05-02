@@ -1,10 +1,22 @@
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { Form, FormikProvider, useFormik } from 'formik';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+// redux
+import { RootState, useSelector } from 'redux/store';
+import { getPayAccount, chargePayAccount } from 'redux/slices/emoney';
 // material
 import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Stack, TextField } from '@mui/material';
+import {
+  Card,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  Stack,
+  TextField
+} from '@mui/material';
 // hooks
 import useAuth from 'hooks/useAuth';
 import { PATH_DASHBOARD } from 'routes/paths';
@@ -26,12 +38,15 @@ declare global {
 
 export default function AddSimpananSukarelaForm() {
   const { enqueueSnackbar } = useSnackbar();
+  const { isLoadingCharge } = useSelector((state: RootState) => state.emoney);
+  const [loadingSnap, setLoadingSnap] = useState<boolean>(false);
 
   const { user } = useAuth();
   const userId = user?.id;
 
   const AddSimpananSukarelaSchema = Yup.object().shape({
-    amount: Yup.number().required().min(0, 'Min value 0.')
+    amount: Yup.number().required().min(0, 'Min value 0.'),
+    paymentType: Yup.string().required().oneOf(['GOPAY', 'OTHER'])
   });
 
   useEffect(() => {
@@ -54,22 +69,25 @@ export default function AddSimpananSukarelaForm() {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      amount: ''
+      amount: '',
+      paymentType: 'OTHER'
     },
     validationSchema: AddSimpananSukarelaSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         const createdOrder = await handleCreateOrder(userId, Number(values.amount), 'OTHER');
-        console.log('Created order: ', createdOrder);
         const fetchedSimpananSukarela = await handleGetSimpananSukarela(userId);
         if (!fetchedSimpananSukarela) {
           await handleCreateSimpananSukarela(userId);
         }
         await handleAddOrderSimpananSukarela(userId, createdOrder.id);
-        await paymentFunction(userId, {
-          order_id: createdOrder.id,
-          gross_amount: createdOrder.total_cost
-        });
+        await paymentFunction(
+          {
+            order_id: createdOrder.id,
+            gross_amount: createdOrder.total_cost
+          },
+          values.paymentType
+        );
         resetForm();
         setSubmitting(false);
       } catch (error) {
@@ -82,7 +100,7 @@ export default function AddSimpananSukarelaForm() {
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
-  const paymentFunction = async (user_id: number, transaction_details: TransactionDetails) => {
+  const paymentFunction = async (transaction_details: TransactionDetails, paymentType: string) => {
     const snapOptions = {
       onSuccess: function (result: any) {
         //TODO: PUSH NOTIFICATION
@@ -102,8 +120,24 @@ export default function AddSimpananSukarelaForm() {
       onClose: function () {}
     };
 
-    const tokenName = await handleCreateTransaction(transaction_details);
-    window.snap.pay(tokenName, snapOptions);
+    if (paymentType === 'OTHER') {
+      setLoadingSnap(true);
+      const tokenName = await handleCreateTransaction(transaction_details);
+      window.snap.pay(tokenName, snapOptions);
+    } else {
+      const payAccount = await getPayAccount();
+      if (payAccount) {
+        const response = await chargePayAccount(transaction_details.order_id, window.location.href);
+        if (response.status_code === '200') {
+          enqueueSnackbar('Pembayaran menggunakan akun pembayaran terdaftar berhasil', {
+            variant: 'success'
+          });
+          window.location.reload();
+        }
+      } else {
+        enqueueSnackbar('Daftarkan terlebih dahulu akun pembayaran', { variant: 'error' });
+      }
+    }
   };
 
   return (
@@ -121,6 +155,14 @@ export default function AddSimpananSukarelaForm() {
                     error={Boolean(touched.amount && errors.amount)}
                     helperText={touched.amount && errors.amount}
                   />
+                  <FormLabel id="payment-type-radio-buttons-group">Metode Pembayaran</FormLabel>
+                  <RadioGroup
+                    aria-labelledby="payment-type-radio-buttons-group"
+                    {...getFieldProps('paymentType')}
+                  >
+                    <FormControlLabel value="GOPAY" control={<Radio />} label="GOPAY" />
+                    <FormControlLabel value="OTHER" control={<Radio />} label="OTHER" />
+                  </RadioGroup>
                 </Stack>
               </Stack>
             </Card>
@@ -131,7 +173,7 @@ export default function AddSimpananSukarelaForm() {
               fullWidth
               variant="contained"
               size="large"
-              loading={isSubmitting}
+              loading={isSubmitting || isLoadingCharge || loadingSnap}
               disabled={!user}
             >
               {user ? 'Penambahan Simpanan Sukarela' : 'Loading'}

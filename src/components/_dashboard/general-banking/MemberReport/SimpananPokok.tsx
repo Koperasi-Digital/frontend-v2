@@ -47,23 +47,35 @@ export default function SimpananPokok() {
     <>
       {simpananPokok ? (
         <>
-          <Stack direction="row" spacing={5} justifyContent="center" sx={{ mb: 15 }}>
-            <Typography variant="h6" gutterBottom>
-              Simpanan pokok : {fCurrency(simpananPokok.amount)}
-            </Typography>
-            {simpananPokok.order && simpananPokok.order.status !== 'LUNAS' ? (
-              <PaymentButton
-                user_id={2}
-                buttonName="Bayar"
-                transaction_details={{
-                  order_id: simpananPokok.order.id.toString(),
-                  gross_amount: simpananPokok.amount
-                }}
-              />
-            ) : (
-              <Typography variant="body1" gutterBottom>
-                Lunas
+          <Stack direction="column" spacing={2} alignItems="center">
+            <Stack direction="row" spacing={5} justifyContent="center" sx={{ mb: 2 }}>
+              <Typography variant="h5" gutterBottom>
+                Simpanan pokok : {fCurrency(simpananPokok.amount)}
               </Typography>
+              <Typography variant="h5" gutterBottom>
+                {simpananPokok.order.status}
+              </Typography>
+            </Stack>
+            {simpananPokok.order && simpananPokok.order.status !== 'LUNAS' && (
+              <>
+                <Typography>Bayar dengan</Typography>
+                <PaymentButton
+                  buttonName="Gopay terdaftar"
+                  transaction_details={{
+                    order_id: simpananPokok.order.id,
+                    gross_amount: simpananPokok.amount
+                  }}
+                  paymentType="GOPAY"
+                />
+                <PaymentButton
+                  buttonName="Alternatif lain"
+                  transaction_details={{
+                    order_id: simpananPokok.order.id,
+                    gross_amount: simpananPokok.amount
+                  }}
+                  paymentType="OTHER"
+                />
+              </>
             )}
           </Stack>
         </>

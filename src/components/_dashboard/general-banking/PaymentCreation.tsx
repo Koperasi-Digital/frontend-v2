@@ -1,13 +1,24 @@
-import { useEffect } from 'react';
-import { Button } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { handleCreateTransaction } from '../../../utils/financeAxios/financeTransaction';
 import { useSnackbar } from 'notistack';
-import { TransactionDetails } from '../../../@types/transaction';
+
+// redux
+import { RootState, useSelector } from 'redux/store';
+import { getPayAccount, chargePayAccount } from 'redux/slices/emoney';
+
+// material
+import { LoadingButton } from '@mui/lab';
+import { Typography } from '@mui/material';
 
 type PaymentCreationProps = {
-  user_id: number;
   buttonName: string;
-  transaction_details: TransactionDetails;
+  transaction_details: transaction_details;
+  paymentType: string;
+};
+
+type transaction_details = {
+  order_id: string;
+  gross_amount: number;
 };
 
 declare global {
@@ -16,8 +27,15 @@ declare global {
   }
 }
 
-const PaymentCreation = ({ user_id, buttonName, transaction_details }: PaymentCreationProps) => {
+const PaymentCreation = ({
+  buttonName,
+  transaction_details,
+  paymentType
+}: PaymentCreationProps) => {
   const { enqueueSnackbar } = useSnackbar();
+  const { isLoadingCharge } = useSelector((state: RootState) => state.emoney);
+  const [loadingSnap, setLoadingSnap] = useState<boolean>(false);
+  const [payAccountExist, setPayAccountExist] = useState<Boolean>(false);
 
   useEffect(() => {
     const snapSrcUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
@@ -35,35 +53,77 @@ const PaymentCreation = ({ user_id, buttonName, transaction_details }: PaymentCr
     };
   }, []);
 
+  useEffect(() => {
+    const fetchPayAccount = async () => {
+      const payAccount = await getPayAccount();
+      if (payAccount) {
+        setPayAccountExist(true);
+      } else {
+        setPayAccountExist(false);
+      }
+    };
+    fetchPayAccount();
+  }, []);
+
   const paymentFunction = async () => {
     const snapOptions = {
       onSuccess: function (result: any) {
         //TODO: PUSH NOTIFICATION
+        setLoadingSnap(false);
         window.location.href = './';
         enqueueSnackbar('Payment success', { variant: 'success' });
       },
       onPending: function (result: any) {
         //TODO: PUSH NOTIFICATION
+        setLoadingSnap(false);
         window.location.href = './';
         enqueueSnackbar('Payment pending', { variant: 'warning' });
       },
       onError: function (result: any) {
         //TODO: PUSH NOTIFICATION
+        setLoadingSnap(false);
         window.location.href = './';
         enqueueSnackbar('Payment error', { variant: 'error' });
       },
-      onClose: function () {}
+      onClose: function () {
+        setLoadingSnap(false);
+      }
     };
 
-    const tokenName = await handleCreateTransaction(transaction_details);
-    window.snap.pay(tokenName, snapOptions);
+    if (paymentType === 'OTHER') {
+      setLoadingSnap(true);
+      const tokenName = await handleCreateTransaction(transaction_details);
+      window.snap.pay(tokenName, snapOptions);
+    } else {
+      const payAccount = await getPayAccount();
+      if (payAccount) {
+        setPayAccountExist(true);
+        const response = await chargePayAccount(transaction_details.order_id, window.location.href);
+        if (response.status_code === '200') {
+          enqueueSnackbar('Pembayaran menggunakan akun pembayaran terdaftar berhasil', {
+            variant: 'success'
+          });
+          window.location.reload();
+        }
+      } else {
+        enqueueSnackbar('Daftarkan terlebih dahulu akun pembayaran', { variant: 'error' });
+      }
+    }
   };
 
   return (
     <>
-      <Button variant="contained" onClick={paymentFunction}>
-        {buttonName}
-      </Button>
+      {paymentType === 'OTHER' || payAccountExist ? (
+        <LoadingButton
+          variant="contained"
+          loading={isLoadingCharge || loadingSnap}
+          onClick={paymentFunction}
+        >
+          {buttonName}
+        </LoadingButton>
+      ) : !payAccountExist ? (
+        <Typography>Belum ada akun gopay terdaftar</Typography>
+      ) : null}
     </>
   );
 };
