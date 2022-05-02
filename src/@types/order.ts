@@ -26,4 +26,5 @@ export type OrderState = {
   orderDetails: OrderDetails | null;
   orderDetailsList: OrderDetails[];
   orderDetailsLog: OrderDetailsLog[];
+  orderDetailsGroupByOrder: { [key: string]: OrderDetails[] };
 };

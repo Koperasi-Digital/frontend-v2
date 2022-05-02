@@ -101,9 +101,15 @@ export default function PaymentPage() {
       const payAccount = await getPayAccount();
       if (payAccount) {
         setPayAccountExist(true);
-        const response = await chargePayAccount(orderId, window.location.href);
+        const currentURL = window.location.href;
+        const pathName = window.location.pathname;
+        const rootPath = currentURL.replace(pathName, '');
+        const response = await chargePayAccount(orderId, rootPath + '/e-commerce/checkout');
+        console.log('The response is');
+        console.log(response);
         if (response.status_code === '200') {
           navigate(path);
+        } else if (response.status_code === '201') {
         }
       } else {
         setPayAccountExist(false);

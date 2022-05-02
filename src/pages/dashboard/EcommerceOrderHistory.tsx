@@ -16,7 +16,9 @@ import useAuth from 'hooks/useAuth';
 
 export default function EcommerceProductList() {
   const dispatch = useDispatch();
-  const { orderDetailsList: orders } = useSelector((state: { order: OrderState }) => state.order);
+  const { orderDetailsList: orders, orderDetailsGroupByOrder } = useSelector(
+    (state: { order: OrderState }) => state.order
+  );
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const { user } = useAuth();
@@ -53,17 +55,27 @@ export default function EcommerceProductList() {
           ) : (
             <>
               <Grid container spacing={3}>
-                {orders.map((order) => (
-                  <Grid key={order.id} item xs={12}>
-                    <OrderCard orderDetails={order} />
-                  </Grid>
+                {Object.keys(orderDetailsGroupByOrder).map((orderId) => (
+                  <>
+                    <Grid key={orderId} item xs={12}>
+                      <OrderCard
+                        orderDetails={orderDetailsGroupByOrder[orderId]}
+                        orderId={orderId}
+                      />
+                    </Grid>
+                    {/* {orderDetailsGroupByOrder[orderId].map((orderDetail) => (
+                      <Grid key={orderDetail.id} item xs={12}>
+                        <OrderCard orderDetails={orderDetail} orderId={orderId} />
+                      </Grid>
+                    ))} */}
+                  </>
                 ))}
               </Grid>
 
               <TablePagination
                 rowsPerPageOptions={[5, 10, 15]}
                 component="div"
-                count={orders.length}
+                count={Object.keys(orderDetailsGroupByOrder).length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={(event, value) => setPage(value)}
