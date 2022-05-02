@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { store } from '../store';
+import { dispatch, store } from '../store';
 // utils
 import axios from '../../utils/axios';
 // @types
@@ -157,4 +157,8 @@ export async function chargePayAccount(orderId: string, callbackURL: string) {
     dispatch(slice.actions.hasError());
     dispatch(slice.actions.finishLoadingChargePaymentAccount());
   }
+}
+
+export async function resetPayAccount() {
+  dispatch(resetState());
 }
