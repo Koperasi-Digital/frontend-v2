@@ -8,7 +8,7 @@ import { DialogAnimate } from '../../animate';
 
 // redux
 import { RootState, useDispatch, useSelector } from 'redux/store';
-import { registerEMoney, unbindEMoney, getPayAccount } from 'redux/slices/emoney';
+import { registerEMoney, unbindEMoney, getPayAccount, resetPayAccount } from 'redux/slices/emoney';
 // import { resetState } from 'redux/slices/emoney';
 
 export default function BankingEMoney() {
@@ -112,7 +112,17 @@ export default function BankingEMoney() {
           isLoadingUnbind ? (
           <Typography>Loading</Typography>
         ) : (
-          <Typography>Terjadi error</Typography>
+          <Box width="100%" display="flex" flexDirection="column" gap={2} justifyContent="center">
+            <Typography>Terjadi error</Typography>
+            <Button
+              variant="contained"
+              onClick={() => {
+                resetPayAccount();
+              }}
+            >
+              Mulai lagi
+            </Button>
+          </Box>
         )}
       </Stack>
       <DialogAnimate

@@ -41,24 +41,21 @@ export default function SisaHasilUsaha(props: { dateValue: Date }) {
     <>
       {sisaHasilUsaha ? (
         <>
-          <Stack direction="row" justifyContent="center">
-            <Typography variant="h6" gutterBottom sx={{ marginBottom: 2 }}>
-              SHU : {fCurrency(sisaHasilUsaha.total_cost)}
+          <Stack direction="column" alignItems="center" spacing={2} sx={{ mb: 2 }}>
+            <Typography variant="h6">SHU : {fCurrency(sisaHasilUsaha.total_cost)}</Typography>
+            <Typography variant="h6">
+              periode {new Date(sisaHasilUsaha.periode).getDate()} - {1} -{' '}
+              {new Date(sisaHasilUsaha.periode).getFullYear()}
             </Typography>
           </Stack>
           <Stack direction="row" justifyContent="center">
             <Typography
               variant="body1"
-              sx={{ color: (theme) => theme.palette.error.main }}
+              sx={{ color: (theme) => theme.palette.error.main, textAlign: 'center' }}
               gutterBottom
             >
-              *SHU = 1% + persentase keaktifan * 1% dari total simpanan koperasi
-            </Typography>
-          </Stack>
-          <Stack direction="row" justifyContent="center">
-            <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-              periode {new Date(sisaHasilUsaha.periode).getDate()} - {1} -{' '}
-              {new Date(sisaHasilUsaha.periode).getFullYear()}
+              *15% SHU Koperasi dibagikan kepada anggota berdasarkan keaktifan anggota dalam
+              menghadiri rapat dan melakukan pembelian pada E-Commerce
             </Typography>
           </Stack>
         </>

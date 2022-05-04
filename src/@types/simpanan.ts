@@ -21,8 +21,9 @@ export type SimpananWajibType = {
     id: number;
   };
   order: {
-    id: number;
+    id: string;
     total_cost: number;
     status: string;
   };
 };
+
