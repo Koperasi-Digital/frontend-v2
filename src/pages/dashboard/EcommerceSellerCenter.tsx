@@ -14,9 +14,25 @@ import {
   TotalBalance,
   CurrentBalance
 } from '../../components/_dashboard/e-commerce/seller';
+import { useEffect, useState } from 'react';
+import useAuth from 'hooks/useAuth';
+import { OrderSummaryReport } from '../../@types/seller-center';
+import { getOrderSummaryReport } from 'utils/sellerCenterAxios/sellerDashboard';
 
 // ----------------------------------------------------------------------
 export default function SellerCenter() {
+  const { user } = useAuth();
+  const storeId = user!.store.id;
+  const [orderSummaryReport, setOrderSummaryReport] = useState<OrderSummaryReport>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getOrderSummaryReport(storeId);
+      setOrderSummaryReport(response);
+    };
+    fetchData();
+  }, [storeId]);
+
   return (
     <Page title="Seller Center">
       <Container maxWidth="xl">
@@ -33,13 +49,13 @@ export default function SellerCenter() {
         />
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={2}>
-            <InfoNewOrders />
+            <InfoNewOrders total={orderSummaryReport?.LUNAS} />
           </Grid>
           <Grid item xs={12} sm={6} md={2}>
-            <InfoDeliveringOrders />
+            <InfoDeliveringOrders total={orderSummaryReport?.['DALAM PENGIRIMAN']} />
           </Grid>
           <Grid item xs={12} sm={6} md={2}>
-            <InfoFinishedOrders />
+            <InfoFinishedOrders total={orderSummaryReport?.SELESAI} />
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
             <CurrentBalance />

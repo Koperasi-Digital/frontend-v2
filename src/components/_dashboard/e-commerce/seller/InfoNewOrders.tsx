@@ -34,15 +34,19 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 24;
+type InfoNewOrdersProps = {
+  total: number | undefined;
+};
 
-export default function InfoNewOrders() {
+export default function InfoNewOrders({ total }: InfoNewOrdersProps) {
   return (
     <RootStyle>
       <IconWrapperStyle>
         <Icon icon={mailFilled} width={24} height={24} />
       </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">
+        {fShortenNumber(typeof total === 'undefined' ? 0 : total)}
+      </Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         Pesanan Masuk
       </Typography>

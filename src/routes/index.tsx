@@ -237,7 +237,7 @@ export default function Router() {
               )
             },
             {
-              path: 'order/:id/payment',
+              path: 'order/:id/payment/:paymentType',
               element: (
                 <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
                   <PaymentPage />

@@ -1,4 +1,4 @@
-import { Box, Card, Grid, Typography, Stack } from '@mui/material';
+import { Box, Card, Grid, Typography, Stack, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { fDate } from '../../../../utils/formatTime';
@@ -16,48 +16,96 @@ const ProductImgStyle = styled('img')({
 
 // --------------------------------------------s--------------------------
 
-export default function OrderCard({ orderDetails }: { orderDetails: OrderDetails }) {
-  const linkTo = `${PATH_DASHBOARD.eCommerce.root}/order/`;
-  const { id, order, product, quantity, subtotal, status } = orderDetails;
-  const store_name = product && product.store && product.store.name;
-  const timestamp = order.timestamp;
-  const product_name = product.name;
-  const cover = product.cover;
+export default function OrderCard({
+  orderDetails,
+  orderId
+}: {
+  orderDetails: OrderDetails[];
+  orderId: string;
+}) {
+  const paymentLink = `${PATH_DASHBOARD.eCommerce.root}/order/${orderId}/payment/`;
 
   return (
-    <Card sx={{ mx: 2, px: 2, py: 2, ':hover': { boxShadow: 50 } }}>
-      <Link
-        to={linkTo + id}
-        color="inherit"
-        style={{
-          textDecoration: 'none',
-          color: 'black'
-        }}
+    <Card sx={{ mx: 1, px: 1, py: 2, ':hover': { boxShadow: 50 } }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        alignItems="center"
+        justifyContent={{ xs: 'center', sm: 'space-between' }}
+        spacing={{ xs: 0.5, sm: 2 }}
+        sx={{ mb: 5 }}
+        textAlign="center"
       >
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="subtitle1">{fDate(timestamp)}</Typography>
-          <Typography variant="subtitle1">{status}</Typography>
+        <Typography variant="h6">Id order: {orderId}</Typography>
+        <Typography variant="subtitle1">{fDate(orderDetails[0].order.timestamp)}</Typography>
+      </Stack>
+
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mb: 3 }}
+      >
+        <Stack direction="row" spacing={1}>
+          <Typography variant="subtitle1">{orderDetails[0].order.status}</Typography>
+          <Typography>{orderDetails[0].order.status !== 'LUNAS' && '-'}</Typography>
+          <Typography variant="subtitle1">
+            {orderDetails[0].order.status !== 'LUNAS' && 'Bayar dengan'}
+          </Typography>
         </Stack>
-        <Grid container>
-          <Grid item xs>
-            <Box sx={{ pt: '100%', position: 'relative' }}>
-              <ProductImgStyle alt={product_name} src={cover} />
-            </Box>
+        {orderDetails[0].order.status !== 'LUNAS' && (
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="right"
+            spacing={2}
+            sx={{ mb: 3 }}
+          >
+            <Link
+              to={`${paymentLink}GOPAY`}
+              style={{
+                textDecoration: 'none'
+              }}
+            >
+              <Button variant="contained">Gopay terdaftar</Button>
+            </Link>
+            <Link
+              to={`${paymentLink}OTHER`}
+              style={{
+                textDecoration: 'none'
+              }}
+            >
+              <Button variant="contained">Alternatif lain</Button>
+            </Link>
+          </Stack>
+        )}
+      </Stack>
+
+      {orderDetails.map((orderDetail) => (
+        <>
+          <Grid container sx={{ mb: 3 }}>
+            <Grid item xs={12} md>
+              <Box sx={{ pt: '100%', position: 'relative' }}>
+                <ProductImgStyle alt={orderDetail.product.name} src={orderDetail.product.cover} />
+              </Box>
+            </Grid>
+            <Grid item xs={8} sx={{ mx: 2 }}>
+              <Typography variant="subtitle1" noWrap>
+                <h3>{orderDetail.product.name}</h3>
+              </Typography>
+              <Typography noWrap>{orderDetail.product.store.name}</Typography>
+              <Typography noWrap>Quantity: {orderDetail.quantity}</Typography>
+            </Grid>
+            <Grid item xs>
+              <Typography variant="subtitle1" align="right">
+                {fCurrency(orderDetail.subtotal)}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={8} sx={{ mx: 2 }}>
-            <Typography variant="subtitle1" noWrap>
-              <h3>{product_name}</h3>
-            </Typography>
-            <Typography noWrap>{store_name}</Typography>
-            <Typography noWrap>Quantity: {quantity}</Typography>
-          </Grid>
-          <Grid item xs>
-            <Typography variant="subtitle2" align="right">
-              <h2>{fCurrency(subtotal)}</h2>
-            </Typography>
-          </Grid>
-        </Grid>
-      </Link>
+        </>
+      ))}
+      <Typography sx={{ mt: 3 }} variant="h6" align="center">
+        Order subtotal: {fCurrency(orderDetails[0].order.total_cost)}
+      </Typography>
     </Card>
   );
 }

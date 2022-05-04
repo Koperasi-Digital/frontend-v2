@@ -3,6 +3,7 @@ import { store } from '../store';
 // utils
 import axios from '../../utils/axios';
 import { OrderState } from '../../@types/order';
+import { OrderDetails } from '../../@types/order';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +12,8 @@ const initialState: OrderState = {
   error: false,
   orderDetails: null,
   orderDetailsList: [],
-  orderDetailsLog: []
+  orderDetailsLog: [],
+  orderDetailsGroupByOrder: {}
 };
 
 const slice = createSlice({
@@ -34,6 +36,13 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = false;
       state.orderDetailsList = action.payload;
+    },
+
+    // GROUP ORDER DETAILS ON ORDER
+    getGroupedOrderListSuccess(state, action) {
+      state.isLoading = false;
+      state.error = false;
+      state.orderDetailsGroupByOrder = action.payload;
     },
 
     // GET ORDER DETAILS SUCCESS
@@ -76,8 +85,18 @@ export function getOrdersByCustomer(id: string) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/order-details/customer/' + id);
-      console.log(response.data.payload);
+      console.log('Order details');
+      const orderDetailsGroupByOrder = response.data.payload.reduce(
+        (objectsByKeyValue: { [key: string]: OrderDetails[] }, obj: OrderDetails) => {
+          const value: string = obj.order.id;
+          objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+          return objectsByKeyValue;
+        },
+        {}
+      );
+
       dispatch(slice.actions.getOrderListSuccess(response.data.payload));
+      dispatch(slice.actions.getGroupedOrderListSuccess(orderDetailsGroupByOrder));
     } catch (error) {
       console.log(error);
     }

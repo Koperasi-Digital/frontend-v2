@@ -79,9 +79,9 @@ export default function CheckoutPayment() {
   };
 
   const PaymentSchema = Yup.object().shape({
-    delivery: Yup.number()
-      .positive('Must be more than 0')
-      .required('Shipment delivery is required'),
+    // delivery: Yup.number()
+    //   .positive('Must be more than 0')
+    //   .required('Shipment delivery is required'),
     payment: Yup.mixed().required('Payment is required'),
     shipment: Yup.mixed().required('Shipment is required')
   });
@@ -95,16 +95,19 @@ export default function CheckoutPayment() {
     validationSchema: PaymentSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
+        console.log('Shipping: ', shipping);
         const createdOrder = await handleCreateOrder(
           userId,
-          Math.floor(total),
+          Math.floor(total + (shipping ? shipping : 0)),
           values.payment,
           cart,
           address ? address : undefined
         );
         enqueueSnackbar('Pesanan berhasil dibuat.', { variant: 'success' });
         handleNextStep();
-        navigate(PATH_DASHBOARD.eCommerce.root + '/order/' + createdOrder.id + '/payment');
+        navigate(
+          PATH_DASHBOARD.eCommerce.root + '/order/' + createdOrder.id + '/payment/' + values.payment
+        );
       } catch (error) {
         setSubmitting(false);
         setErrors(error);

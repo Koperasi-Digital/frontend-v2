@@ -37,7 +37,6 @@ function createTotalBalance(arusKasData: any) {
   const balanceData = arusKasData.map(
     (item: any) => item.jumlahKasAwal + item.kasMasuk - item.kasKeluar
   );
-  console.log(balanceData);
   return [{ data: balanceData }];
 }
 
