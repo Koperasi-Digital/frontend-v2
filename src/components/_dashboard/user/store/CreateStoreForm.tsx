@@ -13,6 +13,8 @@ import useAuth from 'hooks/useAuth';
 //
 import { MIconButton } from '../../../@material-extend';
 import countries from '../countries';
+import cities from '../cities';
+import provinces from '../provinces';
 import axios from 'utils/axios';
 import { PATH_DASHBOARD } from 'routes/paths';
 
@@ -150,21 +152,41 @@ export default function CreateStoreForm() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <TextField
+                  select
                   fullWidth
                   label="Kota"
+                  placeholder="Kota"
                   {...getFieldProps('city')}
+                  SelectProps={{ native: true }}
                   error={Boolean(touched.city && errors.city)}
                   helperText={touched.city && errors.city}
-                />
+                >
+                  <option defaultValue=""></option>
+                  {cities.map((option) => (
+                    <option key={option.city_id} value={option.city_name}>
+                      {option.city_name}
+                    </option>
+                  ))}
+                </TextField>
               </Grid>
               <Grid item xs={12} sm={4}>
                 <TextField
+                  select
                   fullWidth
                   label="Provinsi"
+                  placeholder="Provinsi"
                   {...getFieldProps('state')}
+                  SelectProps={{ native: true }}
                   error={Boolean(touched.state && errors.state)}
                   helperText={touched.state && errors.state}
-                />
+                >
+                  <option defaultValue=""></option>
+                  {provinces.map((option) => (
+                    <option key={option.province_id} value={option.province}>
+                      {option.province}
+                    </option>
+                  ))}
+                </TextField>
               </Grid>
               <Grid item xs={12} sm={4}>
                 <TextField

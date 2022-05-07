@@ -44,17 +44,19 @@ export default function CreateStore() {
     }
     return (
       <ContentStyle>
-        <Box sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h4" gutterBottom>
-              Pembukaan Toko
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              Silakan isi formulir berikut untuk membuka toko pada koperasi.
-            </Typography>
+        <Container>
+          <Box sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="h4" gutterBottom>
+                Pembukaan Toko
+              </Typography>
+              <Typography sx={{ color: 'text.secondary' }}>
+                Silakan isi formulir berikut untuk membuka toko pada koperasi.
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-        <CreateStoreForm />
+          <CreateStoreForm />
+        </Container>
       </ContentStyle>
     );
   };

@@ -17,6 +17,8 @@ import { LoadingButton } from '@mui/lab';
 import { UserAddressBook } from '../../../../@types/user';
 //
 import countries from '../countries';
+import provinces from '../provinces';
+import cities from '../cities';
 import { addAddress, editAddress } from 'redux/slices/user';
 
 // ----------------------------------------------------------------------
@@ -50,7 +52,7 @@ export default function AccountAddressForm({
   const formik = useFormik({
     initialValues: {
       phoneNumber: existingAddress?.phoneNumber || '',
-      country: existingAddress?.country || 'Indonesia',
+      country: existingAddress?.country || countries[0].label,
       state: existingAddress?.state || '',
       city: existingAddress?.city || '',
       address: existingAddress?.address || '',
@@ -109,21 +111,39 @@ export default function AccountAddressForm({
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={4}>
                     <TextField
+                      select
                       fullWidth
                       label="Kota"
+                      placeholder="Kota"
                       {...getFieldProps('city')}
+                      SelectProps={{ native: true }}
                       error={Boolean(touched.city && errors.city)}
                       helperText={touched.city && errors.city}
-                    />
+                    >
+                      {cities.map((option) => (
+                        <option key={option.city_id} value={option.city_name}>
+                          {option.city_name}
+                        </option>
+                      ))}
+                    </TextField>
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField
+                      select
                       fullWidth
                       label="Provinsi"
+                      placeholder="Provinsi"
                       {...getFieldProps('state')}
+                      SelectProps={{ native: true }}
                       error={Boolean(touched.state && errors.state)}
                       helperText={touched.state && errors.state}
-                    />
+                    >
+                      {provinces.map((option) => (
+                        <option key={option.province_id} value={option.province}>
+                          {option.province}
+                        </option>
+                      ))}
+                    </TextField>
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField

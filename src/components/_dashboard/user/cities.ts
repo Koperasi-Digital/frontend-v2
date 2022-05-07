@@ -2514,3 +2514,5 @@ export function getCityIDByName(target: string) {
     return 0;
   }
 }
+
+export default cities;
