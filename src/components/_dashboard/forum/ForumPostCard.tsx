@@ -212,7 +212,7 @@ export default function ForumPostCard({ post }: PostCardProps) {
                     >
                       <Typography variant="subtitle2">{comment.author.displayName}</Typography>
                       <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
+                        direction={{ xs: 'row' }}
                         alignItems={{ sm: 'center' }}
                         justifyContent="space-between"
                         spacing={0.5}
