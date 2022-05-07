@@ -90,7 +90,12 @@ export default function Dashboard() {
             <AppWelcome />
           </Grid>
           <Grid item xs={12}>
-            <Stack direction="row" spacing={2} justifyContent="center" sx={{ overflow: 'auto' }}>
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent={{ lg: 'center' }}
+              sx={{ overflow: 'auto', px: { xs: 2, lg: 0 } }}
+            >
               <HomeRedirectButton
                 to={
                   isCustomer
