@@ -32,11 +32,11 @@ export default function UserActiveness() {
         }
       })
       .then((response) => {
-        const { totalLogs, totalActivities } = response.data.payload;
+        const { totalAttendedMeetings, totalMeetings } = response.data.payload;
         setTotalActive((prev) => ({
           ...prev,
-          userActivities: totalLogs,
-          totalActivities
+          userActivities: totalAttendedMeetings,
+          totalActivities: totalMeetings
         }));
       });
 
