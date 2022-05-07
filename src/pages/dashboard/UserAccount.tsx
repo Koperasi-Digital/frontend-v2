@@ -53,6 +53,7 @@ export default function UserAccount() {
   });
 
   const currentUser = toUserManager(user);
+  const isMember = currentUser?.roles.map((roles) => roles.name).includes('MEMBER') || false;
 
   const ACCOUNT_TABS = [
     {
@@ -66,9 +67,11 @@ export default function UserAccount() {
           <Grid item xs={12}>
             <AccountAddressBook addressBook={addressBook} />
           </Grid>
-          <Grid item xs={12}>
-            <UserActivityLogs user={currentUser} />
-          </Grid>
+          {isMember && (
+            <Grid item xs={12}>
+              <UserActivityLogs user={currentUser} />
+            </Grid>
+          )}
         </Grid>
       )
     },
