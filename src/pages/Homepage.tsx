@@ -74,9 +74,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     const productFilter: ProductFilter = {
-      city: ['Bandung'],
-      category: 'Ayam',
-      priceRange: '100000-200000'
+      city: [],
+      category: '',
+      priceRange: ''
     };
     dispatch(getProducts(productFilter, null, null));
     dispatch(getPostsBlogList('', 0, 'POPULER'));
