@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // material
-import { Card, Container, TablePagination, Grid, Typography, Box } from '@mui/material';
+import { Container, TablePagination, Grid, Typography, Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getOrdersByCustomer } from '../../redux/slices/order';
@@ -47,7 +47,7 @@ export default function EcommerceProductList() {
           ]}
         />
 
-        <Card sx={{ py: 2 }}>
+        <Box justifyContent="center" sx={{ m: 'auto', py: 2, width: '75%' }}>
           {orders.length === 0 ? (
             <Box display="flex" justifyContent="center" sx={{ width: '100%', p: 3 }}>
               <Typography variant="body2">Kamu belum pernah melakukan pemesanan.</Typography>
@@ -83,7 +83,7 @@ export default function EcommerceProductList() {
               />
             </>
           )}
-        </Card>
+        </Box>
       </Container>
     </Page>
   );

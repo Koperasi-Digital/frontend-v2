@@ -42,6 +42,7 @@ type OrderDetailsUpdateStatusValues = {
 type OrderDetailsSummaryProps = {
   orderDetails: OrderDetails;
   orderDetailsLog: OrderDetailsLog[];
+  isSeller: boolean;
 };
 
 function getNextStatus(status: string) {
@@ -139,7 +140,8 @@ function ConfirmationFormDialog({
 
 export default function OrderDetailsSummary({
   orderDetails,
-  orderDetailsLog
+  orderDetailsLog,
+  isSeller
 }: OrderDetailsSummaryProps) {
   const { id, order, product, quantity, subtotal, status, shipment, shipment_price } = orderDetails;
 
@@ -199,14 +201,16 @@ export default function OrderDetailsSummary({
           <Box sx={{ my: 2, mx: 2 }}>
             <OrderDetailsTimeline orderDetailsLog={orderDetailsLog}></OrderDetailsTimeline>
           </Box>
-          <Button
-            size="medium"
-            variant="contained"
-            sx={{ float: 'right', mx: 2, px: 2 }}
-            onClick={() => handleOpenModalUpdateStatus()}
-          >
-            {nextStatus}
-          </Button>
+          {isSeller && (
+            <Button
+              size="medium"
+              variant="contained"
+              sx={{ float: 'right', mx: 2, px: 2 }}
+              onClick={() => handleOpenModalUpdateStatus()}
+            >
+              {nextStatus}
+            </Button>
+          )}
         </Grid>
       </Grid>
       <ConfirmationFormDialog

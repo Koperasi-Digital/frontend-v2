@@ -1,10 +1,11 @@
 import { Box, Card, Grid, Typography, Stack, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
-import { fDate } from '../../../../utils/formatTime';
+import { useTheme, styled } from '@mui/material/styles';
+import { fDateTime } from '../../../../utils/formatTime';
 import { fCurrency } from '../../../../utils/formatNumber';
 import { OrderDetails } from '../../../../@types/order';
 import { PATH_DASHBOARD } from 'routes/paths';
+import Label from '../../../Label';
 
 const ProductImgStyle = styled('img')({
   top: 0,
@@ -23,10 +24,12 @@ export default function OrderCard({
   orderDetails: OrderDetails[];
   orderId: string;
 }) {
+  const theme = useTheme();
   const paymentLink = `${PATH_DASHBOARD.eCommerce.root}/order/${orderId}/payment/`;
+  const orderDetailsLink = `${PATH_DASHBOARD.eCommerce.root}/order/`;
 
   return (
-    <Card sx={{ mx: 1, px: 1, py: 2, ':hover': { boxShadow: 50 } }}>
+    <Card sx={{ mx: 1, my: 1, px: 2, py: 2, ':hover': { boxShadow: 50 } }}>
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
         alignItems="center"
@@ -35,8 +38,8 @@ export default function OrderCard({
         sx={{ mb: 5 }}
         textAlign="center"
       >
-        <Typography variant="h6">Id order: {orderId}</Typography>
-        <Typography variant="subtitle1">{fDate(orderDetails[0].order.timestamp)}</Typography>
+        <Typography variant="h6">Order ID: {orderId}</Typography>
+        <Typography variant="subtitle1">{fDateTime(orderDetails[0].order.timestamp)}</Typography>
       </Stack>
 
       <Stack
@@ -79,30 +82,54 @@ export default function OrderCard({
           </Stack>
         )}
       </Stack>
+      <Stack direction="column" justifyContent="space-between" sx={{ mb: 3 }}>
+        {orderDetails.map((orderDetail) => (
+          <Link
+            key={orderDetail.id}
+            to={`${orderDetailsLink + orderDetail.id}`}
+            style={{
+              textDecoration: 'none'
+            }}
+          >
+            <Card sx={{ mx: 1, my: 1, px: 2, py: 2, ':hover': { boxShadow: 100 } }}>
+              <Grid container sx={{ mb: 3 }}>
+                <Grid item xs={12} md sx={{ mx: 2 }}>
+                  <Box sx={{ pt: '100%', position: 'relative' }}>
+                    <ProductImgStyle
+                      alt={orderDetail.product.name}
+                      src={orderDetail.product.cover}
+                    />
+                  </Box>
+                </Grid>
+                <Grid item xs={8} sx={{ mx: 2 }}>
+                  <Typography variant="subtitle1" noWrap>
+                    <h3>{orderDetail.product.name}</h3>
+                  </Typography>
+                  <Typography noWrap>{orderDetail.product.store.name}</Typography>
+                  <Typography noWrap>Jumlah: {orderDetail.quantity}</Typography>
+                </Grid>
+                <Grid item xs sx={{ mx: 2 }}>
+                  <Stack direction="column" alignItems="right" justifyContent="space-between">
+                    <Label
+                      variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                      color={
+                        (orderDetail.status === 'DALAM PENGIRIMAN' && 'warning') ||
+                        (orderDetail.status === 'PENDING' && 'error') ||
+                        (orderDetail.status === 'LUNAS' && 'info') ||
+                        'success'
+                      }
+                    >
+                      {orderDetail.status ? orderDetail.status : ''}
+                    </Label>
+                    <Typography variant="subtitle1">{fCurrency(orderDetail.subtotal)}</Typography>
+                  </Stack>
+                </Grid>
+              </Grid>
+            </Card>
+          </Link>
+        ))}
+      </Stack>
 
-      {orderDetails.map((orderDetail) => (
-        <>
-          <Grid container sx={{ mb: 3 }}>
-            <Grid item xs={12} md>
-              <Box sx={{ pt: '100%', position: 'relative' }}>
-                <ProductImgStyle alt={orderDetail.product.name} src={orderDetail.product.cover} />
-              </Box>
-            </Grid>
-            <Grid item xs={8} sx={{ mx: 2 }}>
-              <Typography variant="subtitle1" noWrap>
-                <h3>{orderDetail.product.name}</h3>
-              </Typography>
-              <Typography noWrap>{orderDetail.product.store.name}</Typography>
-              <Typography noWrap>Quantity: {orderDetail.quantity}</Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography variant="subtitle1" align="right">
-                {fCurrency(orderDetail.subtotal)}
-              </Typography>
-            </Grid>
-          </Grid>
-        </>
-      ))}
       <Typography sx={{ mt: 3 }} variant="h6" align="center">
         Order subtotal: {fCurrency(orderDetails[0].order.total_cost)}
       </Typography>
