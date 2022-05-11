@@ -127,7 +127,7 @@ export type ProductFormikRaw = {
   productionCost: string | number;
   cover: File | any;
   description: string;
-  status: string;
+  status: boolean;
   weight: string | number;
   store_id: string | number;
 };

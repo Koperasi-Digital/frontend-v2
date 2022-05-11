@@ -12,7 +12,8 @@ import {
   AllTimeProducts,
   MonthlySales,
   TotalBalance,
-  CurrentBalance
+  CurrentBalance,
+  OrderProductButton
 } from '../../components/_dashboard/e-commerce/seller';
 import { useEffect, useState } from 'react';
 import useAuth from 'hooks/useAuth';
@@ -38,14 +39,7 @@ export default function SellerCenter() {
       <Container maxWidth="xl">
         <HeaderBreadcrumbs
           heading="Seller Center"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root
-            },
-            { name: 'Seller Center' }
-          ]}
+          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Seller Center' }]}
         />
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={2}>
@@ -67,7 +61,12 @@ export default function SellerCenter() {
             <div style={{ marginBottom: 20 }}>
               <TotalBalance />
             </div>
-            <ProductSold />
+            <div style={{ marginBottom: 20 }}>
+              <ProductSold />
+            </div>
+            <div style={{ marginBottom: 20 }}>
+              <OrderProductButton />
+            </div>
           </Grid>
           <Grid item xs={12} md={6} lg={8}>
             <AllTimeProducts />

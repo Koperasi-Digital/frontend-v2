@@ -19,15 +19,18 @@ export default function EcommerceOrderDetails() {
     (state: { order: OrderState }) => state.order
   );
 
-  const { user, currentRole } = useAuth();
-  console.log(user);
-  console.log(currentRole);
+  const { user } = useAuth();
 
   useEffect(() => {
     dispatch(getOrderDetails(id));
     dispatch(getOrderDetailsLog(id));
-    setIsSeller(currentRole!.name === 'MEMBER');
-  }, [dispatch, id, currentRole]);
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (orderDetails != null && user!.store != null) {
+      setIsSeller(orderDetails.product.store.id === user!.store.id);
+    }
+  }, [orderDetails, user]);
 
   return (
     <Page title="Detail Transaction">
@@ -37,10 +40,15 @@ export default function EcommerceOrderDetails() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root
+              name: isSeller ? 'Seller Center' : 'E-Commerce',
+              href: isSeller ? PATH_DASHBOARD.eCommerce.seller.root : PATH_DASHBOARD.eCommerce.root
             },
-            { name: 'Order List', href: PATH_DASHBOARD.eCommerce.orderList },
+            {
+              name: isSeller ? 'Order List' : 'Order History',
+              href: isSeller
+                ? PATH_DASHBOARD.eCommerce.seller.orderList
+                : PATH_DASHBOARD.eCommerce.orderHistory
+            },
             {
               name: 'Order Details #' + (orderDetails && orderDetails.id)
             }

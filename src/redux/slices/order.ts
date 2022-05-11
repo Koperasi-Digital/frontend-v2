@@ -85,7 +85,6 @@ export function getOrdersByCustomer(id: string) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/order-details/customer/' + id);
-      console.log('Order details');
       const orderDetailsGroupByOrder = response.data.payload.reduce(
         (objectsByKeyValue: { [key: string]: OrderDetails[] }, obj: OrderDetails) => {
           const value: string = obj.order.id;

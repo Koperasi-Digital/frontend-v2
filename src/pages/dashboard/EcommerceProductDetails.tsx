@@ -19,6 +19,7 @@ import {
   ProductDetailsCarousel
 } from '../../components/_dashboard/e-commerce/product-details';
 import CartWidget from '../../components/_dashboard/e-commerce/CartWidget';
+import useAuth from 'hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +57,8 @@ export default function EcommerceProductDetails() {
   const dispatch = useDispatch();
   const [value, setValue] = useState('1');
   const { name = '' } = useParams();
+  const { user } = useAuth();
+  const [isSeller, setIsSeller] = useState(false);
   const { product, error, checkout } = useSelector(
     (state: { product: ProductState }) => state.product
   );
@@ -63,6 +66,12 @@ export default function EcommerceProductDetails() {
   useEffect(() => {
     dispatch(getProduct(name));
   }, [dispatch, name]);
+
+  useEffect(() => {
+    if (user!.store) {
+      setIsSeller(product!.store.id === user!.store.id);
+    }
+  }, [product, user]);
 
   const handleAddCart = (product: CartItem) => {
     dispatch(addCart(product));
@@ -102,6 +111,7 @@ export default function EcommerceProductDetails() {
                     cart={checkout.cart}
                     onAddCart={handleAddCart}
                     onGotoStep={handleGotoStep}
+                    isSeller={isSeller}
                   />
                 </Grid>
               </Grid>

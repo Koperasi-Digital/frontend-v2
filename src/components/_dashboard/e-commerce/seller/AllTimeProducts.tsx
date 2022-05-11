@@ -23,7 +23,7 @@ export default function AllTimeProducts() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const sortByTemp = sortBy === 'Tertinggi' ? 'ASC' : 'DESC';
+      const sortByTemp = sortBy === 'Tertinggi' ? 'DESC' : 'ASC';
       const response = await getProductStatistics(storeId, sortByTemp);
       setProductStatistics(response);
     };

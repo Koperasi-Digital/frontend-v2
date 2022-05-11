@@ -10,8 +10,6 @@ import { handleGetLabaRugiInfo } from 'utils/financeAxios/financeReport';
 
 import useAuth from 'hooks/useAuth';
 
-import LoadingScreen from '../../../../components/LoadingScreen';
-
 // ----------------------------------------------------------------------
 
 const RowStyle = styled('div')({
@@ -24,9 +22,9 @@ const RowStyle = styled('div')({
 export default function CurrentBalance() {
   const { user } = useAuth();
 
-  const [currentBalance, setCurrentBalance] = useState<number>();
-  const [incomeAmount, setIncomeAmount] = useState<number>();
-  const [expenseAmount, setExpenseAmount] = useState<number>();
+  const [currentBalance, setCurrentBalance] = useState<number>(0);
+  const [incomeAmount, setIncomeAmount] = useState<number>(0);
+  const [expenseAmount, setExpenseAmount] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,8 +32,6 @@ export default function CurrentBalance() {
         const saldo = await handleGetSaldo(user.id);
         setCurrentBalance(saldo.amount);
         const periodeString = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-1';
-        console.log('User id: ', user.id);
-        console.log('Periode string: ', periodeString);
         const laporanLabaRugi = await handleGetLabaRugiInfo(user.id, periodeString);
         if (laporanLabaRugi) {
           setIncomeAmount(laporanLabaRugi.jumlahPenjualan);
@@ -48,40 +44,36 @@ export default function CurrentBalance() {
     fetchData();
   }, [user]);
 
-  return currentBalance && incomeAmount && expenseAmount ? (
-    <>
-      <Card sx={{ p: 3 }}>
-        <Typography variant="subtitle2" gutterBottom>
-          Your Current Balance
-        </Typography>
+  return (
+    <Card sx={{ p: 3 }}>
+      <Typography variant="subtitle2" gutterBottom>
+        Your Current Balance
+      </Typography>
 
-        <Stack spacing={1}>
-          <Typography variant="h3">{fCurrency(currentBalance)}</Typography>
+      <Stack spacing={1}>
+        <Typography variant="h3">{fCurrency(currentBalance)}</Typography>
 
-          <RowStyle>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Your Current Balance
-            </Typography>
-            <Typography variant="body2">{fCurrency(currentBalance)}</Typography>
-          </RowStyle>
+        <RowStyle>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            Your Current Balance
+          </Typography>
+          <Typography variant="body2">{fCurrency(currentBalance)}</Typography>
+        </RowStyle>
 
-          <RowStyle>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Income Amount
-            </Typography>
-            <Typography variant="body2">- {fCurrency(incomeAmount)}</Typography>
-          </RowStyle>
+        <RowStyle>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            Income Amount
+          </Typography>
+          <Typography variant="body2">- {fCurrency(incomeAmount)}</Typography>
+        </RowStyle>
 
-          <RowStyle>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Expense Amount
-            </Typography>
-            <Typography variant="subtitle1">{fCurrency(expenseAmount)}</Typography>
-          </RowStyle>
-        </Stack>
-      </Card>
-    </>
-  ) : (
-    <LoadingScreen />
+        <RowStyle>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            Expense Amount
+          </Typography>
+          <Typography variant="subtitle1">{fCurrency(expenseAmount)}</Typography>
+        </RowStyle>
+      </Stack>
+    </Card>
   );
 }

@@ -46,12 +46,10 @@ type OrderDetailsSummaryProps = {
 };
 
 function getNextStatus(status: string) {
-  if (status === 'SEDANG DISIAPKAN') {
-    return 'KONFIRMASI DALAM PENGIRIMAN';
+  if (status === 'LUNAS') {
+    return 'DALAM PENGIRIMAN';
   } else if (status === 'DALAM PENGIRIMAN') {
-    return 'KONFIRMASI SUDAH SAMPAI';
-  } else if (status === 'SEDANG DISIAPKAN') {
-    return 'KONFIRMASI DALAM PENGIRIMAN';
+    return 'SELESAI';
   } else {
     return 'NONE';
   }
@@ -61,12 +59,14 @@ interface ConfirmationFormDialogProps {
   id: string;
   isOpenModalUpdateStatus: boolean;
   setIsOpenModalUpdateStatus: (value: boolean) => void;
+  nextStatus: string;
 }
 
 function ConfirmationFormDialog({
   id,
   isOpenModalUpdateStatus,
-  setIsOpenModalUpdateStatus
+  setIsOpenModalUpdateStatus,
+  nextStatus
 }: ConfirmationFormDialogProps) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -78,7 +78,7 @@ function ConfirmationFormDialog({
   const formik = useFormik<OrderDetailsUpdateStatusValues>({
     initialValues: {
       description: '',
-      newStatus: 'DALAM PENGIRIMAN'
+      newStatus: nextStatus
     },
     validationSchema: UpdateStatusSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
@@ -105,7 +105,9 @@ function ConfirmationFormDialog({
       <DialogContent sx={{ overflowY: 'unset' }}>
         <FormikProvider value={formik}>
           <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
-            <Typography sx={{ my: 2 }}>Anda akan mengubah status menjadi TERKONFIRMASI.</Typography>
+            <Typography sx={{ my: 2 }}>
+              Anda akan mengubah status pesanan menjadi {nextStatus}.
+            </Typography>
             <TextField
               fullWidth
               label="Deskripsi"
@@ -201,14 +203,14 @@ export default function OrderDetailsSummary({
           <Box sx={{ my: 2, mx: 2 }}>
             <OrderDetailsTimeline orderDetailsLog={orderDetailsLog}></OrderDetailsTimeline>
           </Box>
-          {isSeller && (
+          {isSeller && nextStatus !== 'NONE' && (
             <Button
               size="medium"
               variant="contained"
               sx={{ float: 'right', mx: 2, px: 2 }}
               onClick={() => handleOpenModalUpdateStatus()}
             >
-              {nextStatus}
+              KONFIRMASI {nextStatus}
             </Button>
           )}
         </Grid>
@@ -217,6 +219,7 @@ export default function OrderDetailsSummary({
         id={id}
         isOpenModalUpdateStatus={isOpenModalUpdateStatus}
         setIsOpenModalUpdateStatus={setIsOpenModalUpdateStatus}
+        nextStatus={nextStatus}
       />
     </Container>
   );

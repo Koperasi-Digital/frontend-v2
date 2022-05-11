@@ -40,12 +40,12 @@ const LabelStyle = styled((props) => (
 
 function labelPriceRange(range: string) {
   if (range === 'below') {
-    return 'Below $25';
+    return '< Rp 50.000';
   }
   if (range === 'between') {
-    return 'Between $25 - $75';
+    return 'Rp 50.000 - Rp 100.000';
   }
-  return 'Above $75';
+  return '> Rp 100.000';
 }
 
 type ShopTagFilteredProps = {
@@ -87,7 +87,7 @@ export default function ShopTagFiltered({
     <RootStyle>
       {city.length > 0 && (
         <WrapperStyle>
-          <LabelStyle>Gender:</LabelStyle>
+          <LabelStyle>Kota:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             {city.map((_city) => (
               <Chip
@@ -104,7 +104,7 @@ export default function ShopTagFiltered({
 
       {category !== '' && (
         <WrapperStyle>
-          <LabelStyle>Category:</LabelStyle>
+          <LabelStyle>Kategori:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             <Chip size="small" label={category} onDelete={handleRemoveCategory} sx={{ m: 0.5 }} />
           </Stack>
@@ -113,7 +113,7 @@ export default function ShopTagFiltered({
 
       {priceRange && (
         <WrapperStyle>
-          <LabelStyle>Price:</LabelStyle>
+          <LabelStyle>Harga:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             <Chip
               size="small"

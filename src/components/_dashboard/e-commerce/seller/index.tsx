@@ -8,3 +8,4 @@ export { default as AllTimeProducts } from './AllTimeProducts';
 export { default as MonthlySales } from './MonthlySales';
 export { default as TotalBalance } from './TotalBalance';
 export { default as CurrentBalance } from './CurrentBalance';
+export { default as OrderProductButton } from './OrderProductButton';

@@ -149,6 +149,7 @@ export default function EcommerceProductList() {
         selected.slice(selectedIndex + 1)
       );
     }
+    console.log(newSelected);
     setSelected(newSelected);
   };
 
@@ -175,8 +176,8 @@ export default function EcommerceProductList() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root
+              name: 'Seller Center',
+              href: PATH_DASHBOARD.eCommerce.seller.root
             },
             { name: 'Product List' }
           ]}
@@ -218,7 +219,7 @@ export default function EcommerceProductList() {
                           role="checkbox"
                           selected={isItemSelected}
                           aria-checked={isItemSelected}
-                          onClick={() => handleClick(name)}
+                          onClick={() => handleClick(id)}
                         >
                           <TableCell padding="checkbox">
                             <Checkbox checked={isItemSelected} />

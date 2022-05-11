@@ -71,11 +71,11 @@ export const PATH_DASHBOARD = {
     seller: {
       root: path(ROOTS_DASHBOARD, '/seller'),
       center: path(ROOTS_DASHBOARD, '/seller/dashboard'),
-      list: path(ROOTS_DASHBOARD, '/seller/list'),
+      list: path(ROOTS_DASHBOARD, '/seller/product-list'),
       newProduct: path(ROOTS_DASHBOARD, '/seller/product/new'),
-      editById: path(ROOTS_DASHBOARD, '/seller/product/itik-ayam/edit')
+      editById: path(ROOTS_DASHBOARD, '/seller/product/itik-ayam/edit'),
+      orderList: path(ROOTS_DASHBOARD, '/seller/order-list')
     },
-    orderList: path(ROOTS_DASHBOARD, '/e-commerce/order-list'),
     orderById: path(ROOTS_DASHBOARD, '/e-commerce/order/:id'),
     orderPayment: path(ROOTS_DASHBOARD, '/e-commerce/order/:id/payment'),
     orderHistory: path(ROOTS_DASHBOARD, '/e-commerce/order-history'),

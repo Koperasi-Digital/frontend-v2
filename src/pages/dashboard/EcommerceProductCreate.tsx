@@ -29,15 +29,21 @@ export default function EcommerceProductCreate() {
   }, [dispatch, name]);
 
   return (
-    <Page title="Ecommerce: Create a new product | CoopChick">
+    <Page
+      title={'Ecommerce: ' + (!isEdit ? 'Create a new product' : 'Edit product') + ' | CoopChick'}
+    >
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading={!isEdit ? 'Create a new product' : 'Edit product'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root
+              name: 'Seller Center',
+              href: PATH_DASHBOARD.eCommerce.seller.root
+            },
+            {
+              name: 'Product List',
+              href: PATH_DASHBOARD.eCommerce.seller.list
             },
             { name: !isEdit ? 'New product' : currentProduct?.name || 'Product' }
           ]}

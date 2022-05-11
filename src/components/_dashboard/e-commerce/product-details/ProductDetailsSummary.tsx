@@ -93,6 +93,7 @@ type ProductDetailsSumaryprops = {
   cart: CartItem[];
   onAddCart: (cartItem: CartItem) => void;
   onGotoStep: (step: number) => void;
+  isSeller: boolean;
 };
 
 export default function ProductDetailsSummary({
@@ -100,6 +101,7 @@ export default function ProductDetailsSummary({
   cart,
   onAddCart,
   onGotoStep,
+  isSeller,
   ...other
 }: ProductDetailsSumaryprops) {
   const theme = useTheme();
@@ -150,7 +152,6 @@ export default function ProductDetailsSummary({
   const { values, touched, errors, getFieldProps, handleSubmit } = formik;
 
   const handleAddCart = async () => {
-    // TODO: change this dummy product_id, shipment_id, and shipment_price
     try {
       let subtotal = values.price * values.quantity;
       let weightTotal = weight * values.quantity;
@@ -163,7 +164,6 @@ export default function ProductDetailsSummary({
         shipment: null,
         shipment_price: null
       });
-      // TODO: END OF TODO
     } catch (error) {
       console.error(error);
     }
@@ -285,29 +285,35 @@ export default function ProductDetailsSummary({
           <Divider sx={{ borderStyle: 'dashed' }} />
 
           <Box sx={{ mt: 5 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  fullWidth
-                  disabled={isMaxQuantity}
-                  size="large"
-                  type="button"
-                  color="warning"
-                  variant="contained"
-                  startIcon={<Icon icon={roundAddShoppingCart} />}
-                  onClick={handleAddCart}
-                  sx={{ whiteSpace: 'nowrap' }}
-                >
-                  Add to Cart
-                </Button>
-              </Grid>
+            {available === 0 || isSeller ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Typography>Produk tidak tersedia.</Typography>
+              </Box>
+            ) : (
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <Button
+                    fullWidth
+                    disabled={isMaxQuantity}
+                    size="large"
+                    type="button"
+                    color="warning"
+                    variant="contained"
+                    startIcon={<Icon icon={roundAddShoppingCart} />}
+                    onClick={handleAddCart}
+                    sx={{ whiteSpace: 'nowrap' }}
+                  >
+                    Add to Cart
+                  </Button>
+                </Grid>
 
-              <Grid item xs={12} sm={6}>
-                <Button fullWidth size="large" type="submit" variant="contained">
-                  Buy Now
-                </Button>
+                <Grid item xs={12} sm={6}>
+                  <Button fullWidth size="large" type="submit" variant="contained">
+                    Buy Now
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
+            )}
           </Box>
         </Form>
       </FormikProvider>
