@@ -68,7 +68,7 @@ export default function EcommerceProductDetails() {
   }, [dispatch, name]);
 
   useEffect(() => {
-    if (user!.store) {
+    if (user!.store != null && product != null) {
       setIsSeller(product!.store.id === user!.store.id);
     }
   }, [product, user]);
@@ -102,10 +102,10 @@ export default function EcommerceProductDetails() {
           <>
             <Card>
               <Grid container>
-                <Grid item xs={12} md={6} lg={7}>
+                <Grid item xs={12} sm={6} lg={4}>
                   <ProductDetailsCarousel productImage={product.cover} />
                 </Grid>
-                <Grid item xs={12} md={6} lg={5}>
+                <Grid item xs={12} sm={6} lg={8}>
                   <ProductDetailsSummary
                     product={product}
                     cart={checkout.cart}
@@ -137,7 +137,7 @@ export default function EcommerceProductDetails() {
               <TabContext value={value}>
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
-                    <Tab disableRipple value="1" label="Description" />
+                    <Tab disableRipple value="1" label="Deskripsi" />
                     {/* <Tab
                       disableRipple
                       value="2"
