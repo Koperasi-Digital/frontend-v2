@@ -3,15 +3,13 @@ import { CartItem } from '../../@types/products';
 import axios from '../axios';
 
 export async function handleCreateOrder(
-  userId: number,
   grossAmount: number,
   paymentType: string,
   cart?: CartItem[],
   address?: UserAddressBook
 ) {
   try {
-    const response = await axios.post('order/create', {
-      user_id: userId,
+    const response = await axios.post('order', {
       total_cost: grossAmount,
       cart: cart,
       address: address?.id,
@@ -27,6 +25,16 @@ export async function handleCreateOrder(
 export async function handleGetOrder(orderId: string) {
   try {
     const response = await axios.get('order/' + orderId);
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
+export async function handleGetAnnualSummary() {
+  try {
+    const response = await axios.get('order/annual-summary');
     return response.data.payload;
   } catch (e) {
     console.log(e);
