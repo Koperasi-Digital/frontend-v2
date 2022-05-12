@@ -1,9 +1,11 @@
 import { TransactionDetails } from '../../@types/transaction';
 import axios from '../axios';
 
-export async function handleShowTransaction(userId: number, fromDate: string, toDate: string) {
+export async function handleCreateTransaction(transactionDetails: TransactionDetails) {
   try {
-    const response = await axios.get('transaction/show/' + userId + '/' + fromDate + '/' + toDate);
+    const response = await axios.post('payment', {
+      transaction_details: transactionDetails
+    });
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -11,11 +13,9 @@ export async function handleShowTransaction(userId: number, fromDate: string, to
   }
 }
 
-export async function handleCreateTransaction(transaction_details: TransactionDetails) {
+export async function handleListTransactions(fromDate: string, toDate: string) {
   try {
-    const response = await axios.post('payment/create', {
-      transaction_details: transaction_details
-    });
+    const response = await axios.get('transaction/' + fromDate + '/' + toDate);
     return response.data.payload;
   } catch (e) {
     console.log(e);

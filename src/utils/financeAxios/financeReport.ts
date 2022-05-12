@@ -1,21 +1,8 @@
 import axios from '../axios';
 
-export async function handleCreateNeracaReport(userId: number, periode: string) {
+export async function handleGetNeracaInfo(periode: string) {
   try {
-    const response = await axios.post('laporan-neraca/create', {
-      userId: userId,
-      periode: periode
-    });
-    return response.data.payload;
-  } catch (e) {
-    console.log(e);
-    return undefined;
-  }
-}
-
-export async function handleGetNeracaInfo(userId: number, periode: string) {
-  try {
-    const response = await axios.get('laporan-neraca/' + userId + '/' + periode);
+    const response = await axios.get('laporan-neraca/' + periode);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -33,9 +20,29 @@ export async function handleGetAnnualNeracaInfo(year: string) {
   }
 }
 
+export async function handleGetArusKasInfo(periode: string) {
+  try {
+    const response = await axios.get('laporan-arus-kas/' + periode);
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
 export async function handleGetAnnualArusKasInfo(year: string) {
   try {
     const response = await axios.get('laporan-arus-kas/get-annual-data/' + year);
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
+export async function handleGetLabaRugiInfo(periode: string) {
+  try {
+    const response = await axios.get('laporan-laba-rugi/' + periode);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -54,7 +61,7 @@ export async function handleGetAnnualLabaRugiInfo(year: string) {
 }
 
 export async function handlePencairanDana(
-  userId: number,
+  memberId: number,
   periode: string,
   amount: number,
   type: string
@@ -63,55 +70,9 @@ export async function handlePencairanDana(
     const response = await axios.post('finance-report-input/approve-disbursement', {
       periode: periode,
       amount: amount,
-      userId: userId,
+      memberId: memberId,
       type: type
     });
-    return response.data.payload;
-  } catch (e) {
-    console.log(e);
-    return undefined;
-  }
-}
-
-export async function handleCreateLabaRugiReport(userId: number, periode: string) {
-  try {
-    const response = await axios.post('laporan-laba-rugi/create', {
-      userId: userId,
-      periode: periode
-    });
-    return response.data.payload;
-  } catch (e) {
-    console.log(e);
-    return undefined;
-  }
-}
-
-export async function handleGetLabaRugiInfo(userId: number, periode: string) {
-  try {
-    const response = await axios.get('laporan-laba-rugi/' + userId + '/' + periode);
-    return response.data.payload;
-  } catch (e) {
-    console.log(e);
-    return undefined;
-  }
-}
-
-export async function handleCreateArusKasReport(userId: number, periode: string) {
-  try {
-    const response = await axios.post('laporan-arus-kas/create', {
-      userId: userId,
-      periode: periode
-    });
-    return response.data.payload;
-  } catch (e) {
-    console.log(e);
-    return undefined;
-  }
-}
-
-export async function handleGetArusKasInfo(userId: number, periode: string) {
-  try {
-    const response = await axios.get('laporan-arus-kas/' + userId + '/' + periode);
     return response.data.payload;
   } catch (e) {
     console.log(e);

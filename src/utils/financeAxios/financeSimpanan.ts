@@ -10,9 +10,9 @@ export async function handleListSimpananPokok() {
   }
 }
 
-export async function handleGetSimpananPokok(userId: number) {
+export async function handleGetSimpananPokok() {
   try {
-    const response = await axios.get('simpanan-pokok/show/' + userId);
+    const response = await axios.get('simpanan-pokok');
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -20,10 +20,9 @@ export async function handleGetSimpananPokok(userId: number) {
   }
 }
 
-export async function handleAddOrderSimpananPokok(userId: number, orderId: number) {
+export async function handleAddOrderSimpananPokok(orderId: number) {
   try {
     const response = await axios.post('simpanan-pokok/create-order', {
-      userId: userId,
       orderId: orderId
     });
     return response.data.payload;
@@ -46,12 +45,12 @@ export async function handleListSimpananWajib(dateValue: Date) {
   }
 }
 
-export async function handleGetSimpananWajib(userId: number, dateValue: Date) {
+export async function handleGetSimpananWajib(dateValue: Date) {
   try {
     const periodeString = dateValue
       ? dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1'
       : '';
-    const response = await axios.get('simpanan-wajib/show/' + userId + '/' + periodeString);
+    const response = await axios.get('simpanan-wajib/' + periodeString);
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -59,17 +58,12 @@ export async function handleGetSimpananWajib(userId: number, dateValue: Date) {
   }
 }
 
-export async function handleAddOrderSimpananWajib(
-  userId: number,
-  dateValue: Date,
-  orderId: number
-) {
+export async function handleAddOrderSimpananWajib(dateValue: Date, orderId: number) {
   try {
     const periodeString = dateValue
       ? dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1'
       : '';
-    const response = await axios.post('simpanan-wajib/create-order', {
-      userId: userId,
+    const response = await axios.patch('simpanan-wajib/create-order', {
       period: periodeString,
       orderId: orderId
     });
@@ -80,9 +74,9 @@ export async function handleAddOrderSimpananWajib(
   }
 }
 
-export async function handleGetSimpananSukarela(userId: number) {
+export async function handleGetSimpananSukarela() {
   try {
-    const response = await axios.get('simpanan-sukarela/show/' + userId);
+    const response = await axios.get('simpanan-sukarela');
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -92,7 +86,7 @@ export async function handleGetSimpananSukarela(userId: number) {
 
 export async function handleEditSimpananSukarela(userId: number, amount: number, isAdd: number) {
   try {
-    const response = await axios.post('simpanan-sukarela/edit', {
+    const response = await axios.patch('simpanan-sukarela', {
       userId: userId,
       amount: amount,
       isAdd: isAdd
@@ -104,11 +98,9 @@ export async function handleEditSimpananSukarela(userId: number, amount: number,
   }
 }
 
-export async function handleCreateSimpananSukarela(userId: number) {
+export async function handleCreateSimpananSukarela() {
   try {
-    const response = await axios.post('simpanan-sukarela/create', {
-      userId: userId
-    });
+    const response = await axios.post('simpanan-sukarela');
     return response.data.payload;
   } catch (e) {
     console.log(e);
@@ -116,10 +108,9 @@ export async function handleCreateSimpananSukarela(userId: number) {
   }
 }
 
-export async function handleAddOrderSimpananSukarela(userId: number, orderId: string) {
+export async function handleAddOrderSimpananSukarela(orderId: string) {
   try {
-    const response = await axios.post('simpanan-sukarela/add-order', {
-      userId: userId,
+    const response = await axios.patch('simpanan-sukarela/add-order', {
       orderId: orderId
     });
     return response.data.payload;
