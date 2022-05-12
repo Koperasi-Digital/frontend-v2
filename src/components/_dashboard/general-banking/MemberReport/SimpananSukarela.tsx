@@ -18,7 +18,7 @@ export default function SimpananSukarela() {
     const fetchData = async () => {
       try {
         if (user) {
-          const fetchedSimpananSukarela = await handleGetSimpananSukarela(user.id);
+          const fetchedSimpananSukarela = await handleGetSimpananSukarela();
           setSimpananSukarelaAmount(fetchedSimpananSukarela.amount);
         }
       } catch (err) {

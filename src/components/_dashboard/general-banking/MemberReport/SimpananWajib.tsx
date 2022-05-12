@@ -24,14 +24,10 @@ export default function SimpananWajib(props: { dateValue: Date }) {
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
-        const fetchedSimpananWajib = await handleGetSimpananWajib(user.id, props.dateValue);
+        const fetchedSimpananWajib = await handleGetSimpananWajib(props.dateValue);
         if (fetchedSimpananWajib && fetchedSimpananWajib.order === null) {
-          const createdOrder = await handleCreateOrder(
-            user.id,
-            fetchedSimpananWajib.amount,
-            'OTHER'
-          );
-          const temp = await handleAddOrderSimpananWajib(user.id, new Date(), createdOrder.id);
+          const createdOrder = await handleCreateOrder(fetchedSimpananWajib.amount, 'OTHER');
+          const temp = await handleAddOrderSimpananWajib(new Date(), createdOrder.id);
           fetchedSimpananWajib.order = temp.order;
         }
         if (!fetchedSimpananWajib) {

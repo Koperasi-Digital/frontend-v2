@@ -97,7 +97,6 @@ export default function CheckoutPayment() {
       try {
         console.log('Shipping: ', shipping);
         const createdOrder = await handleCreateOrder(
-          userId,
           Math.floor(total + (shipping ? shipping : 0)),
           values.payment,
           cart,

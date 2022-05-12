@@ -6,25 +6,18 @@ import { handleGetSaldo } from 'utils/financeAxios/financeSaldo';
 import { fCurrency } from 'utils/formatNumber';
 import { PATH_DASHBOARD } from 'routes/paths';
 
-// hooks
-import useAuth from 'hooks/useAuth';
-
 export default function BankingSaldo() {
   const [saldo, setSaldo] = useState<number>();
 
-  const { user } = useAuth();
-
   useEffect(() => {
     const fetchData = async () => {
-      if (user) {
-        const saldo = await handleGetSaldo(user.id);
+        const saldo = await handleGetSaldo();
         if (saldo) {
           setSaldo(saldo.amount);
         }
-      }
     };
     fetchData();
-  }, [user]);
+  }, []);
 
   return (
     <>

@@ -58,7 +58,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
     const fetchData = async () => {
       let currentPeriodString = dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1';
       if (user) {
-        const neracaData = await handleGetNeracaInfo(user.id, currentPeriodString);
+        const neracaData = await handleGetNeracaInfo(currentPeriodString);
         if (neracaData) {
           setNeracaData(neracaData);
           setDataNotExist(false);

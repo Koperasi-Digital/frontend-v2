@@ -74,7 +74,7 @@ export default function BalanceStatistics(props: { dateValue: Date }) {
         for (let i = 0; i < 12; i++) {
           if (i <= month) {
             let periodeString = props.dateValue.getFullYear() + '-' + (i + 1) + '-1';
-            const labaRugiInfo = await handleGetLabaRugiInfo(user.id, periodeString);
+            const labaRugiInfo = await handleGetLabaRugiInfo(periodeString);
             if (labaRugiInfo) {
               incomeArray.push(labaRugiInfo.jumlahPenjualan + labaRugiInfo.sisaHasilUsaha);
               expenseArray.push(

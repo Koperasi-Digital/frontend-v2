@@ -49,7 +49,7 @@ import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
 import { handleShowTransaction } from 'utils/financeAxios/financeTransaction';
-import { handleShowCoopTransaction } from 'utils/financeAxios/financeCoopTransaction';
+// import { handleShowCoopTransaction } from 'utils/financeAxios/financeCoopTransaction';
 import useAuth from 'hooks/useAuth';
 
 type AvatarIconProps = {
@@ -252,14 +252,18 @@ export default function BankingTransactionsReport() {
           fromDateString,
           toDateString
         );
-        const fetchedCoopTransactionList = await handleShowCoopTransaction(
-          userId,
-          fromDateString,
-          toDateString
-        );
-        if (fetchedTransactionList && fetchedCoopTransactionList) {
-          setAllTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
-          setFilteredTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+        // const fetchedCoopTransactionList = await handleShowCoopTransaction(
+        //   userId,
+        //   fromDateString,
+        //   toDateString
+        // );
+        // if (fetchedTransactionList && fetchedCoopTransactionList) {
+        //   setAllTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+        //   setFilteredTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+        // }
+        if (fetchedTransactionList) {
+          setAllTransactionData(fetchedTransactionList);
+          setFilteredTransactionData(fetchedTransactionList);
         }
       }
     };

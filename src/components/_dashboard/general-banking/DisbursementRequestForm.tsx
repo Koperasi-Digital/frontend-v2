@@ -44,12 +44,12 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
-        const saldo = await handleGetSaldo(user.id);
+        const saldo = await handleGetSaldo();
         if (saldo) {
           setSaldo(saldo.amount);
           setMaxDisbursement(saldo.amount);
         }
-        const simpananSukarela = await handleGetSimpananSukarela(user.id);
+        const simpananSukarela = await handleGetSimpananSukarela();
         if (simpananSukarela) {
           setSimpananSukarelaAmount(simpananSukarela.amount);
         }
@@ -79,7 +79,7 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         if (user && props.bankAccount) {
-          if (await handleCreateReimbursement(user.id, Number(values.amount), values.disbType)) {
+          if (await handleCreateReimbursement(Number(values.amount), values.disbType)) {
             enqueueSnackbar('Create success', { variant: 'success' });
           } else {
             enqueueSnackbar('Create fail', { variant: 'error' });

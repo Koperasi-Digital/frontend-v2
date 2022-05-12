@@ -8,8 +8,6 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { useState, useEffect } from 'react';
 
 import { handleGetBankAccount } from 'utils/financeAxios/financeBankAccount';
-// hooks
-import useAuth from 'hooks/useAuth';
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -21,20 +19,17 @@ type BankAccount = {
 };
 
 export default function DisbursementRequest() {
-  const { user } = useAuth();
   const [bankAccount, setBankAccount] = useState<BankAccount>();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (user) {
-        const bankAccount = await handleGetBankAccount(user.id);
-        if (bankAccount) {
-          setBankAccount(bankAccount);
-        }
+      const bankAccount = await handleGetBankAccount();
+      if (bankAccount) {
+        setBankAccount(bankAccount);
       }
     };
     fetchData();
-  }, [user]);
+  });
 
   return (
     <Page title="Transaction Report | CoopChick">

@@ -18,7 +18,6 @@ import {
   TextField
 } from '@mui/material';
 // hooks
-import useAuth from 'hooks/useAuth';
 import { PATH_DASHBOARD } from 'routes/paths';
 //
 import { handleCreateTransaction } from 'utils/financeAxios/financeTransaction';
@@ -40,9 +39,6 @@ export default function AddSimpananSukarelaForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { isLoadingCharge } = useSelector((state: RootState) => state.emoney);
   const [loadingSnap, setLoadingSnap] = useState<boolean>(false);
-
-  const { user } = useAuth();
-  const userId = user?.id;
 
   const AddSimpananSukarelaSchema = Yup.object().shape({
     amount: Yup.number().required().min(0, 'Min value 0.'),
@@ -75,12 +71,12 @@ export default function AddSimpananSukarelaForm() {
     validationSchema: AddSimpananSukarelaSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        const createdOrder = await handleCreateOrder(userId, Number(values.amount), 'OTHER');
-        const fetchedSimpananSukarela = await handleGetSimpananSukarela(userId);
+        const createdOrder = await handleCreateOrder(Number(values.amount), 'OTHER');
+        const fetchedSimpananSukarela = await handleGetSimpananSukarela();
         if (!fetchedSimpananSukarela) {
-          await handleCreateSimpananSukarela(userId);
+          await handleCreateSimpananSukarela();
         }
-        await handleAddOrderSimpananSukarela(userId, createdOrder.id);
+        await handleAddOrderSimpananSukarela(createdOrder.id);
         await paymentFunction(
           {
             order_id: createdOrder.id,

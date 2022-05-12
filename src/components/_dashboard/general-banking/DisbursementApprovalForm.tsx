@@ -11,7 +11,7 @@ import { UploadSingleFile } from '../../upload';
 
 import {
   handleEditReimbursement,
-  handleShowOneReimbursement
+  handleShowReimbursement
 } from 'utils/financeAxios/financeReimbursement';
 import { handleCreateCoopTransaction } from 'utils/financeAxios/financeCoopTransaction';
 import { handleEditSaldo } from 'utils/financeAxios/financeSaldo';
@@ -50,7 +50,7 @@ export default function DisbursementApprovalForm() {
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        const reimbursement = await handleShowOneReimbursement(values.disbursementRequestId);
+        const reimbursement = await handleShowReimbursement(values.disbursementRequestId);
         const editedReimbursement = await handleEditReimbursement(
           values.disbursementRequestId,
           'success',
