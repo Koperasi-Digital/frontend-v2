@@ -1,9 +1,8 @@
 import axios from '../axios';
 
-export async function handleCreateReimbursement(userId: number, total_cost: number, type: string) {
+export async function handleCreateReimbursement(total_cost: number, type: string) {
   try {
-    const response = await axios.post('reimbursement/create', {
-      userId: userId,
+    const response = await axios.post('reimbursement', {
       total_cost: total_cost,
       type: type
     });
@@ -24,13 +23,33 @@ export async function handleListReimbursement() {
   }
 }
 
+export async function handleUserListReimbursement(){
+  try{
+    const response = await axios.get('reimbursement/userlist');
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
+export async function handleShowReimbursement(reimbursementId: string) {
+  try {
+    const response = await axios.get('reimbursement/' + reimbursementId);
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}
+
 export async function handleEditReimbursement(
   reimbursementId: string,
   status: string,
   photoURL: string | undefined
 ) {
   try {
-    const response = await axios.post('reimbursement/edit', {
+    const response = await axios.patch('reimbursement', {
       reimbursementId: reimbursementId,
       status: status,
       photoURL: photoURL
@@ -42,12 +61,3 @@ export async function handleEditReimbursement(
   }
 }
 
-export async function handleShowOneReimbursement(reimbursementId: string) {
-  try {
-    const response = await axios.get('reimbursement/show-one/' + reimbursementId);
-    return response.data.payload;
-  } catch (e) {
-    console.log(e);
-    return undefined;
-  }
-}
