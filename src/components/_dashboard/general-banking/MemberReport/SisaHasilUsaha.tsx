@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 
 import { handleGetSisaHasilUsaha } from 'utils/financeAxios/financeSisaHasilUsaha';
 
-import useAuth from 'hooks/useAuth';
-
 import { fCurrency } from 'utils/formatNumber';
 
 import LoadingScreen from 'components/LoadingScreen';
@@ -19,23 +17,19 @@ type SisaHasilUsahaType = {
 };
 
 export default function SisaHasilUsaha(props: { dateValue: Date }) {
-  const { user } = useAuth();
-
   const [sisaHasilUsaha, setSisaHasilUsaha] = useState<SisaHasilUsahaType>();
   const [dataNotExist, setDataNotExist] = useState<Boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (user) {
-        const fetchedSisaHasilUsaha = await handleGetSisaHasilUsaha(user.id, props.dateValue);
-        if (!fetchedSisaHasilUsaha) {
-          setDataNotExist(true);
-        }
-        setSisaHasilUsaha(fetchedSisaHasilUsaha);
+      const fetchedSisaHasilUsaha = await handleGetSisaHasilUsaha(props.dateValue);
+      if (!fetchedSisaHasilUsaha) {
+        setDataNotExist(true);
       }
+      setSisaHasilUsaha(fetchedSisaHasilUsaha);
     };
     fetchData();
-  }, [user, props.dateValue]);
+  }, [props.dateValue]);
 
   return (
     <>
