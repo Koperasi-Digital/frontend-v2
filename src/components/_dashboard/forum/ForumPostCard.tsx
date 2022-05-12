@@ -272,9 +272,9 @@ export default function ForumPostCard({ post }: PostCardProps) {
         {isCustomer ? null : (
           <Stack direction="row" alignItems="center">
             <MAvatar
-              src={post.author.photoURL || undefined}
-              alt={post.author.displayName}
-              color={post.author.photoURL ? 'default' : userAvatar!.color}
+              src={user?.photoURL || undefined}
+              alt={user?.displayName}
+              color={user?.photoURL ? 'default' : userAvatar!.color}
             >
               {userAvatar?.name}
             </MAvatar>
