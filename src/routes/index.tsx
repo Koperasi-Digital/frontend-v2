@@ -245,14 +245,6 @@ export default function Router() {
               )
             },
             {
-              path: 'order-list',
-              element: (
-                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
-                  <EcommerceOrderList />
-                </RoleBasedGuard>
-              )
-            },
-            {
               path: 'order-history',
               element: (
                 <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
@@ -281,6 +273,7 @@ export default function Router() {
         {
           path: 'seller',
           children: [
+            { element: <Navigate to="/dashboard/seller/dashboard" replace /> },
             {
               path: 'dashboard',
               element: (
@@ -290,7 +283,7 @@ export default function Router() {
               )
             },
             {
-              path: 'list',
+              path: 'product-list',
               element: (
                 <SellerGuard>
                   <EcommerceProductList />
@@ -310,6 +303,14 @@ export default function Router() {
               element: (
                 <SellerGuard>
                   <EcommerceProductCreate />
+                </SellerGuard>
+              )
+            },
+            {
+              path: 'order-list',
+              element: (
+                <SellerGuard>
+                  <EcommerceOrderList />
                 </SellerGuard>
               )
             }

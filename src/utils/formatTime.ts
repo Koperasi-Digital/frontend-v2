@@ -8,7 +8,7 @@ export function fDate(date: Date | string | number) {
 }
 
 export function fDateTime(date: Date | string | number) {
-  return format(new Date(date), 'dd MMM yyyy p', { locale: id });
+  return format(new Date(date), 'dd MMM yyyy p', { locale: id }) + ' WIB';
 }
 
 export function fTimestamp(date: Date | string | number) {

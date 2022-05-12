@@ -172,7 +172,7 @@ const sidebarConfig = [
         children: [
           { title: 'seller', path: PATH_DASHBOARD.eCommerce.seller.center },
           { title: 'manage products', path: PATH_DASHBOARD.eCommerce.seller.list },
-          { title: 'manage orders', path: PATH_DASHBOARD.eCommerce.orderList }
+          { title: 'manage orders', path: PATH_DASHBOARD.eCommerce.seller.orderList }
         ]
       },
       // MANAGEMENT: KNOWLEDGE

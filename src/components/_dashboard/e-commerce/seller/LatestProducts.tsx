@@ -10,6 +10,8 @@ import { ProductLatestItem } from '../../../../@types/seller-center';
 import { useEffect, useState } from 'react';
 import useAuth from 'hooks/useAuth';
 import { getProductLatest } from 'utils/sellerCenterAxios/sellerDashboard';
+import { paramCase } from 'change-case';
+import { PATH_DASHBOARD } from 'routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -27,14 +29,19 @@ type ProductItemProps = {
 // ----------------------------------------------------------------------
 
 function ProductItem({ product }: ProductItemProps) {
-  const { name, cover, price } = product;
+  const { id, name, cover, price } = product;
+  const linkTo = `${PATH_DASHBOARD.eCommerce.root}/product/${paramCase(id.toString())}`;
 
   return (
     <Stack direction="row" spacing={2}>
       <ThumbImgStyle alt={name} src={cover} />
 
       <Box sx={{ flexGrow: 1, minWidth: 200 }}>
-        <Link component={RouterLink} to="#" sx={{ color: 'text.primary', typography: 'subtitle2' }}>
+        <Link
+          component={RouterLink}
+          to={linkTo}
+          sx={{ color: 'text.primary', typography: 'subtitle2' }}
+        >
           {name}
         </Link>
 

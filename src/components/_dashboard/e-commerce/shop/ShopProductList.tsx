@@ -24,7 +24,7 @@ export default function ShopProductList({ products, isLoad, ...other }: ShopProd
   return (
     <Grid container spacing={3} {...other}>
       {products.map((product) => (
-        <Grid key={product.id} item xs={12} sm={6} md={3} lg={2}>
+        <Grid key={product.id} item xs={6} sm={4} md={3} lg={2}>
           <ShopProductCard product={product} />
         </Grid>
       ))}

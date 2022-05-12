@@ -19,6 +19,7 @@ import {
   ProductDetailsCarousel
 } from '../../components/_dashboard/e-commerce/product-details';
 import CartWidget from '../../components/_dashboard/e-commerce/CartWidget';
+import useAuth from 'hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +57,8 @@ export default function EcommerceProductDetails() {
   const dispatch = useDispatch();
   const [value, setValue] = useState('1');
   const { name = '' } = useParams();
+  const { user } = useAuth();
+  const [isSeller, setIsSeller] = useState(false);
   const { product, error, checkout } = useSelector(
     (state: { product: ProductState }) => state.product
   );
@@ -63,6 +66,12 @@ export default function EcommerceProductDetails() {
   useEffect(() => {
     dispatch(getProduct(name));
   }, [dispatch, name]);
+
+  useEffect(() => {
+    if (user!.store != null && product != null) {
+      setIsSeller(product!.store.id === user!.store.id);
+    }
+  }, [product, user]);
 
   const handleAddCart = (product: CartItem) => {
     dispatch(addCart(product));
@@ -93,15 +102,16 @@ export default function EcommerceProductDetails() {
           <>
             <Card>
               <Grid container>
-                <Grid item xs={12} md={6} lg={7}>
+                <Grid item xs={12} sm={6} lg={4}>
                   <ProductDetailsCarousel productImage={product.cover} />
                 </Grid>
-                <Grid item xs={12} md={6} lg={5}>
+                <Grid item xs={12} sm={6} lg={8}>
                   <ProductDetailsSummary
                     product={product}
                     cart={checkout.cart}
                     onAddCart={handleAddCart}
                     onGotoStep={handleGotoStep}
+                    isSeller={isSeller}
                   />
                 </Grid>
               </Grid>
@@ -127,7 +137,7 @@ export default function EcommerceProductDetails() {
               <TabContext value={value}>
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
-                    <Tab disableRipple value="1" label="Description" />
+                    <Tab disableRipple value="1" label="Deskripsi" />
                     {/* <Tab
                       disableRipple
                       value="2"
