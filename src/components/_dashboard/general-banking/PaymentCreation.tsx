@@ -37,23 +37,24 @@ export const paymentFunction = async (
   paymentType: string,
   transaction_details: transaction_details,
   dispatch: any,
-  enqueueSnackbar: any
+  enqueueSnackbar: any,
+  redirectURL?: string
 ) => {
   const coopChickCurrentURL = window.location.href;
   const snapOptions = {
     onSuccess: function (result: any) {
       setLoadingSnap(false);
-      window.location.href = coopChickCurrentURL;
+      window.location.href = redirectURL ? redirectURL : coopChickCurrentURL;
       enqueueSnackbar('Payment success', { variant: 'success' });
     },
     onPending: function (result: any) {
       setLoadingSnap(false);
-      window.location.href = coopChickCurrentURL;
+      window.location.href = redirectURL ? redirectURL : coopChickCurrentURL;
       enqueueSnackbar('Payment pending', { variant: 'warning' });
     },
     onError: function (result: any) {
       setLoadingSnap(false);
-      window.location.href = coopChickCurrentURL;
+      window.location.href = redirectURL ? redirectURL : coopChickCurrentURL;
       enqueueSnackbar('Payment error', { variant: 'error' });
     },
     onClose: function () {
@@ -61,7 +62,7 @@ export const paymentFunction = async (
     }
   };
 
-  // transaction_details.order_id = 'cc7fd25c-8c42-409a-9805-d777d40f0321'; --> simulation for third party payment gateway error
+  // transaction_details.order_id = '45f3a3f7-cf93-4a08-ba38-1284450d882c'; // --> simulation for third party payment gateway error
 
   if (paymentType === 'OTHER') {
     setLoadingSnap(true);
@@ -82,7 +83,11 @@ export const paymentFunction = async (
         enqueueSnackbar('Pembayaran menggunakan akun pembayaran terdaftar berhasil', {
           variant: 'success'
         });
-        window.location.reload();
+        if (redirectURL) {
+          window.location.href = redirectURL;
+        } else {
+          window.location.reload();
+        }
       } else {
         enqueueSnackbar(response.message, { variant: 'error' });
         dispatch(finishLoadingChargePaymentAccount());

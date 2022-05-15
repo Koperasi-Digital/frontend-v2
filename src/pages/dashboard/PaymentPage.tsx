@@ -3,16 +3,14 @@ import { useSnackbar } from 'notistack';
 import { Typography, Box, Stack } from '@mui/material';
 // components
 import Page from '../../components/Page';
-import { useNavigate, useParams } from 'react-router-dom';
-import { handleCreateTransaction } from 'utils/financeAxios/financeTransaction';
+import { useParams } from 'react-router-dom';
 import { handleGetOrder } from 'utils/financeAxios/financeOrder';
 import { TransactionDetails } from '../../@types/transaction';
-import { PATH_DASHBOARD } from 'routes/paths';
-import { setCheckoutOrder } from 'redux/slices/product';
 
 //redux
 import { RootState, useDispatch, useSelector } from 'redux/store';
-import { getPayAccount, chargePayAccount } from 'redux/slices/emoney';
+import { getPayAccount } from 'redux/slices/emoney';
+import { paymentFunction } from 'components/_dashboard/general-banking/PaymentCreation';
 
 declare global {
   interface Window {
@@ -22,16 +20,15 @@ declare global {
 
 // ----------------------------------------------------------------------
 export default function PaymentPage() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoadingCharge } = useSelector((state: RootState) => state.emoney);
-  const { id: orderId = '', paymentType } = useParams();
   const { enqueueSnackbar } = useSnackbar();
+  const { isLoadingCharge, errorType } = useSelector((state: RootState) => state.emoney);
+  const [loadingSnap, setLoadingSnap] = useState<boolean>(false);
+  const { id: orderId = '', paymentType } = useParams();
   const [transactionDetails, setTransactionDetails] = useState<TransactionDetails>();
   const [payAccountExist, setPayAccountExist] = useState<Boolean>(false);
 
   useEffect(() => {
-    dispatch(setCheckoutOrder(orderId));
     const snapSrcUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
     const myMidtransClientKey = 'SB-Mid-client-hGP5UBKXCE-VIit4'; //change this according to your client-key
 
@@ -45,12 +42,11 @@ export default function PaymentPage() {
     return () => {
       document.body.removeChild(script);
     };
-  }, [orderId, dispatch]);
+  }, []);
 
   useEffect(() => {
     const fetchOrder = async () => {
       const order = await handleGetOrder(orderId);
-      console.log(order);
       if (order) {
         setTransactionDetails({
           order_id: orderId,
@@ -62,64 +58,35 @@ export default function PaymentPage() {
   }, [orderId]);
 
   useEffect(() => {
-    const payWithOthers = () => {
-      const path = PATH_DASHBOARD.eCommerce.checkout;
-      const payFun = async () => {
-        if (transactionDetails) {
-          const snapOptions = {
-            onSuccess: function (result: any) {
-              //TODO: PUSH NOTIFICATION
-              enqueueSnackbar('Payment success', { variant: 'success' });
-              navigate(path);
-            },
-            onPending: function (result: any) {
-              //TODO: PUSH NOTIFICATION
-              enqueueSnackbar('Payment pending', { variant: 'warning' });
-              navigate(path);
-            },
-            onError: function (result: any) {
-              //TODO: PUSH NOTIFICATION
-              enqueueSnackbar('Payment error', { variant: 'error' });
-              navigate(path);
-            },
-            onClose: function () {
-              //TODO: PUSH NOTIFICATION
-              enqueueSnackbar('Payment pending', { variant: 'warning' });
-              navigate(path);
-            }
-          };
-
-          const tokenName = await handleCreateTransaction(transactionDetails);
-          window.snap.pay(tokenName, snapOptions);
-        }
-      };
-      payFun();
-    };
-
-    const payWithGopay = async () => {
-      const path = PATH_DASHBOARD.eCommerce.checkout;
+    const fetchPayAccount = async () => {
       const payAccount = await getPayAccount();
       if (payAccount) {
         setPayAccountExist(true);
-        const currentURL = window.location.href;
-        const pathName = window.location.pathname;
-        const rootPath = currentURL.replace(pathName, '');
-        const response = await chargePayAccount(orderId, rootPath + '/e-commerce/checkout');
-        if (response.status_code === '200') {
-          navigate(path);
-        } else if (response.status_code === '201') {
-        }
       } else {
         setPayAccountExist(false);
       }
     };
+    fetchPayAccount();
+  }, []);
 
-    if (paymentType === 'OTHER') {
-      payWithOthers();
-    } else {
-      payWithGopay();
-    }
-  }, [transactionDetails, enqueueSnackbar, navigate, orderId, paymentType]);
+  useEffect(() => {
+    const payFun = async () => {
+      const currentURL = window.location.href;
+      const pathName = window.location.pathname;
+      const rootPath = currentURL.replace(pathName, '');
+      if (paymentType && transactionDetails) {
+        await paymentFunction(
+          setLoadingSnap,
+          paymentType,
+          transactionDetails,
+          dispatch,
+          enqueueSnackbar,
+          `${rootPath}/dashboard/e-commerce/order-history`
+        );
+      }
+    };
+    payFun();
+  }, [paymentType, transactionDetails, dispatch, enqueueSnackbar]);
 
   return (
     <Page title="Payment">
@@ -145,9 +112,11 @@ export default function PaymentPage() {
               ? null
               : !payAccountExist
               ? 'Akun pembayaran tidak tersedia. Silahkan daftarkan akun pembayaran terlebih dahulu'
-              : isLoadingCharge
+              : isLoadingCharge || loadingSnap
               ? 'Pembayaran sedang diproses'
-              : 'Terjadi error'}
+              : errorType
+              ? errorType
+              : ''}
           </Typography>
         </Stack>
       </Box>

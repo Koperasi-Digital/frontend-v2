@@ -85,6 +85,7 @@ export function registerEMoney(phoneNumber: string, paymentType: string, country
   return async () => {
     const { dispatch } = store;
     try {
+      dispatch(resetErrorType());
       dispatch(
         slice.actions.addEmoney({
           paymentType: paymentType,
@@ -92,16 +93,14 @@ export function registerEMoney(phoneNumber: string, paymentType: string, country
           countryCode: countryCode
         })
       );
-      const currentURL = window.location.href;
-      const pathName = window.location.pathname;
-      const rootPath = currentURL.replace(pathName, '');
+      const coopChickCurrentURL = window.location.href;
       const responseData = (
         await axios.post('emoney/create-pay-account', {
           payment_type: paymentType,
           gopay_partner: {
             phone_number: phoneNumber,
             country_code: countryCode,
-            redirect_url: `${rootPath}/dashboard/app`
+            redirect_url: coopChickCurrentURL
           }
         })
       ).data.payload;
@@ -157,6 +156,7 @@ export async function getPayAccount() {
 export async function chargePayAccount(orderId: string, callbackURL: string) {
   const { dispatch } = store;
   try {
+    dispatch(resetErrorType());
     dispatch(slice.actions.startLoadingChargePaymentAccount());
     const response = await axios.post('emoney/charge-pay-account', {
       orderId: orderId,
@@ -165,8 +165,9 @@ export async function chargePayAccount(orderId: string, callbackURL: string) {
     console.log(response);
     dispatch(slice.actions.finishLoadingChargePaymentAccount());
     return response.data.payload;
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
+    dispatch(slice.actions.updateErrorStatus(e.message));
     dispatch(slice.actions.hasError());
     dispatch(slice.actions.finishLoadingChargePaymentAccount());
     return e;
