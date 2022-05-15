@@ -1,8 +1,10 @@
 // material
-import { Container, Grid, Card } from '@mui/material';
+import { Container, Grid, Card, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 // components
 import Page from '../../components/Page';
 import DisbursementRequestForm from '../../components/_dashboard/general-banking/DisbursementRequestForm';
+import DisbursementRequestListTable from 'components/_dashboard/general-banking/DisbursementRequestListTable';
 import BankAccountRegisterForm from 'components/_dashboard/general-banking/BankAccountRegisterForm';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { useState, useEffect } from 'react';
@@ -20,6 +22,8 @@ type BankAccount = {
 
 export default function DisbursementRequest() {
   const [bankAccount, setBankAccount] = useState<BankAccount>();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +33,7 @@ export default function DisbursementRequest() {
       }
     };
     fetchData();
-  });
+  }, []);
 
   return (
     <Page title="Transaction Report | CoopChick">
@@ -45,13 +49,16 @@ export default function DisbursementRequest() {
             { name: 'Pengajuan Pencairan' }
           ]}
         />
-        <Card sx={{ padding: 10 }}>
+        <Card sx={{ padding: isMobile ? 1 : 10 }}>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={6}>
               <DisbursementRequestForm bankAccount={bankAccount} />
             </Grid>
             <Grid item xs={12} md={6}>
               <BankAccountRegisterForm bankAccount={bankAccount} setBankAccount={setBankAccount} />
+            </Grid>
+            <Grid item xs={12}>
+              <DisbursementRequestListTable />
             </Grid>
           </Grid>
         </Card>

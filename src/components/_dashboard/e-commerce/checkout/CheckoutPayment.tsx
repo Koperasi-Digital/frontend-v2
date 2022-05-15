@@ -26,8 +26,9 @@ import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
 import { handleCreateOrder } from 'utils/financeAxios/financeOrder';
 import { PATH_DASHBOARD } from 'routes/paths';
-import useAuth from 'hooks/useAuth';
 import { useNavigate } from 'react-router';
+
+import useAuth from 'hooks/useAuth';
 
 const PAYMENT_OPTIONS: PaymentOption[] = [
   {
@@ -47,11 +48,10 @@ const PAYMENT_OPTIONS: PaymentOption[] = [
 export default function CheckoutPayment() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { user } = useAuth();
-  const userId = user?.id;
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
   const dispatch = useDispatch();
   const { total, subtotal, shipping, cart, billing: address } = checkout;
+  const { user } = useAuth();
 
   const handleBackStep = () => {
     dispatch(onBackStep());
@@ -97,6 +97,7 @@ export default function CheckoutPayment() {
       try {
         console.log('Shipping: ', shipping);
         const createdOrder = await handleCreateOrder(
+          user?.id,
           Math.floor(total + (shipping ? shipping : 0)),
           values.payment,
           cart,

@@ -1,6 +1,7 @@
 import { Box, Stack, Typography, Button, DialogTitle } from '@mui/material';
 import { useEffect, useState } from 'react';
 import BankingEMoneyForm from './BankingEMoneyForm';
+import { useSnackbar } from 'notistack';
 
 import { fCurrency } from '../../../utils/formatNumber';
 
@@ -8,7 +9,13 @@ import { DialogAnimate } from '../../animate';
 
 // redux
 import { RootState, useDispatch, useSelector } from 'redux/store';
-import { registerEMoney, unbindEMoney, getPayAccount, resetPayAccount } from 'redux/slices/emoney';
+import {
+  registerEMoney,
+  unbindEMoney,
+  getPayAccount,
+  resetPayAccount,
+  resetErrorType
+} from 'redux/slices/emoney';
 // import { resetState } from 'redux/slices/emoney';
 
 export default function BankingEMoney() {
@@ -20,11 +27,13 @@ export default function BankingEMoney() {
     registerStep,
     paymentType,
     phoneNumber,
-    countryCode
+    countryCode,
+    errorType
   } = useSelector((state: RootState) => state.emoney);
 
   const [saldo, setSaldo] = useState<number | undefined>(undefined);
   const [openModalEMoney, setOpenModalEMoney] = useState<boolean>(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleRegisterEMoney = async (
     payment_type: string,
@@ -72,6 +81,17 @@ export default function BankingEMoney() {
       fetchSaldo();
     }
   }, [registerStep, saldo]);
+
+  useEffect(() => {
+    if (errorType) {
+      if (errorType === 'Unauthorized') {
+        enqueueSnackbar('Payment account has already used in other account', { variant: 'error' });
+      } else {
+        enqueueSnackbar('Register payment account fail', { variant: 'error' });
+      }
+      dispatch(resetErrorType());
+    }
+  }, [dispatch, enqueueSnackbar, errorType]);
 
   return (
     <>

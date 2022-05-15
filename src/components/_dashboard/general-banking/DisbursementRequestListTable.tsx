@@ -31,7 +31,10 @@ import { fCurrency } from '../../../utils/formatNumber';
 import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
-import { handleListReimbursement } from 'utils/financeAxios/financeReimbursement';
+import {
+  handleListReimbursement,
+  handleUserListReimbursement
+} from 'utils/financeAxios/financeReimbursement';
 
 // hooks
 import useAuth from 'hooks/useAuth';
@@ -153,21 +156,28 @@ function MoreMenuButton({ onDownload, onPrint, onShare, onDelete }: MoreMenuButt
 }
 
 export default function DisbursementRequestListTable() {
-  const { user } = useAuth();
+  const { currentRole } = useAuth();
   const [reimbursementList, setReimbursementList] = useState<Reimbursement[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const reimbursementList = await handleListReimbursement();
-      const filteredReimbursementList = reimbursementList.filter((data: { status: string }) => {
-        return data.status !== 'success';
-      });
-      if (filteredReimbursementList) {
-        setReimbursementList(filteredReimbursementList);
+      let reimbursementList;
+      if (currentRole) {
+        if (currentRole.name === 'ADMIN') {
+          reimbursementList = await handleListReimbursement();
+        } else {
+          reimbursementList = await handleUserListReimbursement();
+        }
+        if (reimbursementList) {
+          const filteredReimbursementList = reimbursementList.filter((data: { status: string }) => {
+            return data.status !== 'success';
+          });
+          setReimbursementList(filteredReimbursementList);
+        }
       }
     };
     fetchData();
-  }, [user]);
+  }, [currentRole]);
 
   const handleClickDownload = () => {};
   const handleClickPrint = () => {};
@@ -197,11 +207,21 @@ export default function DisbursementRequestListTable() {
                 <TableRow>
                   <TableCell>ID</TableCell>
                   <TableCell>Type</TableCell>
-                  <TableCell>User</TableCell>
+                  {currentRole && currentRole.name === 'ADMIN' ? (
+                    <TableCell>User</TableCell>
+                  ) : (
+                    <></>
+                  )}
                   <TableCell>Date</TableCell>
-                  <TableCell>Account Number</TableCell>
-                  <TableCell>Account Name</TableCell>
-                  <TableCell>Bank Name</TableCell>
+                  {currentRole && currentRole.name === 'ADMIN' ? (
+                    <>
+                      <TableCell>Account Number</TableCell>
+                      <TableCell>Account Name</TableCell>
+                      <TableCell>Bank Name</TableCell>
+                    </>
+                  ) : (
+                    <></>
+                  )}
                   <TableCell>Amount</TableCell>
                   <TableCell />
                 </TableRow>
@@ -214,17 +234,21 @@ export default function DisbursementRequestListTable() {
                   <TableRow key={row.id}>
                     <TableCell>{row.id}</TableCell>
                     <TableCell>{row.type}</TableCell>
-                    <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Box sx={{ position: 'relative' }}>{renderAvatar(row)}</Box>
-                        <Box sx={{ ml: 2 }}>
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            {row.display_name}
-                          </Typography>
-                          <Typography variant="subtitle2"> {row.display_name}</Typography>
+                    {currentRole && currentRole.name === 'ADMIN' ? (
+                      <TableCell>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Box sx={{ position: 'relative' }}>{renderAvatar(row)}</Box>
+                          <Box sx={{ ml: 2 }}>
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              {row.display_name}
+                            </Typography>
+                            <Typography variant="subtitle2"> {row.display_name}</Typography>
+                          </Box>
                         </Box>
-                      </Box>
-                    </TableCell>
+                      </TableCell>
+                    ) : (
+                      <></>
+                    )}
 
                     <TableCell>
                       <Typography variant="subtitle2">
@@ -235,11 +259,17 @@ export default function DisbursementRequestListTable() {
                       </Typography>
                     </TableCell>
 
-                    <TableCell>{row.account_number}</TableCell>
+                    {currentRole && currentRole.name === 'ADMIN' ? (
+                      <>
+                        <TableCell>{row.account_number}</TableCell>
 
-                    <TableCell>{row.account_name}</TableCell>
+                        <TableCell>{row.account_name}</TableCell>
 
-                    <TableCell>{row.bank_name}</TableCell>
+                        <TableCell>{row.bank_name}</TableCell>
+                      </>
+                    ) : (
+                      <></>
+                    )}
 
                     <TableCell>{fCurrency(row.total_cost)}</TableCell>
 

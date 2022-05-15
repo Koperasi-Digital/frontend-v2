@@ -9,7 +9,7 @@ export async function handleCreateTransaction(transactionDetails: TransactionDet
     return response.data.payload;
   } catch (e) {
     console.log(e);
-    return null;
+    return e;
   }
 }
 

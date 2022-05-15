@@ -33,7 +33,7 @@ const emoneyPersistConfig = {
   key: 'emoney',
   storage,
   keyPrefix: 'redux-',
-  whitelist: ['paymentType', 'phoneNumber', 'countryCode', 'registerStep']
+  whitelist: ['paymentType', 'phoneNumber', 'countryCode', 'registerStep', 'errorType']
 };
 
 const rootReducer = combineReducers({

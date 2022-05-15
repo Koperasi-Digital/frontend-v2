@@ -13,7 +13,8 @@ const initialState: EMoneyState = {
   paymentType: null,
   phoneNumber: null,
   countryCode: null,
-  error: false
+  error: false,
+  errorType: null
 };
 
 const slice = createSlice({
@@ -65,6 +66,12 @@ const slice = createSlice({
       state.registerStep = 0;
       state.isLoadingCharge = false;
       state.isLoadingGetPaymentAccount = false;
+    },
+    updateErrorStatus(state, action) {
+      state.errorType = action.payload;
+    },
+    resetErrorType(state) {
+      state.errorType = null;
     }
   }
 });
@@ -72,7 +79,7 @@ const slice = createSlice({
 // Reducer
 export default slice.reducer;
 
-export const { resetState } = slice.actions;
+export const { resetState, resetErrorType, finishLoadingChargePaymentAccount } = slice.actions;
 
 export function registerEMoney(phoneNumber: string, paymentType: string, countryCode: string) {
   return async () => {
@@ -85,13 +92,16 @@ export function registerEMoney(phoneNumber: string, paymentType: string, country
           countryCode: countryCode
         })
       );
+      const currentURL = window.location.href;
+      const pathName = window.location.pathname;
+      const rootPath = currentURL.replace(pathName, '');
       const responseData = (
         await axios.post('emoney/create-pay-account', {
           payment_type: paymentType,
           gopay_partner: {
             phone_number: phoneNumber,
             country_code: countryCode,
-            redirect_url: 'http://localhost:3000/dashboard/app'
+            redirect_url: `${rootPath}/dashboard/app`
           }
         })
       ).data.payload;
@@ -106,9 +116,11 @@ export function registerEMoney(phoneNumber: string, paymentType: string, country
       } else {
         dispatch(slice.actions.setRegisterStep(2));
       }
-    } catch (e) {
+    } catch (e: any) {
       console.log(e);
+      dispatch(slice.actions.updateErrorStatus(e.type));
       dispatch(slice.actions.hasError());
+      window.location.reload();
     }
   };
 }
@@ -150,12 +162,14 @@ export async function chargePayAccount(orderId: string, callbackURL: string) {
       orderId: orderId,
       callbackURL: callbackURL
     });
+    console.log(response);
     dispatch(slice.actions.finishLoadingChargePaymentAccount());
     return response.data.payload;
   } catch (e) {
     console.log(e);
     dispatch(slice.actions.hasError());
     dispatch(slice.actions.finishLoadingChargePaymentAccount());
+    return e;
   }
 }
 

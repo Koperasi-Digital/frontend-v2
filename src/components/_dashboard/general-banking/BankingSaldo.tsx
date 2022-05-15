@@ -11,10 +11,10 @@ export default function BankingSaldo() {
 
   useEffect(() => {
     const fetchData = async () => {
-        const saldo = await handleGetSaldo();
-        if (saldo) {
-          setSaldo(saldo.amount);
-        }
+      const saldo = await handleGetSaldo();
+      if (saldo) {
+        setSaldo(saldo.amount);
+      }
     };
     fetchData();
   }, []);

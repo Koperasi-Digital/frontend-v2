@@ -26,7 +26,11 @@ export default function SimpananPokok() {
       if (user) {
         const fetchedSimpananPokok = await handleGetSimpananPokok();
         if (fetchedSimpananPokok && fetchedSimpananPokok.order === null) {
-          const createdOrder = await handleCreateOrder(fetchedSimpananPokok.amount, 'OTHER');
+          const createdOrder = await handleCreateOrder(
+            user?.id,
+            fetchedSimpananPokok.amount,
+            'OTHER'
+          );
           const temp = await handleAddOrderSimpananPokok(createdOrder.id);
           fetchedSimpananPokok.order = temp.order;
         }

@@ -80,6 +80,7 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
       try {
         if (user && props.bankAccount) {
           if (await handleCreateReimbursement(Number(values.amount), values.disbType)) {
+            window.location.reload();
             enqueueSnackbar('Create success', { variant: 'success' });
           } else {
             enqueueSnackbar('Create fail', { variant: 'error' });

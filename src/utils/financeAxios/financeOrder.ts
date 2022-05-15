@@ -3,13 +3,15 @@ import { CartItem } from '../../@types/products';
 import axios from '../axios';
 
 export async function handleCreateOrder(
+  userId: number,
   grossAmount: number,
   paymentType: string,
   cart?: CartItem[],
   address?: UserAddressBook
 ) {
   try {
-    const response = await axios.post('order', {
+    const response = await axios.post('order/create', {
+      user_id: userId,
       total_cost: grossAmount,
       cart: cart,
       address: address?.id,

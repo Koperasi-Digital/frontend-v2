@@ -48,7 +48,7 @@ import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
-import { handleShowTransaction } from 'utils/financeAxios/financeTransaction';
+import { handleListTransactions } from 'utils/financeAxios/financeTransaction';
 // import { handleShowCoopTransaction } from 'utils/financeAxios/financeCoopTransaction';
 import useAuth from 'hooks/useAuth';
 
@@ -247,11 +247,7 @@ export default function BankingTransactionsReport() {
         const toDateString = `${toDateValue.getFullYear()}-${
           toDateValue.getMonth() + 1
         }-${toDateValue.getDate()} 23:59:59`;
-        const fetchedTransactionList = await handleShowTransaction(
-          userId,
-          fromDateString,
-          toDateString
-        );
+        const fetchedTransactionList = await handleListTransactions(fromDateString, toDateString);
         // const fetchedCoopTransactionList = await handleShowCoopTransaction(
         //   userId,
         //   fromDateString,

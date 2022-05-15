@@ -23,8 +23,8 @@ export async function handleListReimbursement() {
   }
 }
 
-export async function handleUserListReimbursement(){
-  try{
+export async function handleUserListReimbursement() {
+  try {
     const response = await axios.get('reimbursement/userlist');
     return response.data.payload;
   } catch (e) {
@@ -60,4 +60,3 @@ export async function handleEditReimbursement(
     return undefined;
   }
 }
-
