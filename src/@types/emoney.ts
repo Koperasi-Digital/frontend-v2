@@ -7,10 +7,5 @@ export type EMoneyState = {
   isLoadingCharge: boolean;
   isLoadingUnbind: boolean;
   error: boolean;
-};
-
-export type EMoney = {
-  paymentType: string;
-  phoneNumber: string;
-  countryCode: string;
+  errorType: string | null;
 };

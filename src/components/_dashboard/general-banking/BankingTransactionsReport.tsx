@@ -48,8 +48,8 @@ import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
-import { handleShowTransaction } from 'utils/financeAxios/financeTransaction';
-import { handleShowCoopTransaction } from 'utils/financeAxios/financeCoopTransaction';
+import { handleListTransactions } from 'utils/financeAxios/financeTransaction';
+// import { handleShowCoopTransaction } from 'utils/financeAxios/financeCoopTransaction';
 import useAuth from 'hooks/useAuth';
 
 type AvatarIconProps = {
@@ -247,19 +247,19 @@ export default function BankingTransactionsReport() {
         const toDateString = `${toDateValue.getFullYear()}-${
           toDateValue.getMonth() + 1
         }-${toDateValue.getDate()} 23:59:59`;
-        const fetchedTransactionList = await handleShowTransaction(
-          userId,
-          fromDateString,
-          toDateString
-        );
-        const fetchedCoopTransactionList = await handleShowCoopTransaction(
-          userId,
-          fromDateString,
-          toDateString
-        );
-        if (fetchedTransactionList && fetchedCoopTransactionList) {
-          setAllTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
-          setFilteredTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+        const fetchedTransactionList = await handleListTransactions(fromDateString, toDateString);
+        // const fetchedCoopTransactionList = await handleShowCoopTransaction(
+        //   userId,
+        //   fromDateString,
+        //   toDateString
+        // );
+        // if (fetchedTransactionList && fetchedCoopTransactionList) {
+        //   setAllTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+        //   setFilteredTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+        // }
+        if (fetchedTransactionList) {
+          setAllTransactionData(fetchedTransactionList);
+          setFilteredTransactionData(fetchedTransactionList);
         }
       }
     };

@@ -64,7 +64,7 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
     const fetchData = async () => {
       let currentPeriodString = dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1';
       if (user) {
-        const currentLabaRugiData = await handleGetLabaRugiInfo(user.id, currentPeriodString);
+        const currentLabaRugiData = await handleGetLabaRugiInfo(currentPeriodString);
         if (currentLabaRugiData) {
           setDataNotExist(false);
           setCurrentLabaRugiData(currentLabaRugiData);
@@ -83,7 +83,7 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
       let previousPeriodString =
         prevDateValue.getFullYear() + '-' + (prevDateValue.getMonth() + 1) + '-1';
       if (user) {
-        let fetchedLabaRugiInfo = await handleGetLabaRugiInfo(user.id, previousPeriodString);
+        let fetchedLabaRugiInfo = await handleGetLabaRugiInfo(previousPeriodString);
         if (!fetchedLabaRugiInfo) {
           fetchedLabaRugiInfo = {
             jumlahPenjualan: 0,

@@ -33,3 +33,13 @@ export async function handleGetOrder(orderId: string) {
     return undefined;
   }
 }
+
+export async function handleGetAnnualSummary() {
+  try {
+    const response = await axios.get('order/annual-summary');
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+}

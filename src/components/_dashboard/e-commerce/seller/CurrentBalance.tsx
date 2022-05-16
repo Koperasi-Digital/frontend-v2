@@ -29,10 +29,10 @@ export default function CurrentBalance() {
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
-        const saldo = await handleGetSaldo(user.id);
+        const saldo = await handleGetSaldo();
         setCurrentBalance(saldo.amount);
         const periodeString = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-1';
-        const laporanLabaRugi = await handleGetLabaRugiInfo(user.id, periodeString);
+        const laporanLabaRugi = await handleGetLabaRugiInfo(periodeString);
         if (laporanLabaRugi) {
           setIncomeAmount(laporanLabaRugi.jumlahPenjualan);
           setExpenseAmount(

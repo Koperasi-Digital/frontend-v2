@@ -1,14 +1,12 @@
 import axios from '../axios';
 
 export async function handleCreateBankAccount(
-  userId: number,
   accountNumber: string,
   accountName: string,
   bankName: string
 ) {
   try {
-    const response = await axios.post('bank-account/create', {
-      userId: userId,
+    const response = await axios.post('bank-account', {
       accountNumber: accountNumber,
       accountName: accountName,
       bankName: bankName
@@ -21,14 +19,12 @@ export async function handleCreateBankAccount(
 }
 
 export async function handleEditBankAccount(
-  userId: number,
   accountNumber: string,
   accountName: string,
   bankName: string
 ) {
   try {
-    const response = await axios.post('bank-account/edit', {
-      userId: userId,
+    const response = await axios.patch('bank-account', {
       accountNumber: accountNumber,
       accountName: accountName,
       bankName: bankName
@@ -40,9 +36,9 @@ export async function handleEditBankAccount(
   }
 }
 
-export async function handleGetBankAccount(userId: number) {
+export async function handleGetBankAccount() {
   try {
-    const response = await axios.get('bank-account/show/' + userId);
+    const response = await axios.get('bank-account');
     return response.data.payload;
   } catch (e) {
     console.log(e);

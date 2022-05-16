@@ -45,7 +45,6 @@ export default function BankAccountRegisterForm(props: {
         if (user) {
           if (props.bankAccount) {
             const editedBankAccount = await handleEditBankAccount(
-              user.id,
               values.accountNumber,
               values.accountName,
               values.bankName
@@ -58,7 +57,6 @@ export default function BankAccountRegisterForm(props: {
             }
           } else {
             const createdBankAccount = await handleCreateBankAccount(
-              user.id,
               values.accountNumber,
               values.accountName,
               values.bankName

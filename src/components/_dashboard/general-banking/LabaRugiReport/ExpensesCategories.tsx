@@ -67,7 +67,7 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
       if (user) {
         const currentPeriodString =
           props.dateValue.getFullYear() + '-' + (props.dateValue.getMonth() + 1) + '-1';
-        const currentLabaRugiData = await handleGetLabaRugiInfo(user.id, currentPeriodString);
+        const currentLabaRugiData = await handleGetLabaRugiInfo(currentPeriodString);
         if (currentLabaRugiData) {
           const series = [
             currentLabaRugiData.biayaProduksiProdukTerjual,

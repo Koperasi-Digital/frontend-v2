@@ -13,7 +13,8 @@ const initialState: EMoneyState = {
   paymentType: null,
   phoneNumber: null,
   countryCode: null,
-  error: false
+  error: false,
+  errorType: null
 };
 
 const slice = createSlice({
@@ -65,6 +66,12 @@ const slice = createSlice({
       state.registerStep = 0;
       state.isLoadingCharge = false;
       state.isLoadingGetPaymentAccount = false;
+    },
+    updateErrorStatus(state, action) {
+      state.errorType = action.payload;
+    },
+    resetErrorType(state) {
+      state.errorType = null;
     }
   }
 });
@@ -72,12 +79,13 @@ const slice = createSlice({
 // Reducer
 export default slice.reducer;
 
-export const { resetState } = slice.actions;
+export const { resetState, resetErrorType, finishLoadingChargePaymentAccount } = slice.actions;
 
 export function registerEMoney(phoneNumber: string, paymentType: string, countryCode: string) {
   return async () => {
     const { dispatch } = store;
     try {
+      dispatch(resetErrorType());
       dispatch(
         slice.actions.addEmoney({
           paymentType: paymentType,
@@ -85,13 +93,14 @@ export function registerEMoney(phoneNumber: string, paymentType: string, country
           countryCode: countryCode
         })
       );
+      const coopChickCurrentURL = window.location.href;
       const responseData = (
         await axios.post('emoney/create-pay-account', {
           payment_type: paymentType,
           gopay_partner: {
             phone_number: phoneNumber,
             country_code: countryCode,
-            redirect_url: 'http://localhost:3000/dashboard/app'
+            redirect_url: coopChickCurrentURL
           }
         })
       ).data.payload;
@@ -106,9 +115,11 @@ export function registerEMoney(phoneNumber: string, paymentType: string, country
       } else {
         dispatch(slice.actions.setRegisterStep(2));
       }
-    } catch (e) {
+    } catch (e: any) {
       console.log(e);
+      dispatch(slice.actions.updateErrorStatus(e.type));
       dispatch(slice.actions.hasError());
+      window.location.reload();
     }
   };
 }
@@ -145,17 +156,21 @@ export async function getPayAccount() {
 export async function chargePayAccount(orderId: string, callbackURL: string) {
   const { dispatch } = store;
   try {
+    dispatch(resetErrorType());
     dispatch(slice.actions.startLoadingChargePaymentAccount());
     const response = await axios.post('emoney/charge-pay-account', {
       orderId: orderId,
       callbackURL: callbackURL
     });
+    console.log(response);
     dispatch(slice.actions.finishLoadingChargePaymentAccount());
     return response.data.payload;
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
+    dispatch(slice.actions.updateErrorStatus(e.message));
     dispatch(slice.actions.hasError());
     dispatch(slice.actions.finishLoadingChargePaymentAccount());
+    return e;
   }
 }
 

@@ -24,14 +24,14 @@ export default function SimpananPokok() {
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
-        const fetchedSimpananPokok = await handleGetSimpananPokok(user.id);
+        const fetchedSimpananPokok = await handleGetSimpananPokok();
         if (fetchedSimpananPokok && fetchedSimpananPokok.order === null) {
           const createdOrder = await handleCreateOrder(
-            user.id,
+            user?.id,
             fetchedSimpananPokok.amount,
             'OTHER'
           );
-          const temp = await handleAddOrderSimpananPokok(user.id, createdOrder.id);
+          const temp = await handleAddOrderSimpananPokok(createdOrder.id);
           fetchedSimpananPokok.order = temp.order;
         }
         if (!fetchedSimpananPokok) {

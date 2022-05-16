@@ -48,7 +48,7 @@ export default function ArusKasReport({ dateValue }: ArusKasReportProps) {
     const fetchData = async () => {
       let currentPeriodString = dateValue.getFullYear() + '-' + (dateValue.getMonth() + 1) + '-1';
       if (user) {
-        const arusKasData = await handleGetArusKasInfo(user.id, currentPeriodString);
+        const arusKasData = await handleGetArusKasInfo(currentPeriodString);
         if (arusKasData) {
           setArusKasData(arusKasData);
           setDataNotExist(false);
