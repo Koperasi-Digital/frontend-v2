@@ -318,7 +318,9 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
                 <Link
                   href={values.meetingLink}
                   target="_blank"
-                  onClick={() => (event?.id ? recordMeetingPresence(event.id) : {})}
+                  onClick={() =>
+                    event?.id && event?.type === 'koperasi' ? recordMeetingPresence(event.id) : {}
+                  }
                 >
                   {values.meetingLink}
                 </Link>
