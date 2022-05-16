@@ -82,7 +82,6 @@ function ConfirmationFormDialog({
     },
     validationSchema: UpdateStatusSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      console.log(values);
       try {
         dispatch(updateOrderDetails(id, values.newStatus));
         dispatch(createOrderDetailsLog(id, values.newStatus, values.description));

@@ -162,7 +162,6 @@ export async function chargePayAccount(orderId: string, callbackURL: string) {
       orderId: orderId,
       callbackURL: callbackURL
     });
-    console.log(response);
     dispatch(slice.actions.finishLoadingChargePaymentAccount());
     return response.data.payload;
   } catch (e: any) {

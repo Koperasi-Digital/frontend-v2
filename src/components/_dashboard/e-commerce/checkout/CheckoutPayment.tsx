@@ -95,7 +95,6 @@ export default function CheckoutPayment() {
     validationSchema: PaymentSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        console.log('Shipping: ', shipping);
         const createdOrder = await handleCreateOrder(
           user?.id,
           Math.floor(total + (shipping ? shipping : 0)),

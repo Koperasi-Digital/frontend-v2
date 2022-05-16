@@ -86,7 +86,6 @@ export const paymentFunction = async (
         transaction_details.order_id,
         redirectURL ? redirectURL : window.location.href
       );
-      console.log(response);
       if (response && response.status_code === '200') {
         enqueueSnackbar('Pembayaran menggunakan akun pembayaran terdaftar berhasil', {
           variant: 'success'
