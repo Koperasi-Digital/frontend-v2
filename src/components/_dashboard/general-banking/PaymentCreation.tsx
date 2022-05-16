@@ -83,7 +83,8 @@ export const paymentFunction = async (
     const payAccount = await getPayAccount();
     if (payAccount) {
       const response = await chargePayAccount(transaction_details.order_id, window.location.href);
-      if (response.status_code === '200') {
+      console.log(response);
+      if (response && response.status_code === '200') {
         enqueueSnackbar('Pembayaran menggunakan akun pembayaran terdaftar berhasil', {
           variant: 'success'
         });
