@@ -73,7 +73,11 @@ export const paymentFunction = async (
       });
       setLoadingSnap(false);
     } else {
-      window.snap.pay(response, snapOptions);
+      if (window.snap) {
+        window.snap.pay(response, snapOptions);
+      } else {
+        window.location.reload();
+      }
     }
   } else {
     const payAccount = await getPayAccount();
