@@ -93,6 +93,8 @@ export const paymentFunction = async (
         } else {
           window.location.reload();
         }
+      } else if (response && response.status_code === '201') {
+        window.location.href = response.actions[0].url;
       } else {
         enqueueSnackbar(response.message, { variant: 'error' });
         dispatch(finishLoadingChargePaymentAccount());
