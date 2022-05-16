@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
-import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
+import editFill from '@iconify/icons-eva/edit-fill';
 // material
 import { useTheme, styled } from '@mui/material/styles';
 import {
@@ -147,8 +147,8 @@ export default function EcommerceOrderList() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root
+              name: 'Seller Center',
+              href: PATH_DASHBOARD.eCommerce.seller.root
             },
             { name: 'Order List' }
           ]}
@@ -203,8 +203,9 @@ export default function EcommerceOrderList() {
                               <Label
                                 variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
                                 color={
-                                  (status === 'Dalam Pengiriman' && 'warning') ||
-                                  (status === 'Pending' && 'error') ||
+                                  (status === 'DALAM PENGIRIMAN' && 'warning') ||
+                                  (status === 'PENDING' && 'error') ||
+                                  (status === 'LUNAS' && 'info') ||
                                   'success'
                                 }
                               >
@@ -214,7 +215,7 @@ export default function EcommerceOrderList() {
                             <TableCell align="right">
                               <IconButton>
                                 <Link to={linkTo + id} color="inherit">
-                                  <Icon icon={moreVerticalFill} width={20} height={20} />
+                                  <Icon icon={editFill} width={20} height={20} />
                                 </Link>
                               </IconButton>
                             </TableCell>

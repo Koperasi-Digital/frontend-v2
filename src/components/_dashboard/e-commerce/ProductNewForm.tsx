@@ -81,7 +81,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
       productionCost: currentProduct?.productionCost || '',
       available: currentProduct?.available || '',
       description: currentProduct?.description || '',
-      status: currentProduct?.status || 'Active',
+      status: Boolean(currentProduct?.status === 'Active') || true,
       store_id: currentProduct?.store?.id || user?.store?.id,
       weight: currentProduct?.weight || '',
       cover: currentProduct?.cover || null
@@ -94,7 +94,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
           'products',
           values.cover.path + fTimestamp(new Date())
         );
-        console.log(uploadFileMessage);
+        let status = values.status ? 'Active' : 'Inactive';
         if (isEdit) {
           let prevProductionCost = currentProduct ? currentProduct.productionCost : 0;
           let prevAvailable = currentProduct ? currentProduct.available : 0;
@@ -102,6 +102,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
             editProduct(
               {
                 ...values,
+                status: status,
                 cover: uploadFileMessage
               },
               product_id,
@@ -113,6 +114,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
           dispatch(
             addProduct({
               ...values,
+              status: status,
               cover: uploadFileMessage
             })
           );
@@ -134,6 +136,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } =
     formik;
 
+  console.log(values.status);
   const handleDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
@@ -153,14 +156,14 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
               <Stack spacing={3}>
                 <TextField
                   fullWidth
-                  label="Product Name"
+                  label="Nama Produk"
                   {...getFieldProps('name')}
                   error={Boolean(touched.name && errors.name)}
                   helperText={touched.name && errors.name}
                 />
 
                 <div>
-                  <LabelStyle>Description</LabelStyle>
+                  <LabelStyle>Deskripsi</LabelStyle>
                   <QuillEditor
                     simple
                     id="product-description"
@@ -176,7 +179,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                 </div>
 
                 <div>
-                  <LabelStyle>Add Image</LabelStyle>
+                  <LabelStyle>Gambar Produk</LabelStyle>
                   <UploadSingleFile
                     maxSize={3145728}
                     accept="image/*"
@@ -198,21 +201,16 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
             <Stack spacing={3}>
               <Card sx={{ p: 3 }}>
                 <FormControlLabel
-                  control={
-                    <Switch
-                      {...getFieldProps('status')}
-                      checked={Boolean(values.status !== 'Active')}
-                    />
-                  }
-                  label="Active"
+                  control={<Switch {...getFieldProps('status')} checked={values.status} />}
+                  label="Aktif"
                   sx={{ mb: 2 }}
                 />
 
                 <Stack spacing={3}>
-                  <TextField fullWidth label="Product SKU" {...getFieldProps('sku')} />
+                  <TextField fullWidth label="SKU Produk" {...getFieldProps('sku')} />
 
                   <FormControl fullWidth>
-                    <InputLabel>Category</InputLabel>
+                    <InputLabel>Kategori</InputLabel>
                     <Select
                       label="Category"
                       native
@@ -258,7 +256,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                   <TextField
                     fullWidth
                     placeholder="0"
-                    label="Price"
+                    label="Harga Jual"
                     {...getFieldProps('price')}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
@@ -270,7 +268,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
                   <TextField
                     fullWidth
                     placeholder="0"
-                    label="Production Cost"
+                    label="Harga Produksi (Modal)"
                     {...getFieldProps('productionCost')}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
