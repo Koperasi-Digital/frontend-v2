@@ -135,7 +135,7 @@ export default function ProductNewForm({ isEdit, currentProduct }: ProductNewFor
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } =
     formik;
-    
+
   const handleDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
