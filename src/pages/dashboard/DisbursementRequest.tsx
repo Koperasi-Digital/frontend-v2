@@ -42,10 +42,6 @@ export default function DisbursementRequest() {
           heading={'Pengajuan Pencairan'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Keuangan',
-              href: PATH_DASHBOARD.finance.root
-            },
             { name: 'Pengajuan Pencairan' }
           ]}
         />

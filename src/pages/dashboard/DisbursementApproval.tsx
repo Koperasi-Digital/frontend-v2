@@ -17,10 +17,6 @@ export default function DisbursementApproval() {
           heading={'Pembuatan Persetujuan Pencairan'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Keuangan',
-              href: PATH_DASHBOARD.managementFinance.root
-            },
             { name: 'Persetujuan Pencairan' }
           ]}
         />

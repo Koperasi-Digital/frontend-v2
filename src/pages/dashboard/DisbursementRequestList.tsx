@@ -17,10 +17,6 @@ export default function DisbursementRequestList() {
           heading={'Daftar Pengajuan Pencairan'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Keuangan',
-              href: PATH_DASHBOARD.managementFinance.root
-            },
             { name: 'Daftar Pengajuan Pencairan' }
           ]}
         />

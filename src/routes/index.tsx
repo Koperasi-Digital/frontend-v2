@@ -319,16 +319,7 @@ export default function Router() {
         {
           path: 'finance',
           children: [
-            { element: <Navigate to="/dashboard/finance/home" replace /> },
-            {
-              path: 'home',
-              element: (
-                <RoleBasedGuard accessibleRoles={['MEMBER']}>
-                  <Finance />
-                </RoleBasedGuard>
-              )
-            },
-            { path: 'report', element: <TransactionsReport /> },
+            { element: <Navigate to="/dashboard/finance/create-disbursement-request" replace /> },
             { path: 'create-disbursement-request', element: <DisbursementRequest /> },
             {
               path: 'add-simpanan-sukarela',
@@ -364,15 +355,7 @@ export default function Router() {
           path: 'management-finance',
           children: [
             {
-              element: <Navigate to="/dashboard/management-finance/home" replace />
-            },
-            {
-              path: 'home',
-              element: (
-                <RoleBasedGuard accessibleRoles={['ADMIN']}>
-                  <AdminFinance />
-                </RoleBasedGuard>
-              )
+              element: <Navigate to="/dashboard/management-finance/disbursement-approval" replace />
             },
             {
               path: 'disbursement-approval',
@@ -523,9 +506,6 @@ const RequestMemberVerification = Loadable(
 );
 const CreateStore = Loadable(lazy(() => import('../pages/dashboard/CreateStore')));
 const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
-const Finance = Loadable(lazy(() => import('../pages/dashboard/Finance')));
-const AdminFinance = Loadable(lazy(() => import('../pages/dashboard/AdminFinance')));
-const TransactionsReport = Loadable(lazy(() => import('../pages/dashboard/TransactionsReport')));
 const DisbursementApproval = Loadable(
   lazy(() => import('../pages/dashboard/DisbursementApproval'))
 );

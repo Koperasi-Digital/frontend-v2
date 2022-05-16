@@ -19,10 +19,6 @@ export default function AddSimpananSukarela() {
           heading={'Penambahan Simpanan Sukarela'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Finance',
-              href: PATH_DASHBOARD.finance.root
-            },
             { name: 'Penambahan Simpanan Sukarela' }
           ]}
         />

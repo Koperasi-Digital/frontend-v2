@@ -13,8 +13,8 @@ import {
   BankingMemberSimpananPokok,
   BankingMemberSimpananWajib
 } from 'components/_dashboard/general-banking';
-import MemberFinance from 'pages/dashboard/Finance';
-import AdminFinance from 'pages/dashboard/AdminFinance';
+import { MemberFinance } from 'components/_dashboard/general-banking';
+import { AdminFinance } from 'components/_dashboard/general-banking';
 import { BankingTransactionsReport } from 'components/_dashboard/general-banking';
 import { RecentUsers, UserActiveness } from 'components/_dashboard/user';
 
