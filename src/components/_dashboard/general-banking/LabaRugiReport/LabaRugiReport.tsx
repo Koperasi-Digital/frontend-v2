@@ -49,8 +49,8 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
 
   const [currentLabaRugiData, setCurrentLabaRugiData] = useState<ILabaRugiData | undefined>();
   const [prevLabaRugiData, setPrevLabaRugiData] = useState<ILabaRugiData | undefined>();
-  const [incomePercent, setIncomePercent] = useState<number>(0);
-  const [expensePercent, setExpensePercent] = useState<number>(0);
+  const [incomePercent, setIncomePercent] = useState<number>();
+  const [expensePercent, setExpensePercent] = useState<number>();
   const [dataNotExist, setDataNotExist] = useState<Boolean>(false);
 
   const RowResultStyle = styled(TableRow)(({ theme }) => ({
@@ -129,108 +129,110 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
         </Box>
       ) : (
         <Grid container spacing={3}>
-          {currentLabaRugiData && prevLabaRugiData ? (
-            <Grid item xs={12}>
-              <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-                <LabaRugiReportToolbar
-                  currentLabaRugiData={currentLabaRugiData}
-                  incomePercent={incomePercent}
-                  expensePercent={expensePercent}
-                  dateValue={dateValue}
-                />
-              </Stack>
-            </Grid>
+          {currentLabaRugiData &&
+          prevLabaRugiData &&
+          incomePercent !== undefined &&
+          expensePercent !== undefined ? (
+            <>
+              <Grid item xs={12}>
+                <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
+                  <LabaRugiReportToolbar
+                    currentLabaRugiData={currentLabaRugiData}
+                    incomePercent={incomePercent}
+                    expensePercent={expensePercent}
+                    dateValue={dateValue}
+                  />
+                </Stack>
+              </Grid>
+              <Grid item xs={12}>
+                <TableContainer sx={{ minWidth: 100, minHeight: 20, mb: 10 }}>
+                  <Table>
+                    <TableHead
+                      sx={{
+                        borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                        '& th': { backgroundColor: 'transparent' }
+                      }}
+                    >
+                      <TableRow>
+                        <TableCell width={10}>#</TableCell>
+                        <TableCell align="left">Komponen</TableCell>
+                        <TableCell align="left">Jumlah</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="left">1</TableCell>
+                        <TableCell align="left">Jumlah Penjualan</TableCell>
+                        <TableCell align="left">
+                          {fCurrency(currentLabaRugiData.jumlahPenjualan)}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">2</TableCell>
+                        <TableCell align="left">Sisa Hasil Usaha</TableCell>
+                        <TableCell align="left">
+                          {fCurrency(currentLabaRugiData.sisaHasilUsaha)}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">3</TableCell>
+                        <TableCell align="left">Biaya Produksi Produk Terjual</TableCell>
+                        <TableCell align="left">
+                          {fCurrency(currentLabaRugiData.biayaProduksiProdukTerjual)}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">4</TableCell>
+                        <TableCell align="left">Biaya Simpanan Pokok</TableCell>
+                        <TableCell align="left">
+                          {fCurrency(currentLabaRugiData.biayaSimpananPokok)}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">5</TableCell>
+                        <TableCell align="left">Biaya Simpanan Wajib</TableCell>
+                        <TableCell align="left">
+                          {fCurrency(currentLabaRugiData.biayaSimpananWajib)}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">5</TableCell>
+                        <TableCell align="left">Biaya Operasi</TableCell>
+                        <TableCell align="left">
+                          {fCurrency(currentLabaRugiData.biayaOperasi)}
+                        </TableCell>
+                      </TableRow>
+                      <RowResultStyle>
+                        <TableCell width={10}></TableCell>
+                        <TableCell align="left">Net</TableCell>
+                        <TableCell align="left">{fCurrency(currentLabaRugiData.net)}</TableCell>
+                      </RowResultStyle>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+              <Grid item xs={12} md={8}>
+                <Stack spacing={2}>
+                  <BalanceStatistics dateValue={dateValue} />
+                  <ExpensesCategories dateValue={dateValue} />
+                </Stack>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Stack spacing={2}>
+                  <Income
+                    currentLabaRugiData={currentLabaRugiData}
+                    prevLabaRugiData={prevLabaRugiData}
+                    incomePercent={incomePercent}
+                  />
+                  <Expenses
+                    currentLabaRugiData={currentLabaRugiData}
+                    prevLabaRugiData={prevLabaRugiData}
+                    expensePercent={expensePercent}
+                  />
+                </Stack>
+              </Grid>
+            </>
           ) : null}
-          {currentLabaRugiData ? (
-            <Grid item xs={12}>
-              <TableContainer sx={{ minWidth: 100, minHeight: 20, mb: 10 }}>
-                <Table>
-                  <TableHead
-                    sx={{
-                      borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
-                      '& th': { backgroundColor: 'transparent' }
-                    }}
-                  >
-                    <TableRow>
-                      <TableCell width={10}>#</TableCell>
-                      <TableCell align="left">Komponen</TableCell>
-                      <TableCell align="left">Jumlah</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="left">1</TableCell>
-                      <TableCell align="left">Jumlah Penjualan</TableCell>
-                      <TableCell align="left">
-                        {fCurrency(currentLabaRugiData.jumlahPenjualan)}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">2</TableCell>
-                      <TableCell align="left">Sisa Hasil Usaha</TableCell>
-                      <TableCell align="left">
-                        {fCurrency(currentLabaRugiData.sisaHasilUsaha)}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">3</TableCell>
-                      <TableCell align="left">Biaya Produksi Produk Terjual</TableCell>
-                      <TableCell align="left">
-                        {fCurrency(currentLabaRugiData.biayaProduksiProdukTerjual)}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">4</TableCell>
-                      <TableCell align="left">Biaya Simpanan Pokok</TableCell>
-                      <TableCell align="left">
-                        {fCurrency(currentLabaRugiData.biayaSimpananPokok)}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">5</TableCell>
-                      <TableCell align="left">Biaya Simpanan Wajib</TableCell>
-                      <TableCell align="left">
-                        {fCurrency(currentLabaRugiData.biayaSimpananWajib)}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">5</TableCell>
-                      <TableCell align="left">Biaya Operasi</TableCell>
-                      <TableCell align="left">
-                        {fCurrency(currentLabaRugiData.biayaOperasi)}
-                      </TableCell>
-                    </TableRow>
-                    <RowResultStyle>
-                      <TableCell width={10}></TableCell>
-                      <TableCell align="left">Net</TableCell>
-                      <TableCell align="left">{fCurrency(currentLabaRugiData.net)}</TableCell>
-                    </RowResultStyle>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-          ) : null}
-
-          <Grid item xs={12} md={8}>
-            <Stack spacing={2}>
-              <BalanceStatistics dateValue={dateValue} />
-              <ExpensesCategories dateValue={dateValue} />
-            </Stack>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Stack spacing={2}>
-              <Income
-                currentLabaRugiData={currentLabaRugiData}
-                prevLabaRugiData={prevLabaRugiData}
-                incomePercent={incomePercent}
-              />
-              <Expenses
-                currentLabaRugiData={currentLabaRugiData}
-                prevLabaRugiData={prevLabaRugiData}
-                expensePercent={expensePercent}
-              />
-            </Stack>
-          </Grid>
         </Grid>
       )}
     </>

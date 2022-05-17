@@ -36,10 +36,10 @@ type CoopLabaRugiReportProps = {
 export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProps) {
   const [currentCoopLabaRugiData, setCurrentCoopLabaRugiData] = useState<
     CoopLabaRugiData | undefined
-  >(undefined);
+  >();
   const [prevCoopLabaRugiData, setPrevCoopLabaRugiData] = useState<CoopLabaRugiData | undefined>();
-  const [incomePercent, setIncomePercent] = useState<number>(0);
-  const [expensePercent, setExpensePercent] = useState<number>(0);
+  const [incomePercent, setIncomePercent] = useState<number>();
+  const [expensePercent, setExpensePercent] = useState<number>();
   const [dataNotExist, setDataNotExist] = useState<Boolean>(false);
 
   const RowResultStyle = styled(TableRow)(({ theme }) => ({
@@ -112,101 +112,103 @@ export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProp
         </Box>
       ) : (
         <Grid container spacing={3}>
-          {currentCoopLabaRugiData && prevCoopLabaRugiData ? (
-            <Grid item xs={12}>
-              <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-                <CoopLabaRugiReportToolbar
-                  currentCoopLabaRugiData={currentCoopLabaRugiData}
-                  incomePercent={incomePercent}
-                  expensePercent={expensePercent}
-                  dateValue={dateValue}
-                />
-              </Stack>
-            </Grid>
+          {currentCoopLabaRugiData &&
+          prevCoopLabaRugiData &&
+          incomePercent !== undefined &&
+          expensePercent !== undefined ? (
+            <>
+              <Grid item xs={12}>
+                <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
+                  <CoopLabaRugiReportToolbar
+                    currentCoopLabaRugiData={currentCoopLabaRugiData}
+                    incomePercent={incomePercent}
+                    expensePercent={expensePercent}
+                    dateValue={dateValue}
+                  />
+                </Stack>
+              </Grid>
+              <Grid item xs={12}>
+                <TableContainer sx={{ minWidth: 100, minHeight: 20, mb: 10 }}>
+                  <Table>
+                    <TableHead
+                      sx={{
+                        borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                        '& th': { backgroundColor: 'transparent' }
+                      }}
+                    >
+                      <TableRow>
+                        <TableCell width={10}>#</TableCell>
+                        <TableCell align="left">Komponen</TableCell>
+                        <TableCell align="left">Jumlah</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="left">1</TableCell>
+                        <TableCell align="left">Jumlah Simpanan Pokok</TableCell>
+                        <TableCell align="left">
+                          {fCurrency(currentCoopLabaRugiData.jumlahSimpananPokok)}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">2</TableCell>
+                        <TableCell align="left">Jumlah Simpanan Wajib</TableCell>
+                        <TableCell align="left">
+                          {fCurrency(currentCoopLabaRugiData.jumlahSimpananWajib)}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">3</TableCell>
+                        <TableCell align="left">Jumlah Biaya Layanan</TableCell>
+                        <TableCell align="left">
+                          {fCurrency(currentCoopLabaRugiData.jumlahBiayaLayanan)}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">4</TableCell>
+                        <TableCell align="left">Biaya Sisa Hasil Usaha</TableCell>
+                        <TableCell align="left">
+                          {fCurrency(currentCoopLabaRugiData.biayaSisaHasilUsaha)}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">5</TableCell>
+                        <TableCell align="left">Biaya Operasi</TableCell>
+                        <TableCell align="left">
+                          {fCurrency(currentCoopLabaRugiData.biayaOperasi)}
+                        </TableCell>
+                      </TableRow>
+                      <RowResultStyle>
+                        <TableCell width={10}></TableCell>
+                        <TableCell align="left">Net</TableCell>
+                        <TableCell align="left">{fCurrency(currentCoopLabaRugiData.net)}</TableCell>
+                      </RowResultStyle>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+              <Grid item xs={12} md={8}>
+                <Stack spacing={2}>
+                  <BalanceStatistics dateValue={dateValue} />
+                  <ExpensesCategories dateValue={dateValue} />
+                </Stack>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Stack spacing={2}>
+                  <Income
+                    currentCoopLabaRugiData={currentCoopLabaRugiData}
+                    prevCoopLabaRugiData={prevCoopLabaRugiData}
+                    incomePercent={incomePercent}
+                  />
+                  <Expenses
+                    currentCoopLabaRugiData={currentCoopLabaRugiData}
+                    prevCoopLabaRugiData={prevCoopLabaRugiData}
+                    expensePercent={expensePercent}
+                  />
+                </Stack>
+              </Grid>
+            </>
           ) : null}
-          {currentCoopLabaRugiData ? (
-            <Grid item xs={12}>
-              <TableContainer sx={{ minWidth: 100, minHeight: 20, mb: 10 }}>
-                <Table>
-                  <TableHead
-                    sx={{
-                      borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
-                      '& th': { backgroundColor: 'transparent' }
-                    }}
-                  >
-                    <TableRow>
-                      <TableCell width={10}>#</TableCell>
-                      <TableCell align="left">Komponen</TableCell>
-                      <TableCell align="left">Jumlah</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="left">1</TableCell>
-                      <TableCell align="left">Jumlah Simpanan Pokok</TableCell>
-                      <TableCell align="left">
-                        {fCurrency(currentCoopLabaRugiData.jumlahSimpananPokok)}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">2</TableCell>
-                      <TableCell align="left">Jumlah Simpanan Wajib</TableCell>
-                      <TableCell align="left">
-                        {fCurrency(currentCoopLabaRugiData.jumlahSimpananWajib)}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">3</TableCell>
-                      <TableCell align="left">Jumlah Biaya Layanan</TableCell>
-                      <TableCell align="left">
-                        {fCurrency(currentCoopLabaRugiData.jumlahBiayaLayanan)}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">4</TableCell>
-                      <TableCell align="left">Biaya Sisa Hasil Usaha</TableCell>
-                      <TableCell align="left">
-                        {fCurrency(currentCoopLabaRugiData.biayaSisaHasilUsaha)}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">5</TableCell>
-                      <TableCell align="left">Biaya Operasi</TableCell>
-                      <TableCell align="left">
-                        {fCurrency(currentCoopLabaRugiData.biayaOperasi)}
-                      </TableCell>
-                    </TableRow>
-                    <RowResultStyle>
-                      <TableCell width={10}></TableCell>
-                      <TableCell align="left">Net</TableCell>
-                      <TableCell align="left">{fCurrency(currentCoopLabaRugiData.net)}</TableCell>
-                    </RowResultStyle>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-          ) : null}
-
-          <Grid item xs={12} md={8}>
-            <Stack spacing={2}>
-              <BalanceStatistics dateValue={dateValue} />
-              <ExpensesCategories dateValue={dateValue} />
-            </Stack>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Stack spacing={2}>
-              <Income
-                currentCoopLabaRugiData={currentCoopLabaRugiData}
-                prevCoopLabaRugiData={prevCoopLabaRugiData}
-                incomePercent={incomePercent}
-              />
-              <Expenses
-                currentCoopLabaRugiData={currentCoopLabaRugiData}
-                prevCoopLabaRugiData={prevCoopLabaRugiData}
-                expensePercent={expensePercent}
-              />
-            </Stack>
-          </Grid>
         </Grid>
       )}
     </>
