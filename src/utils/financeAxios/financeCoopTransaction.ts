@@ -25,15 +25,9 @@ export async function handleListCoopTransactions(fromDate: string, toDate: strin
   }
 }
 
-export async function handleShowUserCoopTransaction(
-  destUserId: number,
-  fromDate: string,
-  toDate: string
-) {
+export async function handleShowUserCoopTransaction(fromDate: string, toDate: string) {
   try {
-    const response = await axios.get(
-      'coop-transaction/show-user/' + destUserId + '/' + fromDate + '/' + toDate
-    );
+    const response = await axios.get('coop-transaction/show-user/' + fromDate + '/' + toDate);
     return response.data.payload;
   } catch (e) {
     console.log(e);
