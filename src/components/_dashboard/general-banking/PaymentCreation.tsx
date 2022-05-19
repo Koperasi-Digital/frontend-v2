@@ -59,6 +59,7 @@ export const paymentFunction = async (
     },
     onClose: function () {
       setLoadingSnap(false);
+      window.location.href = redirectURL ? redirectURL : coopChickCurrentURL;
     }
   };
 
