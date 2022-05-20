@@ -51,28 +51,16 @@ import useAuth from 'hooks/useAuth';
 
 type Transaction = {
   id: string;
-  order_id: string;
   order_details_table_id: string;
   time: Date;
   type: string;
-  payment_type: string;
   order_total_cost: number;
   total_cost: number;
   order_details_subtotal: number;
   status: string;
-  simpananpokok_id: number;
-  simpananwajib_id: number;
-  simpanan_sukarela_id: number;
-  sisahasilusaha_id: string;
-  reimbursement_id: string;
-  sisahasilusaha_total_cost: number;
-  reimbursement_total_cost: number;
   firstuser_id: number;
   firstuser_display_name: string;
-  firstuser_photo_url: string;
-  destuser_id: number;
   destuser_display_name: string;
-  destuser_photo_url: string;
 };
 
 type MoreMenuButtonProps = {
@@ -223,12 +211,6 @@ export default function BankingTransactionsReport() {
           toDateValue.getMonth() + 1
         }-${toDateValue.getDate()} 23:59:59`;
         let fetchedTransactionList = await handleListTransactions(fromDateString, toDateString);
-        fetchedTransactionList = fetchedTransactionList.filter(
-          (transaction: Transaction) =>
-            transaction.simpananpokok_id === null &&
-            transaction.simpananwajib_id === null &&
-            transaction.simpanan_sukarela_id === null
-        );
         const fetchedCoopTransactionList = await handleShowUserCoopTransaction(
           fromDateString,
           toDateString
