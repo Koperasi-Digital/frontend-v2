@@ -107,10 +107,9 @@ export function registerEMoney(phoneNumber: string, paymentType: string, country
       if (responseData.account_status !== 'ENABLED') {
         if (responseData.actions) {
           dispatch(slice.actions.setRegisterStep(1));
-          window.location.href = responseData.actions[0].url;
-        } else {
-          //for mock request
-          window.location.href = './';
+          setTimeout(() => {
+            window.location.href = responseData.actions[0].url;
+          }, 1000);
         }
       } else {
         dispatch(slice.actions.setRegisterStep(2));
