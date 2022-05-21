@@ -45,22 +45,17 @@ import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
 
-import { handleListTransactions } from 'utils/financeAxios/financeTransaction';
-import { handleShowUserCoopTransaction } from 'utils/financeAxios/financeCoopTransaction';
-import useAuth from 'hooks/useAuth';
+import { handleListCoopTransactions } from 'utils/financeAxios/financeCoopTransaction';
 
-type Transaction = {
+type CoopTransaction = {
   id: string;
-  order_details_table_id: string;
-  time: Date;
   type: string;
-  order_total_cost: number;
+  time: Date;
   total_cost: number;
-  order_details_subtotal: number;
   status: string;
-  firstuser_id: number;
-  firstuser_display_name: string;
-  destuser_display_name: string;
+  destUser: {
+    displayName: string;
+  };
 };
 
 type MoreMenuButtonProps = {
@@ -130,24 +125,19 @@ function MoreMenuButton({ onDownload, onPrint, onShare, onDelete }: MoreMenuButt
   );
 }
 
-export function isOutcome(transaction: Transaction, userId: number) {
-  return (
-    transaction.firstuser_id === userId ||
-    transaction.type === 'simpanan pokok' ||
-    transaction.type === 'simpanan wajib' ||
-    transaction.type === 'simpanan sukarela'
-  );
+export function isOutcome(coopTransaction: CoopTransaction) {
+  return coopTransaction.type === 'sisa hasil usaha' || coopTransaction.type === 'reimbursement';
 }
 
-export default function BankingTransactionsReport() {
+export default function BankingCoopTransactionsReport() {
   // Transactions Filter
   const filterDropdownRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [filterMode, setFilterMode] = useState<string>('All');
-  const [allTransactionData, setAllTransactionData] = useState<Transaction[]>([]);
-  const [filteredTransactionData, setFilteredTransactionData] = useState<Transaction[]>([]);
-  const { user } = useAuth();
-  const userId = user?.id;
+  const [allCoopTransactionData, setAllCoopTransactionData] = useState<CoopTransaction[]>([]);
+  const [filteredCoopTransactionData, setFilteredCoopTransactionData] = useState<CoopTransaction[]>(
+    []
+  );
   const handleOpen = () => {
     setOpen(true);
   };
@@ -160,19 +150,19 @@ export default function BankingTransactionsReport() {
     setFilterMode(filterName);
 
     if (filterName === 'All') {
-      setFilteredTransactionData(allTransactionData);
+      setFilteredCoopTransactionData(allCoopTransactionData);
     } else if (filterName === 'income') {
       let result = [];
-      result = allTransactionData.filter((data) => {
-        return !isOutcome(data, userId);
+      result = allCoopTransactionData.filter((data) => {
+        return !isOutcome(data);
       });
-      setFilteredTransactionData(result);
+      setFilteredCoopTransactionData(result);
     } else if (filterName === 'outcome') {
       let result = [];
-      result = allTransactionData.filter((data) => {
-        return isOutcome(data, userId);
+      result = allCoopTransactionData.filter((data) => {
+        return isOutcome(data);
       });
-      setFilteredTransactionData(result);
+      setFilteredCoopTransactionData(result);
     }
   };
 
@@ -187,7 +177,7 @@ export default function BankingTransactionsReport() {
     setPage(0);
   };
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredTransactionData.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredCoopTransactionData.length) : 0;
 
   //Date picker
   const [fromDateValue, setFromDateValue] = useState<Date | null>(new Date());
@@ -203,32 +193,31 @@ export default function BankingTransactionsReport() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (userId && fromDateValue && toDateValue) {
+      if (fromDateValue && toDateValue) {
         const fromDateString = `${fromDateValue.getFullYear()}-${
           fromDateValue.getMonth() + 1
         }-${fromDateValue.getDate()} 0:0:0`;
         const toDateString = `${toDateValue.getFullYear()}-${
           toDateValue.getMonth() + 1
         }-${toDateValue.getDate()} 23:59:59`;
-        let fetchedTransactionList = await handleListTransactions(fromDateString, toDateString);
-        const fetchedCoopTransactionList = await handleShowUserCoopTransaction(
+        const fetchedCoopTransactionList = await handleListCoopTransactions(
           fromDateString,
           toDateString
         );
-        if (fetchedTransactionList && fetchedCoopTransactionList) {
-          setAllTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
-          setFilteredTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+        if (fetchedCoopTransactionList) {
+          setAllCoopTransactionData(fetchedCoopTransactionList);
+          setFilteredCoopTransactionData(fetchedCoopTransactionList);
         }
       }
     };
     fetchData();
-  }, [userId, fromDateValue, toDateValue]);
+  }, [fromDateValue, toDateValue]);
 
   return (
     <>
       <Card sx={{ padding: 5 }}>
         <CardHeader
-          title={<Typography variant="h6">Riwayat transaksi</Typography>}
+          title={<Typography variant="h6">Riwayat transaksi koperasi</Typography>}
           sx={{ mb: 3 }}
         />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -317,26 +306,25 @@ export default function BankingTransactionsReport() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Description</TableCell>
-                  <TableCell>Date</TableCell>
-                  <TableCell>Amount</TableCell>
+                  <TableCell>Deskripsi</TableCell>
+                  <TableCell>Tanggal</TableCell>
+                  <TableCell>Jumlah</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? filteredTransactionData.slice(
+                  ? filteredCoopTransactionData.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
-                  : filteredTransactionData
+                  : filteredCoopTransactionData
                 ).map((row) => (
-                  <TableRow key={row.order_details_table_id ? row.order_details_table_id : row.id}>
+                  <TableRow key={row.id}>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Box sx={{ position: 'relative' }}>
-                          {/* {renderAvatar(row)} */}
                           <Box
                             sx={{
                               right: 0,
@@ -350,14 +338,14 @@ export default function BankingTransactionsReport() {
                               color: 'common.white',
                               bgcolor: 'success.main',
                               justifyContent: 'center',
-                              ...(isOutcome(row, userId) && {
+                              ...(isOutcome(row) && {
                                 bgcolor: 'error.main'
                               })
                             }}
                           >
                             <Icon
                               icon={
-                                isOutcome(row, userId)
+                                isOutcome(row)
                                   ? diagonalArrowRightUpFill
                                   : diagonalArrowLeftDownFill
                               }
@@ -368,19 +356,9 @@ export default function BankingTransactionsReport() {
                         </Box>
                         <Box sx={{ ml: 2 }}>
                           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            {row.type
-                              ? row.type
-                              : row.firstuser_id === userId
-                              ? row.destuser_display_name
-                              : row.firstuser_display_name}
+                            {row.type}
                           </Typography>
-                          <Typography variant="subtitle2">
-                            {row.type
-                              ? row.type
-                              : row.firstuser_id === userId
-                              ? row.destuser_display_name
-                              : row.firstuser_display_name}
-                          </Typography>
+                          <Typography variant="subtitle2">{row.destUser.displayName}</Typography>
                         </Box>
                       </Box>
                     </TableCell>
@@ -398,15 +376,7 @@ export default function BankingTransactionsReport() {
                       </Typography>
                     </TableCell>
 
-                    <TableCell>
-                      {fCurrency(
-                        row.order_details_subtotal
-                          ? row.order_details_subtotal
-                          : row.order_total_cost
-                          ? row.order_total_cost
-                          : row.total_cost
-                      )}
-                    </TableCell>
+                    <TableCell>{fCurrency(row.total_cost)}</TableCell>
 
                     <TableCell>
                       <Label
@@ -444,7 +414,7 @@ export default function BankingTransactionsReport() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={filteredTransactionData.length}
+          count={filteredCoopTransactionData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

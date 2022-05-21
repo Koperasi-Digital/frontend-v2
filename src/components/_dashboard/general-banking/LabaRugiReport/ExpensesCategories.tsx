@@ -33,7 +33,7 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [chartData, setChartData] = useState<number[]>([]);
+  const [chartData, setChartData] = useState<number[]>();
 
   const [chartOptions] = useState<any>({
     chart: { id: 'banking-expense-categories' },
@@ -85,17 +85,20 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
   return (
     <RootStyle>
       <CardHeader title="Expenses Categories" />
-      <Scrollbar>
-        <Box sx={{ my: 5 }} dir="ltr">
-          <ReactApexChart
-            options={chartOptions}
-            series={chartData}
-            type="pie"
-            height={isMobile ? 240 : 250}
-            width={isMobile ? 700 : 800}
-          />
-        </Box>
-      </Scrollbar>
+      {chartData ? (
+        <Scrollbar>
+          <Box sx={{ my: 5 }} dir="ltr">
+            <ReactApexChart
+              options={chartOptions}
+              series={chartData}
+              type="pie"
+              height={isMobile ? 240 : 250}
+              width={isMobile ? 700 : 800}
+            />
+          </Box>
+        </Scrollbar>
+      ) : null}
+
       <Divider />
     </RootStyle>
   );
