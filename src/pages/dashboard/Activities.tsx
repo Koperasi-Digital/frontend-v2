@@ -8,7 +8,7 @@ import { Button, Container } from '@mui/material';
 import { RootState, useDispatch, useSelector } from '../../redux/store';
 import { getEvents, openModal, closeModal, selectEvent } from '../../redux/slices/calendar';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_PAGE } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import { DialogAnimate } from '../../components/animate';
@@ -64,7 +64,7 @@ export default function Activities() {
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Aktivitas"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Aktivitas' }]}
+          links={[{ name: 'CoopChick', href: PATH_PAGE.homepage }, { name: 'Aktivitas' }]}
           action={
             <Button
               variant="contained"

@@ -21,7 +21,7 @@ import { paramCase } from 'change-case';
 // utils
 import axios from 'utils/axios';
 // routes
-import { PATH_DASHBOARD } from 'routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from 'routes/paths';
 // hooks
 import useIsMountedRef from 'hooks/useIsMountedRef';
 // components
@@ -104,7 +104,7 @@ export default function MemberVerification() {
         <HeaderBreadcrumbs
           heading="Verifikasi Calon Anggota Koperasi"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'CoopChick', href: PATH_PAGE.homepage },
             {
               name: 'Verifikasi Calon Anggota Koperasi',
               href: PATH_DASHBOARD.user.memberVerification.verify

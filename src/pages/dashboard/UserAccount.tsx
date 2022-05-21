@@ -13,7 +13,7 @@ import useAuth from 'hooks/useAuth';
 import { RootState, useDispatch, useSelector } from 'redux/store';
 import { getAddressBook } from 'redux/slices/user';
 // routes
-import { PATH_DASHBOARD } from 'routes/paths';
+import { PATH_PAGE } from 'routes/paths';
 // types
 import { AuthUser } from '../../@types/authentication';
 import { UserManager } from '../../@types/user';
@@ -106,11 +106,7 @@ export default function UserAccount() {
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Akun Saya"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Pengguna', href: PATH_DASHBOARD.user.root },
-            { name: 'Akun Saya' }
-          ]}
+          links={[{ name: 'CoopChick', href: PATH_PAGE.homepage }, { name: 'Akun Saya' }]}
         />
 
         <Tabs
