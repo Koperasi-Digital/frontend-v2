@@ -15,7 +15,10 @@ import {
 } from 'components/_dashboard/general-banking';
 import { MemberFinance } from 'components/_dashboard/general-banking';
 import { AdminFinance } from 'components/_dashboard/general-banking';
-import { BankingTransactionsReport } from 'components/_dashboard/general-banking';
+import {
+  BankingTransactionsReport,
+  BankingCoopTransactionsReport
+} from 'components/_dashboard/general-banking';
 import { RecentUsers, UserActiveness } from 'components/_dashboard/user';
 
 // ----------------------------------------------------------------------
@@ -61,7 +64,7 @@ function AdminDashboard() {
         <BankingMemberSimpananWajib />
       </Grid>
       <Grid item xs={12}>
-        <BankingTransactionsReport />
+        <BankingCoopTransactionsReport />
       </Grid>
       <Grid item xs={12}>
         <AdminFinance />

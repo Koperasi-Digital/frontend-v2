@@ -1,4 +1,5 @@
 export { default as BankingTransactionsReport } from './BankingTransactionsReport';
+export { default as BankingCoopTransactionsReport } from './BankingCoopTransactionsReport';
 export { default as DisbursementApprovalForm } from './DisbursementApprovalForm';
 export { default as DisbursementRequestList } from './DisbursementRequestListTable';
 export { default as PaymentCreation } from './PaymentCreation';
