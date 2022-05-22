@@ -104,7 +104,7 @@ export default function MemberVerification() {
         <HeaderBreadcrumbs
           heading="Verifikasi Calon Anggota Koperasi"
           links={[
-            { name: 'CoopChick', href: PATH_PAGE.homepage },
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Verifikasi Calon Anggota Koperasi',
               href: PATH_DASHBOARD.user.memberVerification.verify
