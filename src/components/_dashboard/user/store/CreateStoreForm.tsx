@@ -131,6 +131,7 @@ export default function CreateStoreForm() {
           <Grid item>
             <TextField
               fullWidth
+              type="number"
               label="Nomor Telepon"
               {...getFieldProps('phoneNumber')}
               error={Boolean(touched.phoneNumber && errors.phoneNumber)}

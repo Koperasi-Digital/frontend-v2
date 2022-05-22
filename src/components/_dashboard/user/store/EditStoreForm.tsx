@@ -112,6 +112,7 @@ export default function AccountInformationEdit() {
 
                 <TextField
                   fullWidth
+                  type="number"
                   label="Nomor Telepon"
                   {...getFieldProps('phoneNumber')}
                   error={Boolean(touched.phoneNumber && errors.phoneNumber)}
