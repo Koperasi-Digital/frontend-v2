@@ -61,18 +61,24 @@ export default function MainFooter() {
                   <Typography component="p" variant="overline">
                     {list.headline}
                   </Typography>
-                  {list.children.map((link) => (
-                    <Link
-                      to={link.href}
-                      key={link.name}
-                      color="inherit"
-                      variant="body2"
-                      component={RouterLink}
-                      sx={{ display: 'block' }}
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
+                  {list.children.map((link) =>
+                    link.href === '#' ? (
+                      <Typography variant="body2" color="inherit">
+                        {link.name}
+                      </Typography>
+                    ) : (
+                      <Link
+                        to={link.href}
+                        key={link.name}
+                        color="inherit"
+                        variant="body2"
+                        component={RouterLink}
+                        sx={{ display: 'block' }}
+                      >
+                        {link.name}
+                      </Link>
+                    )
+                  )}
                 </Stack>
               ))}
             </Stack>
