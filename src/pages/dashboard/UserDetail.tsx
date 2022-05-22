@@ -49,8 +49,8 @@ export default function UserDetail() {
           heading="Detail Pengguna"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Pengguna', href: PATH_DASHBOARD.user.root },
-            { name: name }
+            { name: 'Pengguna', href: PATH_DASHBOARD.user.list },
+            { name }
           ]}
         />
 
