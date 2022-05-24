@@ -45,6 +45,8 @@ import {
 // utils
 import { EVENT_COLOR } from 'utils/calendar';
 import axios from 'utils/axios';
+// components
+import { DialogAnimate } from 'components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -115,6 +117,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
   const isOrganizer = isCreating || user?.id === event.createdBy.id;
   const [isReadOnly, setIsReadOnly] = useState(!isCreating);
   const { error } = useSelector((state: RootState) => state.calendar);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
   const EventSchema = Yup.object().shape({
     title: Yup.string().max(255).required('Nama aktivitas harus diisi'),
@@ -372,7 +375,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
           {!isCreating && isReadOnly && (
             <>
               <Tooltip title={isOrganizer ? 'Hapus Aktivitas' : 'Hapus Invitasi'}>
-                <IconButton onClick={handleDelete}>
+                <IconButton onClick={isOrganizer ? () => setIsOpenDeleteModal(true) : handleDelete}>
                   <Icon icon={trash2Fill} width={20} height={20} />
                 </IconButton>
               </Tooltip>
@@ -383,6 +386,23 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
                   </IconButton>
                 </Tooltip>
               )}
+              <DialogAnimate open={isOpenDeleteModal} onClose={() => setIsOpenDeleteModal(false)}>
+                <DialogTitle sx={{ pb: 1 }}>Hapus Aktivitas?</DialogTitle>
+                <DialogContent sx={{ overflowY: 'unset' }}>
+                  <Typography align={'justify'}>
+                    Aktivitas yang sudah dihapus akan hilang selamanya! Apakah Anda tetap ingin
+                    menghapus aktivitas?
+                  </Typography>
+                  <Box display="flex" justifyContent="end" gap={2} pt={2} pb={1}>
+                    <Button variant="contained" onClick={handleDelete} color="error">
+                      Hapus
+                    </Button>
+                    <Button variant="contained" onClick={() => setIsOpenDeleteModal(false)}>
+                      Batal
+                    </Button>
+                  </Box>
+                </DialogContent>
+              </DialogAnimate>
             </>
           )}
           <Box sx={{ flexGrow: 1 }} />
@@ -402,7 +422,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
               loadingIndicator="Loading..."
               disabled={isReadOnly}
             >
-              {isCreating ? 'Tambah' : 'Edit'}
+              {isCreating ? 'Tambah' : 'Simpan'}
             </LoadingButton>
           )}
         </DialogActions>
