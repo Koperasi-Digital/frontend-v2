@@ -130,14 +130,20 @@ export default function BankingTransactionsReport() {
         const toDateString = `${toDateValue.getFullYear()}-${
           toDateValue.getMonth() + 1
         }-${toDateValue.getDate()} 23:59:59`;
-        let fetchedTransactionList = await handleListTransactions(fromDateString, toDateString);
+        const fetchedTransactionList = await handleListTransactions(fromDateString, toDateString);
         const fetchedCoopTransactionList = await handleShowUserCoopTransaction(
           fromDateString,
           toDateString
         );
+        let fetchedAllTransactionList = [...fetchedTransactionList, ...fetchedCoopTransactionList];
+        fetchedAllTransactionList = fetchedAllTransactionList.sort((a, b) => {
+          let da = new Date(a.time),
+            db = new Date(b.time);
+          return db.valueOf() - da.valueOf();
+        });
         if (fetchedTransactionList && fetchedCoopTransactionList) {
-          setAllTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
-          setFilteredTransactionData([...fetchedTransactionList, ...fetchedCoopTransactionList]);
+          setAllTransactionData(fetchedAllTransactionList);
+          setFilteredTransactionData(fetchedAllTransactionList);
         }
       }
     };
