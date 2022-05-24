@@ -51,6 +51,10 @@ type SimpananPokokProps = {
   };
 };
 
+const isLunas = (simpananPokok: SimpananPokokProps) => {
+  return simpananPokok.order && simpananPokok.order.status === 'LUNAS';
+};
+
 export default function BankingMemberSimpananPokok() {
   // Transactions Filter
   const filterDropdownRef = useRef(null);
@@ -77,9 +81,9 @@ export default function BankingMemberSimpananPokok() {
       let result = [];
       result = allSimpananPokokData.filter((data) => {
         if (filterName !== 'LUNAS') {
-          return !data.order || data.order.status !== 'success';
+          return !isLunas(data);
         } else {
-          return data.order && data.order.status === 'success';
+          return isLunas(data);
         }
       });
       setFilteredSimpananPokokData(result);
@@ -169,7 +173,7 @@ export default function BankingMemberSimpananPokok() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(rowsPerPage > 0
+                {(rowsPerPage > 0 && filteredSimpananPokokData
                   ? filteredSimpananPokokData.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
@@ -194,17 +198,9 @@ export default function BankingMemberSimpananPokok() {
                     <TableCell>
                       <Label
                         variant={isLight ? 'ghost' : 'filled'}
-                        color={
-                          (row.order && row.order.status === 'success' && 'success') || 'error'
-                        }
+                        color={(isLunas(row) && 'success') || 'error'}
                       >
-                        {sentenceCase(
-                          row.order
-                            ? row.order.status === 'success'
-                              ? 'LUNAS'
-                              : 'BELUM DIBAYAR'
-                            : 'TIDAK ADA ORDER'
-                        )}
+                        {sentenceCase(isLunas(row) ? 'LUNAS' : 'BELUM DIBAYAR')}
                       </Label>
                     </TableCell>
                   </TableRow>

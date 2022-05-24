@@ -59,6 +59,10 @@ type SimpananWajibProps = {
   };
 };
 
+const isLunas = (simpananWajib: SimpananWajibProps) => {
+  return simpananWajib.order && simpananWajib.order.status === 'LUNAS';
+};
+
 export default function BankingMemberSimpananWajib() {
   // Transactions Filter
   const filterDropdownRef = useRef(null);
@@ -88,9 +92,9 @@ export default function BankingMemberSimpananWajib() {
       let result = [];
       result = allSimpananWajibData.filter((data) => {
         if (filterName !== 'LUNAS') {
-          return !data.order || data.order.status !== 'success';
+          return !isLunas(data);
         } else {
-          return data.order && data.order.status === 'success';
+          return isLunas(data);
         }
       });
       setFilteredSimpananWajibData(result);
@@ -195,7 +199,7 @@ export default function BankingMemberSimpananWajib() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(rowsPerPage > 0
+                {(rowsPerPage > 0 && filteredSimpananWajibData
                   ? filteredSimpananWajibData.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
@@ -220,17 +224,9 @@ export default function BankingMemberSimpananWajib() {
                     <TableCell>
                       <Label
                         variant={isLight ? 'ghost' : 'filled'}
-                        color={
-                          (row.order && row.order.status === 'success' && 'success') || 'error'
-                        }
+                        color={(isLunas(row) && 'success') || 'error'}
                       >
-                        {sentenceCase(
-                          row.order
-                            ? row.order.status === 'success'
-                              ? 'LUNAS'
-                              : 'BELUM DIBAYAR'
-                            : 'No order data'
-                        )}
+                        {sentenceCase(isLunas(row) ? 'LUNAS' : 'BELUM DIBAYAR')}
                       </Label>
                     </TableCell>
                   </TableRow>
