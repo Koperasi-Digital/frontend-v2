@@ -126,7 +126,11 @@ function MoreMenuButton({ onDownload, onPrint, onShare, onDelete }: MoreMenuButt
 }
 
 export function isOutcome(coopTransaction: CoopTransaction) {
-  return coopTransaction.type === 'sisa hasil usaha' || coopTransaction.type === 'reimbursement';
+  return (
+    coopTransaction.type === 'sisa hasil usaha' ||
+    coopTransaction.type === 'reimbursement saldo' ||
+    coopTransaction.type === 'reimbursement simpanan-sukarela'
+  );
 }
 
 export default function BankingCoopTransactionsReport() {
