@@ -325,7 +325,7 @@ export function addProduct(product: ProductFormikProps) {
       // Upload product to product table
       console.log(product);
       const periode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
-      const response = await axios.post('/products/create', product);
+      await axios.post('/products/create', product);
       await handleAddEditProduct(
         periode,
         0,
@@ -333,7 +333,6 @@ export function addProduct(product: ProductFormikProps) {
         0,
         Number(product.productionCost)
       );
-      console.log(response.data.payload);
       dispatch(slice.actions.addProductSuccess());
     } catch (error) {
       console.error(error);
@@ -362,6 +361,23 @@ export function editProduct(
         prevProductionCost,
         Number(product.productionCost)
       );
+      dispatch(slice.actions.addProductSuccess());
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+export function deleteProduct(id: string) {
+  return async () => {
+    const { dispatch } = store;
+    dispatch(slice.actions.startLoading());
+    try {
+      // Delete product from table
+      console.log(id);
+      await axios.delete(`/products/${id}`);
       dispatch(slice.actions.addProductSuccess());
     } catch (error) {
       console.error(error);

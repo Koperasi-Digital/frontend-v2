@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { OrderDetailsSummary } from 'components/_dashboard/e-commerce/order-details';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
-import { PATH_DASHBOARD } from 'routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from 'routes/paths';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -38,7 +38,10 @@ export default function EcommerceOrderDetails() {
         <HeaderBreadcrumbs
           heading={'Order Details #' + (orderDetails && orderDetails.id)}
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            {
+              name: isSeller ? 'Dashboard' : 'Homepage',
+              href: isSeller ? PATH_DASHBOARD.root : PATH_PAGE.homepage
+            },
             {
               name: isSeller ? 'Seller Center' : 'E-Commerce',
               href: isSeller ? PATH_DASHBOARD.eCommerce.seller.root : PATH_DASHBOARD.eCommerce.root

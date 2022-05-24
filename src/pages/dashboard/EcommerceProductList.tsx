@@ -4,25 +4,28 @@ import { Icon } from '@iconify/react';
 import { paramCase, sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import editFill from '@iconify/icons-eva/edit-fill';
+import trash2Fill from '@iconify/icons-eva/trash-2-fill';
 // material
 import { useTheme, styled } from '@mui/material/styles';
 import {
   Box,
   Card,
+  DialogTitle,
+  DialogContent,
   Table,
   TableRow,
-  Checkbox,
   TableBody,
   TableCell,
   Container,
   IconButton,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  Button
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getProductsBySeller } from '../../redux/slices/product';
+import { deleteProduct, getProductsBySeller } from '../../redux/slices/product';
 // utils
 import { fCurrency } from '../../utils/formatNumber';
 // routes
@@ -40,6 +43,8 @@ import {
   ProductListToolbar
 } from '../../components/_dashboard/e-commerce/product-list';
 import useAuth from 'hooks/useAuth';
+import { DialogAnimate } from '../../components/animate';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -109,11 +114,29 @@ export default function EcommerceProductList() {
   const { products } = useSelector((state: { product: ProductState }) => state.product);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-  const [selected, setSelected] = useState<string[]>([]);
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [orderBy, setOrderBy] = useState('created_at');
+  const [isOpenModalDeleteProduct, setIsOpenModalDeleteProduct] = useState<boolean>(false);
+  const [selectedProduct, setSelectedProduct] = useState<string>('');
+  const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
+
+  const handleOpenModalDeleteProduct = (value: string) => {
+    setSelectedProduct(value);
+    setIsOpenModalDeleteProduct(!isOpenModalDeleteProduct);
+  };
+
+  const handleDeleteProduct = async () => {
+    setIsOpenModalDeleteProduct(!isOpenModalDeleteProduct);
+    try {
+      await dispatch(deleteProduct(selectedProduct));
+      await dispatch(getProductsBySeller(user?.id));
+      enqueueSnackbar(`Produk berhasil dihapus`, { variant: 'success' });
+    } catch (err) {
+      enqueueSnackbar(`Gagal menghapus Produk, mohon dicoba lagi!`, { variant: 'error' });
+    }
+  };
 
   useEffect(() => {
     dispatch(getProductsBySeller(user?.id));
@@ -123,34 +146,6 @@ export default function EcommerceProductList() {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (checked: boolean) => {
-    if (checked) {
-      const selected = products.map((n) => n.name);
-      setSelected(selected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: string[] = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    console.log(newSelected);
-    setSelected(newSelected);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -184,11 +179,7 @@ export default function EcommerceProductList() {
         />
 
         <Card>
-          <ProductListToolbar
-            numSelected={selected.length}
-            filterName={filterName}
-            onFilterName={handleFilterByName}
-          />
+          <ProductListToolbar filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -197,10 +188,7 @@ export default function EcommerceProductList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={products.length}
-                  numSelected={selected.length}
                   onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredProducts
@@ -209,21 +197,8 @@ export default function EcommerceProductList() {
                       const { id, name, cover, price, productionCost, sku, available, status } =
                         row;
 
-                      const isItemSelected = selected.indexOf(name) !== -1;
-
                       return (
-                        <TableRow
-                          hover
-                          key={id}
-                          tabIndex={-1}
-                          role="checkbox"
-                          selected={isItemSelected}
-                          aria-checked={isItemSelected}
-                          onClick={() => handleClick(id)}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox checked={isItemSelected} />
-                          </TableCell>
+                        <TableRow hover key={id} tabIndex={-1}>
                           <TableCell component="th" scope="row" padding="none">
                             <Box
                               sx={{
@@ -265,6 +240,14 @@ export default function EcommerceProductList() {
                                 <Icon icon={editFill} width={20} height={20} />
                               </Link>
                             </IconButton>
+                            <IconButton>
+                              <Icon
+                                icon={trash2Fill}
+                                width={20}
+                                height={20}
+                                onClick={() => handleOpenModalDeleteProduct(id)}
+                              />
+                            </IconButton>
                           </TableCell>
                         </TableRow>
                       );
@@ -299,6 +282,36 @@ export default function EcommerceProductList() {
             onPageChange={(event, value) => setPage(value)}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
+          <DialogAnimate
+            open={isOpenModalDeleteProduct}
+            onClose={() => setIsOpenModalDeleteProduct(!isOpenModalDeleteProduct)}
+          >
+            <DialogTitle sx={{ pb: 1 }}>Hapus Produk ?</DialogTitle>
+            <DialogContent sx={{ overflowY: 'unset' }}>
+              <Typography align={'justify'}>
+                Produk yang sudah dihapus akan hilang selamanya! Apakah anda tetap ingin menghapus
+                produk ini?
+              </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-around',
+                  p: 1.5
+                }}
+              >
+                <Button variant="contained" onClick={() => handleDeleteProduct()}>
+                  Hapus
+                </Button>
+                <Button
+                  color="error"
+                  variant="contained"
+                  onClick={() => setIsOpenModalDeleteProduct(!isOpenModalDeleteProduct)}
+                >
+                  Batal
+                </Button>
+              </Box>
+            </DialogContent>
+          </DialogAnimate>
         </Card>
       </Container>
     </Page>

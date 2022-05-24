@@ -85,8 +85,7 @@ export default function MonthlySales() {
   return (
     <Card>
       <CardHeader
-        title="Yearly Sales"
-        subheader="(+43%) than last year"
+        title={`Penjualan Setiap Bulan pada Tahun ${seriesData}`}
         action={
           <TextField
             select

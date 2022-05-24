@@ -28,12 +28,12 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-type ProductListToolbarProps = {
+type OrderListToolbarProps = {
   filterName: string;
   onFilterName: (value: string) => void;
 };
 
-export default function ProductListToolbar({ filterName, onFilterName }: ProductListToolbarProps) {
+export default function OrderListToolbar({ filterName, onFilterName }: OrderListToolbarProps) {
   return (
     <RootStyle>
       <SearchStyle
