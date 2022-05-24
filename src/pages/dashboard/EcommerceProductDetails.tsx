@@ -24,21 +24,6 @@ import ProductDetailsStore from 'components/_dashboard/e-commerce/product-detail
 
 // ----------------------------------------------------------------------
 
-// const IconWrapperStyle = styled('div')(({ theme }) => ({
-//   margin: 'auto',
-//   display: 'flex',
-//   borderRadius: '50%',
-//   alignItems: 'center',
-//   width: theme.spacing(8),
-//   justifyContent: 'center',
-//   height: theme.spacing(8),
-//   marginBottom: theme.spacing(3),
-//   color: theme.palette.primary.main,
-//   backgroundColor: `${alpha(theme.palette.primary.main, 0.08)}`
-// }));
-
-// ----------------------------------------------------------------------
-
 const SkeletonLoad = (
   <Grid container spacing={3}>
     <Grid item xs={12} md={6} lg={7}>
@@ -117,22 +102,6 @@ export default function EcommerceProductDetails() {
                 </Grid>
               </Grid>
             </Card>
-
-            {/* <Grid container sx={{ my: 8 }}>
-              {PRODUCT_DESCRIPTION.map((item) => (
-                <Grid item xs={12} md={4} key={item.title}>
-                  <Box sx={{ my: 2, mx: 'auto', maxWidth: 280, textAlign: 'center' }}>
-                    <IconWrapperStyle>
-                      <Icon icon={item.icon} width={36} height={36} />
-                    </IconWrapperStyle>
-                    <Typography variant="subtitle1" gutterBottom>
-                      {item.title}
-                    </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>{item.description}</Typography>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid> */}
 
             <Card>
               <TabContext value={value}>

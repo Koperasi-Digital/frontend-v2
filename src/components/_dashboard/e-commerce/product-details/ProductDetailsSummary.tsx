@@ -1,13 +1,15 @@
 import { Icon } from '@iconify/react';
-import { sentenceCase } from 'change-case';
+import { paramCase, sentenceCase } from 'change-case';
 import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+
 import plusFill from '@iconify/icons-eva/plus-fill';
 import minusFill from '@iconify/icons-eva/minus-fill';
 import { useFormik, Form, FormikProvider, useField } from 'formik';
 import roundAddShoppingCart from '@iconify/icons-ic/round-add-shopping-cart';
 // material
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Grid, Button, Divider, Typography, FormHelperText } from '@mui/material';
+import { Box, Grid, Link, Button, Divider, Typography, FormHelperText } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // utils
@@ -16,6 +18,7 @@ import { fCurrency } from '../../../../utils/formatNumber';
 import Label from '../../../Label';
 import { MIconButton } from '../../../@material-extend';
 import { Product, CartItem } from '../../../../@types/products';
+import editFill from '@iconify/icons-eva/edit-fill';
 
 // ----------------------------------------------------------------------
 
@@ -100,6 +103,7 @@ export default function ProductDetailsSummary({
   const { id, name, category, price, available, cover, status, store, weight } = product;
   const storeName = store.name || null;
   const storeCity = store.city || null;
+  const linkTo = `${PATH_DASHBOARD.eCommerce.seller.root}/product/${paramCase(id.toString())}/edit`;
 
   const alreadyProduct = cart.map((item) => item.id).includes(id);
   const isMaxQuantity =
@@ -115,7 +119,7 @@ export default function ProductDetailsSummary({
       price,
       quantity: available < 1 ? 0 : 1
     },
-    onSubmit: async (values, { setErrors, setSubmitting }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       try {
         let subtotal = values.price * values.quantity;
         let weightTotal = weight * values.quantity;
@@ -163,17 +167,37 @@ export default function ProductDetailsSummary({
     <RootStyle {...other}>
       <FormikProvider value={formik}>
         <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-          <Label
-            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-            color={status === 'Active' ? 'success' : 'error'}
-            sx={{ textTransform: 'uppercase' }}
-          >
-            {sentenceCase(status || '')}
-          </Label>
+          <Box display="flex" justifyContent="space-between">
+            <Box>
+              <Label
+                variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                color={status === 'Active' ? 'success' : 'error'}
+                sx={{ textTransform: 'uppercase' }}
+              >
+                {sentenceCase(status || '')}
+              </Label>
 
-          <Typography variant="h5" paragraph>
-            {name}
-          </Typography>
+              <Typography variant="h5" paragraph>
+                {name}
+              </Typography>
+            </Box>
+            {isSeller && (
+              <Box>
+                <Link
+                  to={linkTo}
+                  color="inherit"
+                  component={RouterLink}
+                  style={{
+                    textDecoration: 'none'
+                  }}
+                >
+                  <Button size="medium" variant="contained" startIcon={<Icon icon={editFill} />}>
+                    Edit Product
+                  </Button>
+                </Link>
+              </Box>
+            )}
+          </Box>
 
           <Typography variant="h4" sx={{ mb: 3 }}>
             {fCurrency(price)}
@@ -183,7 +207,7 @@ export default function ProductDetailsSummary({
 
           <Box
             sx={{
-              mb: 3,
+              mb: 2,
               display: 'flex',
               justifyContent: 'space-between'
             }}
@@ -196,7 +220,7 @@ export default function ProductDetailsSummary({
 
           <Box
             sx={{
-              mb: 3,
+              mb: 2,
               display: 'flex',
               justifyContent: 'space-between'
             }}
@@ -209,7 +233,7 @@ export default function ProductDetailsSummary({
 
           <Box
             sx={{
-              mb: 3,
+              mb: 2,
               display: 'flex',
               justifyContent: 'space-between'
             }}
@@ -222,7 +246,20 @@ export default function ProductDetailsSummary({
 
           <Box
             sx={{
-              mb: 3,
+              mb: 2,
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}
+          >
+            <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+              Berat per Item
+            </Typography>
+            <Typography sx={{ mt: 0.5 }}>{weight} gram</Typography>
+          </Box>
+
+          <Box
+            sx={{
+              mb: 2,
               display: 'flex',
               justifyContent: 'space-between'
             }}
@@ -254,7 +291,9 @@ export default function ProductDetailsSummary({
           <Box sx={{ mt: 5 }}>
             {available === 0 || isSeller ? (
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Typography>Produk tidak tersedia.</Typography>
+                <Typography>
+                  Produk tidak tersedia. {isSeller && 'Anda adalah penjual dari produk ini.'}
+                </Typography>
               </Box>
             ) : (
               <Grid container spacing={2}>
