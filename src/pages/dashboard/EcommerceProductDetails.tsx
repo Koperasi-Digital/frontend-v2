@@ -7,7 +7,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProduct, addCart, onGotoStep } from '../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // @types
 import { CartItem, ProductState } from '../../@types/products';
 // components
@@ -20,6 +20,7 @@ import {
 } from '../../components/_dashboard/e-commerce/product-details';
 import CartWidget from '../../components/_dashboard/e-commerce/CartWidget';
 import useAuth from 'hooks/useAuth';
+import ProductDetailsStore from 'components/_dashboard/e-commerce/product-details/ProductDetailsStore';
 
 // ----------------------------------------------------------------------
 
@@ -87,7 +88,7 @@ export default function EcommerceProductDetails() {
         <HeaderBreadcrumbs
           heading="Product Details"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Beranda', href: PATH_PAGE.homepage },
             {
               name: 'E-Commerce',
               href: PATH_DASHBOARD.eCommerce.root
@@ -138,12 +139,12 @@ export default function EcommerceProductDetails() {
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
                     <Tab disableRipple value="1" label="Deskripsi" />
-                    {/* <Tab
+                    <Tab
                       disableRipple
                       value="2"
-                      label={`Review (${product.reviews.length})`}
+                      label={`Informasi Toko`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
-                    /> */}
+                    />
                   </TabList>
                 </Box>
 
@@ -154,9 +155,11 @@ export default function EcommerceProductDetails() {
                     <Markdown children={product.description} />
                   </Box>
                 </TabPanel>
-                {/* <TabPanel value="2">
-                  <ProductDetailsReview product={product} />
-                </TabPanel> */}
+                <TabPanel value="2">
+                  <Box sx={{ p: 3 }}>
+                    <ProductDetailsStore store={product.store} />
+                  </Box>
+                </TabPanel>
               </TabContext>
             </Card>
           </>

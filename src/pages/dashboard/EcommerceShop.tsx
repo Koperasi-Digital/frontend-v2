@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts } from '../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_PAGE } from '../../routes/paths';
 // utils
 import fakeRequest from '../../utils/fakeRequest';
 // @types
@@ -99,7 +99,7 @@ export default function EcommerceShop() {
   };
 
   return (
-    <Page title="Ecommerce: Shop | CoopChick">
+    <Page title="Ecommerce | CoopChick">
       {values && (
         <Backdrop open={isSubmitting} sx={{ zIndex: 9999 }}>
           <CircularProgress />
@@ -108,14 +108,12 @@ export default function EcommerceShop() {
 
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Shop"
+          heading="E-Commerce"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Beranda', href: PATH_PAGE.homepage },
             {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root
-            },
-            { name: 'Shop' }
+              name: 'E-Commerce'
+            }
           ]}
         />
 

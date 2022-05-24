@@ -20,7 +20,7 @@ export default function CheckoutBillingInfo({ onBackStep }: CheckoutBillingInfoP
   return (
     <Card sx={{ mb: 3 }}>
       <CardHeader
-        title="Billing Address"
+        title="Alamat Pengiriman"
         action={
           <Button
             size="small"

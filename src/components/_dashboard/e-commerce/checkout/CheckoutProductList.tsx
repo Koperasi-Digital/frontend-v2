@@ -68,7 +68,7 @@ function Incrementer({ available, quantity, onIncrease, onDecrease }: Incremente
         </MIconButton>
       </IncrementerStyle>
       <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-        available: {available}
+        tersedia: {available}
       </Typography>
     </Box>
   );
@@ -92,10 +92,10 @@ export default function CheckoutProductList({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Product</TableCell>
-            <TableCell align="left">Price</TableCell>
-            <TableCell align="left">Quantity</TableCell>
-            <TableCell align="right">Total Price</TableCell>
+            <TableCell>Produk</TableCell>
+            <TableCell align="left">Harga</TableCell>
+            <TableCell align="left">Jumlah</TableCell>
+            <TableCell align="right">Subtotal</TableCell>
             <TableCell align="right" />
           </TableRow>
         </TableHead>

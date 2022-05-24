@@ -31,12 +31,12 @@ export default function CheckoutSummary({
   shipping,
   enableEdit = false
 }: CheckoutSummaryProps) {
-  const displayShipping = shipping !== null ? 'Free' : '-';
+  const displayShipping = shipping !== null ? fCurrency(0) : '-';
 
   return (
     <Card sx={{ mb: 3 }}>
       <CardHeader
-        title="Order Summary"
+        title="Rangkuman Pesanan"
         action={
           enableEdit && (
             <Button
@@ -61,7 +61,7 @@ export default function CheckoutSummary({
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Shipping
+              Harga Ongkos Kirim
             </Typography>
             <Typography variant="subtitle2">
               {shipping ? fCurrency(shipping) : displayShipping}
@@ -75,7 +75,7 @@ export default function CheckoutSummary({
                 {fCurrency(subtotal + (shipping ? shipping : 0))}
               </Typography>
               <Typography variant="caption" sx={{ fontStyle: 'italic' }}>
-                (VAT included if applicable)
+                (Termasuk harga PPN)
               </Typography>
             </Box>
           </Stack>

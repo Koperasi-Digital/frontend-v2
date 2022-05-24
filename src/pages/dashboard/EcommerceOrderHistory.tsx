@@ -5,7 +5,7 @@ import { Container, TablePagination, Grid, Typography, Box } from '@mui/material
 import { useDispatch, useSelector } from '../../redux/store';
 import { getOrdersByCustomer } from '../../redux/slices/order';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // @types
 // components
 import Page from '../../components/Page';
@@ -20,7 +20,7 @@ export default function EcommerceProductList() {
     (state: { order: OrderState }) => state.order
   );
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -33,21 +33,21 @@ export default function EcommerceProductList() {
   };
 
   return (
-    <Page title="Ecommerce: Order History | CoopChick">
+    <Page title="Ecommerce: Riwayat Pesanan | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Order History"
+          heading="Riwayat Pesanan"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Beranda', href: PATH_PAGE.homepage },
             {
               name: 'E-Commerce',
               href: PATH_DASHBOARD.eCommerce.root
             },
-            { name: 'Order History' }
+            { name: 'Riwayat Pesanan' }
           ]}
         />
 
-        <Box justifyContent="center" sx={{ m: 'auto', py: 2, width: '75%' }}>
+        <Box justifyContent="center" sx={{ m: 'auto' }} width={{ xs: '100%', md: '80%' }}>
           {orders.length === 0 ? (
             <Box display="flex" justifyContent="center" sx={{ width: '100%', p: 3 }}>
               <Typography variant="body2">Kamu belum pernah melakukan pemesanan.</Typography>
@@ -55,21 +55,18 @@ export default function EcommerceProductList() {
           ) : (
             <>
               <Grid container spacing={3}>
-                {Object.keys(orderDetailsGroupByOrder).map((orderId) => (
-                  <>
-                    <Grid key={orderId} item xs={12}>
-                      <OrderCard
-                        orderDetails={orderDetailsGroupByOrder[orderId]}
-                        orderId={orderId}
-                      />
-                    </Grid>
-                    {/* {orderDetailsGroupByOrder[orderId].map((orderDetail) => (
-                      <Grid key={orderDetail.id} item xs={12}>
-                        <OrderCard orderDetails={orderDetail} orderId={orderId} />
+                {Object.keys(orderDetailsGroupByOrder)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((orderId) => (
+                    <>
+                      <Grid key={orderId} item xs={12}>
+                        <OrderCard
+                          orderDetails={orderDetailsGroupByOrder[orderId]}
+                          orderId={orderId}
+                        />
                       </Grid>
-                    ))} */}
-                  </>
-                ))}
+                    </>
+                  ))}
               </Grid>
 
               <TablePagination

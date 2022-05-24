@@ -69,7 +69,7 @@ export default function CheckoutDelivery({
 
   return (
     <Card {...other}>
-      <CardHeader title="Delivery options" />
+      <CardHeader title="Opsi Pengiriman Produk" />
       <CardContent>
         <Grid container spacing={2}>
           {cart.map((cartItem, index) => {

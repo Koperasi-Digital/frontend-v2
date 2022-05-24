@@ -21,15 +21,15 @@ export const SORT_BY_OPTIONS = [
 
 function renderLabel(label: string | null) {
   if (label === 'oldest') {
-    return 'Terlama';
+    return 'Tanggal: Terlama';
   }
   if (label === 'newest') {
-    return 'Terbaru';
+    return 'Tanggal: Terbaru';
   }
   if (label === 'priceDesc') {
-    return 'Dari termahal';
+    return 'Harga: Termahal';
   }
-  return 'Dari termurah';
+  return 'Harga: Termurah';
 }
 
 export default function ShopProductSort() {
@@ -58,7 +58,7 @@ export default function ShopProductSort() {
         onClick={(event) => handleOpen(event.currentTarget)}
         endIcon={<Icon icon={open ? chevronUpFill : chevronDownFill} />}
       >
-        Sort By:&nbsp;
+        Urutkan:&nbsp;
         <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
           {renderLabel(sortBy)}
         </Typography>

@@ -46,7 +46,7 @@ export default function CheckoutPaymentMethods({
 
   return (
     <Card sx={{ my: 3 }}>
-      <CardHeader title="Payment options" />
+      <CardHeader title="Metode Pembayaran" />
       <CardContent>
         <RadioGroup row {...getFieldProps('payment')}>
           <Grid container spacing={2}>

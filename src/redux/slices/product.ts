@@ -28,6 +28,7 @@ const initialState: ProductState = {
   },
   checkout: {
     orderId: '',
+    paymentType: '',
     activeStep: 0,
     cart: [],
     subtotal: 0,
@@ -125,6 +126,7 @@ const slice = createSlice({
 
     resetCart(state) {
       state.checkout.orderId = '';
+      state.checkout.paymentType = '';
       state.checkout.activeStep = 0;
       state.checkout.cart = [];
       state.checkout.total = 0;
@@ -202,6 +204,10 @@ const slice = createSlice({
 
     setCheckoutOrder(state, action) {
       state.checkout.orderId = action.payload;
+    },
+
+    setPaymentType(state, action) {
+      state.checkout.paymentType = action.payload;
     }
   }
 });
@@ -225,7 +231,8 @@ export const {
   decreaseQuantity,
   sortByProducts,
   filterProducts,
-  setCheckoutOrder
+  setCheckoutOrder,
+  setPaymentType
 } = slice.actions;
 
 // ----------------------------------------------------------------------

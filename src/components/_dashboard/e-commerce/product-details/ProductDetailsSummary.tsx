@@ -7,16 +7,7 @@ import { useFormik, Form, FormikProvider, useField } from 'formik';
 import roundAddShoppingCart from '@iconify/icons-ic/round-add-shopping-cart';
 // material
 import { useTheme, styled } from '@mui/material/styles';
-import {
-  Box,
-  Grid,
-  Link,
-  Button,
-  Divider,
-  TextField,
-  Typography,
-  FormHelperText
-} from '@mui/material';
+import { Box, Grid, Button, Divider, Typography, FormHelperText } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // utils
@@ -109,7 +100,6 @@ export default function ProductDetailsSummary({
   const { id, name, category, price, available, cover, status, store, weight } = product;
   const storeName = store.name || null;
   const storeCity = store.city || null;
-  const sizes = ['KG', 'LUSIN', 'TON'];
 
   const alreadyProduct = cart.map((item) => item.id).includes(id);
   const isMaxQuantity =
@@ -149,7 +139,7 @@ export default function ProductDetailsSummary({
     }
   });
 
-  const { values, touched, errors, getFieldProps, handleSubmit } = formik;
+  const { values, touched, errors, handleSubmit } = formik;
 
   const handleAddCart = async () => {
     try {
@@ -212,9 +202,9 @@ export default function ProductDetailsSummary({
             }}
           >
             <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              Kategori
+              Lokasi
             </Typography>
-            <Typography sx={{ mt: 0.5 }}>{category}</Typography>
+            <Typography sx={{ mt: 0.5 }}>{store.city}</Typography>
           </Box>
 
           <Box
@@ -225,32 +215,9 @@ export default function ProductDetailsSummary({
             }}
           >
             <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              Satuan
+              Kategori
             </Typography>
-            <TextField
-              select
-              size="small"
-              {...getFieldProps('size')}
-              SelectProps={{ native: true }}
-              FormHelperTextProps={{
-                sx: {
-                  textAlign: 'right',
-                  margin: 0,
-                  mt: 1
-                }
-              }}
-              helperText={
-                <Link href="#" underline="always" color="text.primary">
-                  Informasi Satuan
-                </Link>
-              }
-            >
-              {sizes.map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </TextField>
+            <Typography sx={{ mt: 0.5 }}>{category}</Typography>
           </Box>
 
           <Box

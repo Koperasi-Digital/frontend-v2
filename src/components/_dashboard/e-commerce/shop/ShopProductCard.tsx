@@ -33,21 +33,28 @@ export default function ShopProductCard({ product }: ShopProductCardProps) {
 
   return (
     <Card>
-      <Box sx={{ pt: '100%', position: 'relative' }}>
-        <ProductImgStyle alt={name} src={cover} />
-      </Box>
+      <Link
+        to={linkTo}
+        color="inherit"
+        component={RouterLink}
+        style={{
+          textDecoration: 'none'
+        }}
+      >
+        <Box sx={{ pt: '100%', position: 'relative' }}>
+          <ProductImgStyle alt={name} src={cover} />
+        </Box>
 
-      <Stack spacing={2} sx={{ p: 3 }}>
-        <Link to={linkTo} color="inherit" component={RouterLink}>
+        <Stack spacing={1} sx={{ p: 3 }}>
           <Typography variant="subtitle2" noWrap>
             {name}
           </Typography>
-        </Link>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="subtitle1">{fCurrency(price)}</Typography>
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Typography variant="subtitle1">{fCurrency(price)}</Typography>
+          </Stack>
         </Stack>
-      </Stack>
+      </Link>
     </Card>
   );
 }

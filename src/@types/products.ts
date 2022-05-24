@@ -89,6 +89,7 @@ export type ProductState = {
   };
   checkout: {
     orderId: string;
+    paymentType: string;
     activeStep: number;
     cart: CartItem[];
     subtotal: number;

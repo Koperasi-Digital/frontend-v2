@@ -81,7 +81,7 @@ export default function CheckoutShipmentDialog({
     const shipmentInfo: ShipmentForm = {
       origin: getCityIDByName(origin),
       destination: getCityIDByName(destination),
-      weight: weight
+      weight: weight * 1000
     };
     const fetchShippingData = async (shipmentInfo: ShipmentForm) => {
       const response: ShipmentOptions[] = await getAllShipmentCost(shipmentInfo);
