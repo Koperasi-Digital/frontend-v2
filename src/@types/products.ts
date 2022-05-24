@@ -35,12 +35,6 @@ export type ProductCategory = 'Ayam' | 'Infrastruktur' | 'Kandang | Pakan';
 export type IconType = { tiki: string; jne: string; pos: string };
 
 export type ApplyShipping = {
-  chosenItem: number;
-  shipment: string;
-  shipment_price: number;
-};
-
-export type ApplyShippingV2 = {
   chosenStore: string;
   shipment: string;
   shipment_price: number;

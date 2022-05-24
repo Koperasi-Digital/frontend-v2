@@ -19,18 +19,16 @@ import {
   applyShipping,
   resetShipment,
   setCheckoutOrder,
-  setPaymentType,
-  applyShippingV2
+  setPaymentType
 } from '../../../../redux/slices/product';
 //
 import CheckoutSummary from './CheckoutSummary';
-import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
 import { handleCreateOrder } from 'utils/financeAxios/financeOrder';
 
 import useAuth from 'hooks/useAuth';
-import CheckoutDeliveryV2 from './CheckoutDeliveryV2';
+import CheckoutDeliveryV2 from './CheckoutDelivery';
 
 const PAYMENT_OPTIONS: PaymentOption[] = [
   {
@@ -63,22 +61,14 @@ export default function CheckoutPayment() {
   };
 
   const handleApplyShipping = (value: {
-    chosenItem: number;
+    chosenStore: string;
     shipment: string;
     shipment_price: number;
   }) => {
     dispatch(applyShipping(value));
   };
 
-  const handleApplyShippingV2 = (value: {
-    chosenStore: string;
-    shipment: string;
-    shipment_price: number;
-  }) => {
-    dispatch(applyShippingV2(value));
-  };
-
-  const handleResetShipment = (value: number) => {
+  const handleResetShipment = (value: string) => {
     dispatch(resetShipment(value));
     setFieldValue('shipment', '');
   };
@@ -126,19 +116,11 @@ export default function CheckoutPayment() {
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
-            <CheckoutDelivery
-              formik={formik}
-              cart={cart}
-              user_address={address}
-              onApplyShipping={handleApplyShipping}
-              onReset={handleResetShipment}
-            />
-
             <CheckoutDeliveryV2
               formik={formik}
               cart={cart}
               user_address={address}
-              onApplyShipping={handleApplyShippingV2}
+              onApplyShipping={handleApplyShipping}
               onReset={handleResetShipment}
             />
 

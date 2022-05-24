@@ -21,7 +21,8 @@ import {
   ApplyShipping,
   ShipmentForm,
   ShipmentOptions,
-  IconType
+  IconType,
+  CartItem
 } from '../../../../@types/products';
 import { fCurrency } from '../../../../utils/formatNumber';
 import { MHidden } from 'components/@material-extend';
@@ -51,22 +52,22 @@ const icons: IconType = {
 
 type CheckoutShipmentDialogProps = {
   formik: PaymentFormikProps;
-  cartID: number;
+  chosenStore: string;
+  cartStore: CartItem[];
   origin: string;
   destination: string;
-  weight: number;
   onApplyShipping: (shipping: ApplyShipping) => void;
   open: boolean;
   onClose: (value: boolean) => void;
-  onReset: (value: number) => void;
+  onReset: (value: string) => void;
 };
 
 export default function CheckoutShipmentDialog({
   formik,
-  cartID,
+  chosenStore,
+  cartStore,
   origin,
   destination,
-  weight,
   onApplyShipping,
   open,
   onClose,
@@ -78,17 +79,22 @@ export default function CheckoutShipmentDialog({
 
   // Retrieve all delivery options
   useEffect(() => {
+    let weightTotal = 0;
+    cartStore.forEach((cartItem) => {
+      weightTotal += cartItem.weight * cartItem.quantity;
+    });
     const shipmentInfo: ShipmentForm = {
       origin: getCityIDByName(origin),
       destination: getCityIDByName(destination),
-      weight: weight * 1000
+      weight: weightTotal
     };
+    console.log(shipmentInfo);
     const fetchShippingData = async (shipmentInfo: ShipmentForm) => {
       const response: ShipmentOptions[] = await getAllShipmentCost(shipmentInfo);
       setDeliveryOptions(response);
     };
     fetchShippingData(shipmentInfo);
-  }, [origin, destination, weight]);
+  }, [origin, destination]);
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={() => onClose(false)}>
@@ -97,7 +103,12 @@ export default function CheckoutShipmentDialog({
           <Typography variant="subtitle1">
             <h3>Pilih jenis pengiriman</h3>
           </Typography>
-          <Button size="medium" variant="contained" sx={{ mr: 2 }} onClick={() => onReset(cartID)}>
+          <Button
+            size="medium"
+            variant="contained"
+            sx={{ mr: 2 }}
+            onClick={() => onReset(chosenStore)}
+          >
             Clear
           </Button>
         </Box>
@@ -113,10 +124,11 @@ export default function CheckoutShipmentDialog({
           value={values.shipment}
           onChange={(event) => {
             const { value } = event.target;
-            const [cost, service, cartID] = value.split(';');
+            const [cost, service, chosenStore] = value.split(';');
+            console.log(value);
             setFieldValue('shipment', value);
             const applyShippingItem = {
-              chosenItem: Number(cartID),
+              chosenStore: chosenStore,
               shipment: service,
               shipment_price: Number(cost)
             };
@@ -141,14 +153,20 @@ export default function CheckoutShipmentDialog({
                               ' ' +
                               service +
                               ';' +
-                              cartID && {
+                              chosenStore && {
                             boxShadow: (theme) => theme.customShadows.z8
                           })
                         }}
                       >
                         <FormControlLabel
                           value={
-                            cost[0].value + ';' + code.toUpperCase() + ' ' + service + ';' + cartID
+                            cost[0].value +
+                            ';' +
+                            code.toUpperCase() +
+                            ' ' +
+                            service +
+                            ';' +
+                            chosenStore
                           }
                           control={<Radio checkedIcon={<Icon icon={checkmarkCircle2Fill} />} />}
                           label={

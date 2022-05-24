@@ -18,7 +18,7 @@ import { MHidden } from 'components/@material-extend';
 import { UserAddressBook } from '../../../../@types/user';
 import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
-import CheckoutShipmentDialog from './CheckoutShipmentDialog';
+import CheckoutShipmentDialogV2 from './CheckoutShipmentDialog';
 import editFill from '@iconify/icons-eva/edit-fill';
 
 // ----------------------------------------------------------------------
@@ -26,11 +26,20 @@ import editFill from '@iconify/icons-eva/edit-fill';
 const ItemStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
+  marginLeft: '3%',
+  marginRight: '3%',
   padding: theme.spacing(0, 2.5),
   justifyContent: 'space-between',
   borderRadius: theme.shape.borderRadius,
   transition: theme.transitions.create('all'),
   border: `solid 1px ${theme.palette.grey[500_32]}`
+}));
+
+const StoreStyle = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(0, 2.5),
+  justifyContent: 'space-between'
 }));
 
 const icons: IconType = {
@@ -41,12 +50,71 @@ const icons: IconType = {
 
 // ----------------------------------------------------------------------
 
+const ThumbImgStyle = styled('img')(({ theme }) => ({
+  width: 64,
+  height: 64,
+  objectFit: 'cover',
+  marginRight: theme.spacing(2),
+  borderRadius: theme.shape.borderRadiusSm
+}));
+
 type CheckoutDeliveryProps = {
   formik: PaymentFormikProps;
   cart: CartItem[];
   user_address: UserAddressBook | null;
   onApplyShipping: (shipping: ApplyShipping) => void;
-  onReset: (value: number) => void;
+  onReset: (value: string) => void;
+};
+
+const ProductItemList = ({ cart }: { cart: CartItem[] }) => {
+  return (
+    <Grid container spacing={1}>
+      {cart.map((cartItem, index) => (
+        <Grid key={index} item xs={12}>
+          <ItemStyle
+            sx={{
+              boxShadow: (theme) => theme.customShadows.z8
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <ThumbImgStyle alt="Product" src={cartItem.cover} />
+              <Box>
+                <Typography variant="subtitle2">{cartItem.name}</Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  Jumlah: {cartItem.quantity}
+                </Typography>
+
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                ></Box>
+              </Box>
+            </Box>
+
+            <Box>
+              <Box
+                sx={{
+                  py: 3,
+                  flexGrow: 1,
+                  display: 'flex',
+                  alignItems: 'right'
+                }}
+              >
+                <Box sx={{ mr: 1, maxHeight: 40 }}>
+                  <Typography variant="subtitle2">&nbsp;</Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    {fCurrency(cartItem.subtotal)}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+          </ItemStyle>
+        </Grid>
+      ))}
+    </Grid>
+  );
 };
 
 export default function CheckoutDelivery({
@@ -58,39 +126,52 @@ export default function CheckoutDelivery({
   ...other
 }: CheckoutDeliveryProps) {
   const [isOpenModalShipment, setIsOpenModalShipment] = useState(false);
-  const [chosenItem, setChosenItem] = useState(0);
   const [storeCity, setStoreCity] = useState('');
+  const [storeName, setStoreName] = useState('');
 
-  const handleOpenModalShipment = (id: number, store_city: string) => {
-    setChosenItem(id);
+  const handleOpenModalShipment = (id: number, store_city: string, store_name: string) => {
     setStoreCity(store_city);
+    setStoreName(store_name);
     setIsOpenModalShipment(!isOpenModalShipment);
   };
+
+  const cartGroupByStore = cart.reduce(
+    (objectsByKeyValue: { [key: string]: CartItem[] }, obj: CartItem) => {
+      const value: string = obj.store_name!;
+      objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+      return objectsByKeyValue;
+    },
+    {}
+  );
 
   return (
     <Card {...other}>
       <CardHeader title="Opsi Pengiriman Produk" />
       <CardContent>
-        <Grid container spacing={2}>
-          {cart.map((cartItem, index) => {
-            const { store_city } = cartItem;
-            return (
-              <Grid key={index} item xs={12}>
-                <ItemStyle
-                  sx={{
-                    boxShadow: (theme) => theme.customShadows.z8
-                  }}
-                >
-                  <Box sx={{ py: 3, flexGrow: 1, mr: 0 }}>
-                    <Box sx={{ ml: 1 }}>
-                      <Typography variant="subtitle2">
-                        {cartItem.name}&nbsp;-&nbsp;{fCurrency(cartItem.subtotal)}
-                      </Typography>
+        {Object.keys(cartGroupByStore).map((store, idx) => {
+          const cartItem = cartGroupByStore[store][0];
+          const store_city = cartGroupByStore[store][0].store_city;
+          return (
+            <>
+              <Box sx={{ mb: 2 }}>
+                <StoreStyle>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Icon icon="dashicons:store" width={48} height={48} />
+                    <Box sx={{ px: 2 }}>
+                      <Typography variant="subtitle2">{store}</Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        {cartItem.store_name}
+                        {store_city}
                       </Typography>
+
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center'
+                        }}
+                      ></Box>
                     </Box>
                   </Box>
+
                   <Box>
                     <Box
                       sx={{
@@ -130,11 +211,16 @@ export default function CheckoutDelivery({
                                   sx={{ color: 'text.secondary' }}
                                   alignItems="right"
                                 >
-                                  {fCurrency(cartItem.shipment_price)}
+                                  {fCurrency(
+                                    cartGroupByStore[store].reduce(
+                                      (a, b) => a + (b.shipment_price || 0),
+                                      0
+                                    )
+                                  )}
                                 </Typography>
                               </Box>
                               <IconButton
-                                onClick={() => handleOpenModalShipment(index, store_city!)}
+                                onClick={() => handleOpenModalShipment(idx, store_city!, store)}
                               >
                                 <Icon icon={editFill} width={20} height={20} />
                               </IconButton>
@@ -147,7 +233,7 @@ export default function CheckoutDelivery({
                             type="submit"
                             variant="outlined"
                             startIcon={<Icon icon="fe:truck" />}
-                            onClick={() => handleOpenModalShipment(index, store_city!)}
+                            onClick={() => handleOpenModalShipment(idx, store_city!, store)}
                           >
                             Pilih Pengiriman
                           </LoadingButton>
@@ -155,22 +241,23 @@ export default function CheckoutDelivery({
                       </Box>
                     </Box>
                   </Box>
-                </ItemStyle>
-              </Grid>
-            );
-          })}
-        </Grid>
-        <CheckoutShipmentDialog
+                </StoreStyle>
+                <ProductItemList cart={cartGroupByStore[store]} />
+              </Box>
+            </>
+          );
+        })}
+        <CheckoutShipmentDialogV2
           formik={formik}
-          cartID={chosenItem}
+          chosenStore={storeName}
+          cartStore={cartGroupByStore['Toko Sumber Maju']}
           origin={storeCity}
           destination={user_address!.city}
-          weight={cart[chosenItem].weight}
           open={isOpenModalShipment}
           onApplyShipping={onApplyShipping}
           onClose={setIsOpenModalShipment}
           onReset={onReset}
-        ></CheckoutShipmentDialog>
+        ></CheckoutShipmentDialogV2>
       </CardContent>
     </Card>
   );
