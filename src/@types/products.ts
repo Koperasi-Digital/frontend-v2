@@ -40,6 +40,12 @@ export type ApplyShipping = {
   shipment_price: number;
 };
 
+export type ApplyShippingV2 = {
+  chosenStore: string;
+  shipment: string;
+  shipment_price: number;
+};
+
 export type OnCreateBilling = (address: UserAddressBook) => void;
 
 export type FormikPropsShopView = FormikProps<ProductFilter>;

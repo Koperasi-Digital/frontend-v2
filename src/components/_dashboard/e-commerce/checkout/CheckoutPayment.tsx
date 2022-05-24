@@ -19,7 +19,8 @@ import {
   applyShipping,
   resetShipment,
   setCheckoutOrder,
-  setPaymentType
+  setPaymentType,
+  applyShippingV2
 } from '../../../../redux/slices/product';
 //
 import CheckoutSummary from './CheckoutSummary';
@@ -29,6 +30,7 @@ import CheckoutPaymentMethods from './CheckoutPaymentMethods';
 import { handleCreateOrder } from 'utils/financeAxios/financeOrder';
 
 import useAuth from 'hooks/useAuth';
+import CheckoutDeliveryV2 from './CheckoutDeliveryV2';
 
 const PAYMENT_OPTIONS: PaymentOption[] = [
   {
@@ -66,6 +68,14 @@ export default function CheckoutPayment() {
     shipment_price: number;
   }) => {
     dispatch(applyShipping(value));
+  };
+
+  const handleApplyShippingV2 = (value: {
+    chosenStore: string;
+    shipment: string;
+    shipment_price: number;
+  }) => {
+    dispatch(applyShippingV2(value));
   };
 
   const handleResetShipment = (value: number) => {
@@ -121,6 +131,14 @@ export default function CheckoutPayment() {
               cart={cart}
               user_address={address}
               onApplyShipping={handleApplyShipping}
+              onReset={handleResetShipment}
+            />
+
+            <CheckoutDeliveryV2
+              formik={formik}
+              cart={cart}
+              user_address={address}
+              onApplyShipping={handleApplyShippingV2}
               onReset={handleResetShipment}
             />
 

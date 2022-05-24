@@ -198,6 +198,30 @@ const slice = createSlice({
       state.checkout.total = state.checkout.subtotal + totalShipping;
     },
 
+    applyShippingV2(state, action) {
+      const { chosenStore, shipment, shipment_price } = action.payload;
+      let weightTotal = 0;
+      state.checkout.cart.forEach((cartItem) => {
+        weightTotal += cartItem.weight * cartItem.quantity;
+      });
+      const chosenItem: number[] = [];
+      state.checkout.cart.forEach((cartItem, index) => {
+        if (cartItem.store_name === chosenStore) {
+          chosenItem.push(index);
+        }
+      });
+      chosenItem.forEach((chosenItemID) => {
+        const weight =
+          state.checkout.cart[chosenItemID].quantity * state.checkout.cart[chosenItemID].weight;
+        state.checkout.cart[chosenItemID].shipment = shipment;
+        state.checkout.cart[chosenItemID].shipment_price = (weight * shipment_price) / weightTotal;
+      });
+      const totalShipping = state.checkout.cart.reduce((a, b) => a + (b.shipment_price || 0), 0);
+      console.log(totalShipping);
+      state.checkout.shipping = totalShipping;
+      state.checkout.total = state.checkout.subtotal + totalShipping;
+    },
+
     addProductSuccess(state) {
       state.isLoading = false;
     },
@@ -227,6 +251,7 @@ export const {
   deleteCart,
   createBilling,
   applyShipping,
+  applyShippingV2,
   increaseQuantity,
   decreaseQuantity,
   sortByProducts,
