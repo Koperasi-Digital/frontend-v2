@@ -1,4 +1,3 @@
-import { sum } from 'lodash';
 import { Icon } from '@iconify/react';
 import { Link as RouterLink } from 'react-router-dom';
 import shoppingCartFill from '@iconify/icons-eva/shopping-cart-fill';
@@ -39,7 +38,7 @@ const RootStyle = styled(RouterLink)(({ theme }) => ({
 
 export default function CartWidget() {
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
-  const totalItems = sum(checkout.cart.map((item) => item.quantity));
+  const totalItems = checkout.cart.length;
 
   return (
     <RootStyle to={PATH_DASHBOARD.eCommerce.checkout}>
