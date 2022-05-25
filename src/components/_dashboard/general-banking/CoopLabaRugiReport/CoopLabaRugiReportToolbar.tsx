@@ -159,35 +159,35 @@ export default function CoopLabaRugiReportToolbar(props: {
               },
               {
                 chartInfo: [
-                  `Expenses: ${fCurrency(
+                  `Pengeluaran: ${fCurrency(
                     props.currentCoopLabaRugiData.biayaSisaHasilUsaha +
                       props.currentCoopLabaRugiData.biayaOperasi
                   )}`,
                   `${props.expensePercent > 0 ? '+' : ''} ${fPercent(
                     props.expensePercent
-                  )} than last month`
+                  )} dari bulan lalu`
                 ],
                 chartBase64: bankingExpenseChartURI
               },
               {
                 chartInfo: [
-                  `Income: ${fCurrency(
+                  `Pendapatan: ${fCurrency(
                     props.currentCoopLabaRugiData.jumlahSimpananPokok +
                       props.currentCoopLabaRugiData.jumlahSimpananWajib +
                       props.currentCoopLabaRugiData.jumlahBiayaLayanan
                   )}`,
                   `${props.incomePercent > 0 ? '+' : ''} ${fPercent(
                     props.incomePercent
-                  )} than last month`
+                  )} dari bulan lalu`
                 ],
                 chartBase64: bankingIncomeChartURI
               },
               {
-                chartInfo: ['Balance Statistics Koperasi'],
+                chartInfo: ['Statistik Saldo Koperasi'],
                 chartBase64: bankingBalanceStatisticsChartURI
               },
               {
-                chartInfo: ['Expense Categories Koperasi'],
+                chartInfo: ['Kategori Pengeluaran Koperasi'],
                 chartBase64: bankingExpenseCategoriesChartURI
               }
             ]}

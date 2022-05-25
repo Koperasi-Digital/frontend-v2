@@ -153,10 +153,10 @@ export default function LaporanLabaRugiToolbar(props: {
           <ExportToExcel
             worksheetsNames={[
               'Data Sheet',
-              'Grafik Pengeluaran Koperasi',
-              'Grafik Pemasukan Koperasi',
-              'Grafik Statistik Saldo Koperasi',
-              'Grafik Kategori Pengeluaran Koperasi'
+              'Grafik Pengeluaran',
+              'Grafik Pemasukan',
+              'Grafik Statistik Saldo',
+              'Grafik Kategori Pengeluaran'
             ]}
             sizes={[
               { width: 0, height: 0 },
@@ -172,7 +172,7 @@ export default function LaporanLabaRugiToolbar(props: {
               },
               {
                 chartInfo: [
-                  `Expenses: ${fCurrency(
+                  `Pengeluaran: ${fCurrency(
                     props.currentLabaRugiData.biayaProduksiProdukTerjual +
                       props.currentLabaRugiData.biayaSimpananPokok +
                       props.currentLabaRugiData.biayaSimpananWajib +
@@ -180,28 +180,28 @@ export default function LaporanLabaRugiToolbar(props: {
                   )}`,
                   `${props.expensePercent > 0 ? '+' : ''} ${fPercent(
                     props.expensePercent
-                  )} than last month`
+                  )} dari bulan lalu`
                 ],
                 chartBase64: bankingExpenseChartURI
               },
               {
                 chartInfo: [
-                  `Income: ${fCurrency(
+                  `Pemasukan: ${fCurrency(
                     props.currentLabaRugiData.jumlahPenjualan +
                       props.currentLabaRugiData.sisaHasilUsaha
                   )}`,
                   `${props.incomePercent > 0 ? '+' : ''} ${fPercent(
                     props.incomePercent
-                  )} than last month`
+                  )} dari bulan lalu`
                 ],
                 chartBase64: bankingIncomeChartURI
               },
               {
-                chartInfo: ['Balance Statistics Chart'],
+                chartInfo: ['Grafik Statistik Saldo'],
                 chartBase64: bankingBalanceStatisticsChartURI
               },
               {
-                chartInfo: ['Expense Categories Chart'],
+                chartInfo: ['Grafik Kategori Pengeluaran'],
                 chartBase64: bankingExpenseCategoriesChartURI
               }
             ]}

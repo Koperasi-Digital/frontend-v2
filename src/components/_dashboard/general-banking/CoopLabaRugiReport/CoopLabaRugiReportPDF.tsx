@@ -214,11 +214,11 @@ export default function CoopLabaRugiReportPDF(props: {
         </View>
         <View style={styles.gridContainer}>
           <View style={styles.col8}>
-            <Text style={styles.subtitle2}>Balance Statistics</Text>
+            <Text style={styles.subtitle2}>Statistik Saldo</Text>
             {props.bankingBalanceStatisticsChartURI ? (
               <Image src={props.bankingBalanceStatisticsChartURI} />
             ) : null}
-            <Text style={styles.subtitle2}>Expense Categories</Text>
+            <Text style={styles.subtitle2}>Kategori Pengeluaran</Text>
             {props.bankingExpenseCategoriesChartURI ? (
               <Image src={props.bankingExpenseCategoriesChartURI} />
             ) : null}
@@ -227,7 +227,7 @@ export default function CoopLabaRugiReportPDF(props: {
             <View style={styles.incomeRoot}>
               <View style={styles.gridContainer}>
                 <View style={styles.col8}>
-                  <Text style={styles.subtitle2}>Income</Text>
+                  <Text style={styles.subtitle2}>Pendapatan</Text>
                   <Text style={styles.h3}>
                     {fCurrency(
                       props.currentCoopLabaRugiData.jumlahSimpananPokok +
@@ -266,7 +266,7 @@ export default function CoopLabaRugiReportPDF(props: {
                   {props.incomePercent > 0 && '+'}
                   {fPercent(props.incomePercent)}
                 </Text>
-                <Text style={[styles.body2, styles.opacity072]}>&nbsp;than last month</Text>
+                <Text style={[styles.body2, styles.opacity072]}>&nbsp;dari bulan lalu</Text>
               </View>
               {props.bankingIncomeChartURI ? (
                 <Image style={styles.bgGreen} src={props.bankingIncomeChartURI} />
@@ -275,7 +275,7 @@ export default function CoopLabaRugiReportPDF(props: {
             <View style={styles.expensesRoot}>
               <View style={styles.gridContainer}>
                 <View style={styles.col8}>
-                  <Text style={styles.subtitle2}>Expenses</Text>
+                  <Text style={styles.subtitle2}>Pengeluaran</Text>
                   <Text style={styles.h3}>
                     {fCurrency(
                       props.currentCoopLabaRugiData.biayaSisaHasilUsaha +
@@ -313,7 +313,7 @@ export default function CoopLabaRugiReportPDF(props: {
                   {props.expensePercent > 0 && '+'}
                   {fPercent(props.expensePercent)}
                 </Text>
-                <Text style={[styles.body2, styles.opacity072]}>&nbsp;than last month</Text>
+                <Text style={[styles.body2, styles.opacity072]}>&nbsp;dari bulan lalu</Text>
               </View>
               {props.bankingExpenseChartURI ? <Image src={props.bankingExpenseChartURI} /> : null}
             </View>

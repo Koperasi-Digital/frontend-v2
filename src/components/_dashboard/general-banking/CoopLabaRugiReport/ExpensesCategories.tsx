@@ -64,7 +64,7 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
 
   return (
     <RootStyle>
-      <CardHeader title="Expenses Categories" />
+      <CardHeader title="Kategori Pengeluaran" />
       {chartData ? (
         <Scrollbar>
           <Box dir="ltr">

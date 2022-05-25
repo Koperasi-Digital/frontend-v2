@@ -84,7 +84,7 @@ export default function NeracaReportPDF(props: { neracaData: NeracaData }) {
     <Document>
       <Page size="A4" style={styles.page}>
         <View>
-          <Text style={[styles.overline]}>Neraca Report</Text>
+          <Text style={[styles.overline]}>Laporan Neraca</Text>
         </View>
         <View style={styles.table}>
           <View style={styles.tableHeader}>
