@@ -94,7 +94,7 @@ export default function CheckoutShipmentDialog({
       setDeliveryOptions(response);
     };
     fetchShippingData(shipmentInfo);
-  }, [origin, destination]);
+  }, [origin, destination, cartStore]);
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={() => onClose(false)}>
