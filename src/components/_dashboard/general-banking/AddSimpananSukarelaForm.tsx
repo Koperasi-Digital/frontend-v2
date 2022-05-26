@@ -16,8 +16,10 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  TextField
+  TextField,
+  Typography
 } from '@mui/material';
+import { fCurrency } from 'utils/formatNumber';
 import { handleCreateOrder } from 'utils/financeAxios/financeOrder';
 import {
   handleAddOrderSimpananSukarela,
@@ -38,6 +40,7 @@ export default function AddSimpananSukarelaForm() {
   const { isLoadingCharge } = useSelector((state: RootState) => state.emoney);
   const [loadingSnap, setLoadingSnap] = useState<boolean>(false);
   const { user } = useAuth();
+  const [simpananSukarelaAmount, setSimpananSukarelaAmount] = useState<number>();
 
   useEffect(() => {
     const snapSrcUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
@@ -55,9 +58,23 @@ export default function AddSimpananSukarelaForm() {
     };
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (user) {
+          const fetchedSimpananSukarela = await handleGetSimpananSukarela();
+          setSimpananSukarelaAmount(fetchedSimpananSukarela.amount);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, [user]);
+
   const AddSimpananSukarelaSchema = Yup.object().shape({
-    amount: Yup.number().required().min(0, 'Min value 0.'),
-    paymentType: Yup.string().required().oneOf(['GOPAY', 'OTHER'])
+    amount: Yup.number().required('Jumlah wajib diisi').min(0, 'Jumlah minimum 0.'),
+    paymentType: Yup.string().required('Metode pembayaran wajib diisi').oneOf(['GOPAY', 'OTHER'])
   });
 
   const formik = useFormik({
@@ -104,21 +121,26 @@ export default function AddSimpananSukarelaForm() {
           <Grid item xs={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={5}>
+                {simpananSukarelaAmount && (
+                  <Typography variant="body1">
+                    Jumlah simpanan sukarela saat ini: {fCurrency(simpananSukarelaAmount)}
+                  </Typography>
+                )}
+                <TextField
+                  fullWidth
+                  label="Jumlah"
+                  {...getFieldProps('amount')}
+                  error={Boolean(touched.amount && errors.amount)}
+                  helperText={touched.amount && errors.amount}
+                />
                 <Stack spacing={1}>
-                  <TextField
-                    fullWidth
-                    label="Amount"
-                    {...getFieldProps('amount')}
-                    error={Boolean(touched.amount && errors.amount)}
-                    helperText={touched.amount && errors.amount}
-                  />
                   <FormLabel id="payment-type-radio-buttons-group">Metode Pembayaran</FormLabel>
                   <RadioGroup
                     aria-labelledby="payment-type-radio-buttons-group"
                     {...getFieldProps('paymentType')}
                   >
                     <FormControlLabel value="GOPAY" control={<Radio />} label="GOPAY" />
-                    <FormControlLabel value="OTHER" control={<Radio />} label="OTHER" />
+                    <FormControlLabel value="OTHER" control={<Radio />} label="LAINNYA" />
                   </RadioGroup>
                 </Stack>
               </Stack>
