@@ -154,25 +154,6 @@ export default function CreateStoreForm() {
                 <TextField
                   select
                   fullWidth
-                  label="Kota"
-                  placeholder="Kota"
-                  {...getFieldProps('city')}
-                  SelectProps={{ native: true }}
-                  error={Boolean(touched.city && errors.city)}
-                  helperText={touched.city && errors.city}
-                >
-                  <option defaultValue=""></option>
-                  {cities.map((option) => (
-                    <option key={option.city_id} value={option.city_name}>
-                      {option.city_name}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  select
-                  fullWidth
                   label="Provinsi"
                   placeholder="Provinsi"
                   {...getFieldProps('state')}
@@ -184,6 +165,25 @@ export default function CreateStoreForm() {
                   {provinces.map((option) => (
                     <option key={option.province_id} value={option.province}>
                       {option.province}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  select
+                  fullWidth
+                  label="Kota"
+                  placeholder="Kota"
+                  {...getFieldProps('city')}
+                  SelectProps={{ native: true }}
+                  error={Boolean(touched.city && errors.city)}
+                  helperText={touched.city && errors.city}
+                >
+                  <option defaultValue=""></option>
+                  {cities.map((option) => (
+                    <option key={option.city_id} value={option.city_name}>
+                      {option.city_name}
                     </option>
                   ))}
                 </TextField>

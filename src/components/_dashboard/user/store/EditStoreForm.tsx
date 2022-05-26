@@ -131,23 +131,6 @@ export default function AccountInformationEdit() {
                   <TextField
                     select
                     fullWidth
-                    label="Kota"
-                    placeholder="Kota"
-                    {...getFieldProps('city')}
-                    SelectProps={{ native: true }}
-                    error={Boolean(touched.city && errors.city)}
-                    helperText={touched.city && errors.city}
-                  >
-                    <option defaultValue=""></option>
-                    {cities.map((option) => (
-                      <option key={option.city_id} value={option.city_name}>
-                        {option.city_name}
-                      </option>
-                    ))}
-                  </TextField>
-                  <TextField
-                    select
-                    fullWidth
                     label="Provinsi"
                     placeholder="Provinsi"
                     {...getFieldProps('state')}
@@ -159,6 +142,23 @@ export default function AccountInformationEdit() {
                     {provinces.map((option) => (
                       <option key={option.province_id} value={option.province}>
                         {option.province}
+                      </option>
+                    ))}
+                  </TextField>
+                  <TextField
+                    select
+                    fullWidth
+                    label="Kota"
+                    placeholder="Kota"
+                    {...getFieldProps('city')}
+                    SelectProps={{ native: true }}
+                    error={Boolean(touched.city && errors.city)}
+                    helperText={touched.city && errors.city}
+                  >
+                    <option defaultValue=""></option>
+                    {cities.map((option) => (
+                      <option key={option.city_id} value={option.city_name}>
+                        {option.city_name}
                       </option>
                     ))}
                   </TextField>
