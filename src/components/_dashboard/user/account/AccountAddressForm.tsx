@@ -20,6 +20,7 @@ import countries from '../countries';
 import provinces from '../provinces';
 import cities from '../cities';
 import { addAddress, editAddress } from 'redux/slices/user';
+import PhoneNumberField from 'components/PhoneNumberField';
 
 // ----------------------------------------------------------------------
 
@@ -78,7 +79,7 @@ export default function AccountAddressForm({
     }
   });
 
-  const { errors, touched, isSubmitting, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, isSubmitting, handleSubmit, getFieldProps, setFieldValue } = formik;
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
@@ -88,13 +89,12 @@ export default function AccountAddressForm({
           <DialogContent>
             <Grid container spacing={3} direction="column">
               <Grid item>
-                <TextField
+                <PhoneNumberField
                   fullWidth
-                  type="number"
-                  label="Nomor Telepon"
                   {...getFieldProps('phoneNumber')}
                   error={Boolean(touched.phoneNumber && errors.phoneNumber)}
                   helperText={touched.phoneNumber && errors.phoneNumber}
+                  onChange={(value) => setFieldValue('phoneNumber', value)}
                 />
               </Grid>
 

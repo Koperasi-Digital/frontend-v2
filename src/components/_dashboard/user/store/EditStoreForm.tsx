@@ -14,6 +14,7 @@ import { Store } from '../../../../@types/store';
 import countries from '../countries';
 import provinces from '../provinces';
 import cities from '../cities';
+import PhoneNumberField from 'components/PhoneNumberField';
 
 // ----------------------------------------------------------------------
 
@@ -78,7 +79,7 @@ export default function AccountInformationEdit() {
     }
   });
 
-  const { errors, touched, isSubmitting, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, isSubmitting, handleSubmit, getFieldProps, setFieldValue } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -110,13 +111,12 @@ export default function AccountInformationEdit() {
                   helperText={touched.description && errors.description}
                 />
 
-                <TextField
+                <PhoneNumberField
                   fullWidth
-                  type="number"
-                  label="Nomor Telepon"
                   {...getFieldProps('phoneNumber')}
                   error={Boolean(touched.phoneNumber && errors.phoneNumber)}
                   helperText={touched.phoneNumber && errors.phoneNumber}
+                  onChange={(value) => setFieldValue('phoneNumber', value)}
                 />
 
                 <TextField

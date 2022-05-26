@@ -96,7 +96,7 @@ export default function CreateStoreForm() {
     }
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, setFieldValue } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -131,11 +131,10 @@ export default function CreateStoreForm() {
           <Grid item>
             <TextField
               fullWidth
-              type="number"
-              label="Nomor Telepon"
               {...getFieldProps('phoneNumber')}
               error={Boolean(touched.phoneNumber && errors.phoneNumber)}
               helperText={touched.phoneNumber && errors.phoneNumber}
+              onChange={(value) => setFieldValue('phoneNumber', value)}
             />
           </Grid>
 
