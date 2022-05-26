@@ -15,7 +15,7 @@ export default function RepairRegisterForm() {
 
   const RepairRegisterSchema = Yup.object().shape({
     amount: Yup.number()
-      .required()
+      .required('Jumlah wajib diisi')
       .min(0, `Jumlah Minimum ${fCurrency(0)}`)
   });
 
@@ -52,7 +52,7 @@ export default function RepairRegisterForm() {
               <Stack spacing={1}>
                 <TextField
                   fullWidth
-                  label="Amount"
+                  label="Jumlah"
                   {...getFieldProps('amount')}
                   error={Boolean(touched.amount && errors.amount)}
                   helperText={touched.amount && errors.amount}

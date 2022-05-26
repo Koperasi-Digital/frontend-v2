@@ -20,8 +20,8 @@ export default function EquipmentRegisterForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const EquipmentRegisterSchema = Yup.object().shape({
-    price: Yup.number().required(),
-    source: Yup.string().required().oneOf(['KAS', 'MODAL'])
+    price: Yup.number().required('Harga wajib diisi'),
+    source: Yup.string().required('Sumber wajib diisi').oneOf(['KAS', 'MODAL'])
   });
 
   const formik = useFormik({
