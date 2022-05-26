@@ -62,7 +62,7 @@ export default function BankingCoopTransactionsReport() {
   // Transactions Filter
   const filterDropdownRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const [filterMode, setFilterMode] = useState<string>('All');
+  const [filterMode, setFilterMode] = useState<string>('semua');
   const [allCoopTransactionData, setAllCoopTransactionData] = useState<CoopTransaction[]>([]);
   const [filteredCoopTransactionData, setFilteredCoopTransactionData] = useState<CoopTransaction[]>(
     []
@@ -78,15 +78,15 @@ export default function BankingCoopTransactionsReport() {
 
     setFilterMode(filterName);
 
-    if (filterName === 'All') {
+    if (filterName === 'semua') {
       setFilteredCoopTransactionData(allCoopTransactionData);
-    } else if (filterName === 'income') {
+    } else if (filterName === 'pemasukan') {
       let result = [];
       result = allCoopTransactionData.filter((data) => {
         return !isOutcome(data);
       });
       setFilteredCoopTransactionData(result);
-    } else if (filterName === 'outcome') {
+    } else if (filterName === 'pengeluaran') {
       let result = [];
       result = allCoopTransactionData.filter((data) => {
         return isOutcome(data);
@@ -203,22 +203,22 @@ export default function BankingCoopTransactionsReport() {
                   sx={{ width: 220 }}
                 >
                   <MenuItem
-                    onClick={() => handleSearch('All')}
+                    onClick={() => handleSearch('semua')}
                     sx={{ typography: 'body2', py: 1, px: 2.5 }}
                   >
-                    All
+                    Semua
                   </MenuItem>
                   <MenuItem
-                    onClick={() => handleSearch('income')}
+                    onClick={() => handleSearch('pemasukan')}
                     sx={{ typography: 'body2', py: 1, px: 2.5 }}
                   >
-                    Income
+                    Pemasukan
                   </MenuItem>
                   <MenuItem
-                    onClick={() => handleSearch('outcome')}
+                    onClick={() => handleSearch('pengeluaran')}
                     sx={{ typography: 'body2', py: 1, px: 2.5 }}
                   >
-                    Outcome
+                    Pengeluaran
                   </MenuItem>
                 </MenuPopover>
               </Box>
