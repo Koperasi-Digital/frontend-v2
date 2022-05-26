@@ -89,7 +89,7 @@ export default function PaymentPage() {
   }, [paymentType, transactionDetails, dispatch, enqueueSnackbar]);
 
   return (
-    <Page title="Payment">
+    <Page title="Pembayaran">
       <Box
         sx={{
           display: 'flex',

@@ -45,17 +45,17 @@ export const paymentFunction = async (
     onSuccess: function (result: any) {
       setLoadingSnap(false);
       window.location.href = redirectURL ? redirectURL : coopChickCurrentURL;
-      enqueueSnackbar('Payment success', { variant: 'success' });
+      enqueueSnackbar('Pembayaran berhasil', { variant: 'success' });
     },
     onPending: function (result: any) {
       setLoadingSnap(false);
       window.location.href = redirectURL ? redirectURL : coopChickCurrentURL;
-      enqueueSnackbar('Payment pending', { variant: 'warning' });
+      enqueueSnackbar('Pembayaran tertunda', { variant: 'warning' });
     },
     onError: function (result: any) {
       setLoadingSnap(false);
       window.location.href = redirectURL ? redirectURL : coopChickCurrentURL;
-      enqueueSnackbar('Payment error', { variant: 'error' });
+      enqueueSnackbar('Pembayaran gagal', { variant: 'error' });
     },
     onClose: function () {
       setLoadingSnap(false);
