@@ -78,15 +78,13 @@ export default function UserActiveness() {
         <Box sx={{ flexGrow: 1 }}>
           <Stack direction="column" justifyContent="center" spacing={1} sx={{ mt: 2, mb: 1 }}>
             <Stack direction="row" spacing={1} justifyContent="space-between">
+              <Typography variant="subtitle2">{`Total Transaksi `}</Typography>
+              <Typography variant="subtitle2">{`${fNumber(userTransactions)}`}</Typography>
+            </Stack>
+            <Stack direction="row" spacing={1} justifyContent="space-between">
               <Typography variant="subtitle2">{`Presensi Meeting `}</Typography>
               <Typography variant="subtitle2">{`${fNumber(userActivities)} / ${fNumber(
                 totalActivities
-              )}`}</Typography>
-            </Stack>
-            <Stack direction="row" spacing={1} justifyContent="space-between">
-              <Typography variant="subtitle2">{`Total Transaksi `}</Typography>
-              <Typography variant="subtitle2">{`${fNumber(userTransactions)} / ${fNumber(
-                totalTransactions
               )}`}</Typography>
             </Stack>
             <Stack direction="row" spacing={1} justifyContent="space-between">
