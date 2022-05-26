@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack';
@@ -13,7 +14,6 @@ import useAuth from 'hooks/useAuth';
 //
 import { MIconButton } from '../../../@material-extend';
 import countries from '../countries';
-import cities from '../cities';
 import provinces from '../provinces';
 import axios from 'utils/axios';
 import { PATH_DASHBOARD } from 'routes/paths';
@@ -63,7 +63,7 @@ export default function CreateStoreForm() {
       description: '',
       phoneNumber: '',
       country: countries[0].label,
-      state: '',
+      state: provinces[0].province,
       city: '',
       address: '',
       zipCode: ''
@@ -96,7 +96,39 @@ export default function CreateStoreForm() {
     }
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, setFieldValue } = formik;
+  const { errors, values, touched, isSubmitting, handleSubmit, getFieldProps, setFieldValue } =
+    formik;
+
+  const [cities, setCities] = useState([
+    {
+      city_id: 9999999,
+      province_id: 9999999,
+      type: '',
+      city_name: 'Silakan pilih provinsi terlebih dahulu'
+    }
+  ]);
+
+  const fetchCityData = useCallback(async () => {
+    const provinceId = values.state
+      ? provinces.filter((province) => province.province === values.state)[0].province_id
+      : null;
+    if (provinceId) {
+      const response = await axios.get('shipment/city', {
+        params: {
+          province: values.state
+            ? provinces.filter((province) => province.province === values.state)[0].province_id
+            : null
+        }
+      });
+      if (response.data.payload) {
+        setCities(response.data.payload);
+      }
+    }
+  }, [values.state]);
+
+  useEffect(() => {
+    fetchCityData();
+  }, [fetchCityData]);
 
   return (
     <FormikProvider value={formik}>
@@ -173,8 +205,8 @@ export default function CreateStoreForm() {
                 <TextField
                   select
                   fullWidth
-                  label="Kota"
-                  placeholder="Kota"
+                  label="Kota/Kabupaten"
+                  placeholder="Kota/Kabupaten"
                   {...getFieldProps('city')}
                   SelectProps={{ native: true }}
                   error={Boolean(touched.city && errors.city)}
@@ -183,7 +215,7 @@ export default function CreateStoreForm() {
                   <option defaultValue=""></option>
                   {cities.map((option) => (
                     <option key={option.city_id} value={option.city_name}>
-                      {option.city_name}
+                      {`${option.type} ${option.city_name}`}
                     </option>
                   ))}
                 </TextField>

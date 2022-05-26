@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { Form, FormikProvider, useFormik } from 'formik';
@@ -13,7 +14,6 @@ import axios from 'utils/axios';
 import { Store } from '../../../../@types/store';
 import countries from '../countries';
 import provinces from '../provinces';
-import cities from '../cities';
 import PhoneNumberField from 'components/PhoneNumberField';
 
 // ----------------------------------------------------------------------
@@ -54,9 +54,9 @@ export default function AccountInformationEdit() {
       description: store?.description || '',
       address: store?.address || '',
       city: store?.city || '',
-      country: store?.country || '',
       phoneNumber: store?.phoneNumber || '',
-      state: store?.state || '',
+      country: store?.country || countries[0].label,
+      state: store?.state || provinces[0].province,
       zipCode: store?.zipCode || ''
     },
 
@@ -79,7 +79,39 @@ export default function AccountInformationEdit() {
     }
   });
 
-  const { errors, touched, isSubmitting, handleSubmit, getFieldProps, setFieldValue } = formik;
+  const { errors, values, touched, isSubmitting, handleSubmit, getFieldProps, setFieldValue } =
+    formik;
+
+  const [cities, setCities] = useState([
+    {
+      city_id: 9999999,
+      province_id: 9999999,
+      type: '',
+      city_name: 'Silakan pilih provinsi terlebih dahulu'
+    }
+  ]);
+
+  const fetchCityData = useCallback(async () => {
+    const provinceId = values.state
+      ? provinces.filter((province) => province.province === values.state)[0].province_id
+      : null;
+    if (provinceId) {
+      const response = await axios.get('shipment/city', {
+        params: {
+          province: values.state
+            ? provinces.filter((province) => province.province === values.state)[0].province_id
+            : null
+        }
+      });
+      if (response.data.payload) {
+        setCities(response.data.payload);
+      }
+    }
+  }, [values.state]);
+
+  useEffect(() => {
+    fetchCityData();
+  }, [fetchCityData]);
 
   return (
     <FormikProvider value={formik}>
@@ -148,8 +180,8 @@ export default function AccountInformationEdit() {
                   <TextField
                     select
                     fullWidth
-                    label="Kota"
-                    placeholder="Kota"
+                    label="Kota/Kabupaten"
+                    placeholder="Kota/Kabupaten"
                     {...getFieldProps('city')}
                     SelectProps={{ native: true }}
                     error={Boolean(touched.city && errors.city)}
@@ -158,7 +190,7 @@ export default function AccountInformationEdit() {
                     <option defaultValue=""></option>
                     {cities.map((option) => (
                       <option key={option.city_id} value={option.city_name}>
-                        {option.city_name}
+                        {`${option.type} ${option.city_name}`}
                       </option>
                     ))}
                   </TextField>
