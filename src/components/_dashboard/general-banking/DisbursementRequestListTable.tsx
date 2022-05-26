@@ -1,21 +1,9 @@
-import { useRef, useState, useEffect } from 'react';
-import { format } from 'date-fns';
-import { Icon, IconifyIcon } from '@iconify/react';
-import bookFill from '@iconify/icons-eva/book-fill';
-import shareFill from '@iconify/icons-eva/share-fill';
-import printerFill from '@iconify/icons-eva/printer-fill';
-import downloadFill from '@iconify/icons-eva/download-fill';
-import trash2Outline from '@iconify/icons-eva/trash-2-outline';
-import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
+import { useState, useEffect } from 'react';
 // material
 import {
   Box,
   Card,
-  Menu,
   Table,
-  Avatar,
-  Divider,
-  MenuItem,
   TableRow,
   TableBody,
   TableCell,
@@ -27,9 +15,9 @@ import {
 } from '@mui/material';
 // utils
 import { fCurrency } from '../../../utils/formatNumber';
+import { fDate, fTime } from '../../../utils/formatTime';
 //
 import Scrollbar from '../../Scrollbar';
-import { MIconButton } from '../../@material-extend';
 
 import {
   handleListReimbursement,
@@ -57,104 +45,6 @@ type Reimbursement = {
 
 // ----------------------------------------------------------------------
 
-type AvatarIconProps = {
-  icon: IconifyIcon;
-};
-
-function AvatarIcon({ icon }: AvatarIconProps) {
-  return (
-    <Avatar
-      sx={{
-        width: 48,
-        height: 48,
-        color: 'text.secondary',
-        bgcolor: 'background.neutral'
-      }}
-    >
-      <Icon icon={icon} width={24} height={24} />
-    </Avatar>
-  );
-}
-
-function renderAvatar(request: Reimbursement) {
-  return request.photo_url ? (
-    <Avatar
-      alt={request.display_name}
-      src={request.photo_url}
-      sx={{ width: 48, height: 48, boxShadow: (theme) => theme.customShadows.z8 }}
-    />
-  ) : (
-    <AvatarIcon icon={bookFill} />
-  );
-}
-
-type MoreMenuButtonProps = {
-  onDownload: VoidFunction;
-  onPrint: VoidFunction;
-  onShare: VoidFunction;
-  onDelete: VoidFunction;
-};
-
-function MoreMenuButton({ onDownload, onPrint, onShare, onDelete }: MoreMenuButtonProps) {
-  const menuRef = useRef(null);
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <>
-      <>
-        <MIconButton ref={menuRef} size="large" onClick={handleOpen}>
-          <Icon icon={moreVerticalFill} width={20} height={20} />
-        </MIconButton>
-      </>
-
-      <Menu
-        open={open}
-        anchorEl={menuRef.current}
-        onClose={handleClose}
-        PaperProps={{
-          sx: { width: 200, maxWidth: '100%' }
-        }}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <MenuItem onClick={onDownload}>
-          <Icon icon={downloadFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Download
-          </Typography>
-        </MenuItem>
-        <MenuItem onClick={onPrint}>
-          <Icon icon={printerFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Print
-          </Typography>
-        </MenuItem>
-        <MenuItem onClick={onShare}>
-          <Icon icon={shareFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Share
-          </Typography>
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={onDelete} sx={{ color: 'error.main' }}>
-          <Icon icon={trash2Outline} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Delete
-          </Typography>
-        </MenuItem>
-      </Menu>
-    </>
-  );
-}
-
 export default function DisbursementRequestListTable() {
   const { currentRole } = useAuth();
   const [reimbursementList, setReimbursementList] = useState<Reimbursement[]>([]);
@@ -179,11 +69,6 @@ export default function DisbursementRequestListTable() {
     fetchData();
   }, [currentRole]);
 
-  const handleClickDownload = () => {};
-  const handleClickPrint = () => {};
-  const handleClickShare = () => {};
-  const handleClickDelete = () => {};
-
   //Table Pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -199,30 +84,30 @@ export default function DisbursementRequestListTable() {
   return (
     <>
       <Card>
-        <CardHeader title="Disbursement Request" sx={{ mb: 3 }} />
+        <CardHeader title="Pengajuan Pencairan Dana" sx={{ mb: 3 }} />
         <Scrollbar>
           <TableContainer sx={{ minWidth: 720 }}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell>Type</TableCell>
+                  <TableCell>Id</TableCell>
+                  <TableCell>Tipe</TableCell>
                   {currentRole && currentRole.name === 'ADMIN' ? (
-                    <TableCell>User</TableCell>
+                    <TableCell>Pengguna</TableCell>
                   ) : (
                     <></>
                   )}
-                  <TableCell>Date</TableCell>
+                  <TableCell>Tanggal</TableCell>
                   {currentRole && currentRole.name === 'ADMIN' ? (
                     <>
-                      <TableCell>Account Number</TableCell>
-                      <TableCell>Account Name</TableCell>
-                      <TableCell>Bank Name</TableCell>
+                      <TableCell>Nomor rekening</TableCell>
+                      <TableCell>Nama rekening</TableCell>
+                      <TableCell>Nama bank</TableCell>
                     </>
                   ) : (
                     <></>
                   )}
-                  <TableCell>Amount</TableCell>
+                  <TableCell>Jumlah</TableCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
@@ -237,13 +122,9 @@ export default function DisbursementRequestListTable() {
                     {currentRole && currentRole.name === 'ADMIN' ? (
                       <TableCell>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Box sx={{ position: 'relative' }}>{renderAvatar(row)}</Box>
-                          <Box sx={{ ml: 2 }}>
-                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                              {row.display_name}
-                            </Typography>
-                            <Typography variant="subtitle2"> {row.display_name}</Typography>
-                          </Box>
+                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                            {row.display_name}
+                          </Typography>
                         </Box>
                       </TableCell>
                     ) : (
@@ -251,11 +132,9 @@ export default function DisbursementRequestListTable() {
                     )}
 
                     <TableCell>
-                      <Typography variant="subtitle2">
-                        {format(new Date(row.time), 'dd MMM yyyy')}
-                      </Typography>
+                      <Typography variant="subtitle2">{fDate(row.time)}</Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        {format(new Date(row.time), 'p')}
+                        {fTime(row.time)}
                       </Typography>
                     </TableCell>
 
@@ -272,15 +151,6 @@ export default function DisbursementRequestListTable() {
                     )}
 
                     <TableCell>{fCurrency(row.total_cost)}</TableCell>
-
-                    <TableCell align="right">
-                      <MoreMenuButton
-                        onDownload={handleClickDownload}
-                        onPrint={handleClickPrint}
-                        onShare={handleClickShare}
-                        onDelete={handleClickDelete}
-                      />
-                    </TableCell>
                   </TableRow>
                 ))}
                 {emptyRows > 0 && (

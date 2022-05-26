@@ -7,6 +7,10 @@ export function fDate(date: Date | string | number) {
   return format(new Date(date), 'dd MMMM yyyy', { locale: id });
 }
 
+export function fTime(date: Date | string | number) {
+  return format(new Date(date), 'p', { locale: id });
+}
+
 export function fDateTime(date: Date | string | number) {
   return format(new Date(date), 'dd MMM yyyy p', { locale: id }) + ' WIB';
 }

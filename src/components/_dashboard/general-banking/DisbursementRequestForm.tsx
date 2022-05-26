@@ -60,13 +60,13 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
 
   const DisbursementRequestSchema = Yup.object().shape({
     amount: Yup.number()
-      .required()
-      .min(0, 'Min value 0.')
+      .required('Jumlah pencairan dana wajib diisi')
+      .min(0, 'Jumlah minimum 0.')
       .max(
         maxDisbursement ? maxDisbursement : 0,
-        `Max value ${fCurrency(maxDisbursement ? maxDisbursement : 0)}`
+        `Jumlah maksimum ${fCurrency(maxDisbursement ? maxDisbursement : 0)}`
       ),
-    disbType: Yup.string().required('Disbursement Type required')
+    disbType: Yup.string().required('Tipe pencairan dana perlu diisi')
   });
 
   const formik = useFormik({
@@ -81,13 +81,13 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
         if (user && props.bankAccount) {
           if (await handleCreateReimbursement(Number(values.amount), values.disbType)) {
             window.location.reload();
-            enqueueSnackbar('Create success', { variant: 'success' });
+            enqueueSnackbar('Pengajuan pencairan dana berhasil dibuat', { variant: 'success' });
           } else {
-            enqueueSnackbar('Create fail', { variant: 'error' });
+            enqueueSnackbar('Pengajuan pencairan dana gagal dibuat', { variant: 'error' });
           }
         }
         if (!props.bankAccount) {
-          enqueueSnackbar('Create bank account first', { variant: 'error' });
+          enqueueSnackbar('Buat akun bank terlebih dahulu', { variant: 'error' });
         }
         resetForm();
         setSubmitting(false);
@@ -123,7 +123,7 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
                 <Stack spacing={1}>
                   <TextField
                     fullWidth
-                    label="Amount"
+                    label="Jumlah"
                     {...getFieldProps('amount')}
                     error={Boolean(touched.amount && errors.amount)}
                     helperText={touched.amount && errors.amount}
@@ -141,7 +141,7 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
                 </Stack>
                 <Stack spacing={1}>
                   <FormControl>
-                    <FormLabel id="type-radio-buttons-group-label">Type</FormLabel>
+                    <FormLabel id="type-radio-buttons-group-label">Tipe</FormLabel>
                     <RadioGroup
                       aria-labelledby="type-radio-buttons-group-label"
                       name="disbType"

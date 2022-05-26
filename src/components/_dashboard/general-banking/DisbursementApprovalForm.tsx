@@ -38,8 +38,8 @@ export default function DisbursementApprovalForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewProductSchema = Yup.object().shape({
-    disbursementRequestId: Yup.string().required(),
-    receipt: Yup.mixed().required('Receipt is required')
+    disbursementRequestId: Yup.string().required('Id pencairan dana wajib diisi'),
+    receipt: Yup.mixed().required('Kuitansi wajib diisi')
   });
 
   const formik = useFormik<DisbursementApprovalValues>({
@@ -51,10 +51,15 @@ export default function DisbursementApprovalForm() {
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         const reimbursement = await handleShowReimbursement(values.disbursementRequestId);
+        const uploadFileMessage = await handleUploadFile(
+          values.receipt,
+          'disbursement',
+          values.disbursementRequestId
+        );
         const editedReimbursement = await handleEditReimbursement(
           values.disbursementRequestId,
           'success',
-          undefined
+          uploadFileMessage
         );
         let editedSaldo;
         let editedSimpananSukarela;
@@ -76,12 +81,6 @@ export default function DisbursementApprovalForm() {
           status: 'success'
         });
 
-        const uploadFileMessage = await handleUploadFile(
-          values.receipt,
-          'disbursement',
-          values.disbursementRequestId + '.png'
-        );
-
         const currentPeriode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
 
         const financeReportInput = await handlePencairanDana(
@@ -100,9 +99,9 @@ export default function DisbursementApprovalForm() {
           uploadFileMessage &&
           financeReportInput
         ) {
-          enqueueSnackbar('Create success', { variant: 'success' });
+          enqueueSnackbar('Persetujuan pencairan dana berhasil dibuat', { variant: 'success' });
         } else {
-          enqueueSnackbar('Create fail', { variant: 'error' });
+          enqueueSnackbar('Persetujuan pencairan dana gagal dibuat', { variant: 'error' });
         }
       } catch (error) {
         console.error(error);
@@ -134,13 +133,13 @@ export default function DisbursementApprovalForm() {
               <Stack spacing={3}>
                 <TextField
                   fullWidth
-                  label="Disbursement Request ID"
+                  label="ID pengajuan pencairan dana"
                   {...getFieldProps('disbursementRequestId')}
                   error={Boolean(touched.disbursementRequestId && errors.disbursementRequestId)}
                   helperText={touched.disbursementRequestId && errors.disbursementRequestId}
                 />
                 <div>
-                  <LabelStyle>Upload Receipt</LabelStyle>
+                  <LabelStyle>Unggah kuitansi</LabelStyle>
                   <UploadSingleFile
                     maxSize={3145728}
                     accept="image/*"
@@ -165,7 +164,7 @@ export default function DisbursementApprovalForm() {
               size="large"
               loading={isSubmitting}
             >
-              Create Disbursement Approval
+              Buat persetujuan pencairan dana
             </LoadingButton>
           </Grid>
         </Grid>

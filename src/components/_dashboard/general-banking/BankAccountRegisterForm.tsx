@@ -51,9 +51,9 @@ export default function BankAccountRegisterForm(props: {
             );
             if (editedBankAccount) {
               props.setBankAccount(editedBankAccount);
-              enqueueSnackbar('Edit success', { variant: 'success' });
+              enqueueSnackbar('Akun bank berhasil diedit', { variant: 'success' });
             } else {
-              enqueueSnackbar('Edit fail', { variant: 'error' });
+              enqueueSnackbar('Akun bank gagal diedit', { variant: 'error' });
             }
           } else {
             const createdBankAccount = await handleCreateBankAccount(
@@ -63,9 +63,9 @@ export default function BankAccountRegisterForm(props: {
             );
             if (createdBankAccount) {
               props.setBankAccount(createdBankAccount);
-              enqueueSnackbar('Create success', { variant: 'success' });
+              enqueueSnackbar('Akun bank berhasil dibuat', { variant: 'success' });
             } else {
-              enqueueSnackbar('Create fail', { variant: 'error' });
+              enqueueSnackbar('Akun bank gagal dibuat', { variant: 'error' });
             }
           }
         }
@@ -89,21 +89,21 @@ export default function BankAccountRegisterForm(props: {
               <Stack spacing={5}>
                 <TextField
                   fullWidth
-                  label="Account Number"
+                  label="Nomor rekening"
                   {...getFieldProps('accountNumber')}
                   error={Boolean(touched.accountNumber && errors.accountNumber)}
                   helperText={touched.accountNumber && errors.accountNumber}
                 />
                 <TextField
                   fullWidth
-                  label="Account Name"
+                  label="Nama rekening"
                   {...getFieldProps('accountName')}
                   error={Boolean(touched.accountName && errors.accountName)}
                   helperText={touched.accountName && errors.accountName}
                 />
                 <TextField
                   fullWidth
-                  label="Bank Name"
+                  label="Nama bank"
                   {...getFieldProps('bankName')}
                   error={Boolean(touched.bankName && errors.bankName)}
                   helperText={touched.bankName && errors.bankName}
@@ -120,11 +120,7 @@ export default function BankAccountRegisterForm(props: {
               loading={isSubmitting}
               disabled={!user}
             >
-              {user
-                ? props.bankAccount
-                  ? 'Edit Bank Account'
-                  : 'Register Bank Account'
-                : 'Loading'}
+              {user ? (props.bankAccount ? 'Edit akun bank' : 'Daftarkan akun bank') : 'Loading'}
             </LoadingButton>
           </Grid>
         </Grid>

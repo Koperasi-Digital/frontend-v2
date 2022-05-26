@@ -36,10 +36,10 @@ export default function DisbursementRequest() {
   }, []);
 
   return (
-    <Page title="Transaction Report | CoopChick">
+    <Page title="Pengajuan Pencairan Dana | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={'Pengajuan Pencairan'}
+          heading={'Pengajuan Pencairan Dana'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Pengajuan Pencairan' }
