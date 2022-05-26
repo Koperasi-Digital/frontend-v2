@@ -67,7 +67,7 @@ export default function BankingMemberSimpananWajib() {
   // Transactions Filter
   const filterDropdownRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const [filterMode, setFilterMode] = useState<string>('All');
+  const [filterMode, setFilterMode] = useState<string>('Semua');
   const [allSimpananWajibData, setAllSimpananWajibData] = useState<SimpananWajibProps[]>([]);
   const [filteredSimpananWajibData, setFilteredSimpananWajibData] = useState<SimpananWajibProps[]>(
     []
@@ -86,7 +86,7 @@ export default function BankingMemberSimpananWajib() {
 
     setFilterMode(filterName);
 
-    if (filterName === 'All') {
+    if (filterName === 'Semua') {
       setFilteredSimpananWajibData(allSimpananWajibData);
     } else {
       let result = [];
@@ -167,10 +167,10 @@ export default function BankingMemberSimpananWajib() {
               sx={{ width: 220 }}
             >
               <MenuItem
-                onClick={() => handleSearch('All')}
+                onClick={() => handleSearch('Semua')}
                 sx={{ typography: 'body2', py: 1, px: 2.5 }}
               >
-                All
+                Semua
               </MenuItem>
               <MenuItem
                 onClick={() => handleSearch('LUNAS')}
@@ -193,8 +193,8 @@ export default function BankingMemberSimpananWajib() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Amount</TableCell>
+                  <TableCell>Nama</TableCell>
+                  <TableCell>Jumlah</TableCell>
                   <TableCell>Status</TableCell>
                 </TableRow>
               </TableHead>
@@ -211,7 +211,7 @@ export default function BankingMemberSimpananWajib() {
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Box sx={{ ml: 2 }}>
                           <Typography variant="subtitle2">
-                            {row.user ? row.user.displayName : 'No user data'}
+                            {row.user ? row.user.displayName : 'Tidak ada data pengguna'}
                           </Typography>
                         </Box>
                       </Box>
