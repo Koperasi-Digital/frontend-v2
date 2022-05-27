@@ -48,7 +48,7 @@ export default function AppWelcome() {
           sx={{
             justifyContent: {
               xs: 'center',
-              lg: 'initial'
+              md: 'initial'
             }
           }}
         >

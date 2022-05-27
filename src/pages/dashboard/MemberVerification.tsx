@@ -13,7 +13,10 @@ import {
   Box,
   Button,
   styled,
-  Link
+  Link,
+  DialogContent,
+  DialogTitle,
+  Typography
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -29,6 +32,7 @@ import Scrollbar from 'components/Scrollbar';
 import Page from 'components/Page';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
 import LightboxModal from 'components/LightboxModal';
+import { DialogAnimate } from 'components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +52,7 @@ export default function MemberVerification() {
   const [openLightbox, setOpenLightbox] = useState(false);
   const [lightboxImages, setLightboxImages] = useState({ images: [''], selectedIndex: 0 });
   const { enqueueSnackbar } = useSnackbar();
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
   const getMemberVerification = useCallback(async () => {
     try {
@@ -181,10 +186,39 @@ export default function MemberVerification() {
                                 color="error"
                                 variant="contained"
                                 size="small"
-                                onClick={() => handleRejectVerification(userId)}
+                                onClick={() => setIsOpenDeleteModal(true)}
                               >
                                 Tolak
                               </Button>
+                              <DialogAnimate
+                                open={isOpenDeleteModal}
+                                onClose={() => setIsOpenDeleteModal(false)}
+                              >
+                                <DialogTitle sx={{ pb: 1 }}>Tolak Verifikasi?</DialogTitle>
+                                <DialogContent sx={{ overflowY: 'unset' }}>
+                                  <Typography align={'justify'}>
+                                    Data verifikasi pengguna yang ditolak akan hilang selamanya!
+                                    Calon anggota harus mengajukan verifikasi kembali jika ingin
+                                    menjadi anggota koperasi. Apakah Anda tetap ingin menolak
+                                    verifikasi?
+                                  </Typography>
+                                  <Box display="flex" justifyContent="end" gap={2} pt={2} pb={1}>
+                                    <Button
+                                      variant="contained"
+                                      onClick={() => handleRejectVerification(userId)}
+                                      color="error"
+                                    >
+                                      Tolak
+                                    </Button>
+                                    <Button
+                                      variant="contained"
+                                      onClick={() => setIsOpenDeleteModal(false)}
+                                    >
+                                      Batal
+                                    </Button>
+                                  </Box>
+                                </DialogContent>
+                              </DialogAnimate>
                             </Box>
                           </TableCell>
                         </TableRow>
