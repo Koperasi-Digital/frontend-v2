@@ -88,7 +88,6 @@ export default function CheckoutShipmentDialog({
       destination: getCityIDByName(destination),
       weight: weightTotal
     };
-    console.log(shipmentInfo);
     const fetchShippingData = async (shipmentInfo: ShipmentForm) => {
       const response: ShipmentOptions[] = await getAllShipmentCost(shipmentInfo);
       setDeliveryOptions(response);
@@ -125,7 +124,6 @@ export default function CheckoutShipmentDialog({
           onChange={(event) => {
             const { value } = event.target;
             const [cost, service, chosenStore] = value.split(';');
-            console.log(value);
             setFieldValue('shipment', value);
             const applyShippingItem = {
               chosenStore: chosenStore,

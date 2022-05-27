@@ -323,7 +323,6 @@ export function addProduct(product: ProductFormikProps) {
     dispatch(slice.actions.startLoading());
     try {
       // Upload product to product table
-      console.log(product);
       const periode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
       await axios.post('/products/create', product);
       await handleAddEditProduct(
