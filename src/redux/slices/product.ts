@@ -265,7 +265,6 @@ export function getProducts(filter: ProductFilter, name: string | null, sortBy: 
     const { dispatch } = store;
     dispatch(slice.actions.startLoading());
     dispatch(slice.actions.filterProducts(filter));
-    console.log(sortBy);
     try {
       const response: { data: { payload: Product[] } } = await axios.get('/products/', {
         params: {
