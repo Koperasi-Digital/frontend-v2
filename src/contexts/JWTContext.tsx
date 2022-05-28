@@ -298,7 +298,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
           return selectedRole[0];
         }
       }
-      // use first item in user roles array as default role
+      // sort to get default role: admin > member > customer
+      ownedRoles.sort((a, b) => a.id - b.id);
       const defaultRole = ownedRoles[0];
       localStorage.setItem('currentRoleId', defaultRole.id.toString());
       return defaultRole;
@@ -311,6 +312,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
     if (roleId) {
       localStorage.setItem('currentRoleId', roleId.toString());
       currentRole = getCurrentRole(state.user?.roles);
+    } else {
+      localStorage.removeItem('currentRoleId');
     }
     dispatch({
       type: Types.SetRole,
