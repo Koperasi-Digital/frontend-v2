@@ -65,6 +65,10 @@ export default function Calendar({
       const calendarApi = calendarEl.getApi();
       calendarApi.today();
       setDate(calendarApi.getDate());
+      if (!isMobile) {
+        calendarApi.changeView('timeGridDay');
+        setView('timeGridDay');
+      }
     }
   };
 
