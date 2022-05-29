@@ -69,9 +69,10 @@ export default function DisbursementApprovalForm() {
         }
 
         const createdCoopTransaction = await handleCreateCoopTransaction({
-          sisaHasilUsahaId: undefined,
-          reimbursementId: reimbursement.id,
-          paymentType: 'Transfer Bank BCA',
+          destUserId: reimbursement.user.id,
+          type: `reimbursement ${reimbursement.type}`,
+          total_cost: reimbursement.total_cost,
+          paymentType: 'transfer admin',
           status: 'success'
         });
 

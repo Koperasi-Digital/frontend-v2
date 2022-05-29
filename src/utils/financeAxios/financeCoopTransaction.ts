@@ -1,8 +1,9 @@
 import axios from '../axios';
 
 export async function handleCreateCoopTransaction(param: {
-  sisaHasilUsahaId: number | undefined;
-  reimbursementId: number | undefined;
+  destUserId: number;
+  type: string;
+  total_cost: number;
   paymentType: string;
   status: string;
 }) {
