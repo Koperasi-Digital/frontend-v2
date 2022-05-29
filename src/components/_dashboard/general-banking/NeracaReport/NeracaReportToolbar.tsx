@@ -59,7 +59,7 @@ export default function NeracaReportToolbar(props: { neracaData: NeracaData | un
               loadingPosition="end"
               endIcon={<Icon icon={downloadFill} />}
             >
-              Download Laporan Neraca
+              Unduh Laporan Neraca
             </LoadingButton>
           )}
         </PDFDownloadLink>

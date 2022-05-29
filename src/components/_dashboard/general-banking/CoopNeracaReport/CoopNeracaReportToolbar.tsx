@@ -68,7 +68,7 @@ export default function CoopNeracaReportToolbar(props: {
               loadingPosition="end"
               endIcon={<Icon icon={downloadFill} />}
             >
-              Download Laporan Neraca Koperasi
+              Unduh Laporan Neraca Koperasi
             </LoadingButton>
           )}
         </PDFDownloadLink>

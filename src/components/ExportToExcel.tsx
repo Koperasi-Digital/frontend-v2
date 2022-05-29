@@ -81,7 +81,7 @@ export const ExportToExcel = (props: {
       }}
       endIcon={<Icon icon={downloadFill} />}
     >
-      Export To XLSX File
+      Unduh dalam file XLSX
     </Button>
   );
 };
