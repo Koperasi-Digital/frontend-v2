@@ -47,7 +47,7 @@ export default function CoopArusKasReportToolbar(props: {
               loadingPosition="end"
               endIcon={<Icon icon={downloadFill} />}
             >
-              Download Laporan Arus Kas Koperasi
+              Unduh Laporan Arus Kas Koperasi
             </LoadingButton>
           )}
         </PDFDownloadLink>

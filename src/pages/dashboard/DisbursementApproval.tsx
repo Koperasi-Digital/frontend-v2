@@ -11,13 +11,13 @@ import DisbursementApprovalForm from '../../components/_dashboard/general-bankin
 
 export default function DisbursementApproval() {
   return (
-    <Page title="Finance: Disbursement | CoopChick">
+    <Page title="Penyetujuan Pencairan Dana | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={'Pembuatan Persetujuan Pencairan'}
+          heading={'Pembuatan Persetujuan Pencairan Dana'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Persetujuan Pencairan' }
+            { name: 'Penyetujuan Pencairan' }
           ]}
         />
 

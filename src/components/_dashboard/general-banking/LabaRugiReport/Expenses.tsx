@@ -80,7 +80,7 @@ export default function Expenses(props: {
           </IconWrapperStyle>
 
           <Stack spacing={1} sx={{ p: 3 }}>
-            <Typography sx={{ typography: 'subtitle2' }}>Expenses</Typography>
+            <Typography sx={{ typography: 'subtitle2' }}>Pengeluaran</Typography>
             <Typography sx={{ typography: 'h3' }}>
               {fCurrency(
                 props.currentLabaRugiData.biayaProduksiProdukTerjual +
@@ -100,7 +100,7 @@ export default function Expenses(props: {
                 {fPercent(props.expensePercent)}
               </Typography>
               <Typography variant="body2" component="span" sx={{ opacity: 0.72 }}>
-                &nbsp;than last month
+                &nbsp;dari bulan lalu
               </Typography>
             </Stack>
           </Stack>

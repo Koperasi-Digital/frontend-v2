@@ -85,9 +85,9 @@ export default function BankingEMoney() {
   useEffect(() => {
     if (errorType) {
       if (errorType === 'Unauthorized') {
-        enqueueSnackbar('Payment account has already used in other account', { variant: 'error' });
+        enqueueSnackbar('Akun pembayaran sudah digunakan oleh akun lain', { variant: 'error' });
       } else {
-        enqueueSnackbar('Register payment account fail', { variant: 'error' });
+        enqueueSnackbar('Pendaftaran akun pembayaran gagal', { variant: 'error' });
       }
       dispatch(resetErrorType());
     }
@@ -111,7 +111,7 @@ export default function BankingEMoney() {
               </Typography>
             </Stack>
             <Button variant="contained" onClick={handleUnregisterEMoney}>
-              Unregister Gopay
+              Batalkan pendaftaran Gopay
             </Button>
           </Box>
         ) : !isLoadingGetPaymentAccount &&
@@ -124,7 +124,7 @@ export default function BankingEMoney() {
               setOpenModalEMoney(true);
             }}
           >
-            Register E-Money
+            Daftarkan Gopay
           </Button>
         ) : isLoadingGetPaymentAccount ||
           isLoadingCharge ||
@@ -151,7 +151,7 @@ export default function BankingEMoney() {
           setOpenModalEMoney(false);
         }}
       >
-        <DialogTitle>Register EMoney</DialogTitle>
+        <DialogTitle>Daftarkan Gopay</DialogTitle>
         <BankingEMoneyForm
           handleCloseModal={handleCloseModal}
           handleRegisterEMoney={handleRegisterEMoney}

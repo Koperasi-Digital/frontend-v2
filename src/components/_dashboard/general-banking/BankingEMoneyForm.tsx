@@ -23,9 +23,9 @@ export default function BankingEMoneyForm({
   };
 
   const EventSchema = Yup.object().shape({
-    payment_type: Yup.string().max(255).required('Payment type is required'),
-    phone_number: Yup.string().max(255).required('Phone number is required'),
-    country_code: Yup.string().max(255).required('Country code is required')
+    payment_type: Yup.string().max(255).required('Tipe pembayaran wajib diisi').oneOf(['gopay']),
+    phone_number: Yup.string().max(255).required('Nomor telepon wajib diisi'),
+    country_code: Yup.string().max(255).required('Kode negara wajib diisi')
   });
 
   const formik = useFormik({
@@ -49,7 +49,7 @@ export default function BankingEMoneyForm({
         <DialogContent sx={{ pb: 0, overflowY: 'unset' }}>
           <TextField
             fullWidth
-            label="Payment Type"
+            label="Tipe Pembayaran"
             {...getFieldProps('payment_type')}
             error={Boolean(touched.payment_type && errors.payment_type)}
             helperText={touched.payment_type && errors.payment_type}
@@ -59,7 +59,7 @@ export default function BankingEMoneyForm({
           <TextField
             fullWidth
             multiline
-            label="Phone Number"
+            label="Nomor Telepon"
             {...getFieldProps('phone_number')}
             error={Boolean(touched.phone_number && errors.phone_number)}
             helperText={touched.phone_number && errors.phone_number}
@@ -69,7 +69,7 @@ export default function BankingEMoneyForm({
           <TextField
             fullWidth
             multiline
-            label="Country Code"
+            label="Kode Negara"
             {...getFieldProps('country_code')}
             error={Boolean(touched.country_code && errors.country_code)}
             helperText={touched.country_code && errors.country_code}
@@ -79,7 +79,7 @@ export default function BankingEMoneyForm({
 
         <DialogActions>
           <Button type="button" variant="outlined" color="inherit" onClick={handleCloseModal}>
-            Cancel
+            Batal
           </Button>
           <LoadingButton
             type="submit"
@@ -87,7 +87,7 @@ export default function BankingEMoneyForm({
             loading={isSubmitting}
             loadingIndicator="Loading..."
           >
-            Submit
+            Kirim
           </LoadingButton>
         </DialogActions>
       </Form>

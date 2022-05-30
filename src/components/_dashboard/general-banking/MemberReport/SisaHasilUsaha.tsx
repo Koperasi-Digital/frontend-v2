@@ -62,7 +62,7 @@ export default function SisaHasilUsaha(props: { dateValue: Date }) {
           </Stack>
           <Stack direction="row" justifyContent="center">
             <Typography variant="body1" gutterBottom>
-              (Coba refresh jika yakin memang data ada)
+              (Coba refresh jika data ada)
             </Typography>
           </Stack>
         </>

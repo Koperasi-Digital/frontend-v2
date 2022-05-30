@@ -45,7 +45,7 @@ export default function ArusKasReportToolbar(props: { arusKasData: ArusKasData |
               loadingPosition="end"
               endIcon={<Icon icon={downloadFill} />}
             >
-              Download Laporan Arus Kas
+              Unduh Laporan Arus Kas
             </LoadingButton>
           )}
         </PDFDownloadLink>

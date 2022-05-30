@@ -33,10 +33,10 @@ export default function BalanceStatistics(props: { dateValue: Date }) {
         'Feb',
         'Mar',
         'Apr',
-        'May',
+        'Mei',
         'Jun',
         'Jul',
-        'Aug',
+        'Agt',
         'Sep',
         'Okt',
         'Nov',
@@ -91,14 +91,14 @@ export default function BalanceStatistics(props: { dateValue: Date }) {
     <>
       {incomeList !== undefined && expenseList !== undefined ? (
         <Card>
-          <CardHeader title="Balance Statistics" />
+          <CardHeader title="Statistik Saldo" />
           <Scrollbar>
             <Box dir="ltr">
               <ReactApexChart
                 type="bar"
                 series={[
-                  { name: 'Income', data: incomeList },
-                  { name: 'Expense', data: expenseList }
+                  { name: 'Pendapatan', data: incomeList },
+                  { name: 'Pengeluaran', data: expenseList }
                 ]}
                 options={chartOptions}
                 height={364}

@@ -11,10 +11,10 @@ import DisbursementRequestListTable from 'components/_dashboard/general-banking/
 
 export default function DisbursementRequestList() {
   return (
-    <Page title="Transaction Report | CoopChick">
+    <Page title="Daftar Pengajuan Pencairan Dana | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading={'Daftar Pengajuan Pencairan'}
+          heading={'Daftar Pengajuan Pencairan Dana'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Daftar Pengajuan Pencairan' }

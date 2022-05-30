@@ -34,8 +34,8 @@ export default function DeprecationRegisterForm() {
 
   const DeprecationRegisterSchema = Yup.object().shape({
     amount: Yup.number()
-      .required()
-      .min(0, `Jumlah Minimum ${fCurrency(0)}`)
+      .required('Jumlah wajib diisi')
+      .min(0, `Jumlah minimum ${fCurrency(0)}`)
       .max(
         coopNeracaData ? coopNeracaData.asetTetap : 0,
         `Jumlah maksimum ${fCurrency(coopNeracaData ? coopNeracaData.asetTetap : 0)}`
@@ -84,7 +84,7 @@ export default function DeprecationRegisterForm() {
               <Stack spacing={1}>
                 <TextField
                   fullWidth
-                  label="Amount"
+                  label="Jumlah"
                   {...getFieldProps('amount')}
                   error={Boolean(touched.amount && errors.amount)}
                   helperText={touched.amount && errors.amount}
