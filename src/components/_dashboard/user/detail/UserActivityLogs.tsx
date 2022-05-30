@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { capitalize } from 'lodash';
 import {
+  Button,
   Card,
   Table,
   TableRow,
@@ -24,8 +25,10 @@ import { fDateTime } from 'utils/formatTime';
 import { UserManager } from '../../../../@types/user';
 // hooks
 import useIsMountedRef from 'hooks/useIsMountedRef';
+import useAuth from 'hooks/useAuth';
 // components
 import Scrollbar from 'components/Scrollbar';
+import UserActivityLogForm from './UserActivityLogForm';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +41,8 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [activityLogList, setActivityLogList] = useState([]);
+  const { currentRole } = useAuth();
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const getUserActivityLogs = useCallback(async () => {
     try {
@@ -80,7 +85,18 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
   return (
     <>
       <Card>
-        <CardHeader title="Keaktifan Anggota (Presensi Meeting)" sx={{ mb: 3 }} />
+        <CardHeader
+          title="Keaktifan Anggota (Presensi Meeting)"
+          sx={{ mb: 3 }}
+          action={
+            currentRole &&
+            currentRole?.name === 'ADMIN' && (
+              <Button variant="contained" onClick={() => setIsOpenModal(true)}>
+                Tambah
+              </Button>
+            )
+          }
+        />
         <Scrollbar>
           <TableContainer sx={{ minWidth: 800 }}>
             <Table>
@@ -158,6 +174,7 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
           Lihat keaktifan transaksi
         </Typography>
       </Link>
+      <UserActivityLogForm open={isOpenModal} onClose={() => setIsOpenModal(false)} user={user} />
     </>
   );
 }
