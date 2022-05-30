@@ -67,7 +67,7 @@ export default function ProductSold() {
     <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
       <Box sx={{ flexGrow: 1 }}>
         <Typography variant="subtitle2" paragraph>
-          Product Sold
+          Total Produk Terjual
         </Typography>
         <Typography variant="h3" gutterBottom>
           {fNumber(totalSold)}
@@ -90,7 +90,7 @@ export default function ProductSold() {
             {fPercent(PERCENT)}
           </Typography>
           <Typography variant="body2" component="span" sx={{ color: 'text.secondary' }}>
-            &nbsp;than last week
+            &nbsp;dibandingkan bulan lalu
           </Typography>
         </Stack>
       </Box>

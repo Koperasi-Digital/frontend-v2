@@ -13,13 +13,14 @@ import {
   InputAdornment,
   Box,
   styled,
-  OutlinedInput
+  OutlinedInput,
+  TablePagination
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts } from '../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_PAGE } from '../../routes/paths';
 // utils
 import fakeRequest from '../../utils/fakeRequest';
 // @types
@@ -57,6 +58,13 @@ export default function EcommerceShop() {
   const { products, sortBy, filters } = useSelector(
     (state: { product: ProductState }) => state.product
   );
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(12);
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const formik = useFormik<ProductFilter>({
     initialValues: {
@@ -99,7 +107,7 @@ export default function EcommerceShop() {
   };
 
   return (
-    <Page title="Ecommerce: Shop | CoopChick">
+    <Page title="Ecommerce | CoopChick">
       {values && (
         <Backdrop open={isSubmitting} sx={{ zIndex: 9999 }}>
           <CircularProgress />
@@ -108,14 +116,12 @@ export default function EcommerceShop() {
 
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Shop"
+          heading="E-Commerce"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Beranda', href: PATH_PAGE.homepage },
             {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root
-            },
-            { name: 'Shop' }
+              name: 'E-Commerce'
+            }
           ]}
         />
 
@@ -166,7 +172,19 @@ export default function EcommerceShop() {
           </Stack>
         </Stack>
 
-        <ShopProductList products={products} isLoad={!products && !initialValues} />
+        <ShopProductList
+          products={products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)}
+          isLoad={!products && !initialValues}
+        />
+        <TablePagination
+          rowsPerPageOptions={[6, 12, 24]}
+          component="div"
+          count={products.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(event, value) => setPage(value)}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
         <CartWidget />
       </Container>
     </Page>

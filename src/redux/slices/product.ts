@@ -28,6 +28,7 @@ const initialState: ProductState = {
   },
   checkout: {
     orderId: '',
+    paymentType: '',
     activeStep: 0,
     cart: [],
     subtotal: 0,
@@ -125,6 +126,7 @@ const slice = createSlice({
 
     resetCart(state) {
       state.checkout.orderId = '';
+      state.checkout.paymentType = '';
       state.checkout.activeStep = 0;
       state.checkout.cart = [];
       state.checkout.total = 0;
@@ -134,9 +136,19 @@ const slice = createSlice({
     },
 
     resetShipment(state, action) {
-      const cartID = action.payload;
-      state.checkout.cart[cartID].shipment = null;
-      state.checkout.cart[cartID].shipment_price = null;
+      const chosenStore = action.payload;
+      const chosenItem: number[] = [];
+      state.checkout.cart.forEach((cartItem, index) => {
+        if (cartItem.store_name === chosenStore) {
+          chosenItem.push(index);
+        }
+      });
+      chosenItem.forEach((chosenItemID) => {
+        state.checkout.cart[chosenItemID].shipment = null;
+        state.checkout.cart[chosenItemID].shipment_price = null;
+      });
+      const totalShipping = state.checkout.cart.reduce((a, b) => a + (b.shipment_price || 0), 0);
+      state.checkout.shipping = totalShipping;
     },
 
     onBackStep(state) {
@@ -187,11 +199,24 @@ const slice = createSlice({
     },
 
     applyShipping(state, action) {
-      const { chosenItem, shipment, shipment_price } = action.payload;
-      state.checkout.cart[chosenItem].shipment = shipment;
-      state.checkout.cart[chosenItem].shipment_price = shipment_price;
+      const { chosenStore, shipment, shipment_price } = action.payload;
+      let weightTotal = 0;
+      state.checkout.cart.forEach((cartItem) => {
+        weightTotal += cartItem.weight * cartItem.quantity;
+      });
+      const chosenItem: number[] = [];
+      state.checkout.cart.forEach((cartItem, index) => {
+        if (cartItem.store_name === chosenStore) {
+          chosenItem.push(index);
+        }
+      });
+      chosenItem.forEach((chosenItemID) => {
+        const weight =
+          state.checkout.cart[chosenItemID].quantity * state.checkout.cart[chosenItemID].weight;
+        state.checkout.cart[chosenItemID].shipment = shipment;
+        state.checkout.cart[chosenItemID].shipment_price = (weight * shipment_price) / weightTotal;
+      });
       const totalShipping = state.checkout.cart.reduce((a, b) => a + (b.shipment_price || 0), 0);
-      console.log(totalShipping);
       state.checkout.shipping = totalShipping;
       state.checkout.total = state.checkout.subtotal + totalShipping;
     },
@@ -202,6 +227,10 @@ const slice = createSlice({
 
     setCheckoutOrder(state, action) {
       state.checkout.orderId = action.payload;
+    },
+
+    setPaymentType(state, action) {
+      state.checkout.paymentType = action.payload;
     }
   }
 });
@@ -225,7 +254,8 @@ export const {
   decreaseQuantity,
   sortByProducts,
   filterProducts,
-  setCheckoutOrder
+  setCheckoutOrder,
+  setPaymentType
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -235,7 +265,6 @@ export function getProducts(filter: ProductFilter, name: string | null, sortBy: 
     const { dispatch } = store;
     dispatch(slice.actions.startLoading());
     dispatch(slice.actions.filterProducts(filter));
-    console.log(sortBy);
     try {
       const response: { data: { payload: Product[] } } = await axios.get('/products/', {
         params: {
@@ -293,9 +322,8 @@ export function addProduct(product: ProductFormikProps) {
     dispatch(slice.actions.startLoading());
     try {
       // Upload product to product table
-      console.log(product);
       const periode = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-1`;
-      const response = await axios.post('/products/create', product);
+      await axios.post('/products/create', product);
       await handleAddEditProduct(
         periode,
         0,
@@ -303,7 +331,6 @@ export function addProduct(product: ProductFormikProps) {
         0,
         Number(product.productionCost)
       );
-      console.log(response.data.payload);
       dispatch(slice.actions.addProductSuccess());
     } catch (error) {
       console.error(error);
@@ -332,6 +359,23 @@ export function editProduct(
         prevProductionCost,
         Number(product.productionCost)
       );
+      dispatch(slice.actions.addProductSuccess());
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+export function deleteProduct(id: string) {
+  return async () => {
+    const { dispatch } = store;
+    dispatch(slice.actions.startLoading());
+    try {
+      // Delete product from table
+      console.log(id);
+      await axios.delete(`/products/${id}`);
       dispatch(slice.actions.addProductSuccess());
     } catch (error) {
       console.error(error);

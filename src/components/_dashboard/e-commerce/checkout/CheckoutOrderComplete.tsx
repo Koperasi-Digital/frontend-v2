@@ -1,6 +1,5 @@
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
-import filePdfFilled from '@iconify/icons-ant-design/file-pdf-filled';
 import arrowIosBackFill from '@iconify/icons-eva/arrow-ios-back-fill';
 // material
 import { styled } from '@mui/material/styles';
@@ -33,11 +32,16 @@ export default function CheckoutOrderComplete({ open }: DialogProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
-  const orderId = checkout.orderId;
+  const { orderId, paymentType } = checkout;
 
-  const handleResetStep = () => {
+  const handleContinuePayment = () => {
     dispatch(resetCart());
-    navigate(PATH_DASHBOARD.eCommerce.shop);
+    navigate(PATH_DASHBOARD.eCommerce.root + '/order/' + orderId + '/payment/' + paymentType);
+  };
+
+  const handleContinueShopping = () => {
+    dispatch(resetCart());
+    navigate(PATH_DASHBOARD.eCommerce.root);
   };
 
   return (
@@ -56,8 +60,8 @@ export default function CheckoutOrderComplete({ open }: DialogProps) {
 
           <Typography align="left" sx={{ color: 'text.secondary' }}>
             Anda bisa melihat status pesanan Anda pada halaman Riwayat Pesanan.
-            <br /> <br /> Apabila Anda belum membayar, harap segera membayar dengan membuka detail
-            pesanan tersebut. <br /> <br /> All the best,
+            <br /> <br /> Anda bisa melakukan pembayaran dengan menekan tombol "Bayar" pada dialog
+            berikut ini atau tombol "Bayar Nanti" apabila ingin membayar nanti. <br /> <br />
           </Typography>
         </Box>
 
@@ -70,17 +74,17 @@ export default function CheckoutOrderComplete({ open }: DialogProps) {
         >
           <Button
             color="inherit"
-            onClick={handleResetStep}
-            startIcon={<Icon icon={arrowIosBackFill} />}
+            onClick={handleContinuePayment}
+            startIcon={<Icon icon="uil:bill" />}
           >
-            Continue Shopping
+            Bayar Sekarang
           </Button>
           <Button
-            variant="contained"
-            startIcon={<Icon icon={filePdfFilled} />}
-            onClick={handleResetStep}
+            color="inherit"
+            onClick={handleContinueShopping}
+            startIcon={<Icon icon={arrowIosBackFill} />}
           >
-            Download as PDF
+            Lanjut Berbelanja
           </Button>
         </Stack>
       </Box>

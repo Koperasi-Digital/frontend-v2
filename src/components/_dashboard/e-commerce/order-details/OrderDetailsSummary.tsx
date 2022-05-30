@@ -200,7 +200,11 @@ export default function OrderDetailsSummary({
             ))}
           </Card>
           <Box sx={{ my: 2, mx: 2 }}>
-            <OrderDetailsTimeline orderDetailsLog={orderDetailsLog}></OrderDetailsTimeline>
+            <OrderDetailsTimeline
+              orderDetailsLog={orderDetailsLog}
+              timestamp={order.timestamp}
+              status={status}
+            ></OrderDetailsTimeline>
           </Box>
           {isSeller && nextStatus !== 'NONE' && (
             <Button

@@ -116,7 +116,7 @@ export default function CheckoutBillingAddress() {
               onClick={handleBackStep}
               startIcon={<Icon icon={arrowIosBackFill} />}
             >
-              Back
+              Kembali
             </Button>
             <Button size="small" onClick={handleClickOpen} startIcon={<Icon icon={plusFill} />}>
               Add new address

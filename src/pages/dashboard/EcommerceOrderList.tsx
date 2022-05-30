@@ -179,7 +179,7 @@ export default function EcommerceOrderList() {
                         const user_name = order.user.displayName;
 
                         return (
-                          <TableRow hover key={id} tabIndex={-1} role="checkbox">
+                          <TableRow hover key={id} tabIndex={-1}>
                             <TableCell style={{ minWidth: 50 }}>{id}</TableCell>
                             <TableCell component="th" scope="row" padding="none">
                               <Box
