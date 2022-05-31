@@ -1,7 +1,6 @@
-import { Link as RouterLink } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import { Box, Link, Card, CardHeader, Typography, Stack } from '@mui/material';
+import { Box, Card, CardHeader, Typography, Stack } from '@mui/material';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 //
@@ -10,8 +9,7 @@ import { ProductLatestItem } from '../../../../@types/seller-center';
 import { useEffect, useState } from 'react';
 import useAuth from 'hooks/useAuth';
 import { getProductLatest } from 'utils/sellerCenterAxios/sellerDashboard';
-import { paramCase } from 'change-case';
-import { PATH_DASHBOARD } from 'routes/paths';
+import { fDateTime } from 'utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -29,25 +27,20 @@ type ProductItemProps = {
 // ----------------------------------------------------------------------
 
 function ProductItem({ product }: ProductItemProps) {
-  const { id, name, cover, price } = product;
-  const linkTo = `${PATH_DASHBOARD.eCommerce.root}/product/${paramCase(id.toString())}`;
+  const { name, cover, price, timestamp } = product;
 
   return (
     <Stack direction="row" spacing={2}>
       <ThumbImgStyle alt={name} src={cover} />
 
       <Box sx={{ flexGrow: 1, minWidth: 200 }}>
-        <Link
-          component={RouterLink}
-          to={linkTo}
-          sx={{ color: 'text.primary', typography: 'subtitle2' }}
-        >
-          {name}
-        </Link>
-
-        <Stack direction="row">
+        <Typography variant="subtitle2">{name}</Typography>
+        <Stack direction="row" justifyContent="space-between">
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             {fCurrency(price)}
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary', mx: 3 }}>
+            {fDateTime(timestamp)}
           </Typography>
         </Stack>
       </Box>

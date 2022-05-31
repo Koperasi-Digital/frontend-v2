@@ -73,9 +73,9 @@ export default function CheckoutCart() {
               <CardHeader
                 title={
                   <Typography variant="h6">
-                    Card
+                    Keranjang
                     <Typography component="span" sx={{ color: 'text.secondary' }}>
-                      &nbsp;({totalItems} item)
+                      &nbsp;({totalItems} produk)
                     </Typography>
                   </Typography>
                 }
@@ -93,8 +93,8 @@ export default function CheckoutCart() {
                 </Scrollbar>
               ) : (
                 <EmptyContent
-                  title="Cart is empty"
-                  description="Look like you have no items in your shopping cart."
+                  title="Keranjang Anda kosong"
+                  description="Sepertinya Anda belum berbelanja saat ini"
                   img="/static/illustrations/illustration_empty_cart.svg"
                 />
               )}
@@ -106,7 +106,7 @@ export default function CheckoutCart() {
               to={PATH_DASHBOARD.eCommerce.root}
               startIcon={<Icon icon={arrowIosBackFill} />}
             >
-              Continue Shopping
+              Lanjut Berbelanja
             </Button>
           </Grid>
 

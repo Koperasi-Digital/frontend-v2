@@ -35,7 +35,7 @@ export type ProductCategory = 'Ayam' | 'Infrastruktur' | 'Kandang | Pakan';
 export type IconType = { tiki: string; jne: string; pos: string };
 
 export type ApplyShipping = {
-  chosenItem: number;
+  chosenStore: string;
   shipment: string;
   shipment_price: number;
 };
@@ -89,6 +89,7 @@ export type ProductState = {
   };
   checkout: {
     orderId: string;
+    paymentType: string;
     activeStep: number;
     cart: CartItem[];
     subtotal: number;

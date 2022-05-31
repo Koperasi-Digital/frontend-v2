@@ -69,14 +69,14 @@ export const PATH_DASHBOARD = {
       center: path(ROOTS_DASHBOARD, '/seller/dashboard'),
       list: path(ROOTS_DASHBOARD, '/seller/product-list'),
       newProduct: path(ROOTS_DASHBOARD, '/seller/product/new'),
-      editById: path(ROOTS_DASHBOARD, '/seller/product/itik-ayam/edit'),
+      editById: path(ROOTS_DASHBOARD, '/seller/product/:id/edit'),
       orderList: path(ROOTS_DASHBOARD, '/seller/order-list')
     },
     orderById: path(ROOTS_DASHBOARD, '/e-commerce/order/:id'),
     orderPayment: path(ROOTS_DASHBOARD, '/e-commerce/order/:id/payment'),
     orderHistory: path(ROOTS_DASHBOARD, '/e-commerce/order-history'),
     product: path(ROOTS_DASHBOARD, '/e-commerce/product/:name'),
-    productById: path(ROOTS_DASHBOARD, '/e-commerce/product/itik-ayam'),
+    productById: path(ROOTS_DASHBOARD, '/e-commerce/product/:id'),
     checkout: path(ROOTS_DASHBOARD, '/e-commerce/checkout'),
     invoice: path(ROOTS_DASHBOARD, '/e-commerce/invoice')
   },

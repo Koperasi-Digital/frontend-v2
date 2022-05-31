@@ -1,5 +1,5 @@
-import { Box, Card, Grid, Typography, Stack, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Box, Card, Link, Grid, Typography, Stack, Button } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { fDateTime } from '../../../../utils/formatTime';
 import { fCurrency } from '../../../../utils/formatNumber';
@@ -7,13 +7,23 @@ import { OrderDetails } from '../../../../@types/order';
 import { PATH_DASHBOARD } from 'routes/paths';
 import Label from '../../../Label';
 
-const ProductImgStyle = styled('img')({
-  top: 0,
-  width: '100%',
-  height: '100%',
+const OrderDetailStyle = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(0, 2.5),
+  justifyContent: 'space-between',
+  borderRadius: theme.shape.borderRadius,
+  transition: theme.transitions.create('all'),
+  border: `solid 1px ${theme.palette.grey[500_32]}`
+}));
+
+const ProductImgStyle = styled('img')(({ theme }) => ({
+  width: 64,
+  height: 64,
   objectFit: 'cover',
-  position: 'absolute'
-});
+  marginRight: theme.spacing(2),
+  borderRadius: theme.shape.borderRadiusSm
+}));
 
 // --------------------------------------------s--------------------------
 
@@ -29,7 +39,7 @@ export default function OrderCard({
   const orderDetailsLink = `${PATH_DASHBOARD.eCommerce.root}/order/`;
 
   return (
-    <Card sx={{ mx: 1, my: 1, px: 2, py: 2, ':hover': { boxShadow: 50 } }}>
+    <Card sx={{ m: 0.5, p: 2, ':hover': { boxShadow: 50 } }}>
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
         alignItems="center"
@@ -38,8 +48,8 @@ export default function OrderCard({
         sx={{ mb: 5 }}
         textAlign="center"
       >
-        <Typography variant="h6">Order ID: {orderId}</Typography>
-        <Typography variant="subtitle1">{fDateTime(orderDetails[0].order.timestamp)}</Typography>
+        <Typography variant="subtitle1">Order ID: {orderId}</Typography>
+        <Typography variant="subtitle2">{fDateTime(orderDetails[0].order.timestamp)}</Typography>
       </Stack>
 
       <Stack
@@ -65,6 +75,7 @@ export default function OrderCard({
           >
             <Link
               to={`${paymentLink}GOPAY`}
+              component={RouterLink}
               style={{
                 textDecoration: 'none'
               }}
@@ -73,6 +84,7 @@ export default function OrderCard({
             </Link>
             <Link
               to={`${paymentLink}OTHER`}
+              component={RouterLink}
               style={{
                 textDecoration: 'none'
               }}
@@ -82,56 +94,77 @@ export default function OrderCard({
           </Stack>
         )}
       </Stack>
-      <Stack direction="column" justifyContent="space-between" sx={{ mb: 3 }}>
-        {orderDetails.map((orderDetail) => (
-          <Link
-            key={orderDetail.id}
-            to={`${orderDetailsLink + orderDetail.id}`}
-            style={{
-              textDecoration: 'none'
-            }}
-          >
-            <Card sx={{ mx: 1, my: 1, px: 2, py: 2, ':hover': { boxShadow: 100 } }}>
-              <Grid container sx={{ mb: 3 }}>
-                <Grid item xs={12} md sx={{ mx: 2 }}>
-                  <Box sx={{ pt: '100%', position: 'relative' }}>
-                    <ProductImgStyle
-                      alt={orderDetail.product.name}
-                      src={orderDetail.product.cover}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item xs={8} sx={{ mx: 2 }}>
-                  <Typography variant="subtitle1" noWrap>
-                    <h3>{orderDetail.product.name}</h3>
-                  </Typography>
-                  <Typography noWrap>{orderDetail.product.store.name}</Typography>
-                  <Typography noWrap>Jumlah: {orderDetail.quantity}</Typography>
-                </Grid>
-                <Grid item xs sx={{ mx: 2 }}>
-                  <Stack direction="column" alignItems="right" justifyContent="space-between">
-                    <Label
-                      variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                      color={
-                        (orderDetail.status === 'DALAM PENGIRIMAN' && 'warning') ||
-                        (orderDetail.status === 'PENDING' && 'error') ||
-                        (orderDetail.status === 'LUNAS' && 'info') ||
-                        'success'
-                      }
-                    >
-                      {orderDetail.status ? orderDetail.status : ''}
-                    </Label>
-                    <Typography variant="subtitle1">{fCurrency(orderDetail.subtotal)}</Typography>
-                  </Stack>
-                </Grid>
-              </Grid>
-            </Card>
-          </Link>
-        ))}
-      </Stack>
+      <Grid container spacing={1}>
+        {orderDetails.map((orderDetail, index) => (
+          <Grid key={index} item xs={12}>
+            <Link
+              to={`${orderDetailsLink + orderDetail.id}`}
+              color="inherit"
+              component={RouterLink}
+              style={{
+                textDecoration: 'none'
+              }}
+            >
+              <OrderDetailStyle
+                sx={{
+                  boxShadow: (theme) => theme.customShadows.z8
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <ProductImgStyle alt={orderDetail.product.name} src={orderDetail.product.cover} />
+                  <Box>
+                    <Typography variant="subtitle2">{orderDetail.product.name}</Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      {orderDetail.product.store.name}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      Jumlah: {orderDetail.quantity}
+                    </Typography>
 
-      <Typography sx={{ mt: 3 }} variant="h6" align="center">
-        Order subtotal: {fCurrency(orderDetails[0].order.total_cost)}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                    ></Box>
+                  </Box>
+                </Box>
+
+                <Box>
+                  <Box
+                    sx={{
+                      py: 3,
+                      flexGrow: 1,
+                      display: 'flex',
+                      alignItems: 'flex-end'
+                    }}
+                  >
+                    <Box sx={{ mr: 1, maxHeight: 40 }}>
+                      <Box sx={{ display: 'flex' }} justifyContent="flex-end">
+                        <Label
+                          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                          color={
+                            (orderDetail.status === 'DALAM PENGIRIMAN' && 'warning') ||
+                            (orderDetail.status === 'PENDING' && 'error') ||
+                            (orderDetail.status === 'LUNAS' && 'info') ||
+                            'success'
+                          }
+                        >
+                          {orderDetail.status ? orderDetail.status : ''}
+                        </Label>
+                      </Box>
+                      <Typography variant="subtitle1">{fCurrency(orderDetail.subtotal)}</Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </OrderDetailStyle>
+            </Link>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Typography sx={{ mt: 3, mx: 2 }} variant="h6" align="right">
+        Total: {fCurrency(orderDetails[0].order.total_cost)}
       </Typography>
     </Card>
   );

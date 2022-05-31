@@ -1,20 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import searchFill from '@iconify/icons-eva/search-fill';
-import trash2Fill from '@iconify/icons-eva/trash-2-fill';
 import plusFill from '@iconify/icons-eva/plus-fill';
 // material
-import { useTheme, styled } from '@mui/material/styles';
-import {
-  Box,
-  Toolbar,
-  Tooltip,
-  IconButton,
-  Typography,
-  InputAdornment,
-  OutlinedInput,
-  Button
-} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Box, Toolbar, InputAdornment, OutlinedInput, Button } from '@mui/material';
 import { PATH_DASHBOARD } from 'routes/paths';
 
 // ----------------------------------------------------------------------
@@ -42,59 +32,31 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 type ProductListToolbarProps = {
-  numSelected: number;
   filterName: string;
   onFilterName: (value: string) => void;
 };
 
-export default function ProductListToolbar({
-  numSelected,
-  filterName,
-  onFilterName
-}: ProductListToolbarProps) {
+export default function ProductListToolbar({ filterName, onFilterName }: ProductListToolbarProps) {
   const linkTo = `${PATH_DASHBOARD.eCommerce.seller.root}/product/new`;
-  const theme = useTheme();
-  const isLight = theme.palette.mode === 'light';
 
   return (
-    <RootStyle
-      sx={{
-        ...(numSelected > 0 && {
-          color: isLight ? 'primary.main' : 'text.primary',
-          bgcolor: isLight ? 'primary.lighter' : 'primary.dark'
-        })
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography component="div" variant="subtitle1">
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <SearchStyle
-          value={filterName}
-          onChange={(e) => onFilterName(e.target.value)}
-          placeholder="Search product..."
-          startAdornment={
-            <InputAdornment position="start">
-              <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
-            </InputAdornment>
-          }
-        />
-      )}
+    <RootStyle>
+      <SearchStyle
+        value={filterName}
+        onChange={(e) => onFilterName(e.target.value)}
+        placeholder="Cari produk..."
+        startAdornment={
+          <InputAdornment position="start">
+            <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
+          </InputAdornment>
+        }
+      />
 
       <Link to={linkTo} color="inherit" style={{ textDecoration: 'none' }}>
         <Button size="medium" variant="contained" startIcon={<Icon icon={plusFill} />}>
           Add New Product
         </Button>
       </Link>
-
-      {numSelected > 0 && (
-        <Tooltip title="Delete">
-          <IconButton>
-            <Icon icon={trash2Fill} />
-          </IconButton>
-        </Tooltip>
-      )}
     </RootStyle>
   );
 }

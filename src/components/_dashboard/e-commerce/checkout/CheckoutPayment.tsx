@@ -17,18 +17,18 @@ import {
   onBackStep,
   onNextStep,
   applyShipping,
-  resetShipment
+  resetShipment,
+  setCheckoutOrder,
+  setPaymentType
 } from '../../../../redux/slices/product';
 //
 import CheckoutSummary from './CheckoutSummary';
-import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
 import { handleCreateOrder } from 'utils/financeAxios/financeOrder';
-import { PATH_DASHBOARD } from 'routes/paths';
-import { useNavigate } from 'react-router';
 
 import useAuth from 'hooks/useAuth';
+import CheckoutDeliveryV2 from './CheckoutDelivery';
 
 const PAYMENT_OPTIONS: PaymentOption[] = [
   {
@@ -46,7 +46,6 @@ const PAYMENT_OPTIONS: PaymentOption[] = [
 ];
 
 export default function CheckoutPayment() {
-  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
   const dispatch = useDispatch();
@@ -62,14 +61,14 @@ export default function CheckoutPayment() {
   };
 
   const handleApplyShipping = (value: {
-    chosenItem: number;
+    chosenStore: string;
     shipment: string;
     shipment_price: number;
   }) => {
     dispatch(applyShipping(value));
   };
 
-  const handleResetShipment = (value: number) => {
+  const handleResetShipment = (value: string) => {
     dispatch(resetShipment(value));
     setFieldValue('shipment', '');
   };
@@ -79,9 +78,6 @@ export default function CheckoutPayment() {
   };
 
   const PaymentSchema = Yup.object().shape({
-    // delivery: Yup.number()
-    //   .positive('Must be more than 0')
-    //   .required('Shipment delivery is required'),
     payment: Yup.mixed().required('Payment is required'),
     shipment: Yup.mixed().required('Shipment is required')
   });
@@ -102,11 +98,10 @@ export default function CheckoutPayment() {
           cart,
           address ? address : undefined
         );
+        dispatch(setCheckoutOrder(createdOrder.id));
+        dispatch(setPaymentType(values.payment));
         enqueueSnackbar('Pesanan berhasil dibuat.', { variant: 'success' });
         handleNextStep();
-        navigate(
-          PATH_DASHBOARD.eCommerce.root + '/order/' + createdOrder.id + '/payment/' + values.payment
-        );
       } catch (error) {
         setSubmitting(false);
         setErrors(error);
@@ -121,7 +116,7 @@ export default function CheckoutPayment() {
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
-            <CheckoutDelivery
+            <CheckoutDeliveryV2
               formik={formik}
               cart={cart}
               user_address={address}
@@ -137,7 +132,7 @@ export default function CheckoutPayment() {
               onClick={handleBackStep}
               startIcon={<Icon icon={arrowIosBackFill} />}
             >
-              Back
+              Kembali
             </Button>
           </Grid>
 

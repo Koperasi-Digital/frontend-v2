@@ -10,11 +10,12 @@ export default function SearchNotFound({ searchQuery = '', ...other }: SearchNot
   return (
     <Paper {...other}>
       <Typography gutterBottom align="center" variant="subtitle1">
-        Not found
+        Tidak ditemukan
       </Typography>
       <Typography variant="body2" align="center">
-        No results found for &nbsp;
-        <strong>&quot;{searchQuery}&quot;</strong>. Try checking for typos or using complete words.
+        Tidak ada hasil yang ditemukan untuk &nbsp;
+        <strong>&quot;{searchQuery}&quot;</strong>. Coba periksa kesalahan ketik atau gunakan
+        kata-kata yang lengkap..
       </Typography>
     </Paper>
   );

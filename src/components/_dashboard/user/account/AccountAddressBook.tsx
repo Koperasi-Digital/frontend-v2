@@ -5,13 +5,24 @@ import editFill from '@iconify/icons-eva/edit-fill';
 import trash2Fill from '@iconify/icons-eva/trash-2-fill';
 import checkmarkOutline from '@iconify/icons-eva/checkmark-outline';
 // material
-import { Box, Card, Button, Typography, CardProps, Stack, Paper } from '@mui/material';
+import {
+  Box,
+  Card,
+  Button,
+  Typography,
+  CardProps,
+  Stack,
+  Paper,
+  DialogContent,
+  DialogTitle
+} from '@mui/material';
 // @types
 import { UserAddressBook } from '../../../../@types/user';
 // components
 import Label from 'components/Label';
 import { deleteAddress, setAddressAsDefault } from 'redux/slices/user';
 import { AccountAddressForm } from '.';
+import { DialogAnimate } from 'components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +34,7 @@ interface AccountAddressBookProp extends CardProps {
 export default function AccountAddressBook({ addressBook, isEdit }: AccountAddressBookProp) {
   const [open, setOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState<UserAddressBook>();
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
   const handleOpen = (address?: UserAddressBook) => {
     setSelectedAddress(address);
@@ -32,6 +44,18 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
   const handleClose = () => {
     setOpen(false);
     setSelectedAddress(undefined);
+  };
+
+  const handleOpenDeleteModal = (address?: UserAddressBook) => {
+    setSelectedAddress(address);
+    setIsOpenDeleteModal(true);
+  };
+
+  const handleDeleteAddress = () => {
+    if (selectedAddress) {
+      deleteAddress(selectedAddress.id);
+    }
+    setIsOpenDeleteModal(false);
   };
 
   return (
@@ -85,7 +109,7 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
                       color="error"
                       size="small"
                       startIcon={<Icon icon={trash2Fill} />}
-                      onClick={() => deleteAddress(address.id)}
+                      onClick={() => handleOpenDeleteModal(address)}
                       sx={{ mr: 1 }}
                     >
                       Hapus
@@ -132,6 +156,24 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
         </Stack>
       </Card>
       <AccountAddressForm open={open} onClose={handleClose} existingAddress={selectedAddress} />
+
+      <DialogAnimate open={isOpenDeleteModal} onClose={() => setIsOpenDeleteModal(false)}>
+        <DialogTitle sx={{ pb: 1 }}>Hapus Alamat?</DialogTitle>
+        <DialogContent sx={{ overflowY: 'unset' }}>
+          <Typography align={'justify'}>
+            Alamat yang sudah dihapus akan hilang selamanya! Apakah Anda tetap ingin menghapus
+            alamat?
+          </Typography>
+          <Box display="flex" justifyContent="end" gap={2} pt={2} pb={1}>
+            <Button variant="contained" onClick={handleDeleteAddress} color="error">
+              Hapus
+            </Button>
+            <Button variant="contained" onClick={() => setIsOpenDeleteModal(false)}>
+              Batal
+            </Button>
+          </Box>
+        </DialogContent>
+      </DialogAnimate>
     </>
   );
 }

@@ -141,7 +141,7 @@ export default function LaporanLabaRugiToolbar(props: {
               }}
               endIcon={<Icon icon={downloadFill} />}
             >
-              Download Laporan Laba Rugi
+              Unduh Laporan Laba Rugi
             </LoadingButton>
           )}
         </PDFDownloadLink>

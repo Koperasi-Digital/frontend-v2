@@ -47,7 +47,7 @@ export default function CurrentBalance() {
   return (
     <Card sx={{ p: 3 }}>
       <Typography variant="subtitle2" gutterBottom>
-        Your Current Balance
+        Saldo Anda
       </Typography>
 
       <Stack spacing={1}>
@@ -55,21 +55,21 @@ export default function CurrentBalance() {
 
         <RowStyle>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Your Current Balance
+            Total Saldo
           </Typography>
           <Typography variant="body2">{fCurrency(currentBalance)}</Typography>
         </RowStyle>
 
         <RowStyle>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Income Amount
+            Total Pemasukan
           </Typography>
           <Typography variant="body2">- {fCurrency(incomeAmount)}</Typography>
         </RowStyle>
 
         <RowStyle>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Expense Amount
+            Total Pengeluaran
           </Typography>
           <Typography variant="subtitle1">{fCurrency(expenseAmount)}</Typography>
         </RowStyle>

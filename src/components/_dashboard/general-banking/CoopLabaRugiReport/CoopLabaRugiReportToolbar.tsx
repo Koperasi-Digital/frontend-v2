@@ -128,7 +128,7 @@ export default function CoopLabaRugiReportToolbar(props: {
               }}
               endIcon={<Icon icon={downloadFill} />}
             >
-              Download Laporan Laba Rugi Koperasi
+              Unduh Laporan Laba Rugi Koperasi
             </LoadingButton>
           )}
         </PDFDownloadLink>

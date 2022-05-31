@@ -15,6 +15,8 @@ import { OrderDetailsLog } from '../../../../@types/order';
 // ----------------------------------------------------------------------
 type OrderDetailsTimelineProps = {
   orderDetailsLog: OrderDetailsLog[];
+  timestamp: Date;
+  status: string;
 };
 
 type OrderItemProps = {
@@ -52,7 +54,19 @@ function OrderItem({ type, item, isLast }: OrderItemProps) {
   );
 }
 
-export default function OrderDetailsTimeline({ orderDetailsLog }: OrderDetailsTimelineProps) {
+export default function OrderDetailsTimeline({
+  orderDetailsLog,
+  timestamp,
+  status
+}: OrderDetailsTimelineProps) {
+  const dummyOrderDetailsLog: OrderDetailsLog = {
+    id: '0',
+    status: status,
+    created_at: timestamp,
+    description:
+      status === 'PENDING' ? 'Sedang menunggu pembayaran' : 'Pesanan sedang disiapkan oleh penjual'
+  };
+
   return (
     <Card
       sx={{
@@ -64,6 +78,11 @@ export default function OrderDetailsTimeline({ orderDetailsLog }: OrderDetailsTi
       <CardHeader title="Timeline Pesanan" />
       <CardContent>
         <Timeline>
+          <OrderItem
+            item={dummyOrderDetailsLog}
+            type={'order' + (0 % 5).toString()}
+            isLast={0 === orderDetailsLog.length}
+          />
           {orderDetailsLog.map((item, index) => (
             <OrderItem
               key={item.id}

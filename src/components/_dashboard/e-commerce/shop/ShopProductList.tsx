@@ -22,7 +22,7 @@ type ShopProductListProps = {
 
 export default function ShopProductList({ products, isLoad, ...other }: ShopProductListProps) {
   return (
-    <Grid container spacing={3} {...other}>
+    <Grid container spacing={3} sx={{ mb: 4 }} {...other}>
       {products.map((product) => (
         <Grid key={product.id} item xs={6} sm={4} md={3} lg={2}>
           <ShopProductCard product={product} />
