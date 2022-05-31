@@ -13,6 +13,8 @@ import { handleGetBankAccount } from 'utils/financeAxios/financeBankAccount';
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
+import { useNavigate } from 'react-router-dom';
+import useAuth from 'hooks/useAuth';
 
 type BankAccount = {
   accountNumber: string;
@@ -24,6 +26,8 @@ export default function DisbursementRequest() {
   const [bankAccount, setBankAccount] = useState<BankAccount>();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate();
+  const { currentRole } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +38,12 @@ export default function DisbursementRequest() {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (currentRole && currentRole.name === 'ADMIN') {
+      navigate(PATH_DASHBOARD.managementFinance.disbursementRequestList);
+    }
+  }, [currentRole, navigate]);
 
   return (
     <Page title="Pengajuan Pencairan Dana | CoopChick">
