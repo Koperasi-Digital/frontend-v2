@@ -22,7 +22,7 @@ export async function handleGetSimpananPokok() {
 
 export async function handleAddOrderSimpananPokok(orderId: number) {
   try {
-    const response = await axios.post('simpanan-pokok/create-order', {
+    const response = await axios.patch('simpanan-pokok/create-order', {
       orderId: orderId
     });
     return response.data.payload;
