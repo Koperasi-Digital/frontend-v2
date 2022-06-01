@@ -7,7 +7,7 @@ import { fCurrency } from 'utils/formatNumber';
 import { PATH_DASHBOARD } from 'routes/paths';
 
 export default function BankingSaldo() {
-  const [saldo, setSaldo] = useState<number>();
+  const [saldo, setSaldo] = useState<number | undefined>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +35,7 @@ export default function BankingSaldo() {
         }}
       >
         <Typography component="span" variant="h3">
-          {saldo ? fCurrency(saldo) : ''}
+          {saldo !== undefined ? fCurrency(saldo) : ''}
         </Typography>
       </Card>
       <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.finance.disbursementRequest}>
