@@ -12,7 +12,7 @@ import { PATH_DASHBOARD } from 'routes/paths';
 export default function SimpananSukarela() {
   const { user } = useAuth();
 
-  const [simpananSukarelaAmount, setSimpananSukarelaAmount] = useState<number>();
+  const [simpananSukarelaAmount, setSimpananSukarelaAmount] = useState<number | undefined>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +32,8 @@ export default function SimpananSukarela() {
     <>
       <Stack direction="column" spacing={2} alignItems="center">
         <Typography variant="h5" gutterBottom>
-          Simpanan sukarela : {fCurrency(simpananSukarelaAmount ? simpananSukarelaAmount : 0)}
+          Simpanan sukarela :{' '}
+          {simpananSukarelaAmount !== undefined ? fCurrency(simpananSukarelaAmount) : ''}
         </Typography>
         <Link
           href={PATH_DASHBOARD.finance.addSimpananSukarela}
