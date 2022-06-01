@@ -173,7 +173,7 @@ export default function AccountAddressForm({
                       helperText={touched.city && errors.city}
                     >
                       {cities.map((option) => (
-                        <option key={option.city_id} value={option.city_name}>
+                        <option key={option.city_id} value={`${option.type} ${option.city_name}`}>
                           {`${option.type} ${option.city_name}`}
                         </option>
                       ))}

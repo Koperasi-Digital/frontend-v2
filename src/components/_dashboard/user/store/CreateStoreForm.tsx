@@ -17,6 +17,7 @@ import countries from '../countries';
 import provinces from '../provinces';
 import axios from 'utils/axios';
 import { PATH_DASHBOARD } from 'routes/paths';
+import PhoneNumberField from 'components/PhoneNumberField';
 
 // ----------------------------------------------------------------------
 
@@ -161,7 +162,7 @@ export default function CreateStoreForm() {
           </Grid>
 
           <Grid item>
-            <TextField
+            <PhoneNumberField
               fullWidth
               {...getFieldProps('phoneNumber')}
               error={Boolean(touched.phoneNumber && errors.phoneNumber)}
@@ -214,7 +215,7 @@ export default function CreateStoreForm() {
                 >
                   <option defaultValue=""></option>
                   {cities.map((option) => (
-                    <option key={option.city_id} value={option.city_name}>
+                    <option key={option.city_id} value={`${option.type} ${option.city_name}`}>
                       {`${option.type} ${option.city_name}`}
                     </option>
                   ))}

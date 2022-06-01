@@ -187,9 +187,8 @@ export default function AccountInformationEdit() {
                     error={Boolean(touched.city && errors.city)}
                     helperText={touched.city && errors.city}
                   >
-                    <option defaultValue=""></option>
                     {cities.map((option) => (
-                      <option key={option.city_id} value={option.city_name}>
+                      <option key={option.city_id} value={`${option.type} ${option.city_name}`}>
                         {`${option.type} ${option.city_name}`}
                       </option>
                     ))}
