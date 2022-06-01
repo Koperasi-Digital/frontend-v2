@@ -9,15 +9,12 @@ import {
   TextField,
   DialogTitle,
   DialogContent,
-  DialogActions,
-  FormControl,
-  InputLabel,
-  Select
+  DialogActions
 } from '@mui/material';
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 import { UserManager } from '../../../../@types/user';
-import { startCase } from 'lodash';
 import { isAfter, isBefore } from 'date-fns';
+import axios from 'utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -26,8 +23,6 @@ type UserActivityLogFormProps = {
   open: boolean;
   onClose: VoidFunction;
 };
-
-const EVENT_TYPE_OPTIONS: string[] = ['koperasi', 'peternakan'];
 
 export default function UserActivityLogForm({ open, onClose, user }: UserActivityLogFormProps) {
   const UserActivityLogSchema = Yup.object().shape({
@@ -39,17 +34,16 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
     initialValues: {
       email: user.email,
       name: '',
-      type: '',
-      startAt: '',
-      endAt: '',
-      attendingAt: ''
+      type: 'koperasi',
+      startAt: new Date(),
+      endAt: new Date(),
+      attendingAt: new Date()
     },
-    enableReinitialize: true,
     validationSchema: UserActivityLogSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
         setSubmitting(true);
-        // await addAddress(values);
+        await axios.post('activity-logs/manual', values);
         onClose();
         resetForm();
         setSubmitting(false);
@@ -70,7 +64,7 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
-      <DialogTitle>{`Tambah Keaktifan Anggota`}</DialogTitle>
+      <DialogTitle>Tambah Keaktifan Anggota</DialogTitle>
       <FormikProvider value={formik}>
         <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
           <DialogContent>
@@ -85,7 +79,7 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
                   disabled={true}
                 />
               </Grid>
-              <Grid item xs={6} md={6}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Nama Kegiatan"
@@ -95,18 +89,6 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <FormControl fullWidth>
-                  <InputLabel>Tipe Kegiatan</InputLabel>
-                  <Select label="Tipe" native {...getFieldProps('type')} value={values.type}>
-                    {EVENT_TYPE_OPTIONS.map((eventType) => (
-                      <option key={eventType} value={eventType}>
-                        {startCase(eventType)}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={4}>
                 <MobileDateTimePicker
                   label="Waktu Mulai"
                   value={values.startAt}
@@ -115,7 +97,7 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
                   renderInput={(params) => <TextField fullWidth {...params} />}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={6}>
                 <MobileDateTimePicker
                   label="Waktu Selesai"
                   value={values.endAt}
@@ -131,9 +113,9 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
                   )}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12}>
                 <MobileDateTimePicker
-                  label="Waktu Presensi"
+                  label="Waktu Kehadiran"
                   value={values.attendingAt}
                   inputFormat="dd/MM/yyyy hh:mm a"
                   onChange={(date) => setFieldValue('attendingAt', date)}
@@ -143,7 +125,7 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
                       error={Boolean(isAttendingDateError)}
                       helperText={
                         isAttendingDateError &&
-                        'Waktu presensi harus berada diantara waktu mulai dan waktu selesai'
+                        'Waktu kehadiran harus berada diantara waktu mulai dan waktu selesai'
                       }
                       fullWidth
                     />

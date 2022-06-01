@@ -82,6 +82,11 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - activityLogList.length) : 0;
 
+  const handleActivityLogFormClose = () => {
+    getUserActivityLogs();
+    setIsOpenModal(false);
+  };
+
   return (
     <>
       <Card>
@@ -174,7 +179,7 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
           Lihat keaktifan transaksi
         </Typography>
       </Link>
-      <UserActivityLogForm open={isOpenModal} onClose={() => setIsOpenModal(false)} user={user} />
+      <UserActivityLogForm open={isOpenModal} onClose={handleActivityLogFormClose} user={user} />
     </>
   );
 }
