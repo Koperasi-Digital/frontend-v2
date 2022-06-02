@@ -187,27 +187,29 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
                             <Chip label="Tidak hadir" color="error" size="small" />
                           )}
                         </TableCell>
-                        <TableCell align="left">
-                          <Box display="flex" gap={2}>
-                            <Button
-                              variant="contained"
-                              onClick={() => handleOpenEditModal(data)}
-                              size="small"
-                            >
-                              Edit
-                            </Button>
-                            {attendingAt && (
+                        {isAdmin && (
+                          <TableCell align="left">
+                            <Box display="flex" gap={2}>
                               <Button
                                 variant="contained"
-                                color="error"
-                                onClick={() => handleOpenDeleteModal(data)}
+                                onClick={() => handleOpenEditModal(data)}
                                 size="small"
                               >
-                                Hapus
+                                Edit
                               </Button>
-                            )}
-                          </Box>
-                        </TableCell>
+                              {attendingAt && (
+                                <Button
+                                  variant="contained"
+                                  color="error"
+                                  onClick={() => handleOpenDeleteModal(data)}
+                                  size="small"
+                                >
+                                  Hapus
+                                </Button>
+                              )}
+                            </Box>
+                          </TableCell>
+                        )}
                       </TableRow>
                     );
                   })}
