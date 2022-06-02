@@ -159,6 +159,7 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
     formik;
 
   const handleDelete = async () => {
+    setIsOpenDeleteModal(false);
     if (!event.id) return;
     onCancel();
     dispatch(isOrganizer ? deleteEvent(event.id) : deleteUserFromEvent(event.id));

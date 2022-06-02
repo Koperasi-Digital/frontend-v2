@@ -21,6 +21,8 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { paramCase } from 'change-case';
+import closeFill from '@iconify/icons-eva/close-fill';
+import { Icon } from '@iconify/react';
 // utils
 import axios from 'utils/axios';
 // routes
@@ -33,6 +35,8 @@ import Page from 'components/Page';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
 import LightboxModal from 'components/LightboxModal';
 import { DialogAnimate } from 'components/animate';
+//
+import { MIconButton } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -51,7 +55,7 @@ export default function MemberVerification() {
   const [memberVerificationList, setMemberVerificationList] = useState([]);
   const [openLightbox, setOpenLightbox] = useState(false);
   const [lightboxImages, setLightboxImages] = useState({ images: [''], selectedIndex: 0 });
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
   const getMemberVerification = useCallback(async () => {
@@ -87,7 +91,14 @@ export default function MemberVerification() {
       setMemberVerificationList((prev) =>
         prev.filter((memberVerification: any) => memberVerification.user.id !== userId)
       );
-      enqueueSnackbar('Pengguna berhasil terverifikasi!', { variant: 'success' });
+      enqueueSnackbar('Pengguna berhasil terverifikasi!', {
+        variant: 'success',
+        action: (key) => (
+          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+            <Icon icon={closeFill} />
+          </MIconButton>
+        )
+      });
     });
   };
 

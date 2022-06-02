@@ -63,7 +63,7 @@ export default function MainFooter() {
                   </Typography>
                   {list.children.map((link) =>
                     link.href === '#' ? (
-                      <Typography variant="body2" color="inherit">
+                      <Typography variant="body2" color="inherit" key={link.name}>
                         {link.name}
                       </Typography>
                     ) : (
