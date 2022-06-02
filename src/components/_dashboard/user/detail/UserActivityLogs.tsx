@@ -41,8 +41,10 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [activityLogList, setActivityLogList] = useState([]);
-  const { currentRole } = useAuth();
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const { currentRole } = useAuth();
+  const isAdmin = currentRole && currentRole?.name === 'ADMIN';
+  const [selectedActivityLog, setSelectedActivityLog] = useState();
 
   const getUserActivityLogs = useCallback(async () => {
     try {
@@ -82,7 +84,13 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - activityLogList.length) : 0;
 
+  const handleOpenEditModal = (data: any) => {
+    setIsOpenModal(true);
+    setSelectedActivityLog(data);
+  };
+
   const handleActivityLogFormClose = () => {
+    setSelectedActivityLog(undefined);
     getUserActivityLogs();
     setIsOpenModal(false);
   };
@@ -94,8 +102,7 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
           title="Keaktifan Anggota (Presensi Meeting)"
           sx={{ mb: 3 }}
           action={
-            currentRole &&
-            currentRole?.name === 'ADMIN' && (
+            isAdmin && (
               <Button variant="contained" onClick={() => setIsOpenModal(true)}>
                 Tambah
               </Button>
@@ -113,6 +120,7 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
                   <TableCell>Waktu Mulai</TableCell>
                   <TableCell>Waktu Selesai</TableCell>
                   <TableCell>Waktu Hadir</TableCell>
+                  {isAdmin && <TableCell>Aksi</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -141,6 +149,16 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
                           ) : (
                             <Chip label="Tidak hadir" color="error" size="small" />
                           )}
+                        </TableCell>
+                        <TableCell align="left">
+                          <Button
+                            variant="contained"
+                            onClick={() =>
+                              handleOpenEditModal({ id, name, type, startAt, endAt, attendingAt })
+                            }
+                          >
+                            Edit
+                          </Button>
                         </TableCell>
                       </TableRow>
                     );
@@ -179,7 +197,12 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
           Lihat keaktifan transaksi
         </Typography>
       </Link>
-      <UserActivityLogForm open={isOpenModal} onClose={handleActivityLogFormClose} user={user} />
+      <UserActivityLogForm
+        open={isOpenModal}
+        onClose={handleActivityLogFormClose}
+        user={user}
+        initialData={selectedActivityLog}
+      />
     </>
   );
 }

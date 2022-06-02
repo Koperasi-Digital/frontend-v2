@@ -15,16 +15,25 @@ import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 import { UserManager } from '../../../../@types/user';
 import { isAfter, isBefore } from 'date-fns';
 import axios from 'utils/axios';
+import { isEmpty } from 'lodash';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
 type UserActivityLogFormProps = {
+  initialData: any;
   user: UserManager;
   open: boolean;
   onClose: VoidFunction;
 };
 
-export default function UserActivityLogForm({ open, onClose, user }: UserActivityLogFormProps) {
+export default function UserActivityLogForm({
+  initialData,
+  open,
+  onClose,
+  user
+}: UserActivityLogFormProps) {
+  const isEdit = !isEmpty(initialData);
   const UserActivityLogSchema = Yup.object().shape({
     name: Yup.string().required('Nama kegiatan harus diisi'),
     type: Yup.string().required('Tipe kegiatan harus diisi')
@@ -43,7 +52,11 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
         setSubmitting(true);
-        await axios.post('activity-logs/manual', values);
+        if (isEdit) {
+          await axios.patch(`activity-logs/${initialData.id}`, values);
+        } else {
+          await axios.post('activity-logs/manual', values);
+        }
         onClose();
         resetForm();
         setSubmitting(false);
@@ -54,8 +67,31 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
     }
   });
 
-  const { values, errors, touched, isSubmitting, handleSubmit, getFieldProps, setFieldValue } =
-    formik;
+  const {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleSubmit,
+    getFieldProps,
+    setFieldValue,
+    resetForm
+  } = formik;
+
+  const handleCancel = () => {
+    resetForm();
+    onClose();
+  };
+
+  useEffect(() => {
+    setFieldValue('name', initialData?.name || '');
+    setFieldValue('startAt', initialData?.startAt ? new Date(initialData?.startAt) : new Date());
+    setFieldValue('endAt', initialData?.endAt ? new Date(initialData?.endAt) : new Date());
+    setFieldValue(
+      'attendingAt',
+      initialData?.attendingAt ? new Date(initialData?.attendingAt) : isEdit ? '' : new Date()
+    );
+  }, [initialData, setFieldValue, isEdit]);
 
   const isDateError = isBefore(new Date(values.endAt), new Date(values.startAt));
   const isAttendingDateError =
@@ -64,7 +100,7 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
-      <DialogTitle>Tambah Keaktifan Anggota</DialogTitle>
+      <DialogTitle>{isEdit ? `Edit Keaktifan Anggota` : `Tambah Keaktifan Anggota`}</DialogTitle>
       <FormikProvider value={formik}>
         <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
           <DialogContent>
@@ -86,6 +122,7 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
                   {...getFieldProps('name')}
                   error={Boolean(touched.name && errors.name)}
                   helperText={touched.name && errors.name}
+                  disabled={isEdit}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -95,6 +132,7 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
                   inputFormat="dd/MM/yyyy hh:mm a"
                   onChange={(date) => setFieldValue('startAt', date)}
                   renderInput={(params) => <TextField fullWidth {...params} />}
+                  disabled={isEdit}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -111,6 +149,7 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
                       fullWidth
                     />
                   )}
+                  disabled={isEdit}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -138,11 +177,11 @@ export default function UserActivityLogForm({ open, onClose, user }: UserActivit
           <Divider />
 
           <DialogActions>
-            <Button type="button" color="inherit" variant="outlined" onClick={onClose}>
+            <Button type="button" color="inherit" variant="outlined" onClick={handleCancel}>
               Batal
             </Button>
             <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-              Tambah
+              {isEdit ? `Simpan` : `Tambah`}
             </LoadingButton>
           </DialogActions>
         </Form>
