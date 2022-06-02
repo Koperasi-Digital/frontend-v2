@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { capitalize } from 'lodash';
 import {
+  Button,
   Card,
   Table,
   TableRow,
@@ -13,7 +14,10 @@ import {
   CardHeader,
   Chip,
   Link,
-  Typography
+  Typography,
+  Box,
+  DialogContent,
+  DialogTitle
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from 'routes/paths';
@@ -24,8 +28,11 @@ import { fDateTime } from 'utils/formatTime';
 import { UserManager } from '../../../../@types/user';
 // hooks
 import useIsMountedRef from 'hooks/useIsMountedRef';
+import useAuth from 'hooks/useAuth';
 // components
 import Scrollbar from 'components/Scrollbar';
+import UserActivityLogForm from './UserActivityLogForm';
+import { DialogAnimate } from 'components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +45,11 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [activityLogList, setActivityLogList] = useState([]);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const { currentRole } = useAuth();
+  const isAdmin = currentRole && currentRole?.name === 'ADMIN';
+  const [selectedActivityLog, setSelectedActivityLog] = useState();
 
   const getUserActivityLogs = useCallback(async () => {
     try {
@@ -50,13 +62,18 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
         const { activityLogs, allActivities } = response.data.payload;
         const finalActivityLogs = allActivities.map((activity: any) => {
           let attendingAt;
+          let activityLogId;
           const activityLog = activityLogs.filter(
             (activityLog: any) => activityLog.activity.id === activity.id
           );
-          if (activityLog.length) attendingAt = activityLog[0].created_at;
+          if (activityLog.length) {
+            attendingAt = activityLog[0].created_at;
+            activityLogId = activityLog[0].id;
+          }
           return {
             ...activity,
-            attendingAt
+            attendingAt,
+            activityLogId
           };
         });
         setActivityLogList(finalActivityLogs);
@@ -77,10 +94,49 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - activityLogList.length) : 0;
 
+  const handleOpenEditModal = (data: any) => {
+    setIsOpenModal(true);
+    setSelectedActivityLog(data);
+  };
+
+  const handleOpenDeleteModal = (data: any) => {
+    setIsOpenDeleteModal(true);
+    setSelectedActivityLog(data);
+  };
+
+  const handleActivityLogFormClose = () => {
+    setSelectedActivityLog(undefined);
+    getUserActivityLogs();
+    setIsOpenModal(false);
+  };
+
+  const handleDeleteModalClose = () => {
+    setSelectedActivityLog(undefined);
+    getUserActivityLogs();
+    setIsOpenDeleteModal(false);
+  };
+
+  const handleDeleteActivityLog = async () => {
+    if (selectedActivityLog) {
+      await axios.delete(`activity-logs/${(selectedActivityLog as any).activityLogId}`);
+      handleDeleteModalClose();
+    }
+  };
+
   return (
     <>
       <Card>
-        <CardHeader title="Keaktifan Anggota (Presensi Meeting)" sx={{ mb: 3 }} />
+        <CardHeader
+          title="Keaktifan Anggota (Presensi Meeting)"
+          sx={{ mb: 3 }}
+          action={
+            isAdmin && (
+              <Button variant="contained" onClick={() => setIsOpenModal(true)}>
+                Tambah
+              </Button>
+            )
+          }
+        />
         <Scrollbar>
           <TableContainer sx={{ minWidth: 800 }}>
             <Table>
@@ -92,13 +148,23 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
                   <TableCell>Waktu Mulai</TableCell>
                   <TableCell>Waktu Selesai</TableCell>
                   <TableCell>Waktu Hadir</TableCell>
+                  {isAdmin && <TableCell>Aksi</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
                 {activityLogList
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
-                    const { id, name, type, startAt, endAt, attendingAt } = row;
+                    const { id, name, type, startAt, endAt, attendingAt, activityLogId } = row;
+                    const data = {
+                      id,
+                      name,
+                      type,
+                      startAt,
+                      endAt,
+                      attendingAt,
+                      activityLogId
+                    };
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
@@ -121,6 +187,29 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
                             <Chip label="Tidak hadir" color="error" size="small" />
                           )}
                         </TableCell>
+                        {isAdmin && (
+                          <TableCell align="left">
+                            <Box display="flex" gap={2}>
+                              <Button
+                                variant="contained"
+                                onClick={() => handleOpenEditModal(data)}
+                                size="small"
+                              >
+                                Edit
+                              </Button>
+                              {attendingAt && (
+                                <Button
+                                  variant="contained"
+                                  color="error"
+                                  onClick={() => handleOpenDeleteModal(data)}
+                                  size="small"
+                                >
+                                  Hapus
+                                </Button>
+                              )}
+                            </Box>
+                          </TableCell>
+                        )}
                       </TableRow>
                     );
                   })}
@@ -158,6 +247,29 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
           Lihat keaktifan transaksi
         </Typography>
       </Link>
+      <UserActivityLogForm
+        open={isOpenModal}
+        onClose={handleActivityLogFormClose}
+        user={user}
+        initialData={selectedActivityLog}
+      />
+      <DialogAnimate open={isOpenDeleteModal} onClose={handleDeleteModalClose}>
+        <DialogTitle sx={{ pb: 1 }}>Hapus Presensi?</DialogTitle>
+        <DialogContent sx={{ overflowY: 'unset' }}>
+          <Typography align={'justify'}>
+            Data presensi pengguna akan hilang selamanya! Apakah Anda tetap ingin menghapus data
+            presensi?
+          </Typography>
+          <Box display="flex" justifyContent="end" gap={2} pt={2} pb={1}>
+            <Button variant="contained" onClick={handleDeleteActivityLog} color="error">
+              Hapus
+            </Button>
+            <Button variant="contained" onClick={handleDeleteModalClose}>
+              Batal
+            </Button>
+          </Box>
+        </DialogContent>
+      </DialogAnimate>
     </>
   );
 }
