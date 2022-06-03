@@ -1,6 +1,8 @@
-import { Typography, Link, Card } from '@mui/material';
+import { Typography, Link, Card, Tooltip, IconButton, Stack, Box } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import questionMarkCircleOutline from '@iconify/icons-eva/question-mark-circle-outline';
 
 import { handleGetSaldo } from 'utils/financeAxios/financeSaldo';
 import { fCurrency } from 'utils/formatNumber';
@@ -19,11 +21,23 @@ export default function BankingSaldo() {
     fetchData();
   }, []);
 
+  const saldoExplanation = `Saldo adalah akumulasi dana pembayaran dari koperasi kepada anggota. Dapat berupa pembayaran sisa hasil usaha maupun hasil penjualan toko di e-commerce. Saldo tidak dapat dipakai kembali untuk melakukan transaksi pembayaran, tetapi dapat dicairkan ke akun rekening bank yang didaftarkan oleh anggota`;
+
   return (
     <>
-      <Typography gutterBottom variant="h6" sx={{ mx: '0.5rem' }}>
-        Saldo
-      </Typography>
+      <Stack direction="row">
+        <Box height={20} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+          <Typography gutterBottom variant="h6" sx={{ mx: '0.5rem', mt: '0.1rem' }}>
+            Saldo
+          </Typography>
+        </Box>
+        <Tooltip title={saldoExplanation}>
+          <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+            <Icon icon={questionMarkCircleOutline} width={20} height={20} />
+          </IconButton>
+        </Tooltip>
+      </Stack>
+
       <Card
         sx={{
           p: 3,
