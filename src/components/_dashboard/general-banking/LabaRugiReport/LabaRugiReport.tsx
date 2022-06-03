@@ -106,7 +106,9 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
       const currentIncome =
         currentLabaRugiData.jumlahPenjualan + currentLabaRugiData.sisaHasilUsaha;
       const prevIncome = prevLabaRugiData.jumlahPenjualan + prevLabaRugiData.sisaHasilUsaha;
-      setIncomePercent(((currentIncome - prevIncome) / currentIncome) * 100);
+      setIncomePercent(
+        currentIncome === 0 ? -100 : ((currentIncome - prevIncome) / currentIncome) * 100
+      );
       const currentExpense =
         currentLabaRugiData.biayaProduksiProdukTerjual +
         currentLabaRugiData.biayaSimpananPokok +
@@ -117,7 +119,9 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
         prevLabaRugiData.biayaSimpananPokok +
         prevLabaRugiData.biayaSimpananWajib +
         prevLabaRugiData.biayaOperasi;
-      setExpensePercent(((currentExpense - prevExpense) / currentExpense) * 100);
+      setExpensePercent(
+        currentExpense === 0 ? -100 : ((currentExpense - prevExpense) / currentExpense) * 100
+      );
     }
   }, [currentLabaRugiData, prevLabaRugiData]);
 
