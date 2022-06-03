@@ -64,6 +64,7 @@ export default function BalanceStatistics(props: { dateValue: Date }) {
       const annualLabaRugiData = await handleGetAnnualLabaRugiInfo(
         String(props.dateValue.getFullYear())
       );
+      annualLabaRugiData.reverse();
       if (annualLabaRugiData) {
         incomeArray = annualLabaRugiData.map(
           (labaRugiData: any) => labaRugiData.jumlahPenjualan + labaRugiData.sisaHasilUsaha
