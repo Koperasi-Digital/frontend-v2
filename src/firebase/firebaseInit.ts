@@ -20,4 +20,10 @@ if (!firebase.apps.length) {
 
 // MESSAGING
 
-export const messaging = firebase.messaging();
+let messaging: firebase.messaging.Messaging;
+
+if (firebase.messaging.isSupported()) {
+  messaging = firebase.messaging();
+}
+
+export { messaging };
