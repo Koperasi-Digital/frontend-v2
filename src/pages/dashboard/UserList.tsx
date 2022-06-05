@@ -94,7 +94,7 @@ export default function UserList() {
 
   const { userList } = useSelector((state: RootState) => state.user);
   const [page, setPage] = useState(0);
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [selected, setSelected] = useState<string[]>([]);
   const [orderBy, setOrderBy] = useState('created_at');
   const [filterName, setFilterName] = useState('');
