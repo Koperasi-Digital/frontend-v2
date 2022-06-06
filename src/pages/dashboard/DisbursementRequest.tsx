@@ -1,5 +1,15 @@
 // material
-import { Container, Grid, Card, useMediaQuery } from '@mui/material';
+import {
+  Container,
+  Grid,
+  Card,
+  useMediaQuery,
+  FormControl,
+  InputLabel,
+  Select,
+  SelectChangeEvent,
+  MenuItem
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 // components
 import Page from '../../components/Page';
@@ -28,6 +38,7 @@ export default function DisbursementRequest() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
   const { currentRole } = useAuth();
+  const [status, setStatus] = useState<String>('not-success');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,7 +75,26 @@ export default function DisbursementRequest() {
               <BankAccountRegisterForm bankAccount={bankAccount} setBankAccount={setBankAccount} />
             </Grid>
             <Grid item xs={12}>
-              <DisbursementRequestListTable />
+              <Grid item xs={12}>
+                <FormControl>
+                  <InputLabel>Status disbursement request</InputLabel>
+                  <Select
+                    labelId="report-name-select-label"
+                    id="report-name-select"
+                    value={status}
+                    label="Nama Laporan"
+                    onChange={(event: SelectChangeEvent<String>) => {
+                      setStatus(event.target.value);
+                    }}
+                  >
+                    <MenuItem value={'success'}>Berhasil</MenuItem>
+                    <MenuItem value={'not-success'}>Tidak berhasil</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <DisbursementRequestListTable status={status} />
+              </Grid>
             </Grid>
           </Grid>
         </Card>

@@ -52,7 +52,7 @@ type Reimbursement = {
 
 // ----------------------------------------------------------------------
 
-export default function DisbursementRequestListTable() {
+export default function DisbursementRequestListTable(props: { status: String }) {
   const { currentRole } = useAuth();
   const [reimbursementList, setReimbursementList] = useState<Reimbursement[]>([]);
 
@@ -66,15 +66,22 @@ export default function DisbursementRequestListTable() {
           reimbursementList = await handleUserListReimbursement();
         }
         if (reimbursementList) {
-          const filteredReimbursementList = reimbursementList.filter((data: { status: string }) => {
-            return data.status !== 'success';
-          });
+          let filteredReimbursementList;
+          if (props.status !== 'success') {
+            filteredReimbursementList = reimbursementList.filter((data: { status: string }) => {
+              return data.status !== 'success';
+            });
+          } else {
+            filteredReimbursementList = reimbursementList.filter((data: { status: string }) => {
+              return data.status === 'success';
+            });
+          }
           setReimbursementList(filteredReimbursementList);
         }
       }
     };
     fetchData();
-  }, [currentRole]);
+  }, [currentRole, props.status]);
 
   //Table Pagination
   const [page, setPage] = useState(0);
@@ -129,18 +136,25 @@ export default function DisbursementRequestListTable() {
                     <TableCell>
                       <Stack direction="row" spacing={1}>
                         <Typography>{row.id}</Typography>
-                        <Tooltip title={disbursementExplanation}>
-                          <IconButton
-                            onClick={() => {
-                              window.location.href = `${PATH_DASHBOARD.managementFinance.disbursementApproval}/${row.id}`;
-                            }}
-                            sx={{ display: 'flex', alignItems: 'flex-start' }}
-                          >
-                            <Icon icon={CashApp} width={20} height={20} />
-                          </IconButton>
-                        </Tooltip>
+                        {props.status !== 'success' &&
+                        currentRole &&
+                        currentRole.name === 'ADMIN' ? (
+                          <Tooltip title={disbursementExplanation}>
+                            <IconButton
+                              onClick={() => {
+                                window.location.href = `${PATH_DASHBOARD.managementFinance.disbursementApproval}/${row.id}`;
+                              }}
+                              sx={{ display: 'flex', alignItems: 'flex-start' }}
+                            >
+                              <Icon icon={CashApp} width={20} height={20} />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (
+                          <></>
+                        )}
                       </Stack>
                     </TableCell>
+                    <TableCell>{fCurrency(row.total_cost)}</TableCell>
                     <TableCell>{row.type}</TableCell>
                     {currentRole && currentRole.name === 'ADMIN' ? (
                       <TableCell>
@@ -172,8 +186,6 @@ export default function DisbursementRequestListTable() {
                     ) : (
                       <></>
                     )}
-
-                    <TableCell>{fCurrency(row.total_cost)}</TableCell>
                   </TableRow>
                 ))}
                 {emptyRows > 0 && (

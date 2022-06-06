@@ -8,6 +8,8 @@ import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, TextField, Typography, FormHelperText } from '@mui/material';
 // utils
 import { UploadSingleFile } from '../../upload';
+// routes
+import { PATH_DASHBOARD } from '../../../routes/paths';
 
 import {
   handleEditReimbursement,
@@ -90,7 +92,7 @@ export default function DisbursementApprovalForm(props: { disbursementRequestId:
           reimbursement.type
         );
 
-        resetForm();
+        window.location.href = PATH_DASHBOARD.managementFinance.disbursementApproval;
         setSubmitting(false);
         if (
           editedReimbursement &&
