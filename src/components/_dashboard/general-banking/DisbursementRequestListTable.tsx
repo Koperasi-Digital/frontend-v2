@@ -9,10 +9,17 @@ import {
   TableCell,
   TableHead,
   CardHeader,
+  Stack,
+  Tooltip,
   Typography,
+  IconButton,
   TableContainer,
   TablePagination
 } from '@mui/material';
+// routes
+import { PATH_DASHBOARD } from '../../../routes/paths';
+import { Icon } from '@iconify/react';
+import CashApp from '@iconify/icons-cib/cashapp';
 // utils
 import { fCurrency } from '../../../utils/formatNumber';
 import { fDate, fTime } from '../../../utils/formatTime';
@@ -81,6 +88,8 @@ export default function DisbursementRequestListTable() {
   };
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - reimbursementList.length) : 0;
 
+  const disbursementExplanation = `Klik tombol ini untuk mengajukan pencairan dana untuk request pencairan dana id ini`;
+
   return (
     <>
       <Card>
@@ -117,7 +126,21 @@ export default function DisbursementRequestListTable() {
                   : reimbursementList
                 ).map((row) => (
                   <TableRow key={row.id}>
-                    <TableCell>{row.id}</TableCell>
+                    <TableCell>
+                      <Stack direction="row" spacing={1}>
+                        <Typography>{row.id}</Typography>
+                        <Tooltip title={disbursementExplanation}>
+                          <IconButton
+                            onClick={() => {
+                              window.location.href = `${PATH_DASHBOARD.managementFinance.disbursementApproval}/${row.id}`;
+                            }}
+                            sx={{ display: 'flex', alignItems: 'flex-start' }}
+                          >
+                            <Icon icon={CashApp} width={20} height={20} />
+                          </IconButton>
+                        </Tooltip>
+                      </Stack>
+                    </TableCell>
                     <TableCell>{row.type}</TableCell>
                     {currentRole && currentRole.name === 'ADMIN' ? (
                       <TableCell>
