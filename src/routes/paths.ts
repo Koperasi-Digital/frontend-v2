@@ -59,6 +59,10 @@ export const PATH_DASHBOARD = {
     memberVerification: {
       request: path(ROOTS_DASHBOARD, '/user/member-verification/request'),
       verify: path(ROOTS_DASHBOARD, '/user/member-verification/verify')
+    },
+    memberResignation: {
+      request: path(ROOTS_DASHBOARD, '/user/member-resignation/request'),
+      verify: path(ROOTS_DASHBOARD, '/user/member-resignation/verify')
     }
   },
   eCommerce: {

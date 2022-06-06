@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
-import { deleteUser, getUserList } from 'redux/slices/user';
+import { getUserList } from 'redux/slices/user';
 import { RootState, useDispatch, useSelector } from 'redux/store';
 import { Icon } from '@iconify/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { capitalize, orderBy } from 'lodash';
-import { useSnackbar } from 'notistack';
 import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
 // material
 import {
@@ -34,22 +33,12 @@ import createAvatar from 'utils/createAvatar';
 
 export default function RecentUsers() {
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
   const { userList } = useSelector((state: RootState) => state.user);
   const recentUsers = orderBy(userList, (user) => new Date(user.created_at), ['desc']).slice(0, 5);
 
   useEffect(() => {
     dispatch(getUserList());
   }, [dispatch]);
-
-  const handleDeleteUser = async (userId: string) => {
-    try {
-      await deleteUser(userId);
-      enqueueSnackbar(`Pengguna (ID: ${userId}) berhasil dihapus!`, { variant: 'success' });
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   return (
     <>
@@ -70,6 +59,7 @@ export default function RecentUsers() {
               <TableBody>
                 {recentUsers.map((row) => {
                   const { id, displayName, email, photoURL, roles, created_at } = row;
+                  const userData = { id, displayName, email, photoURL, roles, created_at };
                   const defaultAvatar = photoURL ? null : createAvatar(displayName);
                   return (
                     <TableRow hover key={id} tabIndex={-1} role="checkbox">
@@ -94,10 +84,7 @@ export default function RecentUsers() {
                       <TableCell align="left">{fDateTime(created_at)}</TableCell>
 
                       <TableCell align="right">
-                        <UserMoreMenu
-                          onDelete={() => handleDeleteUser(id)}
-                          userName={displayName}
-                        />
+                        <UserMoreMenu user={userData} />
                       </TableCell>
                     </TableRow>
                   );

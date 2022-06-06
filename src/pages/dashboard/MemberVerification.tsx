@@ -134,8 +134,8 @@ export default function MemberVerification() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Verification ID</TableCell>
-                    <TableCell>User ID</TableCell>
+                    <TableCell>ID Verifikasi</TableCell>
+                    <TableCell>ID Pengguna</TableCell>
                     <TableCell>Nama</TableCell>
                     <TableCell sx={{ width: '15%' }}>Foto KTP</TableCell>
                     <TableCell sx={{ width: '15%' }}>Foto Selfie</TableCell>

@@ -430,6 +430,22 @@ export default function Router() {
                   <RequestMemberVerification />
                 </RoleBasedGuard>
               )
+            },
+            {
+              path: 'member-resignation/verify',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <MemberResignation />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'member-resignation/request',
+              element: (
+                <RoleBasedGuard accessibleRoles={['MEMBER']}>
+                  <RequestMemberResignation />
+                </RoleBasedGuard>
+              )
             }
           ]
         }
@@ -503,6 +519,10 @@ const UserDetail = Loadable(lazy(() => import('../pages/dashboard/UserDetail')))
 const MemberVerification = Loadable(lazy(() => import('../pages/dashboard/MemberVerification')));
 const RequestMemberVerification = Loadable(
   lazy(() => import('../pages/dashboard/RequestMemberVerification'))
+);
+const MemberResignation = Loadable(lazy(() => import('../pages/dashboard/MemberResignation')));
+const RequestMemberResignation = Loadable(
+  lazy(() => import('../pages/dashboard/RequestMemberResignation'))
 );
 const CreateStore = Loadable(lazy(() => import('../pages/dashboard/CreateStore')));
 const Activities = Loadable(lazy(() => import('../pages/dashboard/Activities')));
