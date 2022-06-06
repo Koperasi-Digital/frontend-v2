@@ -1,9 +1,10 @@
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
+import { startCase } from 'lodash';
 import { Form, FormikProvider, useFormik } from 'formik';
 // material
 import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Stack, TextField } from '@mui/material';
+import { Card, Grid, Stack, TextField, FormControl, InputLabel, Select } from '@mui/material';
 // hooks
 import useAuth from 'hooks/useAuth';
 
@@ -17,6 +18,8 @@ type BankAccount = {
   accountName: string;
   bankName: string;
 };
+
+const BANK_NAME_OPTIONS: string[] = ['Panin', 'BCA', 'BRI'];
 
 export default function BankAccountRegisterForm(props: {
   bankAccount: BankAccount | undefined;
@@ -37,7 +40,7 @@ export default function BankAccountRegisterForm(props: {
     initialValues: {
       accountNumber: props.bankAccount ? props.bankAccount.accountNumber : '',
       accountName: props.bankAccount ? props.bankAccount.accountName : '',
-      bankName: props.bankAccount ? props.bankAccount.bankName : ''
+      bankName: props.bankAccount ? props.bankAccount.bankName : BANK_NAME_OPTIONS[0]
     },
     validationSchema: BankAccountRegisterSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -78,7 +81,7 @@ export default function BankAccountRegisterForm(props: {
     }
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+  const { errors, values, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -101,13 +104,22 @@ export default function BankAccountRegisterForm(props: {
                   error={Boolean(touched.accountName && errors.accountName)}
                   helperText={touched.accountName && errors.accountName}
                 />
-                <TextField
-                  fullWidth
-                  label="Nama bank"
-                  {...getFieldProps('bankName')}
-                  error={Boolean(touched.bankName && errors.bankName)}
-                  helperText={touched.bankName && errors.bankName}
-                />
+                <FormControl fullWidth>
+                  <InputLabel>Nama bank</InputLabel>
+                  <Select
+                    label="Nama bank"
+                    native
+                    {...getFieldProps('bankName')}
+                    value={values.bankName}
+                    sx={{ mb: 3 }}
+                  >
+                    {BANK_NAME_OPTIONS.map((bankName) => (
+                      <option key={bankName} value={bankName}>
+                        {startCase(bankName)}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
               </Stack>
             </Card>
           </Grid>
