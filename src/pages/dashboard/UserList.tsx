@@ -37,7 +37,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Nama', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
   { id: 'role', label: 'Role', alignRight: false, disableSort: true },
-  { id: 'createdAt', label: 'Waktu Daftar', alignRight: false },
+  { id: 'created_at', label: 'Waktu Daftar', alignRight: false },
   { id: '' }
 ];
 
@@ -94,9 +94,9 @@ export default function UserList() {
 
   const { userList } = useSelector((state: RootState) => state.user);
   const [page, setPage] = useState(0);
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [selected, setSelected] = useState<string[]>([]);
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState('created_at');
   const [filterName, setFilterName] = useState('');
   const [filterRole, setFilterRole] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
