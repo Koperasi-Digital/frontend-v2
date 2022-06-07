@@ -16,8 +16,6 @@ import {
   resetPayAccount,
   resetErrorType
 } from 'redux/slices/emoney';
-// import { resetState } from 'redux/slices/emoney';
-import { store } from 'redux/store';
 
 export default function BankingEMoney() {
   const dispatch = useDispatch();
@@ -27,9 +25,6 @@ export default function BankingEMoney() {
     isLoadingUnbind,
     registerStep,
     hasBeenRedirected,
-    paymentType,
-    phoneNumber,
-    countryCode,
     errorType
   } = useSelector((state: RootState) => state.emoney);
 
@@ -52,31 +47,6 @@ export default function BankingEMoney() {
   const handleCloseModal = () => {
     setOpenModalEMoney(false);
   };
-
-  useEffect(() => {
-    const handleCheckEMoney = async (
-      hasBeenRedirected: boolean,
-      phoneNumber: string,
-      paymentType: string,
-      countryCode: string
-    ) => {
-      dispatch(registerEMoney(hasBeenRedirected, phoneNumber, paymentType, countryCode));
-    };
-    const emoney = store.getState().emoney;
-    if (
-      emoney.phoneNumber &&
-      emoney.paymentType &&
-      emoney.countryCode &&
-      emoney.registerStep === 1
-    ) {
-      handleCheckEMoney(
-        emoney.hasBeenRedirected,
-        emoney.phoneNumber,
-        emoney.paymentType,
-        emoney.countryCode
-      );
-    }
-  }, [dispatch, paymentType, phoneNumber, countryCode]);
 
   useEffect(() => {
     const fetchSaldo = async () => {
