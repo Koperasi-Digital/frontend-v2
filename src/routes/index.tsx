@@ -355,14 +355,8 @@ export default function Router() {
           path: 'management-finance',
           children: [
             {
-              element: <Navigate to="/dashboard/management-finance/disbursement-approval" replace />
-            },
-            {
-              path: 'disbursement-approval',
               element: (
-                <RoleBasedGuard accessibleRoles={['ADMIN']}>
-                  <DisbursementApproval />
-                </RoleBasedGuard>
+                <Navigate to="/dashboard/management-finance/disbursement-request-list" replace />
               )
             },
             {
@@ -370,6 +364,22 @@ export default function Router() {
               element: (
                 <RoleBasedGuard accessibleRoles={['ADMIN']}>
                   <DisbursementRequestList />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'disbursement-approval/:disbursementRequestId',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DisbursementApproval />
+                </RoleBasedGuard>
+              )
+            },
+            {
+              path: 'disbursement-approval',
+              element: (
+                <RoleBasedGuard accessibleRoles={['ADMIN']}>
+                  <DisbursementApproval />
                 </RoleBasedGuard>
               )
             }
