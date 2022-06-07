@@ -10,6 +10,7 @@ const initialState: EMoneyState = {
   isLoadingCharge: false,
   isLoadingUnbind: false,
   registerStep: 0, //0 hasn't registered yet; 1 is loading; 2 is done registered
+  hasBeenRedirected: false, //user only redirected once
   paymentType: null,
   phoneNumber: null,
   countryCode: null,
@@ -32,6 +33,9 @@ const slice = createSlice({
     },
     finishLoadingChargePaymentAccount(state) {
       state.isLoadingCharge = false;
+    },
+    redirectUser(state) {
+      state.hasBeenRedirected = true;
     },
     startLoadingUnbind(state) {
       state.isLoadingUnbind = true;
@@ -57,6 +61,7 @@ const slice = createSlice({
       state.countryCode = null;
       state.isLoadingCharge = false;
       state.isLoadingGetPaymentAccount = false;
+      state.hasBeenRedirected = false;
       state.registerStep = 0;
     },
     resetState(state) {
@@ -64,6 +69,7 @@ const slice = createSlice({
       state.phoneNumber = null;
       state.countryCode = null;
       state.registerStep = 0;
+      state.hasBeenRedirected = false;
       state.isLoadingCharge = false;
       state.isLoadingGetPaymentAccount = false;
     },
@@ -81,7 +87,12 @@ export default slice.reducer;
 
 export const { resetState, resetErrorType, finishLoadingChargePaymentAccount } = slice.actions;
 
-export function registerEMoney(phoneNumber: string, paymentType: string, countryCode: string) {
+export function registerEMoney(
+  hasBeenRedirected: boolean,
+  phoneNumber: string,
+  paymentType: string,
+  countryCode: string
+) {
   return async () => {
     const { dispatch } = store;
     try {
@@ -106,10 +117,15 @@ export function registerEMoney(phoneNumber: string, paymentType: string, country
       ).data.payload;
       if (responseData.account_status !== 'ENABLED') {
         if (responseData.actions) {
-          dispatch(slice.actions.setRegisterStep(1));
-          setTimeout(() => {
-            window.location.href = responseData.actions[0].url;
-          }, 1000);
+          if (!hasBeenRedirected) {
+            dispatch(slice.actions.setRegisterStep(1));
+            dispatch(slice.actions.redirectUser());
+            setTimeout(() => {
+              window.location.href = responseData.actions[0].url;
+            }, 1000);
+          } else {
+            dispatch(slice.actions.resetState());
+          }
         }
       } else {
         dispatch(slice.actions.setRegisterStep(2));

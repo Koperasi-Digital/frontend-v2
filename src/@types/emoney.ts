@@ -3,6 +3,7 @@ export type EMoneyState = {
   phoneNumber: string | null;
   countryCode: string | null;
   registerStep: number;
+  hasBeenRedirected: boolean;
   isLoadingGetPaymentAccount: boolean;
   isLoadingCharge: boolean;
   isLoadingUnbind: boolean;

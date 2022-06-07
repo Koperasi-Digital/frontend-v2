@@ -17,6 +17,7 @@ import {
   resetErrorType
 } from 'redux/slices/emoney';
 // import { resetState } from 'redux/slices/emoney';
+import { store } from 'redux/store';
 
 export default function BankingEMoney() {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ export default function BankingEMoney() {
     isLoadingCharge,
     isLoadingUnbind,
     registerStep,
+    hasBeenRedirected,
     paymentType,
     phoneNumber,
     countryCode,
@@ -40,7 +42,7 @@ export default function BankingEMoney() {
     phone_number: string,
     country_code: string
   ) => {
-    dispatch(registerEMoney(phone_number, payment_type, country_code));
+    dispatch(registerEMoney(hasBeenRedirected, phone_number, payment_type, country_code));
   };
 
   const handleUnregisterEMoney = async () => {
@@ -53,17 +55,28 @@ export default function BankingEMoney() {
 
   useEffect(() => {
     const handleCheckEMoney = async (
+      hasBeenRedirected: boolean,
       phoneNumber: string,
       paymentType: string,
       countryCode: string
     ) => {
-      dispatch(registerEMoney(phoneNumber, paymentType, countryCode));
+      dispatch(registerEMoney(hasBeenRedirected, phoneNumber, paymentType, countryCode));
     };
-
-    if (paymentType && phoneNumber && countryCode && registerStep === 1) {
-      handleCheckEMoney(phoneNumber, paymentType, countryCode);
+    const emoney = store.getState().emoney;
+    if (
+      emoney.phoneNumber &&
+      emoney.paymentType &&
+      emoney.countryCode &&
+      emoney.registerStep === 1
+    ) {
+      handleCheckEMoney(
+        emoney.hasBeenRedirected,
+        emoney.phoneNumber,
+        emoney.paymentType,
+        emoney.countryCode
+      );
     }
-  }, [dispatch, paymentType, phoneNumber, countryCode, registerStep]);
+  }, [dispatch, paymentType, phoneNumber, countryCode]);
 
   useEffect(() => {
     const fetchSaldo = async () => {
@@ -76,11 +89,10 @@ export default function BankingEMoney() {
         }
       }
     };
-
     if (registerStep === 2) {
       fetchSaldo();
     }
-  }, [registerStep, saldo]);
+  }, [registerStep]);
 
   useEffect(() => {
     if (errorType) {
