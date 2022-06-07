@@ -1,4 +1,5 @@
 // material
+import { useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -10,6 +11,7 @@ import DisbursementApprovalForm from '../../components/_dashboard/general-bankin
 // ----------------------------------------------------------------------
 
 export default function DisbursementApproval() {
+  const { disbursementRequestId = '' } = useParams();
   return (
     <Page title="Penyetujuan Pencairan Dana | CoopChick">
       <Container maxWidth={false}>
@@ -21,7 +23,7 @@ export default function DisbursementApproval() {
           ]}
         />
 
-        <DisbursementApprovalForm />
+        <DisbursementApprovalForm disbursementRequestId={disbursementRequestId} />
       </Container>
     </Page>
   );

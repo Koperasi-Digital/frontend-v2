@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack';
-import { useRef, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import RoundGroups from '@iconify/icons-ic/round-groups';
@@ -19,6 +19,9 @@ import MyAvatar from '../../components/MyAvatar';
 import MenuPopover from '../../components/MenuPopover';
 import CurrentRoleSwitch from './CurrentRoleSwitch';
 import BankingEMoney from 'components/_dashboard/general-banking/BankingEMoney';
+import { registerEMoney } from 'redux/slices/emoney';
+import { store } from 'redux/store';
+import { useDispatch } from 'redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +55,7 @@ export default function AccountPopover() {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const handleOpen = () => {
     setOpen(true);
@@ -72,6 +76,32 @@ export default function AccountPopover() {
       enqueueSnackbar('Error, silakan refresh halaman ini', { variant: 'error' });
     }
   };
+
+  useEffect(() => {
+    console.log('Masuk ke sini');
+    const handleCheckEMoney = async (
+      hasBeenRedirected: boolean,
+      phoneNumber: string,
+      paymentType: string,
+      countryCode: string
+    ) => {
+      dispatch(registerEMoney(hasBeenRedirected, phoneNumber, paymentType, countryCode));
+    };
+    const emoney = store.getState().emoney;
+    if (
+      emoney.phoneNumber &&
+      emoney.paymentType &&
+      emoney.countryCode &&
+      emoney.registerStep === 1
+    ) {
+      handleCheckEMoney(
+        emoney.hasBeenRedirected,
+        emoney.phoneNumber,
+        emoney.paymentType,
+        emoney.countryCode
+      );
+    }
+  }, [dispatch]);
 
   return (
     <>

@@ -8,6 +8,8 @@ import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, TextField, Typography, FormHelperText } from '@mui/material';
 // utils
 import { UploadSingleFile } from '../../upload';
+// routes
+import { PATH_DASHBOARD } from '../../../routes/paths';
 
 import {
   handleEditReimbursement,
@@ -34,7 +36,7 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1)
 }));
 
-export default function DisbursementApprovalForm() {
+export default function DisbursementApprovalForm(props: { disbursementRequestId: string }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewProductSchema = Yup.object().shape({
@@ -44,7 +46,7 @@ export default function DisbursementApprovalForm() {
 
   const formik = useFormik<DisbursementApprovalValues>({
     initialValues: {
-      disbursementRequestId: '',
+      disbursementRequestId: props.disbursementRequestId,
       receipt: null
     },
     validationSchema: NewProductSchema,
@@ -90,7 +92,7 @@ export default function DisbursementApprovalForm() {
           reimbursement.type
         );
 
-        resetForm();
+        window.location.href = PATH_DASHBOARD.managementFinance.disbursementApproval;
         setSubmitting(false);
         if (
           editedReimbursement &&

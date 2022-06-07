@@ -85,7 +85,6 @@ export const PATH_DASHBOARD = {
     home: path(ROOTS_DASHBOARD, '/finance/home'),
     report: path(ROOTS_DASHBOARD, '/finance/report'),
     addSimpananSukarela: path(ROOTS_DASHBOARD, '/finance/add-simpanan-sukarela'),
-    disbursementApproval: path(ROOTS_DASHBOARD, '/finance/disbursement-approval'),
     disbursementRequest: path(ROOTS_DASHBOARD, '/finance/create-disbursement-request'),
     deprecationRegister: path(ROOTS_DASHBOARD, '/finance/register-deprecation'),
     repairRegister: path(ROOTS_DASHBOARD, '/finance/register-repair'),
