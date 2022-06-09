@@ -7,6 +7,8 @@ import { fCurrency } from '../../../utils/formatNumber';
 
 import { DialogAnimate } from '../../animate';
 
+import LoadingScreen from 'components/LoadingScreen';
+
 // redux
 import { RootState, useDispatch, useSelector } from 'redux/store';
 import {
@@ -112,7 +114,7 @@ export default function BankingEMoney() {
           isLoadingCharge ||
           registerStep === 1 ||
           isLoadingUnbind ? (
-          <Typography>Loading</Typography>
+          <LoadingScreen />
         ) : (
           <Box width="100%" display="flex" flexDirection="column" gap={2} justifyContent="center">
             <Typography>Terjadi error</Typography>
