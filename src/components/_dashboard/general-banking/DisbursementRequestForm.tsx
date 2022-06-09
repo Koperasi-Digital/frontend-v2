@@ -99,8 +99,16 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
     }
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, values, setFieldValue } =
-    formik;
+  const {
+    errors,
+    touched,
+    handleSubmit,
+    isSubmitting,
+    getFieldProps,
+    values,
+    setFieldValue,
+    validateField
+  } = formik;
 
   const handleChange = (event: any) => {
     setFieldValue('disbType', event.target.value);
@@ -112,6 +120,12 @@ export default function DisbursementRequestForm(props: { bankAccount: BankAccoun
         : 0
     );
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      validateField('amount');
+    }, 1);
+  }, [maxDisbursement, validateField]);
 
   return (
     <FormikProvider value={formik}>
