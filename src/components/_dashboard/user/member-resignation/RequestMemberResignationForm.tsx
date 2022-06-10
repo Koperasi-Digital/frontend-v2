@@ -25,7 +25,7 @@ import {
 import { SisaHasilUsaha as SisaHasilUsahaType } from '../../../../@types/sisa-hasil-usaha';
 
 //utils
-import { fHTML } from 'utils/financeAxios/financeMemberResignation';
+import { fHTML } from 'utils/financeFormatting/financeMemberResignation';
 // ----------------------------------------------------------------------
 
 interface InitialValues {

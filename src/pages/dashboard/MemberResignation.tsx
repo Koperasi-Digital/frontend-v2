@@ -16,6 +16,9 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogActions,
+  IconButton,
+  Tooltip,
   Typography
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
@@ -33,6 +36,7 @@ import useIsMountedRef from 'hooks/useIsMountedRef';
 import Scrollbar from 'components/Scrollbar';
 import Page from 'components/Page';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
+import VerifyMemberResignationForm from 'components/_dashboard/user/member-resignation/VerifyMemberResignationForm';
 //
 import { MIconButton } from 'components/@material-extend';
 
@@ -194,37 +198,27 @@ export default function MemberResignation() {
                                 open={isOpenConfirmationModal}
                                 onClose={() => setIsOpenConfirmationModal(false)}
                               >
+                                <DialogActions
+                                  sx={{
+                                    zIndex: 9,
+                                    pt: '10px',
+                                    boxShadow: (theme) => theme.customShadows.z8
+                                  }}
+                                >
+                                  <Tooltip title="Tutup">
+                                    <IconButton
+                                      color="inherit"
+                                      onClick={() => setIsOpenConfirmationModal(false)}
+                                    >
+                                      <Icon icon={closeFill} />
+                                    </IconButton>
+                                  </Tooltip>
+                                </DialogActions>
                                 <DialogTitle sx={{ pb: 1 }}>
                                   Terima Pengunduran Keanggotaan?
                                 </DialogTitle>
                                 <DialogContent sx={{ overflowY: 'unset' }}>
-                                  <Typography align={'justify'}>
-                                    Saldo anggota koperasi milik pengguna yang masih tersisa akan
-                                    dikirimkan kepada rekening yang telah terdaftar. Apakah Anda
-                                    tetap ingin menerima pengunduran keanggotaan?
-                                  </Typography>
-                                  <Box
-                                    display="flex"
-                                    justifyContent="end"
-                                    alignItems="center"
-                                    gap={2}
-                                    pt={2}
-                                    pb={1}
-                                  >
-                                    <Button
-                                      variant="contained"
-                                      onClick={() => handleAcceptResignation(userId)}
-                                      color="error"
-                                    >
-                                      Terima
-                                    </Button>
-                                    <Button
-                                      variant="contained"
-                                      onClick={() => setIsOpenConfirmationModal(false)}
-                                    >
-                                      Batal
-                                    </Button>
-                                  </Box>
+                                  <VerifyMemberResignationForm memberId={userId} />
                                 </DialogContent>
                               </Dialog>
                               <Dialog

@@ -14,6 +14,13 @@ export function fHTML(report: string) {
     simpananSukarela: number;
     sisaHasilUsahaList: SisaHasilUsahaType[];
   } = JSON.parse(report);
+  let total = jsonReport.saldo + jsonReport.simpananPokok + jsonReport.simpananSukarela;
+  for (let i = 0; i < jsonReport.simpananWajibList.length; i++) {
+    total += jsonReport.simpananWajibList[i].amount;
+  }
+  for (let i = 0; i < jsonReport.sisaHasilUsahaList.length; i++) {
+    total += jsonReport.sisaHasilUsahaList[i].total_cost;
+  }
   return (
     <>
       <pre>Saldo:&nbsp;{fCurrency(jsonReport.saldo)}</pre>
@@ -40,6 +47,8 @@ export function fHTML(report: string) {
           </pre>
         </>
       ))}
+      <hr />
+      <pre>Total:&nbsp;{fCurrency(total)}</pre>
     </>
   );
 }

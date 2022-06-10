@@ -20,7 +20,7 @@ import {
 // utils
 import axios from 'utils/axios';
 import { handleGetBankAccount } from 'utils/financeAxios/financeBankAccount';
-import { fHTML } from 'utils/financeAxios/financeMemberResignation';
+import { fHTML } from 'utils/financeFormatting/financeMemberResignation';
 // hooks
 import useAuth from 'hooks/useAuth';
 // components
@@ -32,6 +32,9 @@ import { Link as RouterLink } from 'react-router-dom';
 
 // routes
 import { PATH_DASHBOARD } from 'routes/paths';
+
+//types
+import { BankAccount } from '../../@types/bankAccount';
 
 // ----------------------------------------------------------------------
 
@@ -54,12 +57,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   padding: theme.spacing(12, 0)
 }));
-
-type BankAccount = {
-  accountNumber: string;
-  accountName: string;
-  bankName: string;
-};
 
 // ----------------------------------------------------------------------
 
