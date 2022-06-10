@@ -92,7 +92,7 @@ export default function Forum() {
         {posts.length > 0 ? (
           <ForumPost posts={posts} />
         ) : (
-          <Typography>No Forum with topic "{filterTopic}" found</Typography>
+          <Typography>Tidak ada forum dengan topik "{filterTopic}"</Typography>
         )}
         {totalPage > 0 && (
           <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>

@@ -18,8 +18,8 @@ export default function CourseNewPost() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Course List',
-              href: PATH_DASHBOARD.general.courseList
+              name: 'Course',
+              href: PATH_DASHBOARD.general.course
             },
             { name: 'Course baru' }
           ]}

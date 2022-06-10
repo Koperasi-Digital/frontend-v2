@@ -44,7 +44,18 @@ export default function BlogPost() {
   useEffect(() => {
     if (parseInt(id) > 0) {
       dispatch(getBlogById(parseInt(id)));
-      dispatch(addView(parseInt(id)));
+      var blogArrayString = localStorage.getItem('blogArrayId');
+      if (blogArrayString) {
+        var blogArray = blogArrayString.split(',');
+        if (blogArray.includes(id) === false) {
+          dispatch(addView(parseInt(id)));
+          blogArray.push(id);
+          localStorage.setItem('blogArrayId', blogArray.toString());
+        }
+      } else {
+        dispatch(addView(parseInt(id)));
+        localStorage.setItem('blogArrayId', id);
+      }
     }
   }, [dispatch, id]);
 

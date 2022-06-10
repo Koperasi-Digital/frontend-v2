@@ -245,129 +245,129 @@ export default function Course() {
                 </Button>
               )}
             </Stack>
-            {isAdmin ? (
-              <Scrollbar>
-                <TableContainer sx={{ minWidth: 800 }}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        {TABLE_HEAD.map((headCell) => (
-                          <TableCell
-                            key={headCell.id}
-                            align={headCell.alignRight ? 'right' : 'left'}
-                          >
-                            {headCell.label}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {courseItems.map((row, index) => {
-                        return (
-                          <TableRow hover key={index + 'course_item'} tabIndex={-1}>
-                            <TableCell align="left">{`${index + 1}.`}</TableCell>
-                            <TableCell align="left">
-                              <Typography
-                                component={RouterLink}
-                                to={`${PATH_DASHBOARD.root}/course/${id}/page/${row.order}`}
-                                style={{ textDecoration: 'none', color: 'inherit' }}
+            {isAdmin
+              ? course.course_items.length > 0 && (
+                  <Scrollbar>
+                    <TableContainer sx={{ minWidth: 800 }}>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            {TABLE_HEAD.map((headCell) => (
+                              <TableCell
+                                key={headCell.id}
+                                align={headCell.alignRight ? 'right' : 'left'}
                               >
-                                {row.title}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="left">
-                              <IconButton
-                                component={RouterLink}
-                                to={`${PATH_DASHBOARD.general.courseManagement}/${id}/edit/${row.order}`}
-                              >
-                                <Icon icon={editFill} width={20} height={20} />
-                              </IconButton>
-                            </TableCell>
-                            <TableCell align="left">
-                              <IconButton onClick={() => onClickOpenModal(parseInt(row.id))}>
-                                <Icon icon={trash2Outline} width={20} height={20} />
-                              </IconButton>
-                            </TableCell>
-
-                            <TableCell align="right">
-                              <IconButton sx={{ mx: 1 }} onClick={() => onClickUp(row.id)}>
-                                <Icon icon={chevronUpFill} width={25} height={25} />
-                              </IconButton>
-                              <IconButton onClick={() => onClickDown(row.id)}>
-                                <Icon icon={chevronDownFill} width={25} height={25} />
-                              </IconButton>
-                            </TableCell>
+                                {headCell.label}
+                              </TableCell>
+                            ))}
                           </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                    <DialogAnimate
-                      open={isOpenModalDeleteCourse}
-                      onClose={() => setIsOpenModalDeleteCourse(!isOpenModalDeleteCourse)}
-                    >
-                      <DialogTitle sx={{ pb: 1 }}>Delete Materi ini ?</DialogTitle>
-                      <DialogContent sx={{ overflowY: 'unset' }}>
-                        <Typography align={'justify'}>
-                          Materi course yang sudah dihapus akan hilang selamanya ! Apakah anda tetap
-                          ingin menghapus materi ini ?
-                        </Typography>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'space-around',
-                            p: 1.5
-                          }}
+                        </TableHead>
+                        <TableBody>
+                          {courseItems.map((row, index) => {
+                            return (
+                              <TableRow hover key={index + 'course_item'} tabIndex={-1}>
+                                <TableCell align="left">{`${index + 1}.`}</TableCell>
+                                <TableCell align="left">
+                                  <Typography
+                                    component={RouterLink}
+                                    to={`${PATH_DASHBOARD.root}/course/${id}/page/${row.order}`}
+                                    style={{ textDecoration: 'none', color: 'inherit' }}
+                                  >
+                                    {row.title}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell align="left">
+                                  <IconButton
+                                    component={RouterLink}
+                                    to={`${PATH_DASHBOARD.general.courseManagement}/${id}/edit/${row.order}`}
+                                  >
+                                    <Icon icon={editFill} width={20} height={20} />
+                                  </IconButton>
+                                </TableCell>
+                                <TableCell align="left">
+                                  <IconButton onClick={() => onClickOpenModal(parseInt(row.id))}>
+                                    <Icon icon={trash2Outline} width={20} height={20} />
+                                  </IconButton>
+                                </TableCell>
+
+                                <TableCell align="right">
+                                  <IconButton sx={{ mx: 1 }} onClick={() => onClickUp(row.id)}>
+                                    <Icon icon={chevronUpFill} width={25} height={25} />
+                                  </IconButton>
+                                  <IconButton onClick={() => onClickDown(row.id)}>
+                                    <Icon icon={chevronDownFill} width={25} height={25} />
+                                  </IconButton>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                        <DialogAnimate
+                          open={isOpenModalDeleteCourse}
+                          onClose={() => setIsOpenModalDeleteCourse(!isOpenModalDeleteCourse)}
                         >
-                          <Button variant="contained" onClick={handleDeleteCourse}>
-                            Delete
-                          </Button>
-                          <Button
-                            color="error"
-                            variant="contained"
-                            onClick={() => setIsOpenModalDeleteCourse(!isOpenModalDeleteCourse)}
-                          >
-                            Cancel
-                          </Button>
-                        </Box>
-                      </DialogContent>
-                    </DialogAnimate>
-                  </Table>
-                  <Stack sx={{ mt: 2 }} alignItems="flex-end" justifyContent="flex-end">
-                    <Button
-                      onClick={handleUpdateOrder}
-                      variant="contained"
-                      startIcon={<Icon icon={editFill} />}
-                    >
-                      Update Urutan
-                    </Button>
-                  </Stack>
-                </TableContainer>
-              </Scrollbar>
-            ) : (
-              course.course_items.map((item, id) => {
-                return (
-                  <Accordion key={id}>
-                    <AccordionSummary
-                      expandIcon={<Icon icon={expandIcon} width={20} height={20} />}
-                    >
-                      <Typography variant="subtitle1">
-                        {id + 1}. {item.title}
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Stack direction="row" alignItems="center" justifyContent="space-between">
-                        <Typography style={{ textDecoration: 'none', color: 'inherit' }}>
-                          {item.description}
-                        </Typography>
-                        <Button component={RouterLink} to={`page/${id + 1}`}>
-                          See Course
+                          <DialogTitle sx={{ pb: 1 }}>Delete Materi ini ?</DialogTitle>
+                          <DialogContent sx={{ overflowY: 'unset' }}>
+                            <Typography align={'justify'}>
+                              Materi course yang sudah dihapus akan hilang selamanya ! Apakah anda
+                              tetap ingin menghapus materi ini ?
+                            </Typography>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                justifyContent: 'space-around',
+                                p: 1.5
+                              }}
+                            >
+                              <Button variant="contained" onClick={handleDeleteCourse}>
+                                Delete
+                              </Button>
+                              <Button
+                                color="error"
+                                variant="contained"
+                                onClick={() => setIsOpenModalDeleteCourse(!isOpenModalDeleteCourse)}
+                              >
+                                Cancel
+                              </Button>
+                            </Box>
+                          </DialogContent>
+                        </DialogAnimate>
+                      </Table>
+                      <Stack sx={{ mt: 2 }} alignItems="flex-end" justifyContent="flex-end">
+                        <Button
+                          onClick={handleUpdateOrder}
+                          variant="contained"
+                          startIcon={<Icon icon={editFill} />}
+                        >
+                          Update Urutan
                         </Button>
                       </Stack>
-                    </AccordionDetails>
-                  </Accordion>
-                );
-              })
-            )}
+                    </TableContainer>
+                  </Scrollbar>
+                )
+              : course.course_items.map((item, id) => {
+                  return (
+                    <Accordion key={id}>
+                      <AccordionSummary
+                        expandIcon={<Icon icon={expandIcon} width={20} height={20} />}
+                      >
+                        <Typography variant="subtitle1">
+                          {id + 1}. {item.title}
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Stack direction="row" alignItems="center" justifyContent="space-between">
+                          <Typography style={{ textDecoration: 'none', color: 'inherit' }}>
+                            {item.description}
+                          </Typography>
+                          <Button component={RouterLink} to={`page/${id + 1}`}>
+                            See Course
+                          </Button>
+                        </Stack>
+                      </AccordionDetails>
+                    </Accordion>
+                  );
+                })}
           </>
         ) : (
           <PermissionDenied />

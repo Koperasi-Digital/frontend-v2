@@ -32,8 +32,12 @@ export default function CourseEditPost() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Course List',
-              href: PATH_DASHBOARD.general.courseList
+              name: 'Course',
+              href: PATH_DASHBOARD.general.course
+            },
+            {
+              name: course ? course.title : 'Title',
+              href: `${PATH_DASHBOARD.general.course}/${id}`
             },
             { name: 'Edit course' }
           ]}

@@ -105,7 +105,7 @@ export default function Course() {
         {courseList.length > 0 ? (
           <CourseListCard courseList={courseList} />
         ) : (
-          <Typography>No Course with title "{filterCourse}" found</Typography>
+          <Typography>Tidak ada course dengan judul "{filterCourse}"</Typography>
         )}
 
         {totalPage > 0 && (

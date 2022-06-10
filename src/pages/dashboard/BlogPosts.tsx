@@ -147,7 +147,7 @@ export default function BlogPosts() {
             </Grid>
           </InfiniteScroll>
         ) : (
-          <Typography>No Blogs with title "{filterTitle}" found</Typography>
+          <Typography>Tidak ada blog dengan judul "{filterTitle}"</Typography>
         )}
       </Container>
     </Page>
