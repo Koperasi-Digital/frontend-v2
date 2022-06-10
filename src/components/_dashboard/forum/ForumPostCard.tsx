@@ -197,23 +197,6 @@ export default function ForumPostCard({ post }: PostCardProps) {
         <Typography variant="body1">{post.message}</Typography>
 
         {post.media ? (
-          // <Box sx={{ position: 'relative', pt: '20%' }}>
-          //   <Box
-          //     component="img"
-          //     alt="post media"
-          //     src={post.media}
-          //     sx={{
-          //       top: 0,
-          //       height: 'auto',
-          //       width: 'auto',
-          //       maxHeight: 1,
-          //       maxWidth: 1,
-          //       borderRadius: 1,
-          //       objectFit: 'cover',
-          //       position: 'absolute'
-          //     }}
-          //   />
-          // </Box>
           <CardMediaStyle>
             <CoverImgStyle alt="post media" src={post.media} />
           </CardMediaStyle>
