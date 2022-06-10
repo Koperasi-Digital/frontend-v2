@@ -13,7 +13,7 @@ import { fCurrency } from 'utils/formatNumber';
 
 import LoadingScreen from 'components/LoadingScreen';
 
-import { SimpananWajibType } from '../../../../@types/simpanan';
+import { SimpananWajib as SimpananWajibType } from '../../../../@types/simpanan';
 
 export default function SimpananWajib(props: { dateValue: Date }) {
   const { user } = useAuth();
