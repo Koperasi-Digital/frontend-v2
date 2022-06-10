@@ -1,23 +1,9 @@
-import { Icon } from '@iconify/react';
-import { useSnackbar } from 'notistack';
 import { useFormik, Form, FormikProvider } from 'formik';
-import closeFill from '@iconify/icons-eva/close-fill';
 // material
-import {
-  Stack,
-  Alert,
-  styled,
-  Typography,
-  TextField,
-  Checkbox,
-  FormControlLabel
-} from '@mui/material';
+import { Stack, Alert, Typography, TextField, Checkbox, FormControlLabel } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // hooks
 import useIsMountedRef from 'hooks/useIsMountedRef';
-import useAuth from 'hooks/useAuth';
-//
-import { MIconButton } from '../../../@material-extend';
 import axios from 'utils/axios';
 
 // ----------------------------------------------------------------------
@@ -31,8 +17,6 @@ interface InitialValues {
 
 export default function RequestMemberResignationForm() {
   const isMountedRef = useIsMountedRef();
-  const { user } = useAuth();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const formik = useFormik<InitialValues>({
     enableReinitialize: true,
@@ -43,15 +27,8 @@ export default function RequestMemberResignationForm() {
     },
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        await axios.post(`member-resignation/create`, values);
-        enqueueSnackbar('Request pengunduran keanggotaan berhasil dikirim!', {
-          variant: 'success',
-          action: (key) => (
-            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
-              <Icon icon={closeFill} />
-            </MIconButton>
-          )
-        });
+        const { reason, description } = values;
+        await axios.post(`member-resignation/create`, { reason, description });
         if (isMountedRef.current) {
           setSubmitting(false);
         }
@@ -78,11 +55,11 @@ export default function RequestMemberResignationForm() {
             select
             fullWidth
             label="Alasan"
-            placeholder="Alasan penghapusan akun"
-            // {...getFieldProps('city')}
+            placeholder="Alasan pengunduran diri"
+            {...getFieldProps('reason')}
             SelectProps={{ native: true }}
-            // error={Boolean(touched.city && errors.city)}
-            // helperText={touched.city && errors.city}
+            error={Boolean(touched.reason && errors.reason)}
+            helperText={touched.reason && errors.reason}
           >
             <option value="pengajuan">Pengajuan pribadi</option>
             <option value="meninggal">Meninggal dunia</option>

@@ -13,6 +13,7 @@ import {
   Box,
   Button,
   Link,
+  Dialog,
   DialogContent,
   DialogTitle,
   Typography
@@ -32,7 +33,6 @@ import useIsMountedRef from 'hooks/useIsMountedRef';
 import Scrollbar from 'components/Scrollbar';
 import Page from 'components/Page';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
-import { DialogAnimate } from 'components/animate';
 //
 import { MIconButton } from 'components/@material-extend';
 
@@ -50,24 +50,16 @@ export default function MemberResignation() {
   const [memberResignationList, setMemberResignationList] = useState<any[]>([]);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [isOpenConfirmationModal, setIsOpenConfirmationModal] = useState(false);
-  const [isSuccessSubmit, setIsSuccessSubmit] = useState(true);
+  const [isOpenSuccessModal, setIsOpenSuccessModal] = useState(false);
 
   const getMemberResignation = useCallback(async () => {
     try {
-      const response = await axios.get('member-verification');
+      const response = await axios.get('member-resignation');
       if (isMountedRef.current) {
-        setMemberResignationList(response.data.payload);
+        setMemberResignationList(
+          response.data.payload.filter((resignation: any) => resignation.status === 'pending')
+        );
       }
-      // TODO: hapus
-      setMemberResignationList([
-        {
-          id: 1,
-          user: { displayName: 'John Doe', id: 2, email: 'member@member.com' },
-          reason: 'pengajuan',
-          description:
-            'Saya ingin mengajukan pengunduran keanggotaan koperasi karena alasan pribadi'
-        }
-      ]);
     } catch (err) {
       console.error(err);
     }
@@ -84,10 +76,7 @@ export default function MemberResignation() {
 
   const handleAcceptResignation = (userId: number) => {
     axios.post('member-resignation/verify', { id: userId }).then(() => {
-      setMemberResignationList((prev) =>
-        prev.filter((memberResignation: any) => memberResignation.user.id !== userId)
-      );
-      enqueueSnackbar('Request pengunduran diri berhasil diverifikasi!', {
+      enqueueSnackbar('Request pengunduran keanggotaan berhasil diverifikasi!', {
         variant: 'success',
         action: (key) => (
           <MIconButton size="small" onClick={() => closeSnackbar(key)}>
@@ -95,7 +84,16 @@ export default function MemberResignation() {
           </MIconButton>
         )
       });
+      setIsOpenConfirmationModal(false);
+      setIsOpenSuccessModal(true);
     });
+  };
+
+  const handleCloseSuccessModal = (userId: number) => {
+    setIsOpenSuccessModal(false);
+    setMemberResignationList((prev) =>
+      prev.filter((memberResignation: any) => memberResignation.user.id !== userId)
+    );
   };
 
   const handleRejectResignation = (userId: number) => {
@@ -107,13 +105,14 @@ export default function MemberResignation() {
     });
   };
 
-  const handleSendEmail = (displayName: string, email: string) => {
+  const handleSendEmail = (userId: number, displayName: string, email: string) => {
     const formattedSubject = `[CoopChick] Pengunduran keanggotaan telah diverifikasi oleh Admin!`;
     const formattedBody = `Halo ${displayName}, Request pengunduran diri dari keanggotaan koperasi telah diterima oleh Admin.\nKamu masih dapat melakukan transaksi pada e-commerce aplikasi CoopChick.\nSaldo keanggotaan yang masih tersisa akan dikirim pada rekening yang terdaftar.\n\nSalam,\nAdmin Koperasi CoopChick`;
     const mailToLink = `mailto:${email}?subject=${encodeURIComponent(
       formattedSubject
     )}&body=${encodeURIComponent(formattedBody)}`;
     window.open(mailToLink, '_blank');
+    handleCloseSuccessModal(userId);
   };
 
   const emptyRows =
@@ -153,7 +152,6 @@ export default function MemberResignation() {
                     .map((row) => {
                       const { id, user, reason, description } = row;
                       const { displayName, id: userId, email } = user;
-                      console.log({ displayName, email });
 
                       return (
                         <TableRow hover key={id} tabIndex={-1}>
@@ -192,7 +190,7 @@ export default function MemberResignation() {
                               >
                                 Tolak
                               </Button>
-                              <DialogAnimate
+                              <Dialog
                                 open={isOpenConfirmationModal}
                                 onClose={() => setIsOpenConfirmationModal(false)}
                               >
@@ -213,42 +211,55 @@ export default function MemberResignation() {
                                     pt={2}
                                     pb={1}
                                   >
-                                    {isSuccessSubmit ? (
-                                      <>
-                                        <Typography
-                                          variant="body2"
-                                          color="primary"
-                                          fontWeight="bold"
-                                        >
-                                          Sukses!
-                                        </Typography>
-                                        <Button
-                                          variant="contained"
-                                          onClick={() => handleSendEmail(displayName, email)}
-                                        >
-                                          Kirim Email
-                                        </Button>
-                                      </>
-                                    ) : (
-                                      <>
-                                        <Button
-                                          variant="contained"
-                                          onClick={() => handleAcceptResignation(userId)}
-                                          color="error"
-                                        >
-                                          Terima
-                                        </Button>
-                                        <Button
-                                          variant="contained"
-                                          onClick={() => setIsOpenConfirmationModal(false)}
-                                        >
-                                          Batal
-                                        </Button>
-                                      </>
-                                    )}
+                                    <Button
+                                      variant="contained"
+                                      onClick={() => handleAcceptResignation(userId)}
+                                      color="error"
+                                    >
+                                      Terima
+                                    </Button>
+                                    <Button
+                                      variant="contained"
+                                      onClick={() => setIsOpenConfirmationModal(false)}
+                                    >
+                                      Batal
+                                    </Button>
                                   </Box>
                                 </DialogContent>
-                              </DialogAnimate>
+                              </Dialog>
+                              <Dialog
+                                open={isOpenSuccessModal}
+                                onClose={() => handleCloseSuccessModal(userId)}
+                              >
+                                <DialogTitle sx={{ pb: 1 }}>Sukses!</DialogTitle>
+                                <DialogContent sx={{ overflowY: 'unset' }}>
+                                  <Typography align={'justify'}>
+                                    Pengunduran diri anggota berhasil diverifikasi
+                                  </Typography>
+                                  <Box
+                                    display="flex"
+                                    justifyContent="end"
+                                    alignItems="center"
+                                    gap={2}
+                                    pt={2}
+                                    pb={1}
+                                  >
+                                    <Button
+                                      variant="contained"
+                                      onClick={() => handleSendEmail(userId, displayName, email)}
+                                    >
+                                      Kirim Email
+                                    </Button>
+                                    <Button
+                                      variant="contained"
+                                      onClick={() => handleCloseSuccessModal(userId)}
+                                      color="error"
+                                    >
+                                      Tutup
+                                    </Button>
+                                  </Box>
+                                </DialogContent>
+                              </Dialog>
                             </Box>
                           </TableCell>
                         </TableRow>
