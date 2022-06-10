@@ -57,6 +57,7 @@ export default function MemberVerification() {
   const [lightboxImages, setLightboxImages] = useState({ images: [''], selectedIndex: 0 });
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const [isOpenSuccessModal, setIsOpenSuccessModal] = useState(false);
 
   const getMemberVerification = useCallback(async () => {
     try {
@@ -88,9 +89,6 @@ export default function MemberVerification() {
 
   const handleAcceptVerification = (userId: number) => {
     axios.post('member-verification/verify', { id: userId }).then(() => {
-      setMemberVerificationList((prev) =>
-        prev.filter((memberVerification: any) => memberVerification.user.id !== userId)
-      );
       enqueueSnackbar('Pengguna berhasil terverifikasi!', {
         variant: 'success',
         action: (key) => (
@@ -99,6 +97,7 @@ export default function MemberVerification() {
           </MIconButton>
         )
       });
+      setIsOpenSuccessModal(true);
     });
   };
 
@@ -109,6 +108,23 @@ export default function MemberVerification() {
       );
       enqueueSnackbar('Verifikasi pengguna berhasil ditolak!', { variant: 'success' });
     });
+  };
+
+  const handleSendEmail = (userId: number, displayName: string, email: string) => {
+    const formattedSubject = `[CoopChick] Request keanggotaan telah diverifikasi oleh Admin!`;
+    const formattedBody = `Halo ${displayName}, Request keanggotaan koperasi akunmu telah diterima oleh Admin.\n\nSalam,\nAdmin Koperasi CoopChick`;
+    const mailToLink = `mailto:${email}?subject=${encodeURIComponent(
+      formattedSubject
+    )}&body=${encodeURIComponent(formattedBody)}`;
+    window.open(mailToLink, '_blank');
+    handleCloseSuccessModal(userId);
+  };
+
+  const handleCloseSuccessModal = (userId: number) => {
+    setIsOpenSuccessModal(false);
+    setMemberVerificationList((prev) =>
+      prev.filter((memberResignation: any) => memberResignation.user.id !== userId)
+    );
   };
 
   const emptyRows =
@@ -147,7 +163,7 @@ export default function MemberVerification() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       const { id, user, identityCardPhotoURL, selfiePhotoURL } = row;
-                      const { displayName, id: userId } = user;
+                      const { displayName, id: userId, email } = user;
                       const images = [identityCardPhotoURL, selfiePhotoURL];
 
                       return (
@@ -226,6 +242,39 @@ export default function MemberVerification() {
                                       onClick={() => setIsOpenDeleteModal(false)}
                                     >
                                       Batal
+                                    </Button>
+                                  </Box>
+                                </DialogContent>
+                              </DialogAnimate>
+                              <DialogAnimate
+                                open={isOpenSuccessModal}
+                                onClose={() => handleCloseSuccessModal(userId)}
+                              >
+                                <DialogTitle sx={{ pb: 1 }}>Sukses!</DialogTitle>
+                                <DialogContent sx={{ overflowY: 'unset' }}>
+                                  <Typography align={'justify'}>
+                                    Pengunduran diri anggota berhasil diverifikasi
+                                  </Typography>
+                                  <Box
+                                    display="flex"
+                                    justifyContent="end"
+                                    alignItems="center"
+                                    gap={2}
+                                    pt={2}
+                                    pb={1}
+                                  >
+                                    <Button
+                                      variant="contained"
+                                      onClick={() => handleSendEmail(userId, displayName, email)}
+                                    >
+                                      Kirim Email
+                                    </Button>
+                                    <Button
+                                      variant="contained"
+                                      onClick={() => handleCloseSuccessModal(userId)}
+                                      color="error"
+                                    >
+                                      Tutup
                                     </Button>
                                   </Box>
                                 </DialogContent>
