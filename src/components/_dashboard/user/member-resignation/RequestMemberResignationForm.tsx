@@ -145,6 +145,11 @@ export default function RequestMemberResignationForm() {
             helperText={touched.description && errors.description}
           />
 
+          <Typography variant="inherit">
+            Berikut adalah daftar pengembalian dana:
+            {financeDisbursementDesc && fHTML(financeDisbursementDesc)}
+          </Typography>
+
           <FormControlLabel
             control={<Checkbox checked={values.isSure} {...getFieldProps('isSure')} />}
             label={
@@ -153,8 +158,6 @@ export default function RequestMemberResignationForm() {
                   Saya mengerti bahwa pengunduran diri akan menyebabkan kehilangan hak-hak sebagai
                   anggota koperasi. Pengguna tetap dapat melakukan transaksi dalam <i>e-commerce</i>{' '}
                   sebagai <i>customer</i> <br />
-                  <br />
-                  {financeDisbursementDesc && fHTML(financeDisbursementDesc)}
                 </Typography>
               </>
             }

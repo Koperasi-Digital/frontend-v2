@@ -16,7 +16,6 @@ export function fHTML(report: string) {
   } = JSON.parse(report);
   return (
     <>
-      <pre>Berikut adalah daftar keuangan yang akan dikembalikan kepada anda</pre>
       <pre>Saldo:&nbsp;{fCurrency(jsonReport.saldo)}</pre>
       <pre>Simpanan pokok:&nbsp;{fCurrency(jsonReport.simpananPokok)}</pre>
       <pre>Simpanan wajib:</pre>

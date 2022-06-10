@@ -138,8 +138,6 @@ export default function RequestMemberResignation() {
                       Admin
                       <br />
                       <br />
-                      <pre>Pencairan dana sedang diproses</pre>
-                      {fHTML(memberResignation.financeDisbursementDescription)}
                     </Typography>
                     <Grid container spacing={2} sx={{ my: 1 }}>
                       <Grid item xs={12} md={3}>
@@ -165,6 +163,14 @@ export default function RequestMemberResignation() {
                         <Typography variant="body1">
                           {memberResignation.description || '-'}
                         </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={3}>
+                        <Typography variant="body1" fontWeight="bold">
+                          Deskripsi pengembalian dana
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={9}>
+                        {fHTML(memberResignation.financeDisbursementDescription)}
                       </Grid>
                       <Grid item xs={12} md={3}>
                         <Typography variant="body1" fontWeight="bold">
