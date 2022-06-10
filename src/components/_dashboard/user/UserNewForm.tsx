@@ -245,30 +245,34 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
                   />
                 </Stack>
 
-                <FormControl>
-                  <InputLabel id="assigned-roles-label">Role</InputLabel>
-                  <Select
-                    labelId="assigned-roles-label"
-                    id="assigned-roles"
-                    multiple
-                    value={values.roles}
-                    onChange={handleChangeAssignedRole}
-                    input={<OutlinedInput label="Role" />}
-                    renderValue={(selected) => selected.map(capitalize).join(', ')}
-                    disabled={currentUser?.id === loggedInUser?.id}
-                    error={Boolean(touched.roles && errors.roles)}
-                  >
-                    {roles.map(({ name }) => (
-                      <MenuItem key={name} value={name}>
-                        <Checkbox checked={values.roles.indexOf(name) > -1} />
-                        <ListItemText primary={capitalize(name)} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  <FormHelperText error sx={{ textAlign: 'left' }}>
-                    {touched.roles && errors.roles}
-                  </FormHelperText>
-                </FormControl>
+                {!isCustomer && (
+                  <FormControl>
+                    <InputLabel id="assigned-roles-label">Role</InputLabel>
+                    <Select
+                      labelId="assigned-roles-label"
+                      id="assigned-roles"
+                      multiple
+                      value={values.roles}
+                      onChange={handleChangeAssignedRole}
+                      input={<OutlinedInput label="Role" />}
+                      renderValue={(selected) => selected.map(capitalize).join(', ')}
+                      disabled={currentUser?.id === loggedInUser?.id}
+                      error={Boolean(touched.roles && errors.roles)}
+                    >
+                      {roles
+                        .filter((role) => role.name === 'ADMIN')
+                        .map(({ name }) => (
+                          <MenuItem key={name} value={name} disabled={name !== 'ADMIN'}>
+                            <Checkbox checked={values.roles.indexOf(name) > -1} />
+                            <ListItemText primary={capitalize(name)} />
+                          </MenuItem>
+                        ))}
+                    </Select>
+                    <FormHelperText error sx={{ textAlign: 'left' }}>
+                      {touched.roles && errors.roles}
+                    </FormHelperText>
+                  </FormControl>
+                )}
 
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
