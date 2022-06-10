@@ -38,7 +38,8 @@ export default function FAQ() {
             Frequently Asked Questions (FAQ)
           </Typography>
           <Typography variant="h6" gutterBottom>
-            Pertanyaan dan jawaban yang sering ditanyakan tentang aplikasi
+            {`Pertanyaan dan jawaban yang sering ditanyakan tentang aplikasi yang dibutuhkan role
+            ${currentRole?.name}`}
           </Typography>
         </Stack>
         {newData.map((data, index) => (

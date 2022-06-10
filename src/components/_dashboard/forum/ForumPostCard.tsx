@@ -38,12 +38,38 @@ import createAvatar from 'utils/createAvatar';
 //
 import { MAvatar } from 'components/@material-extend';
 import { DialogAnimate } from '../../../components/animate';
+import { styled } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
 interface PostCardProps extends CardProps {
   post: ForumPostType;
 }
+
+const CardMediaStyle = styled('div')(({ theme }) => ({
+  position: 'relative',
+  paddingTop: 'calc(100% * 3 / 4)',
+  '@media (min-width: 768px)': {
+    paddingTop: '20%'
+  }
+}));
+
+const CoverImgStyle = styled('img')(({ theme }) => ({
+  top: 0,
+  width: '100%',
+  height: '100%',
+  borderRadius: '2%',
+  objectFit: 'cover',
+  position: 'absolute',
+  '@media (min-width: 768px)': {
+    width: 'auto',
+    height: 'auto',
+    minHeight: '20%',
+    minWidth: '20%',
+    maxHeight: '100%',
+    maxWidth: '100%'
+  }
+}));
 
 export default function ForumPostCard({ post }: PostCardProps) {
   const { user, currentRole } = useAuth();
@@ -169,22 +195,11 @@ export default function ForumPostCard({ post }: PostCardProps) {
       <Stack spacing={3} sx={{ p: 3 }}>
         <Typography variant="h3">{post.topic}</Typography>
         <Typography variant="body1">{post.message}</Typography>
+
         {post.media ? (
-          <Box sx={{ position: 'relative', pt: 'calc(100% / 16 * 9)' }}>
-            <Box
-              component="img"
-              alt="post media"
-              src={post.media}
-              sx={{
-                top: 0,
-                width: 1,
-                height: 1,
-                borderRadius: 1,
-                objectFit: 'cover',
-                position: 'absolute'
-              }}
-            />
-          </Box>
+          <CardMediaStyle>
+            <CoverImgStyle alt="post media" src={post.media} />
+          </CardMediaStyle>
         ) : (
           <></>
         )}

@@ -106,7 +106,7 @@ export function getCourseList(title: string, page: number, sort: string) {
     try {
       const newPage = page - 1;
       const response = await axios.get('course/search', {
-        params: { title, newPage, sort }
+        params: { title, page: newPage, sort }
       });
       dispatch(slice.actions.getCourseList(response.data.payload));
     } catch (error) {
