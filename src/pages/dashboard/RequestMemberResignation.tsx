@@ -1,8 +1,22 @@
 import { useEffect, useState } from 'react';
+import { useSnackbar } from 'notistack';
+import closeFill from '@iconify/icons-eva/close-fill';
+import { Icon } from '@iconify/react';
 // material
 import { styled } from '@mui/material/styles';
-import { Alert, AlertTitle, Box, Button, Container, Link, Stack, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Chip,
+  Container,
+  Grid,
+  Typography,
+  Link,
+  Button,
+  Stack
+} from '@mui/material';
 // utils
 import axios from 'utils/axios';
 import { handleGetBankAccount } from 'utils/financeAxios/financeBankAccount';
@@ -12,6 +26,7 @@ import useAuth from 'hooks/useAuth';
 // components
 import Page from 'components/Page';
 import { RequestMemberResignationForm } from 'components/_dashboard/user/member-resignation';
+import { MIconButton } from 'components/@material-extend';
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -19,6 +34,17 @@ import { Link as RouterLink } from 'react-router-dom';
 import { PATH_DASHBOARD } from 'routes/paths';
 
 // ----------------------------------------------------------------------
+
+const RESIGNATION_REASON = {
+  pengajuan: 'Pengajuan pribadi',
+  meninggal: 'Meninggal dunia'
+};
+
+const RESIGNATION_STATUS = {
+  accepted: 'Diterima',
+  rejected: 'Ditolak',
+  pending: 'Menunggu Keputusan'
+};
 
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 960,
@@ -44,6 +70,7 @@ export default function RequestMemberResignation() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bankAccount, setBankAccount] = useState<BankAccount>();
   const linkTo = PATH_DASHBOARD.finance.disbursementRequest;
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const getUserMemberResignation = (userId: number) => {
     axios
@@ -51,7 +78,7 @@ export default function RequestMemberResignation() {
       .then((response) => {
         setMemberResignation(response.data.payload);
       })
-      .catch((err) => setMemberResignation(undefined));
+      .catch(() => setMemberResignation(undefined));
   };
 
   useEffect(() => {
@@ -59,6 +86,24 @@ export default function RequestMemberResignation() {
       getUserMemberResignation(user.id);
     }
   }, [user]);
+
+  const handleCancleResignation = () => {
+    if (user) {
+      setIsSubmitting(true);
+      axios.delete(`member-resignation/${user.id}`).then(() => {
+        setIsSubmitting(false);
+        setMemberResignation(undefined);
+        enqueueSnackbar('Request pengunduran diri berhasil dibatalkan!', {
+          variant: 'success',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
+        });
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,6 +141,56 @@ export default function RequestMemberResignation() {
                       <pre>Pencairan dana sedang diproses</pre>
                       {fHTML(memberResignation.financeDisbursementDescription)}
                     </Typography>
+                    <Grid container spacing={2} sx={{ my: 1 }}>
+                      <Grid item xs={12} md={3}>
+                        <Typography variant="body1" fontWeight="bold">
+                          Alasan
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={9}>
+                        <Typography variant="body1">
+                          {
+                            RESIGNATION_REASON[
+                              memberResignation.reason as keyof typeof RESIGNATION_REASON
+                            ]
+                          }
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={3}>
+                        <Typography variant="body1" fontWeight="bold">
+                          Deskripsi
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={9}>
+                        <Typography variant="body1">
+                          {memberResignation.description || '-'}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={3}>
+                        <Typography variant="body1" fontWeight="bold">
+                          Status
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={9}>
+                        <Typography variant="body1">
+                          <Chip
+                            label={
+                              RESIGNATION_STATUS[
+                                memberResignation.status as keyof typeof RESIGNATION_STATUS
+                              ]
+                            }
+                            color={
+                              memberResignation.status === 'pending'
+                                ? 'warning'
+                                : memberResignation.status === 'accepted'
+                                ? 'success'
+                                : 'error'
+                            }
+                            sx={{ fontWeight: 'bold' }}
+                          />
+                        </Typography>
+                      </Grid>
+                    </Grid>
                     <LoadingButton
                       fullWidth
                       size="large"
@@ -103,6 +198,7 @@ export default function RequestMemberResignation() {
                       variant="contained"
                       loading={isSubmitting}
                       sx={{ my: 3 }}
+                      onClick={handleCancleResignation}
                     >
                       Batalkan
                     </LoadingButton>

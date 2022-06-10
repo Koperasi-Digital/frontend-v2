@@ -17,8 +17,7 @@ import {
   Button,
   DialogContent,
   DialogTitle,
-  Typography,
-  TextField
+  Typography
 } from '@mui/material';
 // components
 import { DialogAnimate } from 'components/animate';
@@ -102,31 +101,21 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
         <DialogContent
           sx={{ overflowY: 'unset', display: 'flex', flexDirection: 'column', gap: 2 }}
         >
-          {isMember && (
-            <>
-              <Typography align={'justify'}>
-                Pengguna merupakan anggota koperasi, silakan masukkan alasan penghapusan akun untuk
-                catatan dalam koperasi.
-              </Typography>
-              <TextField
-                select
-                fullWidth
-                label="Alasan"
-                placeholder="Alasan penghapusan akun"
-                // {...getFieldProps('city')}
-                SelectProps={{ native: true }}
-                // error={Boolean(touched.city && errors.city)}
-                // helperText={touched.city && errors.city}
-              >
-                <option value="pengajuan">Pengajuan pribadi</option>
-                <option value="meninggal">Meninggal dunia</option>
-              </TextField>
-            </>
-          )}
           <Typography align={'justify'}>
             Pengguna yang sudah dihapus akan hilang selamanya! Apakah Anda tetap ingin menghapus
             pengguna?
           </Typography>
+          {isMember && (
+            <>
+              <Typography fontWeight="bold" variant="h6">
+                Perhatian!
+              </Typography>
+              <Typography align={'justify'}>
+                Pengguna merupakan anggota koperasi. Saldo anggota koperasi milik pengguna yang
+                masih tersisa akan dikirimkan kepada rekening yang telah terdaftar.
+              </Typography>
+            </>
+          )}
           <Box display="flex" justifyContent="end" gap={2} pt={2} pb={1}>
             <Button variant="contained" onClick={onDelete} color="error">
               Hapus

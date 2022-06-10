@@ -126,7 +126,7 @@ export default function NotificationsPopover() {
       variant: 'info',
       action: (key) => (
         <Button color="info" onClick={() => handleClickNotification(key)}>
-          Open
+          Buka
         </Button>
       )
     });
