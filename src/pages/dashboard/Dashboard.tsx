@@ -80,7 +80,7 @@ function MemberDashboard() {
         <BankingSaldo />
       </Grid>
       <Grid item xs={12} md={5}>
-        <UserActiveness />
+        <UserActiveness withViewMoreButton={true} />
       </Grid>
       <Grid item xs={12} md={4}>
         <ActivityListDashboard height={185} />
