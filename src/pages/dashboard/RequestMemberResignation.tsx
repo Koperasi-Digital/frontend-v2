@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
 // material
 import { styled } from '@mui/material/styles';
-import { Alert, AlertTitle, Box, Container, Typography, Link, Button, Stack } from '@mui/material';
+import { Alert, AlertTitle, Box, Button, Container, Link, Stack, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 // utils
 import axios from 'utils/axios';
-import { LoadingButton } from '@mui/lab';
+import { handleGetBankAccount } from 'utils/financeAxios/financeBankAccount';
+import { fHTML } from 'utils/financeAxios/financeMemberResignation';
 // hooks
 import useAuth from 'hooks/useAuth';
 // components
 import Page from 'components/Page';
 import { RequestMemberResignationForm } from 'components/_dashboard/user/member-resignation';
 
-import { handleGetBankAccount } from 'utils/financeAxios/financeBankAccount';
 import { Link as RouterLink } from 'react-router-dom';
 
 // routes
@@ -44,20 +45,20 @@ export default function RequestMemberResignation() {
   const [bankAccount, setBankAccount] = useState<BankAccount>();
   const linkTo = PATH_DASHBOARD.finance.disbursementRequest;
 
-  // const getUserMemberResignation = (userId: number) => {
-  //   axios
-  //     .get(`member-resignation/${userId}`)
-  //     .then((response) => {
-  //       setMemberResignation(response.data.payload);
-  //     })
-  //     .catch((err) => setMemberResignation(undefined));
-  // };
+  const getUserMemberResignation = (userId: number) => {
+    axios
+      .get(`member-resignation/${userId}`)
+      .then((response) => {
+        setMemberResignation(response.data.payload);
+      })
+      .catch((err) => setMemberResignation(undefined));
+  };
 
-  // useEffect(() => {
-  //   if (user) {
-  //     getUserMemberResignation(user.id);
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (user) {
+      getUserMemberResignation(user.id);
+    }
+  }, [user]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,6 +91,10 @@ export default function RequestMemberResignation() {
                     <Typography sx={{ color: 'text.secondary' }}>
                       Request pengunduran diri dari keanggotaan koperasi telah dikirimkan kepada
                       Admin
+                      <br />
+                      <br />
+                      <pre>Pencairan dana sedang diproses</pre>
+                      {fHTML(memberResignation.financeDisbursementDescription)}
                     </Typography>
                     <LoadingButton
                       fullWidth

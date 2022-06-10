@@ -20,6 +20,25 @@ import useAuth from 'hooks/useAuth';
 import { MIconButton } from '../../../@material-extend';
 import axios from 'utils/axios';
 
+import { useEffect, useState } from 'react';
+
+import { handleGetSaldo } from 'utils/financeAxios/financeSaldo';
+import { handleShowUserSisaHasilUsaha } from 'utils/financeAxios/financeSisaHasilUsaha';
+import {
+  handleGetSimpananPokok,
+  handleShowUserSimpananWajib,
+  handleGetSimpananSukarela
+} from 'utils/financeAxios/financeSimpanan';
+
+//type
+import {
+  SimpananPokok as SimpananPokokType,
+  SimpananWajib as SimpananWajibType
+} from '../../../../@types/simpanan';
+import { SisaHasilUsaha as SisaHasilUsahaType } from '../../../../@types/sisa-hasil-usaha';
+
+//utils
+import { fHTML } from 'utils/financeAxios/financeMemberResignation';
 // ----------------------------------------------------------------------
 
 interface InitialValues {
@@ -34,6 +53,53 @@ export default function RequestMemberResignationForm() {
   const { user } = useAuth();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
+  //finance
+  const [saldoAmount, setSaldoAmount] = useState<number | undefined>();
+  const [simpananSukarelaAmount, setSimpananSukarelaAmount] = useState<number | undefined>();
+  const [simpananPokok, setSimpananPokok] = useState<SimpananPokokType | undefined>();
+  const [simpananWajibList, setSimpananWajibList] = useState<SimpananWajibType[] | undefined>();
+  const [sisaHasilUsahaList, setSisaHasilUsahaList] = useState<SisaHasilUsahaType[] | undefined>();
+  const [financeDisbursementDesc, setFinanceDisbursementDesc] = useState<string>();
+
+  useEffect(() => {
+    if (
+      saldoAmount !== undefined &&
+      simpananSukarelaAmount !== undefined &&
+      simpananPokok !== undefined &&
+      simpananWajibList !== undefined &&
+      sisaHasilUsahaList !== undefined
+    ) {
+      const jsonReport = {
+        saldo: saldoAmount,
+        simpananPokok:
+          simpananPokok.order && simpananPokok.order.status === 'LUNAS' ? simpananPokok.amount : 0,
+        simpananWajibList: simpananWajibList.filter(
+          (simpananWajib) => simpananWajib.order && simpananWajib.order.status === 'LUNAS'
+        ),
+        simpananSukarela: simpananSukarelaAmount,
+        sisaHasilUsahaList: sisaHasilUsahaList
+      };
+      setFinanceDisbursementDesc(JSON.stringify(jsonReport));
+    }
+  }, [saldoAmount, simpananSukarelaAmount, simpananPokok, simpananWajibList, sisaHasilUsahaList]);
+
+  useEffect(() => {
+    const fetchFinanceData = async () => {
+      if (user) {
+        if (await handleGetSaldo()) {
+          setSaldoAmount((await handleGetSaldo()).amount);
+        }
+        if (await handleGetSimpananSukarela()) {
+          setSimpananSukarelaAmount((await handleGetSimpananSukarela()).amount);
+        }
+        setSimpananPokok(await handleGetSimpananPokok());
+        setSimpananWajibList(await handleShowUserSimpananWajib('LUNAS'));
+        setSisaHasilUsahaList(await handleShowUserSisaHasilUsaha());
+      }
+    };
+    fetchFinanceData();
+  }, [user]);
+
   const formik = useFormik<InitialValues>({
     enableReinitialize: true,
     initialValues: {
@@ -43,7 +109,10 @@ export default function RequestMemberResignationForm() {
     },
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        await axios.post(`member-resignation/create`, values);
+        await axios.post(`member-resignation/create`, {
+          ...values,
+          financeDisbursementDesc: financeDisbursementDesc
+        });
         enqueueSnackbar('Request pengunduran keanggotaan berhasil dikirim!', {
           variant: 'success',
           action: (key) => (
@@ -101,11 +170,15 @@ export default function RequestMemberResignationForm() {
           <FormControlLabel
             control={<Checkbox checked={values.isSure} {...getFieldProps('isSure')} />}
             label={
-              <Typography variant="body2">
-                Saya mengerti bahwa pengunduran diri akan menyebabkan kehilangan hak-hak sebagai
-                anggota koperasi. Pengguna tetap dapat melakukan transaksi dalam <i>e-commerce</i>{' '}
-                sebagai <i>customer</i>
-              </Typography>
+              <>
+                <Typography variant="body2">
+                  Saya mengerti bahwa pengunduran diri akan menyebabkan kehilangan hak-hak sebagai
+                  anggota koperasi. Pengguna tetap dapat melakukan transaksi dalam <i>e-commerce</i>{' '}
+                  sebagai <i>customer</i> <br />
+                  <br />
+                  {financeDisbursementDesc && fHTML(financeDisbursementDesc)}
+                </Typography>
+              </>
             }
           />
 
@@ -115,7 +188,7 @@ export default function RequestMemberResignationForm() {
             type="submit"
             variant="contained"
             loading={isSubmitting}
-            disabled={!values.isSure}
+            disabled={!values.isSure || financeDisbursementDesc === undefined}
           >
             Kirim
           </LoadingButton>
