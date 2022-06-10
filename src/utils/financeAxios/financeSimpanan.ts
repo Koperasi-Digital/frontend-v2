@@ -1,5 +1,7 @@
 import axios from '../axios';
 
+import { SimpananWajib } from '../../@types/simpanan';
+
 export async function handleListSimpananPokok() {
   try {
     const response = await axios.get('simpanan-pokok/list');
@@ -71,6 +73,18 @@ export async function handleAddOrderSimpananWajib(dateValue: Date, orderId: numb
   } catch (e) {
     console.log(e);
     return null;
+  }
+}
+
+export async function handleShowUserSimpananWajib(
+  status: string
+): Promise<SimpananWajib[] | undefined> {
+  try {
+    const response = await axios.get(`simpanan-wajib/show-user/${status}`);
+    return response.data.payload;
+  } catch (e) {
+    console.log(e);
+    return undefined;
   }
 }
 
