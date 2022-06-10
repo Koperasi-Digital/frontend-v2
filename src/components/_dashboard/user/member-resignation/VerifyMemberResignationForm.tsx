@@ -14,11 +14,17 @@ import { styled } from '@mui/material/styles';
 // hooks
 import useIsMountedRef from 'hooks/useIsMountedRef';
 import axios from 'utils/axios';
-
+import { handleUploadFile } from 'utils/bucket';
+import { useSnackbar } from 'notistack';
 //utils
 import { fHTML as fHTMLMemberResignation } from 'utils/financeFormatting/financeMemberResignation';
 import { fHTML as fHTMLBankAccount } from 'utils/financeFormatting/financeBankAccount';
 import { UploadSingleFile } from 'components/upload';
+//
+import { MIconButton } from 'components/@material-extend';
+
+import closeFill from '@iconify/icons-eva/close-fill';
+import { Icon } from '@iconify/react';
 
 // ----------------------------------------------------------------------
 
@@ -34,9 +40,14 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1)
 }));
 
-export default function VerifyMemberResignationForm(props: { memberId: number }) {
+export default function VerifyMemberResignationForm(props: {
+  memberId: number;
+  setIsOpenConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpenSuccessModal: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const isMountedRef = useIsMountedRef();
   const [memberResignation, setMemberResignation] = useState<any>();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const getMemberResignation = useCallback(async () => {
     try {
@@ -48,6 +59,27 @@ export default function VerifyMemberResignationForm(props: { memberId: number })
       console.error(err);
     }
   }, [isMountedRef, props.memberId]);
+
+  const handleAcceptResignation = (userId: number, receipt: File, memberResignationId: number) => {
+    handleUploadFile(receipt, 'resignationDisbursement', memberResignationId.toString()).then(
+      (uploadFileMessage) => {
+        axios
+          .post('member-resignation/verify', { id: userId, receiptLink: uploadFileMessage })
+          .then((res) => {
+            enqueueSnackbar('Request pengunduran keanggotaan berhasil diverifikasi!', {
+              variant: 'success',
+              action: (key) => (
+                <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+                  <Icon icon={closeFill} />
+                </MIconButton>
+              )
+            });
+            props.setIsOpenConfirmationModal(false);
+            props.setIsOpenSuccessModal(true);
+          });
+      }
+    );
+  };
 
   useEffect(() => {
     getMemberResignation();
@@ -61,15 +93,37 @@ export default function VerifyMemberResignationForm(props: { memberId: number })
     },
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        // await axios.post(`member-resignation/create`, {
-        //   ...values,
-        //   financeDisbursementDesc: financeDisbursementDesc
-        // });
-        // if (isMountedRef.current) {
-        //   setSubmitting(false);
-        // }
-        // window.location.reload();
-        console.log('VerifyMemberResignationForm submitted');
+        if (values.receipt && memberResignation) {
+          try {
+            handleAcceptResignation(props.memberId, values.receipt, memberResignation.id);
+            enqueueSnackbar('Persetujuan resignation berhasil', {
+              variant: 'success',
+              action: (key) => (
+                <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+                  <Icon icon={closeFill} />
+                </MIconButton>
+              )
+            });
+          } catch (err) {
+            enqueueSnackbar('Persetujuan resignation gagal', {
+              variant: 'error',
+              action: (key) => (
+                <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+                  <Icon icon={closeFill} />
+                </MIconButton>
+              )
+            });
+          }
+        } else {
+          enqueueSnackbar('Persetujuan resignation gagal. Upload kuitansi terlebih dahulu', {
+            variant: 'error',
+            action: (key) => (
+              <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+                <Icon icon={closeFill} />
+              </MIconButton>
+            )
+          });
+        }
       } catch (error: any) {
         console.error(error);
         if (isMountedRef.current) {

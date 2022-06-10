@@ -37,8 +37,6 @@ import Scrollbar from 'components/Scrollbar';
 import Page from 'components/Page';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
 import VerifyMemberResignationForm from 'components/_dashboard/user/member-resignation/VerifyMemberResignationForm';
-//
-import { MIconButton } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -76,21 +74,6 @@ export default function MemberResignation() {
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const handleAcceptResignation = (userId: number) => {
-    axios.post('member-resignation/verify', { id: userId }).then(() => {
-      enqueueSnackbar('Request pengunduran keanggotaan berhasil diverifikasi!', {
-        variant: 'success',
-        action: (key) => (
-          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
-            <Icon icon={closeFill} />
-          </MIconButton>
-        )
-      });
-      setIsOpenConfirmationModal(false);
-      setIsOpenSuccessModal(true);
-    });
   };
 
   const handleCloseSuccessModal = (userId: number) => {
@@ -218,7 +201,11 @@ export default function MemberResignation() {
                                   Terima Pengunduran Keanggotaan?
                                 </DialogTitle>
                                 <DialogContent sx={{ overflowY: 'unset' }}>
-                                  <VerifyMemberResignationForm memberId={userId} />
+                                  <VerifyMemberResignationForm
+                                    memberId={userId}
+                                    setIsOpenConfirmationModal={setIsOpenConfirmationModal}
+                                    setIsOpenSuccessModal={setIsOpenSuccessModal}
+                                  />
                                 </DialogContent>
                               </Dialog>
                               <Dialog
