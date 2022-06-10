@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Icon } from '@iconify/react';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { Form, FormikProvider, useFormik } from 'formik';
@@ -15,6 +16,8 @@ import { Store } from '../../../../@types/store';
 import countries from '../countries';
 import provinces from '../provinces';
 import PhoneNumberField from 'components/PhoneNumberField';
+import closeFill from '@iconify/icons-eva/close-fill';
+import { MIconButton } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +27,7 @@ interface InitialState extends Omit<Store, 'id'> {
 
 export default function AccountInformationEdit() {
   const isMountedRef = useIsMountedRef();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { user, updateUser } = useAuth();
   const store: Store | null = user?.store;
 
@@ -66,7 +69,14 @@ export default function AccountInformationEdit() {
         const response = await axios.patch(`users/store`, values);
         const updatedUser = response.data.payload;
         updateUser(updatedUser);
-        enqueueSnackbar('Toko berhasil diedit!', { variant: 'success' });
+        enqueueSnackbar('Toko berhasil diedit!', {
+          variant: 'success',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
+        });
         if (isMountedRef.current) {
           setSubmitting(false);
         }

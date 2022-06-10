@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { capitalize } from 'lodash';
+import { Icon } from '@iconify/react';
 // material
 import { LoadingButton } from '@mui/lab';
 import {
@@ -38,6 +39,8 @@ import { UserManager } from '../../../@types/user';
 import { UploadAvatar } from '../../upload';
 import useAuth from 'hooks/useAuth';
 import { editUser } from 'redux/slices/user';
+import closeFill from '@iconify/icons-eva/close-fill';
+import { MIconButton } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -57,7 +60,7 @@ type InitialValues = {
 
 export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();
   const { user: loggedInUser } = useAuth();
@@ -76,6 +79,8 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
       .oneOf([Yup.ref('password')], 'Password harus sesuai')
       .nullable()
   });
+
+  const isCustomer = currentUser?.roles.length === 1 && currentUser?.roles[0].name === 'CUSTOMER';
 
   const formik = useFormik<InitialValues>({
     enableReinitialize: true,
@@ -113,12 +118,24 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Pengguna berhasil dibuat!' : 'Pengguna berhasil diedit!', {
-          variant: 'success'
+          variant: 'success',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
         });
         navigate(PATH_DASHBOARD.user.list);
       } catch (error: any) {
         console.error(error);
-        enqueueSnackbar('Error!', { variant: 'error' });
+        enqueueSnackbar('Error!', {
+          variant: 'error',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
+        });
         setSubmitting(false);
         setErrors(error);
       }

@@ -26,6 +26,8 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { deleteUser } from 'redux/slices/user';
 import { useSnackbar } from 'notistack';
 import { Role } from '../../../../@types/role';
+import closeFill from '@iconify/icons-eva/close-fill';
+import { MIconButton } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -37,14 +39,21 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
-  const { id, displayName, email, roles } = user;
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { id, displayName, roles } = user;
   const isMember = roles.map((role: Role) => role.name).includes('MEMBER');
 
   const onDelete = async () => {
     try {
       await deleteUser(id);
-      enqueueSnackbar(`Pengguna (ID: ${email}) berhasil dihapus!`, { variant: 'success' });
+      enqueueSnackbar(`Pengguna ${displayName} berhasil dihapus!`, {
+        variant: 'success',
+        action: (key) => (
+          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+            <Icon icon={closeFill} />
+          </MIconButton>
+        )
+      });
     } catch (err) {
       console.error(err);
     }

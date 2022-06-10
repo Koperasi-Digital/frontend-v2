@@ -3,6 +3,7 @@ import { useSnackbar } from 'notistack';
 import { useRef, useEffect, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
+import closeFill from '@iconify/icons-eva/close-fill';
 import RoundGroups from '@iconify/icons-ic/round-groups';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
@@ -53,7 +54,7 @@ export default function AccountPopover() {
   const anchorRef = useRef(null);
   const { user, logout, currentRole } = useAuth();
   const isMountedRef = useIsMountedRef();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -73,12 +74,18 @@ export default function AccountPopover() {
       }
     } catch (error) {
       console.error(error);
-      enqueueSnackbar('Error, silakan refresh halaman ini', { variant: 'error' });
+      enqueueSnackbar('Error, silakan refresh halaman ini', {
+        variant: 'error',
+        action: (key) => (
+          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+            <Icon icon={closeFill} />
+          </MIconButton>
+        )
+      });
     }
   };
 
   useEffect(() => {
-    console.log('Masuk ke sini');
     const handleCheckEMoney = async (
       hasBeenRedirected: boolean,
       phoneNumber: string,

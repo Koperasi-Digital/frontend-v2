@@ -6,11 +6,14 @@ import { Stack, Card, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // utils
 import useAuth from 'hooks/useAuth';
+import closeFill from '@iconify/icons-eva/close-fill';
+import { MIconButton } from 'components/@material-extend';
+import { Icon } from '@iconify/react';
 
 // ----------------------------------------------------------------------
 
 export default function AccountChangePassword() {
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { changePassword } = useAuth();
 
   const ChangePassWordSchema = Yup.object().shape({
@@ -32,10 +35,24 @@ export default function AccountChangePassword() {
       try {
         await changePassword(values.oldPassword, values.newPassword, values.confirmNewPassword);
         setSubmitting(false);
-        enqueueSnackbar('Password berhasil diubah!', { variant: 'success' });
+        enqueueSnackbar('Password berhasil diubah!', {
+          variant: 'success',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
+        });
       } catch (err) {
         setSubmitting(false);
-        enqueueSnackbar('Error, silakan coba lagi nanti', { variant: 'error' });
+        enqueueSnackbar('Error!', {
+          variant: 'error',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
+        });
       }
     }
   });
