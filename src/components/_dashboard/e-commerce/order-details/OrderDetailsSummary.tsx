@@ -160,7 +160,7 @@ export default function OrderDetailsSummary({
   const shipmentInfo = [
     ['Jenis Pengiriman', shipment],
     ['Ongkos Kirim', fCurrency(shipment_price)],
-    ['Alamat', order.address || '-']
+    ['Alamat', 'Jalan Ganesha No. 10, Dago, Coblong, Bandung']
   ];
 
   const [isOpenModalUpdateStatus, setIsOpenModalUpdateStatus] = useState<boolean>(false);
