@@ -163,7 +163,7 @@ export default function RequestMemberResignation() {
                       </Grid>
                       <Grid item xs={12} md={3}>
                         <Typography variant="body1" fontWeight="bold">
-                          Deskripsi pengembalian dana
+                          Pengembalian dana
                         </Typography>
                       </Grid>
                       <Grid item xs={12} md={9}>

@@ -247,7 +247,7 @@ export default function Router() {
             {
               path: 'order-history',
               element: (
-                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER']}>
+                <RoleBasedGuard accessibleRoles={['CUSTOMER', 'MEMBER', 'ADMIN']}>
                   <EcommerceOrderHistory />
                 </RoleBasedGuard>
               )

@@ -96,14 +96,6 @@ export default function VerifyMemberResignationForm(props: {
         if (values.receipt && memberResignation) {
           try {
             handleAcceptResignation(props.memberId, values.receipt, memberResignation.id);
-            enqueueSnackbar('Persetujuan resignation berhasil', {
-              variant: 'success',
-              action: (key) => (
-                <MIconButton size="small" onClick={() => closeSnackbar(key)}>
-                  <Icon icon={closeFill} />
-                </MIconButton>
-              )
-            });
           } catch (err) {
             enqueueSnackbar('Persetujuan resignation gagal', {
               variant: 'error',

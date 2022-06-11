@@ -242,7 +242,15 @@ export default function UserActivityLogs({ user }: UserActivityLogsProps) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
-      <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.eCommerce.orderHistory}>
+      <Link
+        underline="none"
+        component={RouterLink}
+        to={
+          user.id
+            ? `${PATH_DASHBOARD.eCommerce.orderHistory}?id=${user?.id}`
+            : PATH_DASHBOARD.eCommerce.orderHistory
+        }
+      >
         <Typography variant="body2" align="right" sx={{ m: '0.5rem', fontWeight: 'bold' }}>
           Lihat keaktifan transaksi
         </Typography>

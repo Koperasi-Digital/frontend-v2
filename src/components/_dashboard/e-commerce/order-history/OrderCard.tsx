@@ -6,6 +6,7 @@ import { fCurrency } from '../../../../utils/formatNumber';
 import { OrderDetails } from '../../../../@types/order';
 import { PATH_DASHBOARD } from 'routes/paths';
 import Label from '../../../Label';
+import useAuth from 'hooks/useAuth';
 
 const OrderDetailStyle = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -37,6 +38,8 @@ export default function OrderCard({
   const theme = useTheme();
   const paymentLink = `${PATH_DASHBOARD.eCommerce.root}/order/${orderId}/payment/`;
   const orderDetailsLink = `${PATH_DASHBOARD.eCommerce.root}/order/`;
+  const { currentRole } = useAuth();
+  const isAdmin = currentRole?.name === 'ADMIN';
 
   return (
     <Card sx={{ m: 0.5, p: 2, ':hover': { boxShadow: 50 } }}>
@@ -60,12 +63,12 @@ export default function OrderCard({
       >
         <Stack direction="row" spacing={1}>
           <Typography variant="subtitle1">{orderDetails[0].order.status}</Typography>
-          <Typography>{orderDetails[0].order.status !== 'LUNAS' && '-'}</Typography>
+          <Typography>{orderDetails[0].order.status !== 'LUNAS' && !isAdmin && '-'}</Typography>
           <Typography variant="subtitle1">
-            {orderDetails[0].order.status !== 'LUNAS' && 'Bayar dengan'}
+            {orderDetails[0].order.status !== 'LUNAS' && !isAdmin && 'Bayar dengan'}
           </Typography>
         </Stack>
-        {orderDetails[0].order.status !== 'LUNAS' && (
+        {orderDetails[0].order.status !== 'LUNAS' && !isAdmin && (
           <Stack
             direction="row"
             alignItems="center"
@@ -98,7 +101,11 @@ export default function OrderCard({
         {orderDetails.map((orderDetail, index) => (
           <Grid key={index} item xs={12}>
             <Link
-              to={`${orderDetailsLink + orderDetail.id}`}
+              to={
+                !isAdmin
+                  ? `${orderDetailsLink + orderDetail.id}`
+                  : window.location.href.replace(/^.*\/\/[^/]+/, '')
+              }
               color="inherit"
               component={RouterLink}
               style={{
