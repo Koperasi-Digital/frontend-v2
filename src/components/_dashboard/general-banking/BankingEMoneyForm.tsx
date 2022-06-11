@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useFormik, Form, FormikProvider } from 'formik';
-import { DialogActions, DialogContent, TextField, Button } from '@mui/material';
+import { DialogActions, DialogContent, Stack, TextField, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 type BankingEMoneyFormProps = {
@@ -24,7 +24,7 @@ export default function BankingEMoneyForm({
 
   const EventSchema = Yup.object().shape({
     payment_type: Yup.string().max(255).required('Tipe pembayaran wajib diisi').oneOf(['gopay']),
-    phone_number: Yup.string().max(255).required('Nomor telepon wajib diisi'),
+    phone_number: Yup.string().max(13).required('Nomor telepon wajib diisi'),
     country_code: Yup.string().max(255).required('Kode negara wajib diisi')
   });
 
@@ -55,26 +55,27 @@ export default function BankingEMoneyForm({
             helperText={touched.payment_type && errors.payment_type}
             sx={{ mb: 3 }}
           />
-
-          <TextField
-            fullWidth
-            multiline
-            label="Nomor Telepon"
-            {...getFieldProps('phone_number')}
-            error={Boolean(touched.phone_number && errors.phone_number)}
-            helperText={touched.phone_number && errors.phone_number}
-            sx={{ mb: 3 }}
-          />
-
-          <TextField
-            fullWidth
-            multiline
-            label="Kode Negara"
-            {...getFieldProps('country_code')}
-            error={Boolean(touched.country_code && errors.country_code)}
-            helperText={touched.country_code && errors.country_code}
-            sx={{ mb: 3 }}
-          />
+          <Stack direction="row" spacing={2}>
+            <TextField
+              fullWidth
+              multiline
+              label="Kode Negara"
+              {...getFieldProps('country_code')}
+              error={Boolean(touched.country_code && errors.country_code)}
+              helperText={touched.country_code && errors.country_code}
+              disabled={true}
+              sx={{ mb: 3 }}
+            />
+            <TextField
+              fullWidth
+              multiline
+              label="Nomor Telepon"
+              {...getFieldProps('phone_number')}
+              error={Boolean(touched.phone_number && errors.phone_number)}
+              helperText={touched.phone_number && errors.phone_number}
+              sx={{ mb: 3 }}
+            />
+          </Stack>
         </DialogContent>
 
         <DialogActions>
