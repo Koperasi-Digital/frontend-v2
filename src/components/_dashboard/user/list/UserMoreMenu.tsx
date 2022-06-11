@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import { paramCase } from 'change-case';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { useFormik, Form, FormikProvider } from 'formik';
 import editFill from '@iconify/icons-eva/edit-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import { Link as RouterLink } from 'react-router-dom';
@@ -26,7 +27,25 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { deleteUser } from 'redux/slices/user';
 import { useSnackbar } from 'notistack';
 import { Role } from '../../../../@types/role';
-
+//types
+import { BankAccount } from '../../../../@types/bankAccount';
+//utils
+import { handleGetBankAccount } from 'utils/financeAxios/financeBankAccount';
+import { handleGetSaldo } from 'utils/financeAxios/financeSaldo';
+import { handleShowUserSisaHasilUsaha } from 'utils/financeAxios/financeSisaHasilUsaha';
+import {
+  handleGetSimpananPokok,
+  handleShowUserSimpananWajib,
+  handleGetSimpananSukarela
+} from 'utils/financeAxios/financeSimpanan';
+import { fHTML as fHTMLFinanceData } from 'utils/financeFormatting/financeMemberResignation';
+import { fHTML as fHTMLBankAccount } from 'utils/financeFormatting/financeBankAccount';
+//type
+import {
+  SimpananPokok as SimpananPokokType,
+  SimpananWajib as SimpananWajibType
+} from '../../../../@types/simpanan';
+import { SisaHasilUsaha as SisaHasilUsahaType } from '../../../../@types/sisa-hasil-usaha';
 // ----------------------------------------------------------------------
 
 type UserMoreMenuProps = {
@@ -40,6 +59,20 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
   const { enqueueSnackbar } = useSnackbar();
   const { id, displayName, email, roles } = user;
   const isMember = roles.map((role: Role) => role.name).includes('MEMBER');
+  const [bankAccount, setBankAccount] = useState<BankAccount>();
+  //finance
+  const [saldoAmount, setSaldoAmount] = useState<number | undefined>();
+  const [simpananSukarelaAmount, setSimpananSukarelaAmount] = useState<number | undefined>();
+  const [simpananPokok, setSimpananPokok] = useState<SimpananPokokType | undefined>();
+  const [simpananWajibList, setSimpananWajibList] = useState<SimpananWajibType[] | undefined>();
+  const [sisaHasilUsahaList, setSisaHasilUsahaList] = useState<SisaHasilUsahaType[] | undefined>();
+  const [financeDisbursementDesc, setFinanceDisbursementDesc] = useState<string>();
+
+  interface InitialValues {
+    isDone: boolean;
+    afterSubmit?: string;
+    receipt: File | null;
+  }
 
   const onDelete = async () => {
     try {
@@ -49,6 +82,114 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
       console.error(err);
     }
   };
+
+  const onPrevDelete = async () => {
+    if (bankAccount) {
+      setIsOpenDeleteModal(true);
+    } else {
+      enqueueSnackbar(`Member ${displayName} belum mempunyai akun bank`, { variant: 'error' });
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isMember) {
+        const bankAccount = await handleGetBankAccount(id);
+        if (bankAccount) {
+          setBankAccount(bankAccount);
+        }
+      }
+    };
+    fetchData();
+  }, [isMember, id]);
+
+  useEffect(() => {
+    const fetchFinanceData = async () => {
+      if (user) {
+        if (await handleGetSaldo()) {
+          setSaldoAmount((await handleGetSaldo()).amount);
+        }
+        if (await handleGetSimpananSukarela()) {
+          setSimpananSukarelaAmount((await handleGetSimpananSukarela()).amount);
+        }
+        setSimpananPokok(await handleGetSimpananPokok());
+        setSimpananWajibList(await handleShowUserSimpananWajib('LUNAS'));
+        setSisaHasilUsahaList(await handleShowUserSisaHasilUsaha());
+      }
+    };
+    fetchFinanceData();
+  }, [user]);
+
+  useEffect(() => {
+    if (
+      saldoAmount !== undefined &&
+      simpananSukarelaAmount !== undefined &&
+      simpananPokok !== undefined &&
+      simpananWajibList !== undefined &&
+      sisaHasilUsahaList !== undefined
+    ) {
+      const jsonReport = {
+        saldo: saldoAmount,
+        simpananPokok:
+          simpananPokok.order && simpananPokok.order.status === 'LUNAS' ? simpananPokok.amount : 0,
+        simpananWajibList: simpananWajibList.filter(
+          (simpananWajib) => simpananWajib.order && simpananWajib.order.status === 'LUNAS'
+        ),
+        simpananSukarela: simpananSukarelaAmount,
+        sisaHasilUsahaList: sisaHasilUsahaList
+      };
+      setFinanceDisbursementDesc(JSON.stringify(jsonReport));
+    }
+  }, [saldoAmount, simpananSukarelaAmount, simpananPokok, simpananWajibList, sisaHasilUsahaList]);
+
+  const formik = useFormik<InitialValues>({
+    enableReinitialize: true,
+    initialValues: {
+      isDone: false,
+      receipt: null
+    },
+    onSubmit: async (values, { setErrors, setSubmitting }) => {
+      try {
+        if (values.receipt) {
+          try {
+            handleAcceptResignation(props.memberId, values.receipt, memberResignation.id);
+            enqueueSnackbar('Persetujuan resignation berhasil', {
+              variant: 'success',
+              action: (key) => (
+                <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+                  <Icon icon={closeFill} />
+                </MIconButton>
+              )
+            });
+          } catch (err) {
+            enqueueSnackbar('Persetujuan resignation gagal', {
+              variant: 'error',
+              action: (key) => (
+                <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+                  <Icon icon={closeFill} />
+                </MIconButton>
+              )
+            });
+          }
+        } else {
+          enqueueSnackbar('Persetujuan resignation gagal. Upload kuitansi terlebih dahulu', {
+            variant: 'error',
+            action: (key) => (
+              <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+                <Icon icon={closeFill} />
+              </MIconButton>
+            )
+          });
+        }
+      } catch (error: any) {
+        console.error(error);
+        if (isMountedRef.current) {
+          setErrors({ afterSubmit: error.message });
+          setSubmitting(false);
+        }
+      }
+    }
+  });
 
   return (
     <>
@@ -88,7 +229,7 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
           <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem onClick={() => setIsOpenDeleteModal(true)} sx={{ color: 'text.secondary' }}>
+        <MenuItem onClick={() => onPrevDelete()} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
           </ListItemIcon>
@@ -101,6 +242,7 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
         <DialogContent
           sx={{ overflowY: 'unset', display: 'flex', flexDirection: 'column', gap: 2 }}
         >
+
           <Typography align={'justify'}>
             Pengguna yang sudah dihapus akan hilang selamanya! Apakah Anda tetap ingin menghapus
             pengguna?
@@ -111,8 +253,12 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
                 Perhatian!
               </Typography>
               <Typography align={'justify'}>
-                Pengguna merupakan anggota koperasi. Saldo anggota koperasi milik pengguna yang
-                masih tersisa akan dikirimkan kepada rekening yang telah terdaftar.
+                Lakukan transfer dana sebagai berikut
+                {financeDisbursementDesc && fHTMLFinanceData(financeDisbursementDesc)}
+                <br />
+                ke akun rekening bank berikut
+                {bankAccount && fHTMLBankAccount(bankAccount)}
+
               </Typography>
             </>
           )}
