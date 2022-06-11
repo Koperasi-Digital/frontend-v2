@@ -253,7 +253,7 @@ export default function MemberVerification() {
                                 <DialogTitle sx={{ pb: 1 }}>Sukses!</DialogTitle>
                                 <DialogContent sx={{ overflowY: 'unset' }}>
                                   <Typography align={'justify'}>
-                                    Pengunduran diri anggota berhasil diverifikasi
+                                    Request keanggotaan berhasil diverifikasi
                                   </Typography>
                                   <Box
                                     display="flex"

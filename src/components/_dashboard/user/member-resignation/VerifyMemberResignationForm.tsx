@@ -97,7 +97,7 @@ export default function VerifyMemberResignationForm(props: {
           try {
             handleAcceptResignation(props.memberId, values.receipt, memberResignation.id);
           } catch (err) {
-            enqueueSnackbar('Persetujuan resignation gagal', {
+            enqueueSnackbar('Persetujuan pengunduran diri gagal', {
               variant: 'error',
               action: (key) => (
                 <MIconButton size="small" onClick={() => closeSnackbar(key)}>
@@ -107,7 +107,7 @@ export default function VerifyMemberResignationForm(props: {
             });
           }
         } else {
-          enqueueSnackbar('Persetujuan resignation gagal. Upload kuitansi terlebih dahulu', {
+          enqueueSnackbar('Persetujuan pengunduran diri gagal. Upload kuitansi terlebih dahulu', {
             variant: 'error',
             action: (key) => (
               <MIconButton size="small" onClick={() => closeSnackbar(key)}>

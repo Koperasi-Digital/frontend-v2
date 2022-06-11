@@ -9,7 +9,6 @@ import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 // material
 import {
-  Checkbox,
   Menu,
   MenuItem,
   IconButton,
@@ -19,7 +18,6 @@ import {
   Button,
   DialogContent,
   DialogTitle,
-  FormControlLabel,
   FormHelperText,
   Typography
 } from '@mui/material';
@@ -78,7 +76,6 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
   const [financeDisbursementDesc, setFinanceDisbursementDesc] = useState<string>();
 
   interface InitialValues {
-    isDone: boolean;
     afterSubmit?: string;
     receipt: File | null;
   }
@@ -89,27 +86,18 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
     marginBottom: theme.spacing(1)
   }));
 
-  // const onDelete = async () => {
-  //   try {
-  //     await deleteUser(id);
-  //     enqueueSnackbar(`Pengguna ${displayName} berhasil dihapus!`, {
-  //       variant: 'success',
-  //       action: (key) => (
-  //         <MIconButton size="small" onClick={() => closeSnackbar(key)}>
-  //           <Icon icon={closeFill} />
-  //         </MIconButton>
-  //       )
-  //     });
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
   const onPrevDelete = async () => {
-    if (bankAccount) {
+    if (bankAccount || !isMember) {
       setIsOpenDeleteModal(true);
     } else {
-      enqueueSnackbar(`Member ${displayName} belum mempunyai akun bank`, { variant: 'error' });
+      enqueueSnackbar(`${displayName} belum mempunyai akun bank`, {
+        variant: 'error',
+        action: (key) => (
+          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+            <Icon icon={closeFill} />
+          </MIconButton>
+        )
+      });
     }
   };
 
@@ -165,27 +153,37 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
   }, [saldoAmount, simpananSukarelaAmount, simpananPokok, simpananWajibList, sisaHasilUsahaList]);
 
   const formik = useFormik<InitialValues>({
-    enableReinitialize: true,
+    enableReinitialize: false,
     initialValues: {
-      isDone: false,
       receipt: null
     },
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        if (values.receipt) {
-          try {
-            await handleUploadFile(values.receipt, 'resignationDisbursement', id);
-            await deleteUser(id);
-            enqueueSnackbar(`User ${id} berhasil didelete`, {
-              variant: 'success',
-              action: (key) => (
-                <MIconButton size="small" onClick={() => closeSnackbar(key)}>
-                  <Icon icon={closeFill} />
-                </MIconButton>
-              )
-            });
-          } catch (err) {
-            enqueueSnackbar('Persetujuan resignation gagal', {
+        if (isMember) {
+          if (values.receipt) {
+            try {
+              await handleUploadFile(values.receipt, 'resignationDisbursement', id);
+              await deleteUser(id);
+              enqueueSnackbar(`Pengguna ${displayName} berhasil dihapus`, {
+                variant: 'success',
+                action: (key) => (
+                  <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+                    <Icon icon={closeFill} />
+                  </MIconButton>
+                )
+              });
+            } catch (err) {
+              enqueueSnackbar(`Penghapusan pengguna ${displayName} gagal`, {
+                variant: 'error',
+                action: (key) => (
+                  <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+                    <Icon icon={closeFill} />
+                  </MIconButton>
+                )
+              });
+            }
+          } else {
+            enqueueSnackbar('Upload kuitansi terlebih dahulu', {
               variant: 'error',
               action: (key) => (
                 <MIconButton size="small" onClick={() => closeSnackbar(key)}>
@@ -195,8 +193,9 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
             });
           }
         } else {
-          enqueueSnackbar('Persetujuan resignation gagal. Upload kuitansi terlebih dahulu', {
-            variant: 'error',
+          await deleteUser(id);
+          enqueueSnackbar(`Pengguna ${displayName} berhasil dihapus!`, {
+            variant: 'success',
             action: (key) => (
               <MIconButton size="small" onClick={() => closeSnackbar(key)}>
                 <Icon icon={closeFill} />
@@ -211,8 +210,7 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
     }
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, values, getFieldProps, setFieldValue } =
-    formik;
+  const { errors, touched, handleSubmit, values, setFieldValue } = formik;
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -283,17 +281,18 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
               </Typography>
               {isMember && (
                 <>
-                  <Typography fontWeight="bold" variant="h6">
+                  <Typography fontWeight="bold" variant="h6" sx={{ mt: 2, mb: 1 }}>
                     Dana-dana anggota perlu dikembalikan
                   </Typography>
-                  <Typography align={'justify'}>
-                    Lakukan transfer dana sebagai berikut
-                    {financeDisbursementDesc && fHTMLFinanceData(financeDisbursementDesc)}
-                    <br />
-                    ke akun rekening bank berikut
-                    {bankAccount && fHTMLBankAccount(bankAccount)}
-                  </Typography>
-                  <div>
+                  <Typography align={'justify'}>Lakukan transfer dana sebagai berikut</Typography>
+                  <br />
+                  {financeDisbursementDesc && fHTMLFinanceData(financeDisbursementDesc)}
+                  <br />
+                  <Typography align="justify">ke akun rekening bank berikut</Typography>
+                  <br />
+                  {bankAccount && fHTMLBankAccount(bankAccount)}
+                  <br />
+                  <Box sx={{ my: 1 }}>
                     <LabelStyle>Unggah kuitansi</LabelStyle>
                     <UploadSingleFile
                       maxSize={3145728}
@@ -307,18 +306,7 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
                         {touched.receipt && errors.receipt}
                       </FormHelperText>
                     )}
-                  </div>
-                  <FormControlLabel
-                    control={<Checkbox checked={values.isDone} {...getFieldProps('isDone')} />}
-                    label={
-                      <>
-                        <Typography variant="body2">
-                          Saya telah melakukan pencairan dana kepada akun bank anggota yang tertera
-                          sejumlah total yang tertera
-                        </Typography>
-                      </>
-                    }
-                  />
+                  </Box>
                 </>
               )}
               <Box display="flex" justifyContent="end" gap={2} pt={2} pb={1}>
