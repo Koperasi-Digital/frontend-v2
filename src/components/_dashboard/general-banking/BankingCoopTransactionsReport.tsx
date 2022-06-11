@@ -282,7 +282,9 @@ export default function BankingCoopTransactionsReport() {
                           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                             {row.type}
                           </Typography>
-                          <Typography variant="subtitle2">{row.destUser.displayName}</Typography>
+                          <Typography variant="subtitle2">
+                            {row.destUser ? row.destUser.displayName : 'Akun yang telah dihapus'}
+                          </Typography>
                         </Box>
                       </Box>
                     </TableCell>
