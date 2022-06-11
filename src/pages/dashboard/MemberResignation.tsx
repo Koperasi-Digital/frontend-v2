@@ -37,6 +37,7 @@ import Scrollbar from 'components/Scrollbar';
 import Page from 'components/Page';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
 import VerifyMemberResignationForm from 'components/_dashboard/user/member-resignation/VerifyMemberResignationForm';
+import { MIconButton } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -88,7 +89,14 @@ export default function MemberResignation() {
       setMemberResignationList((prev) =>
         prev.filter((memberResignation: any) => memberResignation.user.id !== userId)
       );
-      enqueueSnackbar('Request pengunduran diri berhasil ditolak!', { variant: 'success' });
+      enqueueSnackbar('Request pengunduran diri berhasil ditolak!', {
+        variant: 'success',
+        action: (key) => (
+          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+            <Icon icon={closeFill} />
+          </MIconButton>
+        )
+      });
     });
   };
 

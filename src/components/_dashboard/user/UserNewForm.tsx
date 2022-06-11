@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { capitalize } from 'lodash';
+import { Icon } from '@iconify/react';
 // material
 import { LoadingButton } from '@mui/lab';
 import {
@@ -38,6 +39,8 @@ import { UserManager } from '../../../@types/user';
 import { UploadAvatar } from '../../upload';
 import useAuth from 'hooks/useAuth';
 import { editUser } from 'redux/slices/user';
+import closeFill from '@iconify/icons-eva/close-fill';
+import { MIconButton } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -57,7 +60,7 @@ type InitialValues = {
 
 export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();
   const { user: loggedInUser } = useAuth();
@@ -76,6 +79,8 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
       .oneOf([Yup.ref('password')], 'Password harus sesuai')
       .nullable()
   });
+
+  const isCustomer = currentUser?.roles.length === 1 && currentUser?.roles[0].name === 'CUSTOMER';
 
   const formik = useFormik<InitialValues>({
     enableReinitialize: true,
@@ -113,12 +118,24 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Pengguna berhasil dibuat!' : 'Pengguna berhasil diedit!', {
-          variant: 'success'
+          variant: 'success',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
         });
         navigate(PATH_DASHBOARD.user.list);
       } catch (error: any) {
         console.error(error);
-        enqueueSnackbar('Error!', { variant: 'error' });
+        enqueueSnackbar('Error!', {
+          variant: 'error',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
+        });
         setSubmitting(false);
         setErrors(error);
       }
@@ -228,30 +245,34 @@ export default function UserNewForm({ isEdit, currentUser }: UserNewFormProps) {
                   />
                 </Stack>
 
-                <FormControl>
-                  <InputLabel id="assigned-roles-label">Role</InputLabel>
-                  <Select
-                    labelId="assigned-roles-label"
-                    id="assigned-roles"
-                    multiple
-                    value={values.roles}
-                    onChange={handleChangeAssignedRole}
-                    input={<OutlinedInput label="Role" />}
-                    renderValue={(selected) => selected.map(capitalize).join(', ')}
-                    disabled={currentUser?.id === loggedInUser?.id}
-                    error={Boolean(touched.roles && errors.roles)}
-                  >
-                    {roles.map(({ name }) => (
-                      <MenuItem key={name} value={name}>
-                        <Checkbox checked={values.roles.indexOf(name) > -1} />
-                        <ListItemText primary={capitalize(name)} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  <FormHelperText error sx={{ textAlign: 'left' }}>
-                    {touched.roles && errors.roles}
-                  </FormHelperText>
-                </FormControl>
+                {!isCustomer && (
+                  <FormControl>
+                    <InputLabel id="assigned-roles-label">Role</InputLabel>
+                    <Select
+                      labelId="assigned-roles-label"
+                      id="assigned-roles"
+                      multiple
+                      value={values.roles}
+                      onChange={handleChangeAssignedRole}
+                      input={<OutlinedInput label="Role" />}
+                      renderValue={(selected) => selected.map(capitalize).join(', ')}
+                      disabled={currentUser?.id === loggedInUser?.id}
+                      error={Boolean(touched.roles && errors.roles)}
+                    >
+                      {roles
+                        .filter((role) => role.name === 'ADMIN')
+                        .map(({ name }) => (
+                          <MenuItem key={name} value={name} disabled={name !== 'ADMIN'}>
+                            <Checkbox checked={values.roles.indexOf(name) > -1} />
+                            <ListItemText primary={capitalize(name)} />
+                          </MenuItem>
+                        ))}
+                    </Select>
+                    <FormHelperText error sx={{ textAlign: 'left' }}>
+                      {touched.roles && errors.roles}
+                    </FormHelperText>
+                  </FormControl>
+                )}
 
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>

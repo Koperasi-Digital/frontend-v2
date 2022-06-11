@@ -47,6 +47,8 @@ import { EVENT_COLOR } from 'utils/calendar';
 import axios from 'utils/axios';
 // components
 import { DialogAnimate } from 'components/animate';
+import closeFill from '@iconify/icons-eva/close-fill';
+import { MIconButton } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -68,7 +70,11 @@ const getInitialValues = (event: EventInput, range: { start: Date; end: Date } |
   };
 
   if (event || range) {
-    return merge({}, _event, event);
+    const mergedEvent = merge({}, _event, event);
+    if (mergedEvent.meetingLink === '-') {
+      mergedEvent.meetingLink = '';
+    }
+    return mergedEvent;
   }
 
   return _event;
@@ -111,7 +117,7 @@ const Field = ({
 
 export default function CalendarForm({ event, range, onCancel }: CalendarFormProps) {
   const { user } = useAuth();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const isCreating = !event || isEmpty(event);
   const isOrganizer = isCreating || user?.id === event.createdBy.id;
@@ -142,16 +148,40 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
       };
       if (event.id) {
         dispatch(updateEvent(event.id, newEvent));
-        if (!error) enqueueSnackbar('Edit aktivitas sukses!', { variant: 'success' });
+        if (!error)
+          enqueueSnackbar('Edit aktivitas sukses!', {
+            variant: 'success',
+            action: (key) => (
+              <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+                <Icon icon={closeFill} />
+              </MIconButton>
+            )
+          });
         setIsReadOnly(true);
       } else {
         dispatch(createEvent(newEvent));
-        if (!error) enqueueSnackbar('Tambah aktivitas sukses!', { variant: 'success' });
+        if (!error)
+          enqueueSnackbar('Tambah aktivitas sukses!', {
+            variant: 'success',
+            action: (key) => (
+              <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+                <Icon icon={closeFill} />
+              </MIconButton>
+            )
+          });
         onCancel();
       }
       resetForm();
       setSubmitting(false);
-      if (error) enqueueSnackbar('Error!', { variant: 'error' });
+      if (error)
+        enqueueSnackbar('Error!', {
+          variant: 'error',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
+        });
     }
   });
 
@@ -164,9 +194,23 @@ export default function CalendarForm({ event, range, onCancel }: CalendarFormPro
     onCancel();
     dispatch(isOrganizer ? deleteEvent(event.id) : deleteUserFromEvent(event.id));
     if (error) {
-      enqueueSnackbar('Error!', { variant: 'error' });
+      enqueueSnackbar('Error!', {
+        variant: 'error',
+        action: (key) => (
+          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+            <Icon icon={closeFill} />
+          </MIconButton>
+        )
+      });
     } else {
-      enqueueSnackbar('Hapus aktivitas sukses!', { variant: 'success' });
+      enqueueSnackbar('Hapus aktivitas sukses!', {
+        variant: 'success',
+        action: (key) => (
+          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+            <Icon icon={closeFill} />
+          </MIconButton>
+        )
+      });
     }
   };
 
