@@ -122,11 +122,11 @@ export function getUserList() {
 
 // ----------------------------------------------------------------------
 
-export function getAddressBook() {
+export function getAddressBook(userId?: string) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('user-addresses');
+      const response = await axios.get('user-addresses', { params: { userId } });
       dispatch(slice.actions.getAddressBookSuccess(response.data.payload));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -134,10 +134,10 @@ export function getAddressBook() {
   };
 }
 
-export async function setAddressAsDefault(id: number) {
+export async function setAddressAsDefault(id: number, userId?: string) {
   dispatch(slice.actions.startLoading());
   try {
-    await axios.post(`user-addresses/default/${id}`);
+    await axios.post(`user-addresses/default/${id}`, null, { params: { userId } });
     dispatch(slice.actions.setAddressAsDefault(id));
   } catch (error) {
     console.log(error);
@@ -145,10 +145,10 @@ export async function setAddressAsDefault(id: number) {
   }
 }
 
-export async function addAddress(data: Partial<UserAddressBook>) {
+export async function addAddress(data: Partial<UserAddressBook>, userId?: string) {
   dispatch(slice.actions.startLoading());
   try {
-    const response = await axios.post(`user-addresses`, data);
+    const response = await axios.post(`user-addresses`, data, { params: { userId } });
     dispatch(slice.actions.addAddressSuccess(response.data.payload));
   } catch (error) {
     console.log(error);
@@ -156,10 +156,10 @@ export async function addAddress(data: Partial<UserAddressBook>) {
   }
 }
 
-export async function editAddress(id: number, data: Partial<UserAddressBook>) {
+export async function editAddress(id: number, data: Partial<UserAddressBook>, userId?: string) {
   dispatch(slice.actions.startLoading());
   try {
-    const response = await axios.patch(`user-addresses/${id}`, data);
+    const response = await axios.patch(`user-addresses/${id}`, data, { params: { userId } });
     dispatch(slice.actions.editAddressSuccess(response.data.payload));
   } catch (error) {
     console.log(error);
@@ -167,10 +167,10 @@ export async function editAddress(id: number, data: Partial<UserAddressBook>) {
   }
 }
 
-export async function deleteAddress(id: number) {
+export async function deleteAddress(id: number, userId?: string) {
   dispatch(slice.actions.startLoading());
   try {
-    await axios.delete(`user-addresses/${id}`);
+    await axios.delete(`user-addresses/${id}`, { params: { userId } });
     dispatch(slice.actions.deleteAddressSuccess(id));
   } catch (error) {
     console.log(error);

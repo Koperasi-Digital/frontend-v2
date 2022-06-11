@@ -26,12 +26,14 @@ import axios from 'utils/axios';
 // ----------------------------------------------------------------------
 
 type AccountAddressFormProps = {
+  userId?: string;
   existingAddress?: UserAddressBook;
   open: boolean;
   onClose: VoidFunction;
 };
 
 export default function AccountAddressForm({
+  userId,
   existingAddress,
   open,
   onClose
@@ -66,9 +68,9 @@ export default function AccountAddressForm({
       try {
         setSubmitting(true);
         if (isEdit) {
-          await editAddress(existingAddress!.id, values);
+          await editAddress(existingAddress!.id, values, userId);
         } else {
-          await addAddress(values);
+          await addAddress(values, userId);
         }
         onClose();
         resetForm();
