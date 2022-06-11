@@ -65,7 +65,7 @@ export default function SimpananWajib(props: { dateValue: Date }) {
               <>
                 <Typography>Bayar dengan</Typography>
                 <PaymentButton
-                  buttonName="Gopay terdaftar"
+                  buttonName="GOPAY TERDAFTAR"
                   transaction_details={{
                     order_id: simpananWajib.order.id,
                     gross_amount: simpananWajib.amount

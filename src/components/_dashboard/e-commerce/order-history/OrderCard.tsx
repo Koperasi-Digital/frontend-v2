@@ -1,4 +1,14 @@
-import { Box, Card, Link, Grid, Typography, Stack, Button } from '@mui/material';
+import {
+  Box,
+  Card,
+  DialogActions,
+  DialogTitle,
+  Link,
+  Grid,
+  Typography,
+  Stack,
+  Button
+} from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { fDateTime } from '../../../../utils/formatTime';
@@ -7,6 +17,8 @@ import { OrderDetails } from '../../../../@types/order';
 import { PATH_DASHBOARD } from 'routes/paths';
 import Label from '../../../Label';
 import useAuth from 'hooks/useAuth';
+import { useEffect, useState } from 'react';
+import { DialogAnimate } from 'components/animate';
 
 const OrderDetailStyle = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -40,6 +52,7 @@ export default function OrderCard({
   const orderDetailsLink = `${PATH_DASHBOARD.eCommerce.root}/order/`;
   const { currentRole } = useAuth();
   const isAdmin = currentRole?.name === 'ADMIN';
+  const [isOpenGopayPopUp, setIsOpenGopayPopUp] = useState<boolean>(false);
 
   return (
     <Card sx={{ m: 0.5, p: 2, ':hover': { boxShadow: 50 } }}>
@@ -76,15 +89,44 @@ export default function OrderCard({
             spacing={2}
             sx={{ mb: 3 }}
           >
-            <Link
-              to={`${paymentLink}GOPAY`}
-              component={RouterLink}
-              style={{
-                textDecoration: 'none'
+            <DialogAnimate
+              open={isOpenGopayPopUp}
+              onClose={() => {
+                setIsOpenGopayPopUp(false);
               }}
             >
-              <Button variant="contained">Gopay terdaftar</Button>
-            </Link>
+              <DialogTitle sx={{ pb: 1 }}>
+                Apakah anda yakin ingin membayar dengan gopay?
+              </DialogTitle>
+              <DialogActions>
+                <Stack direction="row" spacing={2}>
+                  <Link
+                    to={`${paymentLink}GOPAY`}
+                    component={RouterLink}
+                    style={{
+                      textDecoration: 'none'
+                    }}
+                  >
+                    <Button variant="contained">Ya</Button>
+                  </Link>
+                  <Button
+                    onClick={() => {
+                      setIsOpenGopayPopUp(false);
+                    }}
+                  >
+                    Tidak
+                  </Button>
+                </Stack>
+              </DialogActions>
+            </DialogAnimate>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setIsOpenGopayPopUp(true);
+              }}
+            >
+              GOPAY TERDAFTAR
+            </Button>
             <Link
               to={`${paymentLink}OTHER`}
               component={RouterLink}
