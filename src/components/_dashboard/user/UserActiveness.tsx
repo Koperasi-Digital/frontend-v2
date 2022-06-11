@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Box, Card, Typography, Stack, Link } from '@mui/material';
@@ -7,10 +7,16 @@ import { PATH_DASHBOARD } from 'routes/paths';
 // utils
 import axios from 'utils/axios';
 import { fNumber, fPercent } from 'utils/formatNumber';
+import { UserManager } from '../../../@types/user';
 
 // ----------------------------------------------------------------------
 
-export default function UserActiveness() {
+interface UserActivenessProps {
+  user?: UserManager;
+  withViewMoreButton?: boolean;
+}
+
+export default function UserActiveness({ user, withViewMoreButton }: UserActivenessProps) {
   const [totalActive, setTotalActive] = useState({
     userActivities: 0,
     totalActivities: 0,
@@ -24,31 +30,38 @@ export default function UserActiveness() {
   const meetingActivity = totalActivities ? userActivities / totalActivities : 1;
   const netActivity = (ecommerceActivity + meetingActivity) / 2;
 
-  const getTotalActive = () =>
-    axios
-      .get('activity-logs/annual-summary', {
-        params: {
-          type: 'presensi_meeting'
-        }
-      })
-      .then((response) => {
-        const { totalAttendedMeetings, totalMeetings } = response.data.payload;
+  const getTotalActive = useCallback(
+    () =>
+      axios
+        .get('activity-logs/annual-summary', {
+          params: {
+            type: 'presensi_meeting',
+            id: user?.id
+          }
+        })
+        .then((response) => {
+          const { totalAttendedMeetings, totalMeetings } = response.data.payload;
+          setTotalActive((prev) => ({
+            ...prev,
+            userActivities: totalAttendedMeetings,
+            totalActivities: totalMeetings
+          }));
+        }),
+    [user?.id]
+  );
+
+  const getTotalTransaction = useCallback(
+    () =>
+      axios.get('order/annual-summary', { params: { id: user?.id } }).then((response) => {
+        const { totalEcommerceActivities, userEcommerceActivites } = response.data.payload;
         setTotalActive((prev) => ({
           ...prev,
-          userActivities: totalAttendedMeetings,
-          totalActivities: totalMeetings
+          userTransactions: userEcommerceActivites,
+          totalTransactions: totalEcommerceActivities
         }));
-      });
-
-  const getTotalTransaction = () =>
-    axios.get('order/annual-summary').then((response) => {
-      const { totalEcommerceActivities, userEcommerceActivites } = response.data.payload;
-      setTotalActive((prev) => ({
-        ...prev,
-        userTransactions: userEcommerceActivites,
-        totalTransactions: totalEcommerceActivities
-      }));
-    });
+      }),
+    [user?.id]
+  );
 
   const getUserFinalTotalActiveness = () =>
     axios.get('sisa-hasil-usaha/percentage').then((response) => {
@@ -60,7 +73,7 @@ export default function UserActiveness() {
     getTotalActive();
     getTotalTransaction();
     getUserFinalTotalActiveness();
-  }, []);
+  }, [getTotalActive, getTotalTransaction]);
 
   return (
     <>
@@ -97,17 +110,21 @@ export default function UserActiveness() {
             </Stack>
           </Stack>
         </Box>
-        <Box sx={{ mr: { lg: 3 }, ml: { lg: 8 }, mt: { xs: 2, lg: 0 } }}>
-          <Typography component="span" variant="h3">
-            {fPercent(finalActiveness * 100)}
-          </Typography>
+        <Box sx={{ mr: { lg: 3 }, ml: { lg: 8 }, mt: { xs: 2, lg: 0 }, width: { lg: '25%' } }}>
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <Typography component="span" variant="h3">
+              {fPercent(finalActiveness * 100)}
+            </Typography>
+          </Box>
         </Box>
       </Card>
-      <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.user.account}>
-        <Typography variant="body2" align="right" sx={{ m: '0.5rem', fontWeight: 'bold' }}>
-          Lebih lanjut
-        </Typography>
-      </Link>
+      {withViewMoreButton && (
+        <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.user.account}>
+          <Typography variant="body2" align="right" sx={{ m: '0.5rem', fontWeight: 'bold' }}>
+            Lebih lanjut
+          </Typography>
+        </Link>
+      )}
     </>
   );
 }

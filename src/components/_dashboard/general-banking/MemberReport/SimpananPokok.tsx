@@ -13,7 +13,7 @@ import { fCurrency } from 'utils/formatNumber';
 
 import LoadingScreen from 'components/LoadingScreen';
 
-import { SimpananPokokType } from '../../../../@types/simpanan';
+import { SimpananPokok as SimpananPokokType } from '../../../../@types/simpanan';
 
 export default function SimpananPokok() {
   const { user } = useAuth();

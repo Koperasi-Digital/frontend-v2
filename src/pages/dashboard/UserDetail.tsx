@@ -15,6 +15,7 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { UserActivityLogs, UserInformationDetail } from 'components/_dashboard/user/detail';
 import { AccountAddressBook } from 'components/_dashboard/user/account';
+import { UserActiveness } from 'components/_dashboard/user';
 
 // ----------------------------------------------------------------------
 
@@ -63,9 +64,14 @@ export default function UserDetail() {
               <AccountAddressBook addressBook={addressBook} />
             </Grid>
             {isMember && (
-              <Grid item xs={12}>
-                <UserActivityLogs user={currentUser} />
-              </Grid>
+              <>
+                <Grid item xs={12}>
+                  <UserActivityLogs user={currentUser} />
+                </Grid>
+                <Grid item xs={12}>
+                  <UserActiveness user={currentUser} />
+                </Grid>
+              </>
             )}
           </Grid>
         ) : (

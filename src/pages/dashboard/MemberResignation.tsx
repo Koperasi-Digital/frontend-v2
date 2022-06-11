@@ -12,10 +12,13 @@ import {
   Container,
   Box,
   Button,
-  styled,
   Link,
+  Dialog,
   DialogContent,
   DialogTitle,
+  DialogActions,
+  IconButton,
+  Tooltip,
   Typography
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
@@ -33,37 +36,32 @@ import useIsMountedRef from 'hooks/useIsMountedRef';
 import Scrollbar from 'components/Scrollbar';
 import Page from 'components/Page';
 import HeaderBreadcrumbs from 'components/HeaderBreadcrumbs';
-import LightboxModal from 'components/LightboxModal';
-import { DialogAnimate } from 'components/animate';
-//
+import VerifyMemberResignationForm from 'components/_dashboard/user/member-resignation/VerifyMemberResignationForm';
 import { MIconButton } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
-const ImgStyle = styled('img')(() => ({
-  top: 0,
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-  position: 'absolute'
-}));
+const RESIGNATION_REASON = {
+  pengajuan: 'Pengajuan pribadi',
+  meninggal: 'Meninggal dunia'
+};
 
-export default function MemberVerification() {
+export default function MemberResignation() {
   const isMountedRef = useIsMountedRef();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [memberVerificationList, setMemberVerificationList] = useState([]);
-  const [openLightbox, setOpenLightbox] = useState(false);
-  const [lightboxImages, setLightboxImages] = useState({ images: [''], selectedIndex: 0 });
+  const [memberResignationList, setMemberResignationList] = useState<any[]>([]);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const [isOpenConfirmationModal, setIsOpenConfirmationModal] = useState(false);
   const [isOpenSuccessModal, setIsOpenSuccessModal] = useState(false);
 
-  const getMemberVerification = useCallback(async () => {
+  const getMemberResignation = useCallback(async () => {
     try {
-      const response = await axios.get('member-verification');
+      const response = await axios.get('member-resignation');
       if (isMountedRef.current) {
-        setMemberVerificationList(response.data.payload);
+        setMemberResignationList(
+          response.data.payload.filter((resignation: any) => resignation.status === 'pending')
+        );
       }
     } catch (err) {
       console.error(err);
@@ -71,25 +69,27 @@ export default function MemberVerification() {
   }, [isMountedRef]);
 
   useEffect(() => {
-    getMemberVerification();
-  }, [getMemberVerification]);
+    getMemberResignation();
+  }, [getMemberResignation]);
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const handleOpenLightbox = (index: number, images?: string[]) => {
-    setOpenLightbox(true);
-    setLightboxImages((prev) => ({
-      images: images || prev.images,
-      selectedIndex: index
-    }));
+  const handleCloseSuccessModal = (userId: number) => {
+    setIsOpenSuccessModal(false);
+    setMemberResignationList((prev) =>
+      prev.filter((memberResignation: any) => memberResignation.user.id !== userId)
+    );
   };
 
-  const handleAcceptVerification = (userId: number) => {
-    axios.post('member-verification/verify', { id: userId }).then(() => {
-      enqueueSnackbar('Pengguna berhasil terverifikasi!', {
+  const handleRejectResignation = (userId: number) => {
+    axios.post('member-resignation/reject', { id: userId }).then(() => {
+      setMemberResignationList((prev) =>
+        prev.filter((memberResignation: any) => memberResignation.user.id !== userId)
+      );
+      enqueueSnackbar('Request pengunduran diri berhasil ditolak!', {
         variant: 'success',
         action: (key) => (
           <MIconButton size="small" onClick={() => closeSnackbar(key)}>
@@ -97,22 +97,12 @@ export default function MemberVerification() {
           </MIconButton>
         )
       });
-      setIsOpenSuccessModal(true);
-    });
-  };
-
-  const handleRejectVerification = (userId: number) => {
-    axios.post('member-verification/reject', { id: userId }).then(() => {
-      setMemberVerificationList((prev) =>
-        prev.filter((memberVerification: any) => memberVerification.user.id !== userId)
-      );
-      enqueueSnackbar('Verifikasi pengguna berhasil ditolak!', { variant: 'success' });
     });
   };
 
   const handleSendEmail = (userId: number, displayName: string, email: string) => {
-    const formattedSubject = `[CoopChick] Request keanggotaan telah diverifikasi oleh Admin!`;
-    const formattedBody = `Halo ${displayName}, Request keanggotaan koperasi akunmu telah diterima oleh Admin.\n\nSalam,\nAdmin Koperasi CoopChick`;
+    const formattedSubject = `[CoopChick] Pengunduran keanggotaan telah diverifikasi oleh Admin!`;
+    const formattedBody = `Halo ${displayName}, Request pengunduran diri dari keanggotaan koperasi telah diterima oleh Admin.\nKamu masih dapat melakukan transaksi pada e-commerce aplikasi CoopChick.\nSaldo keanggotaan yang masih tersisa akan dikirim pada rekening yang terdaftar.\n\nSalam,\nAdmin Koperasi CoopChick`;
     const mailToLink = `mailto:${email}?subject=${encodeURIComponent(
       formattedSubject
     )}&body=${encodeURIComponent(formattedBody)}`;
@@ -120,51 +110,43 @@ export default function MemberVerification() {
     handleCloseSuccessModal(userId);
   };
 
-  const handleCloseSuccessModal = (userId: number) => {
-    setIsOpenSuccessModal(false);
-    setMemberVerificationList((prev) =>
-      prev.filter((memberResignation: any) => memberResignation.user.id !== userId)
-    );
-  };
-
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - memberVerificationList.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - memberResignationList.length) : 0;
 
   return (
-    <Page title="Verifikasi Calon Anggota Koperasi | CoopChick">
+    <Page title="Verifikasi Pengunduran Keanggotaan Koperasi | CoopChick">
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
-          heading="Verifikasi Calon Anggota Koperasi"
+          heading="Verifikasi Pengunduran Keanggotaan Koperasi"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Verifikasi Calon Anggota Koperasi',
-              href: PATH_DASHBOARD.user.memberVerification.verify
+              name: 'Verifikasi Pengunduran Keanggotaan',
+              href: PATH_DASHBOARD.user.memberResignation.verify
             }
           ]}
         />
         <Card>
-          <CardHeader title="Verifikasi Calon Anggota Koperasi" sx={{ mb: 3 }} />
+          <CardHeader title="Pengunduran Keanggotaan Koperasi " sx={{ mb: 3 }} />
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>ID Verifikasi</TableCell>
+                    <TableCell>ID Pengunduran</TableCell>
                     <TableCell>ID Pengguna</TableCell>
                     <TableCell>Nama</TableCell>
-                    <TableCell sx={{ width: '15%' }}>Foto KTP</TableCell>
-                    <TableCell sx={{ width: '15%' }}>Foto Selfie</TableCell>
+                    <TableCell sx={{ width: '15%' }}>Alasan</TableCell>
+                    <TableCell sx={{ width: '15%' }}>Deskripsi</TableCell>
                     <TableCell>Aksi</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {memberVerificationList
+                  {memberResignationList
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, user, identityCardPhotoURL, selfiePhotoURL } = row;
+                      const { id, user, reason, description } = row;
                       const { displayName, id: userId, email } = user;
-                      const images = [identityCardPhotoURL, selfiePhotoURL];
 
                       return (
                         <TableRow hover key={id} tabIndex={-1}>
@@ -182,30 +164,16 @@ export default function MemberVerification() {
                             </Link>
                           </TableCell>
                           <TableCell align="left">
-                            <Box sx={{ pt: '100%', position: 'relative' }}>
-                              <ImgStyle
-                                alt={identityCardPhotoURL}
-                                src={identityCardPhotoURL}
-                                onClick={() => handleOpenLightbox(0, images)}
-                              />
-                            </Box>
+                            {RESIGNATION_REASON[reason as keyof typeof RESIGNATION_REASON]}
                           </TableCell>
-                          <TableCell align="left">
-                            <Box sx={{ pt: '100%', position: 'relative' }}>
-                              <ImgStyle
-                                alt={selfiePhotoURL}
-                                src={selfiePhotoURL}
-                                onClick={() => handleOpenLightbox(1, images)}
-                              />
-                            </Box>
-                          </TableCell>
+                          <TableCell align="left">{description}</TableCell>
                           <TableCell align="left">
                             <Box display="flex" gap={2}>
                               <Button
                                 color="success"
                                 variant="contained"
                                 size="small"
-                                onClick={() => handleAcceptVerification(userId)}
+                                onClick={() => setIsOpenConfirmationModal(true)}
                               >
                                 Terima
                               </Button>
@@ -213,47 +181,49 @@ export default function MemberVerification() {
                                 color="error"
                                 variant="contained"
                                 size="small"
-                                onClick={() => setIsOpenDeleteModal(true)}
+                                onClick={() => handleRejectResignation(userId)}
                               >
                                 Tolak
                               </Button>
-                              <DialogAnimate
-                                open={isOpenDeleteModal}
-                                onClose={() => setIsOpenDeleteModal(false)}
+                              <Dialog
+                                open={isOpenConfirmationModal}
+                                onClose={() => setIsOpenConfirmationModal(false)}
                               >
-                                <DialogTitle sx={{ pb: 1 }}>Tolak Verifikasi?</DialogTitle>
+                                <DialogActions
+                                  sx={{
+                                    zIndex: 9,
+                                    pt: '10px',
+                                    boxShadow: (theme) => theme.customShadows.z8
+                                  }}
+                                >
+                                  <Tooltip title="Tutup">
+                                    <IconButton
+                                      color="inherit"
+                                      onClick={() => setIsOpenConfirmationModal(false)}
+                                    >
+                                      <Icon icon={closeFill} />
+                                    </IconButton>
+                                  </Tooltip>
+                                </DialogActions>
+                                <DialogTitle sx={{ pb: 1 }}>
+                                  Terima Pengunduran Keanggotaan?
+                                </DialogTitle>
                                 <DialogContent sx={{ overflowY: 'unset' }}>
-                                  <Typography align={'justify'}>
-                                    Data verifikasi pengguna yang ditolak akan hilang selamanya!
-                                    Calon anggota harus mengajukan verifikasi kembali jika ingin
-                                    menjadi anggota koperasi. Apakah Anda tetap ingin menolak
-                                    verifikasi?
-                                  </Typography>
-                                  <Box display="flex" justifyContent="end" gap={2} pt={2} pb={1}>
-                                    <Button
-                                      variant="contained"
-                                      onClick={() => handleRejectVerification(userId)}
-                                      color="error"
-                                    >
-                                      Tolak
-                                    </Button>
-                                    <Button
-                                      variant="contained"
-                                      onClick={() => setIsOpenDeleteModal(false)}
-                                    >
-                                      Batal
-                                    </Button>
-                                  </Box>
+                                  <VerifyMemberResignationForm
+                                    memberId={userId}
+                                    setIsOpenConfirmationModal={setIsOpenConfirmationModal}
+                                    setIsOpenSuccessModal={setIsOpenSuccessModal}
+                                  />
                                 </DialogContent>
-                              </DialogAnimate>
-                              <DialogAnimate
+                              </Dialog>
+                              <Dialog
                                 open={isOpenSuccessModal}
                                 onClose={() => handleCloseSuccessModal(userId)}
                               >
                                 <DialogTitle sx={{ pb: 1 }}>Sukses!</DialogTitle>
                                 <DialogContent sx={{ overflowY: 'unset' }}>
                                   <Typography align={'justify'}>
-                                    Request keanggotaan berhasil diverifikasi
+                                    Pengunduran diri anggota berhasil diverifikasi
                                   </Typography>
                                   <Box
                                     display="flex"
@@ -278,7 +248,7 @@ export default function MemberVerification() {
                                     </Button>
                                   </Box>
                                 </DialogContent>
-                              </DialogAnimate>
+                              </Dialog>
                             </Box>
                           </TableCell>
                         </TableRow>
@@ -290,7 +260,7 @@ export default function MemberVerification() {
                     </TableRow>
                   )}
                 </TableBody>
-                {!memberVerificationList.length && (
+                {!memberResignationList.length && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -306,20 +276,13 @@ export default function MemberVerification() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={memberVerificationList.length}
+            count={memberResignationList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={(e, page) => setPage(page)}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
-        <LightboxModal
-          images={lightboxImages.images}
-          photoIndex={lightboxImages.selectedIndex}
-          isOpen={openLightbox}
-          setPhotoIndex={handleOpenLightbox}
-          onClose={() => setOpenLightbox(false)}
-        />
       </Container>
     </Page>
   );

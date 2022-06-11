@@ -6,6 +6,7 @@ import SvgIconStyle from '../../components/SvgIconStyle';
 import { Icon } from '@iconify/react';
 import RoundHome from '@iconify/icons-ic/round-home';
 import RoundGroups from '@iconify/icons-ic/round-groups';
+import BaselinePersonRemove from '@iconify/icons-ic/baseline-person-remove';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +28,8 @@ const ICONS = {
   dashboard: getIcon('ic_dashboard'),
   booking: getIcon('ic_booking'),
   request: <Icon icon={RoundGroups} width="100%" height="100%" />,
-  homepage: <Icon icon={RoundHome} width="100%" height="100%" />
+  homepage: <Icon icon={RoundHome} width="100%" height="100%" />,
+  resign: <Icon icon={BaselinePersonRemove} width="100%" height="100%" />
 };
 
 const sidebarConfig = [
@@ -124,6 +126,12 @@ const sidebarConfig = [
         accessibleRoles: ['CUSTOMER'],
         path: PATH_DASHBOARD.user.memberVerification.request,
         icon: ICONS.request
+      },
+      {
+        title: 'Pengunduran Diri',
+        accessibleRoles: ['MEMBER'],
+        path: PATH_DASHBOARD.user.memberResignation.request,
+        icon: ICONS.resign
       }
     ]
   },
@@ -143,6 +151,10 @@ const sidebarConfig = [
           {
             title: 'verifikasi calon anggota',
             path: PATH_DASHBOARD.user.memberVerification.verify
+          },
+          {
+            title: 'pengunduran diri anggota',
+            path: PATH_DASHBOARD.user.memberResignation.verify
           }
         ]
       },

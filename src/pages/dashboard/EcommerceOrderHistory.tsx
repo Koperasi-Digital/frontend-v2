@@ -6,26 +6,34 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { getOrdersByCustomer } from '../../redux/slices/order';
 // routes
 import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
-// @types
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { OrderCard } from 'components/_dashboard/e-commerce/order-history';
 import { OrderState } from '../../@types/order';
 import useAuth from 'hooks/useAuth';
+import useQuery from 'hooks/useQuery';
 
 export default function EcommerceProductList() {
   const dispatch = useDispatch();
+  const query = useQuery();
   const { orderDetailsList: orders, orderDetailsGroupByOrder } = useSelector(
     (state: { order: OrderState }) => state.order
   );
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const { user } = useAuth();
+  const { user, currentRole } = useAuth();
+
+  const id = query.get('id');
+  const isAdmin = currentRole?.name === 'ADMIN';
 
   useEffect(() => {
-    dispatch(getOrdersByCustomer(user?.id.toString()));
-  }, [dispatch, user]);
+    let userId = user?.id.toString();
+    if (isAdmin && id) {
+      userId = id;
+    }
+    dispatch(getOrdersByCustomer(userId));
+  }, [dispatch, user, isAdmin, id]);
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));

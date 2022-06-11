@@ -36,9 +36,14 @@ export async function handleEditBankAccount(
   }
 }
 
-export async function handleGetBankAccount() {
+export async function handleGetBankAccount(userId?: number) {
   try {
-    const response = await axios.get('bank-account');
+    let response;
+    if (!userId) {
+      response = await axios.get('bank-account');
+    } else {
+      response = await axios.get('bank-account', { params: { id: userId } });
+    }
     return response.data.payload;
   } catch (e) {
     console.log(e);

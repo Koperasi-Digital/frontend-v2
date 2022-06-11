@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
+import { Icon } from '@iconify/react';
 // material
 import { Box, Grid, Card, Stack, TextField, Typography, FormHelperText } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -15,6 +16,8 @@ import { handleUploadFile } from 'utils/bucket';
 import { fTimestamp } from 'utils/formatTime';
 // @types
 import { User } from '../../../../@types/account';
+import closeFill from '@iconify/icons-eva/close-fill';
+import { MIconButton } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +27,7 @@ interface InitialState extends Partial<User> {
 
 export default function AccountInformationEdit() {
   const isMountedRef = useIsMountedRef();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { user, updateProfile } = useAuth();
 
   const UpdateUserSchema = Yup.object().shape({
@@ -59,13 +62,27 @@ export default function AccountInformationEdit() {
           values.photoURL = photoUrl;
         }
         updateProfile(values);
-        enqueueSnackbar('Pengguna berhasil diedit!', { variant: 'success' });
+        enqueueSnackbar('Pengguna berhasil diedit!', {
+          variant: 'success',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
+        });
         if (isMountedRef.current) {
           setSubmitting(false);
         }
       } catch (error: any) {
         console.log(error);
-        enqueueSnackbar('Error!', { variant: 'error' });
+        enqueueSnackbar('Error!', {
+          variant: 'error',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
+        });
         if (isMountedRef.current) {
           setErrors({ afterSubmit: error.code });
           setSubmitting(false);

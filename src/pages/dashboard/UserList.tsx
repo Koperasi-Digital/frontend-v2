@@ -13,10 +13,9 @@ import {
   TableContainer,
   TablePagination
 } from '@mui/material';
-import { useSnackbar } from 'notistack';
 // redux
 import { RootState, useDispatch, useSelector } from '../../redux/store';
-import { getUserList, deleteUser } from '../../redux/slices/user';
+import { getUserList } from '../../redux/slices/user';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // @types
@@ -90,7 +89,6 @@ function applySortFilter(
 
 export default function UserList() {
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
 
   const { userList } = useSelector((state: RootState) => state.user);
   const [page, setPage] = useState(0);
@@ -151,15 +149,6 @@ export default function UserList() {
     setFilterRole(filterRole);
   };
 
-  const handleDeleteUser = async (userId: string) => {
-    try {
-      await deleteUser(userId);
-      enqueueSnackbar(`Pengguna (ID: ${userId}) berhasil dihapus!`, { variant: 'success' });
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
 
   const filteredUsers = applySortFilter(
@@ -208,6 +197,7 @@ export default function UserList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       const { id, displayName, roles, email, photoURL, created_at } = row;
+                      const userData = { id, displayName, email, photoURL, roles, created_at };
                       const isItemSelected = selected.indexOf(displayName) !== -1;
                       const defaultAvatar = photoURL ? null : createAvatar(displayName);
 
@@ -247,10 +237,7 @@ export default function UserList() {
                           <TableCell align="left">{fDateTime(new Date(created_at))}</TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu
-                              onDelete={() => handleDeleteUser(id)}
-                              userName={displayName}
-                            />
+                            <UserMoreMenu user={userData} />
                           </TableCell>
                         </TableRow>
                       );

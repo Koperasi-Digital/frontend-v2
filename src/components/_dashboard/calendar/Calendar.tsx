@@ -7,6 +7,7 @@ import interactionPlugin, { EventResizeDoneArg } from '@fullcalendar/interaction
 import idLocale from '@fullcalendar/core/locales/id';
 import { useSnackbar } from 'notistack';
 import { useState, useRef, useEffect } from 'react';
+import { Icon } from '@iconify/react';
 // material
 import { useTheme } from '@mui/material/styles';
 import { Card, useMediaQuery } from '@mui/material';
@@ -16,6 +17,8 @@ import { getEvents, updateEvent, selectEvent, selectRange } from 'redux/slices/c
 // @types
 import { CalendarView } from '../../../../src/@types/calendar';
 import { CalendarStyle, CalendarToolbar } from '.';
+import closeFill from '@iconify/icons-eva/close-fill';
+import { MIconButton } from 'components/@material-extend';
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +39,7 @@ export default function Calendar({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const calendarRef = useRef<FullCalendar>(null);
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<CalendarView>(
     injectedView || (isMobile ? 'listWeek' : 'dayGridMonth')
@@ -123,9 +126,24 @@ export default function Calendar({
           endAt: event.end
         })
       );
-      enqueueSnackbar('Edit aktivitas sukses!', { variant: 'success' });
+      enqueueSnackbar('Edit aktivitas sukses!', {
+        variant: 'success',
+        action: (key) => (
+          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+            <Icon icon={closeFill} />
+          </MIconButton>
+        )
+      });
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('Error!', {
+        variant: 'error',
+        action: (key) => (
+          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+            <Icon icon={closeFill} />
+          </MIconButton>
+        )
+      });
     }
   };
 
@@ -135,14 +153,27 @@ export default function Calendar({
         updateEvent(event.id, {
           allDay: event.allDay,
           startAt: event.start,
-          endAt: event.end
+          endAt: event.end || event.start
         })
       );
       enqueueSnackbar('Edit aktivitas sukses!', {
-        variant: 'success'
+        variant: 'success',
+        action: (key) => (
+          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+            <Icon icon={closeFill} />
+          </MIconButton>
+        )
       });
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('Error!', {
+        variant: 'error',
+        action: (key) => (
+          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+            <Icon icon={closeFill} />
+          </MIconButton>
+        )
+      });
     }
   };
 
