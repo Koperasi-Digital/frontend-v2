@@ -174,6 +174,7 @@ export default function AccountAddressForm({
                       error={Boolean(touched.city && errors.city)}
                       helperText={touched.city && errors.city}
                     >
+                      {!isEdit && <option defaultValue=""></option>}
                       {cities.map((option) => (
                         <option key={option.city_id} value={`${option.type} ${option.city_name}`}>
                           {`${option.type} ${option.city_name}`}
