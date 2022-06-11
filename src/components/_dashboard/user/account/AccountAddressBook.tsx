@@ -27,11 +27,16 @@ import { DialogAnimate } from 'components/animate';
 // ----------------------------------------------------------------------
 
 interface AccountAddressBookProp extends CardProps {
+  userId?: string;
   addressBook: UserAddressBook[];
   isEdit?: boolean;
 }
 
-export default function AccountAddressBook({ addressBook, isEdit }: AccountAddressBookProp) {
+export default function AccountAddressBook({
+  userId,
+  addressBook,
+  isEdit
+}: AccountAddressBookProp) {
   const [open, setOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState<UserAddressBook>();
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
@@ -53,7 +58,7 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
 
   const handleDeleteAddress = () => {
     if (selectedAddress) {
-      deleteAddress(selectedAddress.id);
+      deleteAddress(selectedAddress.id, userId);
     }
     setIsOpenDeleteModal(false);
   };
@@ -127,7 +132,7 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
                         size="small"
                         color="info"
                         startIcon={<Icon icon={checkmarkOutline} />}
-                        onClick={() => setAddressAsDefault(address.id)}
+                        onClick={() => setAddressAsDefault(address.id, userId)}
                       >
                         Jadikan Alamat Utama
                       </Button>
@@ -155,7 +160,12 @@ export default function AccountAddressBook({ addressBook, isEdit }: AccountAddre
           )}
         </Stack>
       </Card>
-      <AccountAddressForm open={open} onClose={handleClose} existingAddress={selectedAddress} />
+      <AccountAddressForm
+        open={open}
+        onClose={handleClose}
+        existingAddress={selectedAddress}
+        userId={userId}
+      />
 
       <DialogAnimate open={isOpenDeleteModal} onClose={() => setIsOpenDeleteModal(false)}>
         <DialogTitle sx={{ pb: 1 }}>Hapus Alamat?</DialogTitle>
