@@ -1,7 +1,6 @@
-import { Button, Stack, Typography, DialogActions, DialogTitle } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { PaymentCreation as PaymentButton } from 'components/_dashboard/general-banking';
-import { DialogAnimate } from 'components/animate';
 import {
   handleGetSimpananPokok,
   handleAddOrderSimpananPokok
@@ -20,7 +19,6 @@ export default function SimpananPokok() {
 
   const [simpananPokok, setSimpananPokok] = useState<SimpananPokokType>();
   const [dataNotExist, setDataNotExist] = useState<Boolean>(false);
-  const [isOpenGopayPopUp, setIsOpenGopayPopUp] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,43 +58,6 @@ export default function SimpananPokok() {
             {simpananPokok.order && simpananPokok.order.status !== 'LUNAS' && (
               <>
                 <Typography>Bayar dengan</Typography>
-                {/* <DialogAnimate
-                  open={isOpenGopayPopUp}
-                  onClose={() => {
-                    setIsOpenGopayPopUp(false);
-                  }}
-                >
-                  <DialogTitle sx={{ pb: 1 }}>
-                    Apakah anda yakin ingin membayar dengan gopay?
-                  </DialogTitle>
-                  <DialogActions>
-                    <Stack direction="row" spacing={2}>
-                      <PaymentButton
-                        buttonName="Ya"
-                        transaction_details={{
-                          order_id: simpananPokok.order.id,
-                          gross_amount: simpananPokok.amount
-                        }}
-                        paymentType="GOPAY"
-                      />
-                      <Button
-                        onClick={() => {
-                          setIsOpenGopayPopUp(false);
-                        }}
-                      >
-                        Tidak
-                      </Button>
-                    </Stack>
-                  </DialogActions>
-                </DialogAnimate>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setIsOpenGopayPopUp(true);
-                  }}
-                >
-                  Gopay
-                </Button> */}
                 <PaymentButton
                   buttonName="GOPAY TERDAFTAR"
                   transaction_details={{

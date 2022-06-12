@@ -54,11 +54,11 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
     },
     fill: { opacity: 0.8 },
     legend: {
-      position: 'right',
-      itemMargin: {
-        horizontal: 10,
-        vertical: 5
-      }
+      position: 'bottom'
+      // itemMargin: {
+      //   horizontal: 10,
+      //   vertical: 5
+      // }
     }
   });
 
@@ -92,8 +92,8 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
               options={chartOptions}
               series={chartData}
               type="pie"
-              height={isMobile ? 240 : 250}
-              width={isMobile ? 700 : 800}
+              height={isMobile ? 500 : 400}
+              width={isMobile ? 240 : 600}
             />
           </Box>
         </Scrollbar>

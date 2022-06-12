@@ -17,7 +17,7 @@ import { OrderDetails } from '../../../../@types/order';
 import { PATH_DASHBOARD } from 'routes/paths';
 import Label from '../../../Label';
 import useAuth from 'hooks/useAuth';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { DialogAnimate } from 'components/animate';
 
 const OrderDetailStyle = styled('div')(({ theme }) => ({

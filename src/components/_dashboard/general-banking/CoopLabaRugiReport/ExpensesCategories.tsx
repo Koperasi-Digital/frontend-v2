@@ -37,11 +37,13 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
     },
     fill: { opacity: 0.8 },
     legend: {
-      position: 'right',
-      itemMargin: {
-        horizontal: 10,
-        vertical: 5
-      }
+      position: 'bottom',
+      offsetX: 0,
+      offsetY: 0
+      // itemMargin: {
+      //   horizontal: 10,
+      //   vertical: 5
+      // }
     }
   });
 
@@ -67,13 +69,13 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
       <CardHeader title="Kategori Pengeluaran" />
       {chartData ? (
         <Scrollbar>
-          <Box dir="ltr">
+          <Box sx={{ my: 5 }} dir="ltr">
             <ReactApexChart
               options={chartOptions}
               series={chartData}
               type="pie"
-              height={isMobile ? 240 : 250}
-              width={isMobile ? 700 : 800}
+              height={isMobile ? 500 : 400}
+              width={isMobile ? 240 : 600}
             />
           </Box>
         </Scrollbar>
