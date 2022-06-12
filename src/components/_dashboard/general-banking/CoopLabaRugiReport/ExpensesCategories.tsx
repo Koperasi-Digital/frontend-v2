@@ -28,24 +28,31 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
 
   const [chartData, setChartData] = useState<number[]>();
 
-  const [chartOptions] = useState<any>({
-    chart: { id: 'coop-expense-categories' },
-    labels: ['Biaya Sisa Hasil Usaha', 'Biaya Operasi'],
-    colors: [theme.palette.primary.main, theme.palette.info.darker],
-    stroke: {
-      colors: [theme.palette.background.paper]
-    },
-    fill: { opacity: 0.8 },
-    legend: {
-      position: 'bottom',
-      offsetX: 0,
-      offsetY: 0
-      // itemMargin: {
-      //   horizontal: 10,
-      //   vertical: 5
-      // }
-    }
-  });
+  const [chartOptions, setChartOptions] = useState<any>();
+
+  useEffect(() => {
+    setChartOptions({
+      chart: { id: 'coop-expense-categories' },
+      labels: ['Biaya Sisa Hasil Usaha', 'Biaya Operasi'],
+      colors: [theme.palette.primary.main, theme.palette.info.darker],
+      stroke: {
+        colors: [theme.palette.background.paper]
+      },
+      fill: { opacity: 0.8 },
+      legend: {
+        position: isMobile ? 'bottom' : 'right',
+        itemMargin: {
+          horizontal: 10,
+          vertical: 5
+        }
+      }
+    });
+  }, [
+    isMobile,
+    theme.palette.background.paper,
+    theme.palette.primary.main,
+    theme.palette.info.darker
+  ]);
 
   useEffect(() => {
     const fetchData = async () => {

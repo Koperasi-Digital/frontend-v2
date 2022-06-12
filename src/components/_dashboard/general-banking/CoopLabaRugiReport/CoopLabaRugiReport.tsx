@@ -7,7 +7,7 @@ import Expenses from './Expenses';
 import ExpensesCategories from './ExpensesCategories';
 import Income from './Income';
 
-import { styled } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 
 import {
   Stack,
@@ -18,7 +18,8 @@ import {
   TableHead,
   TableCell,
   Typography,
-  Box
+  Box,
+  useMediaQuery
 } from '@mui/material';
 
 import { fCurrency } from 'utils/formatNumber';
@@ -41,6 +42,9 @@ export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProp
   const [incomePercent, setIncomePercent] = useState<number>();
   const [expensePercent, setExpensePercent] = useState<number>();
   const [dataNotExist, setDataNotExist] = useState<Boolean>(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const RowResultStyle = styled(TableRow)(({ theme }) => ({
     '& td': {
@@ -187,25 +191,31 @@ export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProp
                   </Table>
                 </TableContainer>
               </Grid>
-              <Grid item xs={12} md={8}>
-                <Stack spacing={2}>
-                  <BalanceStatistics dateValue={dateValue} />
-                  <ExpensesCategories dateValue={dateValue} />
+              <Grid item xs={12} spacing={2}>
+                <Stack spacing={2} direction={isMobile ? 'column' : 'row'}>
+                  <Grid item xs={12} md={6}>
+                    <Income
+                      currentCoopLabaRugiData={currentCoopLabaRugiData}
+                      prevCoopLabaRugiData={prevCoopLabaRugiData}
+                      incomePercent={incomePercent}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Expenses
+                      currentCoopLabaRugiData={currentCoopLabaRugiData}
+                      prevCoopLabaRugiData={prevCoopLabaRugiData}
+                      expensePercent={expensePercent}
+                    />
+                  </Grid>
                 </Stack>
               </Grid>
-              <Grid item xs={12} md={4}>
-                <Stack spacing={2}>
-                  <Income
-                    currentCoopLabaRugiData={currentCoopLabaRugiData}
-                    prevCoopLabaRugiData={prevCoopLabaRugiData}
-                    incomePercent={incomePercent}
-                  />
-                  <Expenses
-                    currentCoopLabaRugiData={currentCoopLabaRugiData}
-                    prevCoopLabaRugiData={prevCoopLabaRugiData}
-                    expensePercent={expensePercent}
-                  />
-                </Stack>
+              <Grid item xs={12}>
+                <Grid item xs={12}>
+                  <BalanceStatistics dateValue={dateValue} />
+                </Grid>
+                <Grid item xs={12}>
+                  <ExpensesCategories dateValue={dateValue} />
+                </Grid>
               </Grid>
             </>
           ) : null}

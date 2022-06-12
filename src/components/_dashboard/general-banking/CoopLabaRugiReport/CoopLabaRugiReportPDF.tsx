@@ -13,6 +13,8 @@ import {
 import { fCurrency, fPercent } from 'utils/formatNumber';
 
 import { CoopLabaRugiData } from '../../../../@types/finance-report';
+import { useTheme } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 
 Font.register({
   family: 'Roboto',
@@ -21,11 +23,20 @@ Font.register({
 
 // Create styles
 const styles = StyleSheet.create({
-  col4: { width: '25%' },
-  col8: { width: '75%' },
+  col3: { width: '25%' },
   col6: { width: '50%' },
-  mb8: { marginBottom: 8 },
+  col9: { width: '75%' },
+  col12: { width: '100%' },
+  height2: { height: '17%' },
+  height3: { height: '25%' },
+  height6: { height: '50%' },
+  height7: { height: '58%' },
+  height9: { height: '75%' },
+  height12: { height: '100%' },
+  mb0: { marginBottom: 0 },
+  mb15: { marginBottom: 15 },
   mb40: { marginBottom: 40 },
+  mb70: { marginBottom: 70 },
   ml05: { marginLeft: 0.5 },
   overline: {
     fontSize: 8,
@@ -113,13 +124,15 @@ export default function CoopLabaRugiReportPDF(props: {
   incomePercent: number;
   expensePercent: number;
 }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View>
           <Text style={[styles.overline]}>Laporan Laba Rugi Koperasi</Text>
         </View>
-        <View style={styles.table}>
+        <View style={[styles.table, isMobile ? styles.mb40 : styles.mb0]}>
           <View style={styles.tableHeader}>
             <View style={styles.tableRow}>
               <View style={styles.tableCell_1}>
@@ -212,21 +225,11 @@ export default function CoopLabaRugiReportPDF(props: {
             </View>
           </View>
         </View>
-        <View style={styles.gridContainer}>
-          <View style={styles.col8}>
-            <Text style={styles.subtitle2}>Statistik Saldo</Text>
-            {props.bankingBalanceStatisticsChartURI ? (
-              <Image src={props.bankingBalanceStatisticsChartURI} />
-            ) : null}
-            <Text style={styles.subtitle2}>Kategori Pengeluaran</Text>
-            {props.bankingExpenseCategoriesChartURI ? (
-              <Image src={props.bankingExpenseCategoriesChartURI} />
-            ) : null}
-          </View>
-          <View style={styles.col4}>
+        <View style={[styles.gridContainer, isMobile ? styles.mb40 : styles.mb0]}>
+          <View style={styles.col6}>
             <View style={styles.incomeRoot}>
               <View style={styles.gridContainer}>
-                <View style={styles.col8}>
+                <View style={styles.col9}>
                   <Text style={styles.subtitle2}>Pendapatan</Text>
                   <Text style={styles.h3}>
                     {fCurrency(
@@ -236,7 +239,7 @@ export default function CoopLabaRugiReportPDF(props: {
                     )}
                   </Text>
                 </View>
-                <View style={styles.col4}>
+                <View style={styles.col3}>
                   <Svg width="20" height="20">
                     <Path
                       d="M17.71 6.29a1 1 0 0 0-1.42 0L8 14.59V9a1 1 0 0 0-2 0v8a1 1 0 0 0 1 1h8a1 1 0 0 0 0-2H9.41l8.3-8.29a1 1 0 0 0 0-1.42Z"
@@ -272,9 +275,11 @@ export default function CoopLabaRugiReportPDF(props: {
                 <Image style={styles.bgGreen} src={props.bankingIncomeChartURI} />
               ) : null}
             </View>
+          </View>
+          <View style={styles.col6}>
             <View style={styles.expensesRoot}>
               <View style={styles.gridContainer}>
-                <View style={styles.col8}>
+                <View style={styles.col9}>
                   <Text style={styles.subtitle2}>Pengeluaran</Text>
                   <Text style={styles.h3}>
                     {fCurrency(
@@ -283,7 +288,7 @@ export default function CoopLabaRugiReportPDF(props: {
                     )}
                   </Text>
                 </View>
-                <View style={styles.col4}>
+                <View style={styles.col3}>
                   <Svg width="20" height="20">
                     <Path
                       d="M18 7.05a1 1 0 0 0-1-1L9 6a1 1 0 0 0 0 2h5.56l-8.27 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.42V15a1 1 0 0 0 1 1a1 1 0 0 0 1-1Z"
@@ -318,6 +323,18 @@ export default function CoopLabaRugiReportPDF(props: {
               {props.bankingExpenseChartURI ? <Image src={props.bankingExpenseChartURI} /> : null}
             </View>
           </View>
+        </View>
+        <View style={[styles.col12, isMobile ? styles.mb70 : styles.mb0]}>
+          <Text style={styles.subtitle2}>Statistik Saldo</Text>
+          {props.bankingBalanceStatisticsChartURI ? (
+            <Image src={props.bankingBalanceStatisticsChartURI} />
+          ) : null}
+        </View>
+        <View style={isMobile ? styles.col3 : styles.col6}>
+          <Text style={styles.subtitle2}>Kategori Pengeluaran</Text>
+          {props.bankingExpenseCategoriesChartURI ? (
+            <Image src={props.bankingExpenseCategoriesChartURI} />
+          ) : null}
         </View>
       </Page>
     </Document>

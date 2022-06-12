@@ -35,32 +35,43 @@ export default function ExpensesCategories(props: { dateValue: Date }) {
 
   const [chartData, setChartData] = useState<number[]>();
 
-  const [chartOptions] = useState<any>({
-    chart: { id: 'banking-expense-categories' },
-    labels: [
-      'Biaya Produksi Produk Terjual',
-      'Biaya Simpanan Pokok',
-      'Biaya Simpanan Wajib',
-      'Biaya Operasi'
-    ],
-    colors: [
-      theme.palette.primary.main,
-      theme.palette.info.darker,
-      theme.palette.chart.yellow[0],
-      theme.palette.chart.blue[0]
-    ],
-    stroke: {
-      colors: [theme.palette.background.paper]
-    },
-    fill: { opacity: 0.8 },
-    legend: {
-      position: 'bottom'
-      // itemMargin: {
-      //   horizontal: 10,
-      //   vertical: 5
-      // }
-    }
-  });
+  const [chartOptions, setChartOptions] = useState<any>();
+
+  useEffect(() => {
+    setChartOptions({
+      chart: { id: 'banking-expense-categories' },
+      labels: [
+        'Biaya Produksi Produk Terjual',
+        'Biaya Simpanan Pokok',
+        'Biaya Simpanan Wajib',
+        'Biaya Operasi'
+      ],
+      colors: [
+        theme.palette.primary.main,
+        theme.palette.info.darker,
+        theme.palette.chart.yellow[0],
+        theme.palette.chart.blue[0]
+      ],
+      stroke: {
+        colors: [theme.palette.background.paper]
+      },
+      fill: { opacity: 0.8 },
+      legend: {
+        position: isMobile ? 'bottom' : 'right',
+        itemMargin: {
+          horizontal: 10,
+          vertical: 5
+        }
+      }
+    });
+  }, [
+    isMobile,
+    theme.palette.background.paper,
+    theme.palette.primary.main,
+    theme.palette.info.darker,
+    theme.palette.chart.yellow,
+    theme.palette.chart.blue
+  ]);
 
   useEffect(() => {
     const fetchData = async () => {

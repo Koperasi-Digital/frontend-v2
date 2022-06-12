@@ -7,7 +7,7 @@ import Expenses from './Expenses';
 import ExpensesCategories from './ExpensesCategories';
 import Income from './Income';
 
-import { styled } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 
 import {
   Stack,
@@ -18,7 +18,8 @@ import {
   TableHead,
   TableCell,
   Box,
-  Typography
+  Typography,
+  useMediaQuery
 } from '@mui/material';
 
 import { fCurrency } from 'utils/formatNumber';
@@ -36,6 +37,9 @@ type LabaRugiReportProps = {
 
 export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
   const { user } = useAuth();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   interface ILabaRugiData {
     jumlahPenjualan: number;
@@ -215,25 +219,31 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
                   </Table>
                 </TableContainer>
               </Grid>
-              <Grid item xs={12} md={8}>
-                <Stack spacing={2}>
-                  <BalanceStatistics dateValue={dateValue} />
-                  <ExpensesCategories dateValue={dateValue} />
+              <Grid item xs={12} spacing={2}>
+                <Stack spacing={2} direction={isMobile ? 'column' : 'row'}>
+                  <Grid item xs={12} md={6}>
+                    <Income
+                      currentLabaRugiData={currentLabaRugiData}
+                      prevLabaRugiData={prevLabaRugiData}
+                      incomePercent={incomePercent}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Expenses
+                      currentLabaRugiData={currentLabaRugiData}
+                      prevLabaRugiData={prevLabaRugiData}
+                      expensePercent={expensePercent}
+                    />
+                  </Grid>
                 </Stack>
               </Grid>
-              <Grid item xs={12} md={4}>
-                <Stack spacing={2}>
-                  <Income
-                    currentLabaRugiData={currentLabaRugiData}
-                    prevLabaRugiData={prevLabaRugiData}
-                    incomePercent={incomePercent}
-                  />
-                  <Expenses
-                    currentLabaRugiData={currentLabaRugiData}
-                    prevLabaRugiData={prevLabaRugiData}
-                    expensePercent={expensePercent}
-                  />
-                </Stack>
+              <Grid item xs={12}>
+                <Grid item xs={12}>
+                  <BalanceStatistics dateValue={dateValue} />
+                </Grid>
+                <Grid item xs={12}>
+                  <ExpensesCategories dateValue={dateValue} />
+                </Grid>
               </Grid>
             </>
           ) : null}
