@@ -10,6 +10,7 @@ import Income from './Income';
 import { useTheme, styled } from '@mui/material/styles';
 
 import {
+  IconButton,
   Stack,
   Table,
   TableRow,
@@ -17,10 +18,15 @@ import {
   TableBody,
   TableHead,
   TableCell,
+  Tooltip,
   Typography,
   Box,
   useMediaQuery
 } from '@mui/material';
+
+import { Icon } from '@iconify/react';
+
+import questionMarkCircleOutline from '@iconify/icons-eva/question-mark-circle-outline';
 
 import { fCurrency } from 'utils/formatNumber';
 
@@ -149,42 +155,144 @@ export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProp
                     <TableBody>
                       <TableRow>
                         <TableCell align="left">1</TableCell>
-                        <TableCell align="left">Jumlah Simpanan Pokok</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                Jumlah simpanan pokok
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={
+                                'Jumlah simpanan pokok adalah nilai dana simpanan pokok yang diterima dari member selama periode yang dipilih.'
+                              }
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">
                           {fCurrency(currentCoopLabaRugiData.jumlahSimpananPokok)}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell align="left">2</TableCell>
-                        <TableCell align="left">Jumlah Simpanan Wajib</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                Jumlah simpanan wajib
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={
+                                'Jumlah simpanan wajib adalah nilai dana simpanan wajib yang diterima dari member selama periode yang dipilih.'
+                              }
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">
                           {fCurrency(currentCoopLabaRugiData.jumlahSimpananWajib)}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell align="left">3</TableCell>
-                        <TableCell align="left">Jumlah Biaya Layanan</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                Jumlah biaya layanan
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={
+                                'Jumlah biaya layanan adalah nilai dana biaya layanan yang diterima dari transaksi penjualan di E-Commerce selama periode yang dipilih.'
+                              }
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">
                           {fCurrency(currentCoopLabaRugiData.jumlahBiayaLayanan)}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell align="left">4</TableCell>
-                        <TableCell align="left">Biaya Sisa Hasil Usaha</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                Biaya sisa hasil usaha
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={
+                                'Biaya sisa hasil usaha adalah biaya sisa hasil usaha yang dibayarkan ke anggota selama periode yang dipilih'
+                              }
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">
                           {fCurrency(currentCoopLabaRugiData.biayaSisaHasilUsaha)}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell align="left">5</TableCell>
-                        <TableCell align="left">Biaya Operasi</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                Biaya operasi
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={
+                                'Biaya operasi adalah biaya yang dibayarkan karena alasan depresiasi/perbaikan peralatan/bangunan koperasi'
+                              }
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">
                           {fCurrency(currentCoopLabaRugiData.biayaOperasi)}
                         </TableCell>
                       </TableRow>
                       <RowResultStyle>
                         <TableCell width={10}></TableCell>
-                        <TableCell align="left">Net</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                Net
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={
+                                'Net adalah biaya bersih keuntungan koperasi selama periode yang dipilih'
+                              }
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">{fCurrency(currentCoopLabaRugiData.net)}</TableCell>
                       </RowResultStyle>
                     </TableBody>
