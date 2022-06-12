@@ -155,7 +155,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                         <Stack direction="row">
                           <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
                             <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
-                              Aset
+                              <strong>Aset</strong>
                             </Typography>
                           </Box>
                           <Tooltip
@@ -223,7 +223,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                         <Stack direction="row">
                           <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
                             <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
-                              Liabilitas
+                              <strong>Liabilitas</strong>
                             </Typography>
                           </Box>
                           <Tooltip
@@ -307,7 +307,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                         <Stack direction="row">
                           <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
                             <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
-                              Ekuitas
+                              <strong>Ekuitas</strong>
                             </Typography>
                           </Box>
                           <Tooltip

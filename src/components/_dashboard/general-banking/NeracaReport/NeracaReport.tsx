@@ -172,7 +172,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                         <Stack direction="row">
                           <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
                             <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
-                              Aset
+                              <strong>Aset</strong>
                             </Typography>
                           </Box>
                           <Tooltip
@@ -278,7 +278,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                         <Stack direction="row">
                           <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
                             <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
-                              Ekuitas
+                              <strong>Ekuitas</strong>
                             </Typography>
                           </Box>
                           <Tooltip

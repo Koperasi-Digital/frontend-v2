@@ -170,7 +170,7 @@ export default function ArusKasReport({ dateValue }: ArusKasReportProps) {
                         <Stack direction="row">
                           <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
                             <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
-                              Jumlah kas akhir
+                              <strong>Jumlah kas akhir</strong>
                             </Typography>
                           </Box>
                           <Tooltip

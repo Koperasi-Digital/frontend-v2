@@ -279,7 +279,7 @@ export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProp
                           <Stack direction="row">
                             <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
                               <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
-                                Net
+                                <strong>Net</strong>
                               </Typography>
                             </Box>
                             <Tooltip
