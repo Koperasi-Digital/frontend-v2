@@ -59,7 +59,6 @@ export const formats = [
   'color',
   'direction',
   'font',
-  'formula',
   'header',
   'image',
   'indent',
@@ -162,7 +161,6 @@ export default function QuillEditorToolbar({ id, isSimple, ...other }: EditorToo
         </div>
 
         <div className="ql-formats">
-          {!isSimple && <button type="button" className="ql-formula" />}
           <button type="button" className="ql-clean" />
         </div>
 
