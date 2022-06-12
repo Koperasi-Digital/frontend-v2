@@ -22,7 +22,7 @@ import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from '../../redux/store';
 import { getPostsBlogList, getPostsBlogListMore } from '../../redux/slices/blog';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // @types
 import { BlogState } from '../../@types/blog';
 // components
@@ -92,7 +92,7 @@ export default function BlogPosts() {
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Blogs"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Blogs' }]}
+          links={[{ name: 'Beranda', href: PATH_PAGE.homepage }, { name: 'Blogs' }]}
           action={
             isCustomer ? null : (
               <Stack direction="row" alignItems="center" justifyContent="space-between">

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 // material
 import { Box, Card, Divider, Container, Typography } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import Markdown from '../../components/Markdown';
@@ -37,7 +37,7 @@ export default function FAQPost() {
         <HeaderBreadcrumbs
           heading="FAQ Post"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Beranda', href: PATH_PAGE.homepage },
             {
               name: 'FAQ',
               href: PATH_DASHBOARD.general.faq

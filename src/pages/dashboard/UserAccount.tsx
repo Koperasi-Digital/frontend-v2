@@ -112,7 +112,7 @@ export default function UserAccount() {
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Akun Saya"
-          links={[{ name: 'CoopChick', href: PATH_PAGE.homepage }, { name: 'Akun Saya' }]}
+          links={[{ name: 'Beranda', href: PATH_PAGE.homepage }, { name: 'Akun Saya' }]}
         />
 
         <Tabs

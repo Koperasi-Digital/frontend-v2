@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import useAuth from '../../hooks/useAuth';
 import { getBlogByUserId } from '../../redux/slices/blog';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // @types
 import { BlogState } from '../../@types/blog';
 // components
@@ -32,7 +32,7 @@ export default function MyBlog() {
         <HeaderBreadcrumbs
           heading="Blogku"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Beranda', href: PATH_PAGE.homepage },
             {
               name: 'Blogs',
               href: PATH_DASHBOARD.general.blogs
@@ -50,7 +50,7 @@ export default function MyBlog() {
             </Button>
           }
         />
-        {ownPosts.length === 0 && <h4>Anda belum pernah membuat blog</h4>}
+
         <Grid container spacing={3}>
           {ownPosts.map((post) => (
             <BlogOwnPostCard key={post.id} post={post} />

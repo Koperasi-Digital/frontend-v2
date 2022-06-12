@@ -19,7 +19,7 @@ import { getCourseList } from '../../redux/slices/course';
 // redux
 import { RootState, useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -72,7 +72,7 @@ export default function Course() {
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Course"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Course' }]}
+          links={[{ name: 'Beranda', href: PATH_PAGE.homepage }, { name: 'Course' }]}
           action={
             isAdmin ? (
               <Button

@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_PAGE } from '../../routes/paths';
 // hooks
 import useAuth from '../../hooks/useAuth';
 // components
@@ -31,7 +31,7 @@ export default function FAQ() {
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="FAQ"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'FAQ' }]}
+          links={[{ name: 'Beranda', href: PATH_PAGE.homepage }, { name: 'FAQ' }]}
         />
         <Stack direction="column" alignItems="center" mb={5}>
           <Typography variant="h3" gutterBottom>
