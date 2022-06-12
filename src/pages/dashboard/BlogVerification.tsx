@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { BlogState } from '../../@types/blog';
 import { getBlogVerificationList, setVerified, deleteBlog } from '../../redux/slices/blog';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import Label from '../../components/Label';
@@ -151,7 +151,7 @@ export default function BlogVerification() {
         <HeaderBreadcrumbs
           heading="Blog Verification"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Beranda', href: PATH_PAGE.homepage },
             { name: 'Blog Verification', href: PATH_DASHBOARD.general.blogVerification }
           ]}
         />

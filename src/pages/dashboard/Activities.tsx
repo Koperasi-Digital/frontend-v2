@@ -64,7 +64,7 @@ export default function Activities() {
       <Container maxWidth={false}>
         <HeaderBreadcrumbs
           heading="Aktivitas"
-          links={[{ name: 'CoopChick', href: PATH_PAGE.homepage }, { name: 'Aktivitas' }]}
+          links={[{ name: 'Beranda', href: PATH_PAGE.homepage }, { name: 'Aktivitas' }]}
           action={
             <Button
               variant="contained"

@@ -1,7 +1,7 @@
 // material
 import { Container } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -16,7 +16,7 @@ export default function BlogNewPost() {
         <HeaderBreadcrumbs
           heading="Buat blog baru"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Beranda', href: PATH_PAGE.homepage },
             {
               name: 'Blogs',
               href: PATH_DASHBOARD.general.blogs

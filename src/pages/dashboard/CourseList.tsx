@@ -21,7 +21,7 @@ import {
 import { RootState, useDispatch, useSelector } from '../../redux/store';
 import { getCourseAdminList, setPublished, deleteCourse } from '../../redux/slices/course';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import Label from '../../components/Label';
@@ -155,7 +155,7 @@ export default function CourseList() {
         <HeaderBreadcrumbs
           heading="Course List"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Beranda', href: PATH_PAGE.homepage },
             { name: 'Course List', href: PATH_DASHBOARD.general.courseList }
           ]}
         />

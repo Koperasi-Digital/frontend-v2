@@ -5,7 +5,7 @@ import { Container, Typography } from '@mui/material';
 import { RootState, useDispatch, useSelector } from '../../redux/store';
 import { getOwnPosts } from '../../redux/slices/forum';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // hooks
 import useAuth from '../../hooks/useAuth';
 // components
@@ -28,7 +28,7 @@ export default function MyForum() {
         <HeaderBreadcrumbs
           heading="Forumku"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Beranda', href: PATH_PAGE.homepage },
             { name: 'Forum', href: PATH_DASHBOARD.general.forum },
             { name: user?.displayName || '' }
           ]}

@@ -6,7 +6,7 @@ import { Box, Card, Divider, Skeleton, Container, Typography } from '@mui/materi
 import { useDispatch, useSelector } from '../../redux/store';
 import { getBlogById, addView } from '../../redux/slices/blog';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // @types
 import { BlogState } from '../../@types/blog';
 // components
@@ -65,7 +65,7 @@ export default function BlogPost() {
         <HeaderBreadcrumbs
           heading="Blog Detail"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Beranda', href: PATH_PAGE.homepage },
             {
               name: 'Blogs',
               href: PATH_DASHBOARD.general.blogs

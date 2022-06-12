@@ -10,7 +10,7 @@ import { Box, Card, Skeleton, Container, Typography, Divider, Button, Stack } fr
 import { RootState, useDispatch, useSelector } from '../../redux/store';
 import { getCourseItemById } from '../../redux/slices/course';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import Markdown from '../../components/Markdown';
@@ -53,7 +53,7 @@ export default function CoursePage() {
         <HeaderBreadcrumbs
           heading="Course"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Beranda', href: PATH_PAGE.homepage },
             {
               name: 'Course',
               href: PATH_DASHBOARD.general.course
