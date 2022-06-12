@@ -179,10 +179,10 @@ export default function BankingMemberSimpananWajib() {
                 Lunas
               </MenuItem>
               <MenuItem
-                onClick={() => handleSearch('BELUM DIBAYAR')}
+                onClick={() => handleSearch('BELUM LUNAS')}
                 sx={{ typography: 'body2', py: 1, px: 2.5 }}
               >
-                Belum Dibayar
+                Belum Lunas
               </MenuItem>
             </MenuPopover>
           </Box>
