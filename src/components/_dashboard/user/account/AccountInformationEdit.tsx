@@ -52,7 +52,7 @@ export default function AccountInformationEdit() {
     validationSchema: UpdateUserSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        if (typeof values.photoURL === 'object') {
+        if (values.photoURL && typeof values.photoURL === 'object') {
           const photoFile = values.photoURL as unknown as File;
           const photoUrl = await handleUploadFile(
             photoFile,
