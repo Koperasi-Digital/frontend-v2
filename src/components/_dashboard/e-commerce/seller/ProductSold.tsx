@@ -43,7 +43,7 @@ export default function ProductSold() {
     const fetchData = async () => {
       const response = await getProductAnnualReport(storeId);
       setProductAnnualReport(response);
-      setTotalSold(response[0].total);
+      setTotalSold(response[0] ? response[0].total : 0);
     };
     fetchData();
   }, [storeId]);
