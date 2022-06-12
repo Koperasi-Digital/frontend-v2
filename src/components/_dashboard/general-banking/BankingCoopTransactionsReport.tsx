@@ -14,6 +14,7 @@ import {
   Table,
   Button,
   MenuItem,
+  Stack,
   TableRow,
   TableBody,
   TableCell,
@@ -320,8 +321,15 @@ export default function BankingCoopTransactionsReport() {
                 ))}
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={6} />
+                    <TableCell colSpan={4} />
                   </TableRow>
+                )}
+                {filteredCoopTransactionData.length === 0 && (
+                  <TableCell colSpan={5}>
+                    <Stack direction="row" justifyContent="center">
+                      Tidak ada data
+                    </Stack>
+                  </TableCell>
                 )}
               </TableBody>
             </Table>

@@ -210,6 +210,13 @@ export default function BankingMemberSimpananPokok() {
                     <TableCell colSpan={6} />
                   </TableRow>
                 )}
+                {filteredSimpananPokokData.length === 0 && (
+                  <TableCell colSpan={3}>
+                    <Stack direction="row" justifyContent="center">
+                      Tidak ada data
+                    </Stack>
+                  </TableCell>
+                )}
               </TableBody>
             </Table>
           </TableContainer>

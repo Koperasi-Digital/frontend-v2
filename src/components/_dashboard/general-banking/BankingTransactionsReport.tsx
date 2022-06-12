@@ -14,6 +14,7 @@ import {
   Table,
   Button,
   MenuItem,
+  Stack,
   TableRow,
   TableBody,
   TableCell,
@@ -352,6 +353,13 @@ export default function BankingTransactionsReport() {
                   <TableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
                   </TableRow>
+                )}
+                {filteredTransactionData.length === 0 && (
+                  <TableCell colSpan={5}>
+                    <Stack direction="row" justifyContent="center">
+                      Tidak ada data
+                    </Stack>
+                  </TableCell>
                 )}
               </TableBody>
             </Table>

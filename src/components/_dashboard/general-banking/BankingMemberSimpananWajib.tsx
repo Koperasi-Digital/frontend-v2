@@ -236,6 +236,13 @@ export default function BankingMemberSimpananWajib() {
                     <TableCell colSpan={6} />
                   </TableRow>
                 )}
+                {filteredSimpananWajibData.length === 0 && (
+                  <TableCell colSpan={3}>
+                    <Stack direction="row" justifyContent="center">
+                      Tidak ada data
+                    </Stack>
+                  </TableCell>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
