@@ -8,7 +8,8 @@ import { LoadingButton } from '@mui/lab';
 
 import CoopLabaRugiReportPDF from './CoopLabaRugiReportPDF';
 import { ExportToExcel } from 'components/ExportToExcel';
-import { Stack } from '@mui/material';
+import { Stack, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import { fCurrency, fPercent } from 'utils/formatNumber';
 
@@ -26,6 +27,10 @@ export default function CoopLabaRugiReportToolbar(props: {
     useState<string>();
   const [bankingExpenseCategoriesChartURI, setBankingExpenseCategoriesChartURI] =
     useState<string>();
+  const [isLoadingGetChartURI, setIsLoadingGetChartURI] = useState<boolean>(true);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [sheetData, setSheetData] = useState<{ No: string; Komponen: string; Jumlah: number }[]>();
 
@@ -62,6 +67,7 @@ export default function CoopLabaRugiReportToolbar(props: {
 
   const getChartURICallback = useCallback(() => {
     const getChartURI = async () => {
+      setIsLoadingGetChartURI(true);
       const bankingExpenseChartURI = await ApexCharts.exec('coop-expense-chart', 'dataURI');
       const bankingIncomeChartURI = await ApexCharts.exec('coop-income-chart', 'dataURI');
       const bankingBalanceStatisticsChartURI = await ApexCharts.exec(
@@ -82,61 +88,71 @@ export default function CoopLabaRugiReportToolbar(props: {
         setBankingIncomeChartURI(bankingIncomeChartURI.imgURI);
         setBankingBalanceStatisticsChartURI(bankingBalanceStatisticsChartURI.imgURI);
         setBankingExpenseCategoriesChartURI(bankingExpenseCategoriesChartURI.imgURI);
+        setIsLoadingGetChartURI(false);
       } else {
         setTimeout(() => {
           getChartURI();
-        }, 1000);
+        }, 1500);
       }
     };
     setTimeout(() => {
       getChartURI();
-    }, 1000);
+    }, 1500);
   }, []);
 
   useEffect(() => {
     getChartURICallback();
-  }, [props.dateValue, getChartURICallback]);
+  }, [props.dateValue, getChartURICallback, isMobile]);
 
   return props.currentCoopLabaRugiData ? (
     <>
       <Stack direction="row" spacing={2}>
-        <PDFDownloadLink
-          document={
-            <CoopLabaRugiReportPDF
-              bankingExpenseChartURI={bankingExpenseChartURI}
-              bankingIncomeChartURI={bankingIncomeChartURI}
-              bankingBalanceStatisticsChartURI={bankingBalanceStatisticsChartURI}
-              bankingExpenseCategoriesChartURI={bankingExpenseCategoriesChartURI}
-              currentCoopLabaRugiData={props.currentCoopLabaRugiData}
-              incomePercent={props.incomePercent}
-              expensePercent={props.expensePercent}
-            />
-          }
-          fileName={`LAPORAN-LABA-RUGI-KOPERASI`}
-          style={{ textDecoration: 'none' }}
-        >
-          {({ loading }) => (
-            <LoadingButton
-              size="small"
-              loading={loading}
-              variant="contained"
-              loadingPosition="end"
-              onClick={() => {
-                setTimeout(() => {
-                  getChartURICallback();
-                }, 1000);
-              }}
-              endIcon={<Icon icon={downloadFill} />}
-            >
-              Unduh Laporan Laba Rugi Koperasi
-            </LoadingButton>
-          )}
-        </PDFDownloadLink>
         {bankingExpenseChartURI &&
         bankingIncomeChartURI &&
         bankingBalanceStatisticsChartURI &&
         bankingExpenseCategoriesChartURI &&
-        sheetData ? (
+        !isLoadingGetChartURI ? (
+          <PDFDownloadLink
+            document={
+              <CoopLabaRugiReportPDF
+                bankingExpenseChartURI={bankingExpenseChartURI}
+                bankingIncomeChartURI={bankingIncomeChartURI}
+                bankingBalanceStatisticsChartURI={bankingBalanceStatisticsChartURI}
+                bankingExpenseCategoriesChartURI={bankingExpenseCategoriesChartURI}
+                currentCoopLabaRugiData={props.currentCoopLabaRugiData}
+                incomePercent={props.incomePercent}
+                expensePercent={props.expensePercent}
+              />
+            }
+            fileName={`LAPORAN-LABA-RUGI-KOPERASI`}
+            style={{ textDecoration: 'none' }}
+          >
+            {({ loading }) => (
+              <LoadingButton
+                size="small"
+                loading={loading}
+                variant="contained"
+                loadingPosition="end"
+                onClick={() => {
+                  setTimeout(() => {
+                    getChartURICallback();
+                  }, 1000);
+                }}
+                endIcon={<Icon icon={downloadFill} />}
+              >
+                Unduh Laporan Laba Rugi Koperasi
+              </LoadingButton>
+            )}
+          </PDFDownloadLink>
+        ) : (
+          <>Loading</>
+        )}
+        {bankingExpenseChartURI &&
+        bankingIncomeChartURI &&
+        bankingBalanceStatisticsChartURI &&
+        bankingExpenseCategoriesChartURI &&
+        sheetData &&
+        !isLoadingGetChartURI ? (
           <ExportToExcel
             worksheetsNames={[
               'Data Sheet',
@@ -150,7 +166,7 @@ export default function CoopLabaRugiReportToolbar(props: {
               { width: 200, height: 100 },
               { width: 200, height: 100 },
               { width: 500, height: 200 },
-              { width: 700, height: 200 }
+              { width: isMobile ? 150 : 450, height: 200 }
             ]}
             filename={'LAPORAN-LABA-RUGI-KOPERASI'}
             contents={[
@@ -194,7 +210,7 @@ export default function CoopLabaRugiReportToolbar(props: {
             onClick={() => {
               setTimeout(() => {
                 getChartURICallback();
-              }, 1000);
+              }, 1500);
             }}
           />
         ) : (
