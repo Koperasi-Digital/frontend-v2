@@ -61,39 +61,65 @@ export function isOutcome(coopTransaction: CoopTransaction) {
 
 export default function BankingCoopTransactionsReport() {
   // Transactions Filter
-  const filterDropdownRef = useRef(null);
-  const [open, setOpen] = useState(false);
-  const [filterMode, setFilterMode] = useState<string>('semua');
+  const filterTypeDropdownRef = useRef(null);
+  const filterStatusDropdownRef = useRef(null);
+  const [openTypeFilter, setOpenTypeFilter] = useState(false);
+  const [openStatusFilter, setOpenStatusFilter] = useState(false);
+  const [filterTypeMode, setFilterTypeMode] = useState<string>('semua');
+  const [filterStatusMode, setFilterStatusMode] = useState<string>('semua');
   const [allCoopTransactionData, setAllCoopTransactionData] = useState<CoopTransaction[]>([]);
   const [filteredCoopTransactionData, setFilteredCoopTransactionData] = useState<CoopTransaction[]>(
     []
   );
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleSearch = (filterName: string) => {
-    handleClose();
 
-    setFilterMode(filterName);
-
-    if (filterName === 'semua') {
-      setFilteredCoopTransactionData(allCoopTransactionData);
-    } else if (filterName === 'pemasukan') {
-      let result = [];
-      result = allCoopTransactionData.filter((data) => {
+  const handleOpenTypeFilter = () => {
+    setOpenTypeFilter(true);
+  };
+  const handleCloseTypeFilter = () => {
+    setOpenTypeFilter(false);
+  };
+  const handleOpenStatusFilter = () => {
+    setOpenStatusFilter(true);
+  };
+  const handleCloseStatusFilter = () => {
+    setOpenStatusFilter(false);
+  };
+  const handleSearch = (param: { filterType?: string; filterStatus?: string }) => {
+    let filteredCoopTransaction: CoopTransaction[] = allCoopTransactionData;
+    const typeFilter = param.filterType ? param.filterType : filterTypeMode;
+    const statusFilter = param.filterStatus ? param.filterStatus : filterStatusMode;
+    if (param.filterType) {
+      handleCloseTypeFilter();
+      setFilterTypeMode(param.filterType);
+    }
+    if (param.filterStatus) {
+      handleCloseStatusFilter();
+      setFilterStatusMode(param.filterStatus);
+    }
+    if (typeFilter === 'semua') {
+      //do nothing
+    } else if (typeFilter === 'pemasukan') {
+      filteredCoopTransaction = filteredCoopTransaction.filter((data) => {
         return !isOutcome(data);
       });
-      setFilteredCoopTransactionData(result);
-    } else if (filterName === 'pengeluaran') {
-      let result = [];
-      result = allCoopTransactionData.filter((data) => {
+    } else {
+      filteredCoopTransaction = filteredCoopTransaction.filter((data) => {
         return isOutcome(data);
       });
-      setFilteredCoopTransactionData(result);
     }
+
+    if (statusFilter === 'semua') {
+      //do nothing
+    } else if (statusFilter === 'success') {
+      filteredCoopTransaction = filteredCoopTransaction.filter((data) => {
+        return data.status === 'success';
+      });
+    } else {
+      filteredCoopTransaction = filteredCoopTransaction.filter((data) => {
+        return data.status !== 'success';
+      });
+    }
+    setFilteredCoopTransactionData(filteredCoopTransaction);
   };
 
   //Table Pagination
@@ -186,42 +212,86 @@ export default function BankingCoopTransactionsReport() {
               </Box>
             </Grid>
 
-            <Grid item sm={12} lg={4}>
+            <Grid item sm={12} lg={6}>
               <Box display="flex" justifyContent="center" alignItems="center">
-                <Button
-                  onClick={handleOpen}
-                  ref={filterDropdownRef}
-                  sx={{ typography: 'h6', py: 1, px: 2.5, border: 2 }}
-                >
-                  {filterMode}
-                  <Icon icon={arrowDownOutline} width={16} height={16} />
-                </Button>
+                <Stack direction="row" spacing={2}>
+                  <Typography sx={{ mt: 2 }}>Filter tipe transaksi:</Typography>
+                  <Button
+                    onClick={handleOpenTypeFilter}
+                    ref={filterTypeDropdownRef}
+                    sx={{ typography: 'h6', py: 1, px: 2.5, border: 2 }}
+                  >
+                    {filterTypeMode}
+                    <Icon icon={arrowDownOutline} width={16} height={16} />
+                  </Button>
 
-                <MenuPopover
-                  open={open}
-                  onClose={handleClose}
-                  anchorEl={filterDropdownRef.current}
-                  sx={{ width: 220 }}
-                >
-                  <MenuItem
-                    onClick={() => handleSearch('semua')}
-                    sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                  <MenuPopover
+                    open={openTypeFilter}
+                    onClose={handleCloseTypeFilter}
+                    anchorEl={filterTypeDropdownRef.current}
+                    sx={{ width: 220 }}
                   >
-                    Semua
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => handleSearch('pemasukan')}
-                    sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    <MenuItem
+                      onClick={() => handleSearch({ filterType: 'semua' })}
+                      sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    >
+                      Semua
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => handleSearch({ filterType: 'pemasukan' })}
+                      sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    >
+                      Pemasukan
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => handleSearch({ filterType: 'pengeluaran' })}
+                      sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    >
+                      Pengeluaran
+                    </MenuItem>
+                  </MenuPopover>
+                </Stack>
+              </Box>
+            </Grid>
+            <Grid item sm={12} lg={6}>
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <Stack direction="row" spacing={2}>
+                  <Typography sx={{ mt: 2 }}>Filter status transaksi:</Typography>
+                  <Button
+                    onClick={handleOpenStatusFilter}
+                    ref={filterStatusDropdownRef}
+                    sx={{ typography: 'h6', py: 1, px: 2.5, border: 2 }}
                   >
-                    Pemasukan
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => handleSearch('pengeluaran')}
-                    sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    {filterStatusMode}
+                    <Icon icon={arrowDownOutline} width={16} height={16} />
+                  </Button>
+
+                  <MenuPopover
+                    open={openStatusFilter}
+                    onClose={handleCloseStatusFilter}
+                    anchorEl={filterStatusDropdownRef.current}
+                    sx={{ width: 220 }}
                   >
-                    Pengeluaran
-                  </MenuItem>
-                </MenuPopover>
+                    <MenuItem
+                      onClick={() => handleSearch({ filterStatus: 'semua' })}
+                      sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    >
+                      Semua
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => handleSearch({ filterStatus: 'success' })}
+                      sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    >
+                      Berhasil
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => handleSearch({ filterStatus: 'not success' })}
+                      sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    >
+                      Tidak berhasil
+                    </MenuItem>
+                  </MenuPopover>
+                </Stack>
               </Box>
             </Grid>
           </Grid>
