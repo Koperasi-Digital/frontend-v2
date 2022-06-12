@@ -143,7 +143,7 @@ export default function DisbursementApprovalForm(props: { disbursementRequestId:
                 <div>
                   <LabelStyle>Unggah kuitansi</LabelStyle>
                   <UploadSingleFile
-                    maxSize={3145728}
+                    maxSize={6291456}
                     accept="image/*"
                     file={values.receipt}
                     onDrop={handleDrop}
