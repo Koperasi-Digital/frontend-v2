@@ -1,16 +1,12 @@
 import { useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import searchFill from '@iconify/icons-eva/search-fill';
-import trash2Fill from '@iconify/icons-eva/trash-2-fill';
 import { capitalize } from 'lodash';
 // material
-import { useTheme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import {
   Box,
   Toolbar,
-  Tooltip,
-  IconButton,
-  Typography,
   OutlinedInput,
   InputAdornment,
   FormControl,
@@ -64,7 +60,6 @@ const FilterContainer = styled(Box)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 type UserListToolbarProps = {
-  numSelected: number;
   filterName: string;
   filterRole: string;
   onFilterName: (value: string) => void;
@@ -72,15 +67,11 @@ type UserListToolbarProps = {
 };
 
 export default function UserListToolbar({
-  numSelected,
   filterName,
   filterRole,
   onFilterName,
   onFilterRole
 }: UserListToolbarProps) {
-  const theme = useTheme();
-  const isLight = theme.palette.mode === 'light';
-
   const dispatch = useDispatch();
   const { roles } = useSelector((state: RootState) => state.role);
 
@@ -89,59 +80,38 @@ export default function UserListToolbar({
   }, [dispatch]);
 
   return (
-    <RootStyle
-      sx={{
-        ...(numSelected > 0 && {
-          color: isLight ? 'primary.main' : 'text.primary',
-          bgcolor: isLight ? 'primary.lighter' : 'primary.dark'
-        })
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography component="div" variant="subtitle1">
-          {numSelected} dipilih
-        </Typography>
-      ) : (
-        <FilterContainer>
-          <RoleFormControlStyle>
-            <InputLabel id="role-filter-label">Role</InputLabel>
-            <Select
-              labelId="role-filter-label"
-              id="role-filter"
-              label="Role"
-              value={filterRole}
-              onChange={(e) => onFilterRole(e.target.value)}
-            >
-              <MenuItem value="">
-                <em>None</em>
+    <RootStyle>
+      <FilterContainer>
+        <RoleFormControlStyle>
+          <InputLabel id="role-filter-label">Role</InputLabel>
+          <Select
+            labelId="role-filter-label"
+            id="role-filter"
+            label="Role"
+            value={filterRole}
+            onChange={(e) => onFilterRole(e.target.value)}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {roles.map(({ id, name }) => (
+              <MenuItem key={id} value={name}>
+                {capitalize(name)}
               </MenuItem>
-              {roles.map(({ id, name }) => (
-                <MenuItem key={id} value={name}>
-                  {capitalize(name)}
-                </MenuItem>
-              ))}
-            </Select>
-          </RoleFormControlStyle>
-          <SearchStyle
-            value={filterName}
-            onChange={(e) => onFilterName(e.target.value)}
-            placeholder="Cari nama atau email..."
-            startAdornment={
-              <InputAdornment position="start">
-                <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
-              </InputAdornment>
-            }
-          />
-        </FilterContainer>
-      )}
-
-      {numSelected > 0 && (
-        <Tooltip title="Delete">
-          <IconButton>
-            <Icon icon={trash2Fill} />
-          </IconButton>
-        </Tooltip>
-      )}
+            ))}
+          </Select>
+        </RoleFormControlStyle>
+        <SearchStyle
+          value={filterName}
+          onChange={(e) => onFilterName(e.target.value)}
+          placeholder="Cari nama atau email..."
+          startAdornment={
+            <InputAdornment position="start">
+              <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
+            </InputAdornment>
+          }
+        />
+      </FilterContainer>
     </RootStyle>
   );
 }
