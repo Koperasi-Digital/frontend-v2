@@ -79,21 +79,23 @@ export default function CheckoutShipmentDialog({
 
   // Retrieve all delivery options
   useEffect(() => {
-    let weightTotal = 0;
-    cartStore.forEach((cartItem) => {
-      weightTotal += cartItem.weight * cartItem.quantity;
-    });
-    const shipmentInfo: ShipmentForm = {
-      origin: getCityIDByName(origin),
-      destination: getCityIDByName(destination),
-      weight: weightTotal
-    };
-    const fetchShippingData = async (shipmentInfo: ShipmentForm) => {
-      const response: ShipmentOptions[] = await getAllShipmentCost(shipmentInfo);
-      setDeliveryOptions(response);
-    };
-    fetchShippingData(shipmentInfo);
-  }, [origin, destination, cartStore]);
+    if (open) {
+      let weightTotal = 0;
+      cartStore.forEach((cartItem) => {
+        weightTotal += cartItem.weight * cartItem.quantity;
+      });
+      const shipmentInfo: ShipmentForm = {
+        origin: getCityIDByName(origin),
+        destination: getCityIDByName(destination),
+        weight: weightTotal
+      };
+      const fetchShippingData = async (shipmentInfo: ShipmentForm) => {
+        const response: ShipmentOptions[] = await getAllShipmentCost(shipmentInfo);
+        setDeliveryOptions(response);
+      };
+      fetchShippingData(shipmentInfo);
+    }
+  }, [origin, destination, cartStore, open]);
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={() => onClose(false)}>
