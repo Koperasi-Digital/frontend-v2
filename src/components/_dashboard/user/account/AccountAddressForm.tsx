@@ -50,7 +50,9 @@ export default function AccountAddressForm({
     state: Yup.string().required('Provinsi harus diisi'),
     city: Yup.string().required('Kota harus diisi'),
     address: Yup.string().required('Alamat harus diisi'),
-    zipCode: Yup.string().required('Kode pos harus diisi')
+    zipCode: Yup.string()
+      .required('Kode pos harus diisi')
+      .matches(/^([1-9])[0-9]{4}$/, 'Kode pos tidak valid')
   });
 
   const formik = useFormik({

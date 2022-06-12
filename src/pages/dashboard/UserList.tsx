@@ -4,7 +4,6 @@ import {
   Card,
   Table,
   Stack,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -93,7 +92,6 @@ export default function UserList() {
   const { userList } = useSelector((state: RootState) => state.user);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-  const [selected, setSelected] = useState<string[]>([]);
   const [orderBy, setOrderBy] = useState('created_at');
   const [filterName, setFilterName] = useState('');
   const [filterRole, setFilterRole] = useState('');
@@ -107,33 +105,6 @@ export default function UserList() {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (checked: boolean) => {
-    if (checked) {
-      const newSelecteds = userList.map((n) => n.displayName);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: string[] = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -173,7 +144,6 @@ export default function UserList() {
 
         <Card>
           <UserListToolbar
-            numSelected={selected.length}
             filterName={filterName}
             filterRole={filterRole}
             onFilterName={handleFilterByName}
@@ -187,10 +157,7 @@ export default function UserList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userList.length}
-                  numSelected={selected.length}
                   onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredUsers
@@ -198,24 +165,10 @@ export default function UserList() {
                     .map((row) => {
                       const { id, displayName, roles, email, photoURL, created_at } = row;
                       const userData = { id, displayName, email, photoURL, roles, created_at };
-                      const isItemSelected = selected.indexOf(displayName) !== -1;
                       const defaultAvatar = photoURL ? null : createAvatar(displayName);
 
                       return (
-                        <TableRow
-                          hover
-                          key={id}
-                          tabIndex={-1}
-                          role="checkbox"
-                          selected={isItemSelected}
-                          aria-checked={isItemSelected}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={isItemSelected}
-                              onClick={() => handleClick(displayName)}
-                            />
-                          </TableCell>
+                        <TableRow hover key={id}>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <MAvatar
