@@ -152,99 +152,95 @@ export default function CheckoutDelivery({
           const cartItem = cartGroupByStore[store][0];
           const store_city = cartGroupByStore[store][0].store_city;
           return (
-            <>
-              <Box sx={{ mb: 2 }}>
-                <StoreStyle>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Icon icon="dashicons:store" width={48} height={48} />
-                    <Box sx={{ px: 2 }}>
-                      <Typography variant="subtitle2">{store}</Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        {store_city}
-                      </Typography>
+            <Box key={idx} sx={{ mb: 2 }}>
+              <StoreStyle>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Icon icon="dashicons:store" width={48} height={48} />
+                  <Box sx={{ px: 2 }}>
+                    <Typography variant="subtitle2">{store}</Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      {store_city}
+                    </Typography>
 
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center'
-                        }}
-                      ></Box>
-                    </Box>
-                  </Box>
-
-                  <Box>
                     <Box
                       sx={{
-                        py: 3,
-                        flexGrow: 1,
                         display: 'flex',
-                        alignItems: 'right'
+                        alignItems: 'center'
                       }}
-                    >
-                      <Box sx={{ mr: 1, maxHeight: 40 }}>
-                        {cartItem.shipment && cartItem.shipment_price ? (
-                          <>
-                            <Stack direction="row" alignItems="center" justifyContent="cener">
-                              <MHidden width="smDown">
-                                <Box
-                                  component="img"
-                                  alt="ONGKIR"
-                                  src={
-                                    icons[
-                                      cartItem.shipment
-                                        .split(' ')[0]
-                                        .toLowerCase() as keyof IconType
-                                    ]
-                                  }
-                                  sx={{
-                                    mr: 1,
-                                    maxHeight: 30
-                                  }}
-                                />
-                              </MHidden>
-                              <Box sx={{ ml: 1 }}>
-                                <Typography variant="subtitle2" alignItems="right">
-                                  {cartItem.shipment}
-                                </Typography>
-                                <Typography
-                                  variant="body2"
-                                  sx={{ color: 'text.secondary' }}
-                                  alignItems="right"
-                                >
-                                  {fCurrency(
-                                    cartGroupByStore[store].reduce(
-                                      (a, b) => a + (b.shipment_price || 0),
-                                      0
-                                    )
-                                  )}
-                                </Typography>
-                              </Box>
-                              <IconButton
-                                onClick={() => handleOpenModalShipment(idx, store_city!, store)}
+                    ></Box>
+                  </Box>
+                </Box>
+
+                <Box>
+                  <Box
+                    sx={{
+                      py: 3,
+                      flexGrow: 1,
+                      display: 'flex',
+                      alignItems: 'right'
+                    }}
+                  >
+                    <Box sx={{ mr: 1, maxHeight: 40 }}>
+                      {cartItem.shipment && cartItem.shipment_price ? (
+                        <>
+                          <Stack direction="row" alignItems="center" justifyContent="cener">
+                            <MHidden width="smDown">
+                              <Box
+                                component="img"
+                                alt="ONGKIR"
+                                src={
+                                  icons[
+                                    cartItem.shipment.split(' ')[0].toLowerCase() as keyof IconType
+                                  ]
+                                }
+                                sx={{
+                                  mr: 1,
+                                  maxHeight: 30
+                                }}
+                              />
+                            </MHidden>
+                            <Box sx={{ ml: 1 }}>
+                              <Typography variant="subtitle2" alignItems="right">
+                                {cartItem.shipment}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                sx={{ color: 'text.secondary' }}
+                                alignItems="right"
                               >
-                                <Icon icon={editFill} width={20} height={20} />
-                              </IconButton>
-                            </Stack>
-                          </>
-                        ) : (
-                          <LoadingButton
-                            fullWidth
-                            size="medium"
-                            type="submit"
-                            variant="outlined"
-                            startIcon={<Icon icon="fe:truck" />}
-                            onClick={() => handleOpenModalShipment(idx, store_city!, store)}
-                          >
-                            Pilih Pengiriman
-                          </LoadingButton>
-                        )}
-                      </Box>
+                                {fCurrency(
+                                  cartGroupByStore[store].reduce(
+                                    (a, b) => a + (b.shipment_price || 0),
+                                    0
+                                  )
+                                )}
+                              </Typography>
+                            </Box>
+                            <IconButton
+                              onClick={() => handleOpenModalShipment(idx, store_city!, store)}
+                            >
+                              <Icon icon={editFill} width={20} height={20} />
+                            </IconButton>
+                          </Stack>
+                        </>
+                      ) : (
+                        <LoadingButton
+                          fullWidth
+                          size="medium"
+                          type="submit"
+                          variant="outlined"
+                          startIcon={<Icon icon="fe:truck" />}
+                          onClick={() => handleOpenModalShipment(idx, store_city!, store)}
+                        >
+                          Pilih Pengiriman
+                        </LoadingButton>
+                      )}
                     </Box>
                   </Box>
-                </StoreStyle>
-                <ProductItemList cart={cartGroupByStore[store]} />
-              </Box>
-            </>
+                </Box>
+              </StoreStyle>
+              <ProductItemList cart={cartGroupByStore[store]} />
+            </Box>
           );
         })}
         <CheckoutShipmentDialogV2

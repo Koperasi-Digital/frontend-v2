@@ -151,20 +151,26 @@ export default function OrderDetailsSummary({
     ['Tanggal Pemesanan', fDateTime(order.timestamp)],
     ['Nama Produk', product.name],
     ['Nama Toko', product.store.name],
-    ['Nama Pembeli', order.user.displayName],
+    ['No Telp Toko', product.store.phoneNumber],
     ['Jumlah', quantity],
     ['Total', fCurrency(subtotal)],
     ['Status', status]
   ];
 
   const shipmentInfo = [
+    ['Nama Pembeli', order.user.displayName],
     ['Jenis Pengiriman', shipment],
     ['Ongkos Kirim', fCurrency(shipment_price)],
-    ['Alamat', 'Jalan Ganesha No. 10, Dago, Coblong, Bandung']
+    ['No Telp Pembeli', order.address?.phoneNumber],
+    [
+      'Alamat',
+      `${order.address?.address}, ${order.address?.city}, ${order.address?.state}, ${order.address?.country} ${order.address?.zipCode}`
+    ]
   ];
 
   const [isOpenModalUpdateStatus, setIsOpenModalUpdateStatus] = useState<boolean>(false);
   const nextStatus = getNextStatus(status);
+  console.log(nextStatus);
 
   // const { currentRole, user } = useAuth();
 
