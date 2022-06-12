@@ -161,10 +161,14 @@ export default function OrderDetailsSummary({
     ['Nama Pembeli', order.user.displayName],
     ['Jenis Pengiriman', shipment],
     ['Ongkos Kirim', fCurrency(shipment_price)],
-    ['No Telp Pembeli', order.address?.phoneNumber],
+    ['No Telp Pembeli', order.address?.phoneNumber || '-'],
     [
       'Alamat',
-      `${order.address?.address}, ${order.address?.city}, ${order.address?.state}, ${order.address?.country} ${order.address?.zipCode}`
+      order.address
+        ? `${order.address?.address || ''}, ${order.address?.city || ''}, ${
+            order.address?.state || ''
+          }, ${order.address?.country || ''} ${order.address?.zipCode || ''}`
+        : '-'
     ]
   ];
 
