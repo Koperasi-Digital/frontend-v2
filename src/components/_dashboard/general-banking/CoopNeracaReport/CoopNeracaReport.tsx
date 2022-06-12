@@ -5,6 +5,7 @@ import { handleGetCoopNeracaInfo } from 'utils/financeAxios/financeCoopReport';
 import { styled } from '@mui/material/styles';
 
 import {
+  IconButton,
   Stack,
   Table,
   TableRow,
@@ -12,9 +13,14 @@ import {
   TableBody,
   TableHead,
   TableCell,
+  Tooltip,
   Box,
   Typography
 } from '@mui/material';
+
+import { Icon } from '@iconify/react';
+
+import questionMarkCircleOutline from '@iconify/icons-eva/question-mark-circle-outline';
 
 import { fCurrency } from 'utils/formatNumber';
 
@@ -105,54 +111,216 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                   <TableBody>
                     <TableRow>
                       <TableCell align="left">1</TableCell>
-                      <TableCell align="left">Kas</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Kas
+                            </Typography>
+                          </Box>
+                          <Tooltip title={'Kas adalah jumlah kas yang dimiliki oleh koperasi.'}>
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(coopNeracaData.kas)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">2</TableCell>
-                      <TableCell align="left">Aset Tetap</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Aset tetap
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Aset tetap adalah nilai aset tetap baik peralatan maupun bangunan yang dimiliki oleh koperasi.'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(coopNeracaData.asetTetap)}</TableCell>
                     </TableRow>
                     <RowResultStyle>
                       <TableCell width={10}></TableCell>
-                      <TableCell align="left">Aset</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Aset
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Aset adalah seluruh kepemilikan yang koperasi punya (lengan kiri dari neraca).'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(coopNeracaData.aset)}</TableCell>
                     </RowResultStyle>
                     <TableRow>
                       <TableCell align="left">3</TableCell>
-                      <TableCell align="left">Saldo Member</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Saldo member
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Saldo member adalah nilai total seluruh saldo dari anggota koperasi yang belum dicairkan.'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(coopNeracaData.saldoMember)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">4</TableCell>
-                      <TableCell align="left">Simpanan Sukarela Member</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Simpanan sukarela member
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Simpanan sukarela member adalah nilai total seluruh simpanan sukarela dari anggota koperasi yang belum dicairkan.'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">
                         {fCurrency(coopNeracaData.simpananSukarela)}
                       </TableCell>
                     </TableRow>
                     <RowResultStyle>
                       <TableCell width={10}></TableCell>
-                      <TableCell align="left">Liabilitas</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Liabilitas
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Liabilitas adalah bagian aset yang tidak bersih / perlu dikembalikan di kemudian hari. (lengan kiri koperasi)'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(coopNeracaData.liabilitas)}</TableCell>
                     </RowResultStyle>
                     <TableRow>
                       <TableCell align="left">5</TableCell>
-                      <TableCell align="left">Pendapatan</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Pendapatan
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Pendapatan adalah keuntungan koperasi yang terdiri dari pembayaran simpanan pokok dan wajib maupun penerimaan biaya layanan di E-Commerce.'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(coopNeracaData.pendapatan)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">6</TableCell>
-                      <TableCell align="left">Modal</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Modal
+                            </Typography>
+                          </Box>
+                          <Tooltip title={'Modal adalah total aset Anda dari periode sebelumnya.'}>
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(coopNeracaData.modal)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">7</TableCell>
-                      <TableCell align="left">Beban</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Beban
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Beban adalah biaya yang perlu dibayarkan pada periode saat ini dapat berupa biaya SHU maupun depresiasi/perbaikan peralatan.'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(coopNeracaData.beban)}</TableCell>
                     </TableRow>
                     <RowResultStyle>
                       <TableCell width={10}></TableCell>
-                      <TableCell align="left">Ekuitas</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Ekuitas
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Ekuitas adalah kepemilikan bersih yang koperasi punya (lengan kanan dari neraca: Aset-Liabilitas).'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(coopNeracaData.ekuitas)}</TableCell>
                     </RowResultStyle>
                   </TableBody>

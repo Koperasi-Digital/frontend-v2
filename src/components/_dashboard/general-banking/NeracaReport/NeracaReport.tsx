@@ -5,6 +5,7 @@ import { handleGetNeracaInfo } from 'utils/financeAxios/financeReport';
 import { styled } from '@mui/material/styles';
 
 import {
+  IconButton,
   Stack,
   Table,
   TableRow,
@@ -12,9 +13,14 @@ import {
   TableBody,
   TableHead,
   TableCell,
+  Tooltip,
   Box,
   Typography
 } from '@mui/material';
+
+import { Icon } from '@iconify/react';
+
+import questionMarkCircleOutline from '@iconify/icons-eva/question-mark-circle-outline';
 
 import { fCurrency } from 'utils/formatNumber';
 
@@ -104,47 +110,188 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                   <TableBody>
                     <TableRow>
                       <TableCell align="left">1</TableCell>
-                      <TableCell align="left">Kas</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Kas
+                            </Typography>
+                          </Box>
+                          <Tooltip title={'Kas adalah jumlah saldo yang dipunyai oleh Anda.'}>
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(neracaData.kas)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">2</TableCell>
-                      <TableCell align="left">Persediaan</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Persediaan
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={'Persediaan adalah total bahan baku tersedia di toko Anda.'}
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(neracaData.persediaan)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">3</TableCell>
-                      <TableCell align="left">Simpanan Sukarela</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Simpanan sukarela
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={'Simpanan sukarela adalah jumlah simpanan sukarela Anda.'}
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(neracaData.simpananSukarela)}</TableCell>
                     </TableRow>
                     <RowResultStyle>
                       <TableCell width={10}></TableCell>
-                      <TableCell align="left">Aset</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Aset
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Aset adalah seluruh kepemilikan yang Anda punya (lengan kiri dari neraca).'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(neracaData.aset)}</TableCell>
                     </RowResultStyle>
                     <TableRow>
                       <TableCell align="left">4</TableCell>
-                      <TableCell align="left">Pendapatan</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Pendapatan
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Pendapatan adalah keuntungan jumlah penjualan bersih dari penjualan di toko maupun penerimaan SHU pada periode yand dipilih'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(neracaData.pendapatan)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">5</TableCell>
-                      <TableCell align="left">Modal</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Modal
+                            </Typography>
+                          </Box>
+                          <Tooltip title={'Modal adalah total aset Anda dari periode sebelumnya.'}>
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(neracaData.modal)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">6</TableCell>
-                      <TableCell align="left">Prive</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Prive
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Prive adalah jumlah penarikan dana yang dilakukan pada periode ini (berupa penarikan saldo/simpanan sukarela).'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(neracaData.prive)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">7</TableCell>
-                      <TableCell align="left">Beban</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Beban
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Beban adalah biaya yang perlu dibayarkan pada periode saat ini dapat berupa biaya simpanan pokok/simpanan wajib/ biaya layanan pada E-Commerce.'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(neracaData.beban)}</TableCell>
                     </TableRow>
                     <RowResultStyle>
                       <TableCell width={10}></TableCell>
-                      <TableCell align="left">Ekuitas</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Ekuitas
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Ekuitas adalah kepemilikan bersih yang Anda punya (lengan kanan dari neraca).'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(neracaData.ekuitas)}</TableCell>
                     </RowResultStyle>
                   </TableBody>
