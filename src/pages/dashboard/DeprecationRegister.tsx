@@ -1,5 +1,5 @@
 // material
-import { Container, Grid, Card, useMediaQuery } from '@mui/material';
+import { Container, Grid, Card, useMediaQuery, Typography } from '@mui/material';
 
 // components
 import Page from '../../components/Page';
@@ -26,6 +26,12 @@ export default function DeprecationRegister() {
         />
         <Card sx={{ padding: isMobile ? 2 : 10, paddingTop: 10 }}>
           <Grid container spacing={3} justifyContent="center">
+            <Typography paddingX={5} justifyContent="center" textAlign="center">
+              Biaya depresiasi adalah biaya yang muncul karena adanya penggunaan aset tetap yang
+              dipakai secara terus menerus sehingga penyusutan manfaat serta kualitasnya. <br />
+              Silahkan daftarkan depresiasi setiap bulannya ( terhitung dari tanggal
+              pembelian/perolehan aset tersebut )
+            </Typography>
             <Grid item xs={12}>
               <DeprecationRegisterForm />
             </Grid>

@@ -4,15 +4,22 @@ import { Form, FormikProvider, useFormik } from 'formik';
 // material
 import { LoadingButton } from '@mui/lab';
 import {
+  Box,
   Card,
   FormControlLabel,
   FormLabel,
   Grid,
+  IconButton,
   Radio,
   RadioGroup,
   Stack,
-  TextField
+  TextField,
+  Tooltip
 } from '@mui/material';
+
+import { Icon } from '@iconify/react';
+
+import questionMarkCircleOutline from '@iconify/icons-eva/question-mark-circle-outline';
 
 import { handleRegisterNewEquipment } from 'utils/financeAxios/financeCoopReport';
 
@@ -70,8 +77,36 @@ export default function EquipmentRegisterForm() {
                     aria-labelledby="demo-controlled-radio-buttons-group"
                     {...getFieldProps('source')}
                   >
-                    <FormControlLabel value="KAS" control={<Radio />} label="KAS" />
-                    <FormControlLabel value="MODAL" control={<Radio />} label="MODAL" />
+                    <Stack direction="row">
+                      <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                        <FormControlLabel value="KAS" control={<Radio />} label="Kas" />
+                      </Box>
+                      <Box sx={{ mt: 0.6 }}>
+                        <Tooltip
+                          title={'Pilih "Kas" jika peralatan dibeli menggunakan kas koperasi'}
+                        >
+                          <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
+                    </Stack>
+                    <Stack direction="row">
+                      <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                        <FormControlLabel value="MODAL" control={<Radio />} label="Pemberian" />
+                      </Box>
+                      <Box sx={{ mt: 0.6 }}>
+                        <Tooltip
+                          title={
+                            'Pilih "Pemberian" jika peralatan diberikan, pada laporan keuangan akan dimodifikasi pada field modal'
+                          }
+                        >
+                          <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
+                    </Stack>
                   </RadioGroup>
                 </Stack>
               </Stack>

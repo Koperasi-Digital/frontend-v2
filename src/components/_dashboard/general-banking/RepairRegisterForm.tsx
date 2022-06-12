@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import { Form, FormikProvider, useFormik } from 'formik';
 // material
 import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Stack, TextField } from '@mui/material';
+import { Card, Grid, Stack, TextField, Typography } from '@mui/material';
 
 import { handleRegisterEquipmentRepairment } from 'utils/financeAxios/financeCoopReport';
 import { fCurrency } from 'utils/formatNumber';
@@ -49,10 +49,13 @@ export default function RepairRegisterForm() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12}>
             <Card sx={{ p: 1 }}>
-              <Stack spacing={1}>
+              <Stack direction="row" spacing={3}>
+                <Typography variant="inherit" sx={{ mt: '1rem' }}>
+                  Rp
+                </Typography>
                 <TextField
                   fullWidth
-                  label="Jumlah"
+                  label="Nominal"
                   {...getFieldProps('amount')}
                   error={Boolean(touched.amount && errors.amount)}
                   helperText={touched.amount && errors.amount}
