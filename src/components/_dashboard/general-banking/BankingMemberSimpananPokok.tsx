@@ -153,10 +153,10 @@ export default function BankingMemberSimpananPokok() {
                 Lunas
               </MenuItem>
               <MenuItem
-                onClick={() => handleSearch('BELUM DIBAYAR')}
+                onClick={() => handleSearch('BELUM LUNAS')}
                 sx={{ typography: 'body2', py: 1, px: 2.5 }}
               >
-                Belum Dibayar
+                Belum Lunas
               </MenuItem>
             </MenuPopover>
           </Box>
@@ -200,7 +200,7 @@ export default function BankingMemberSimpananPokok() {
                         variant={isLight ? 'ghost' : 'filled'}
                         color={(isLunas(row) && 'success') || 'error'}
                       >
-                        {sentenceCase(isLunas(row) ? 'LUNAS' : 'BELUM DIBAYAR')}
+                        {sentenceCase(isLunas(row) ? 'LUNAS' : 'BELUM LUNAS')}
                       </Label>
                     </TableCell>
                   </TableRow>
@@ -209,6 +209,13 @@ export default function BankingMemberSimpananPokok() {
                   <TableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
                   </TableRow>
+                )}
+                {filteredSimpananPokokData.length === 0 && (
+                  <TableCell colSpan={3}>
+                    <Stack direction="row" justifyContent="center">
+                      Tidak ada data
+                    </Stack>
+                  </TableCell>
                 )}
               </TableBody>
             </Table>

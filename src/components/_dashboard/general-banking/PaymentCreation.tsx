@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { handleCreateTransaction } from '../../../utils/financeAxios/financeTransaction';
 import { useSnackbar } from 'notistack';
 
+import { DialogAnimate } from 'components/animate';
+
 // redux
 import { RootState, useSelector } from 'redux/store';
 import { useDispatch } from 'redux/store';
@@ -13,7 +15,7 @@ import {
 
 // material
 import { LoadingButton } from '@mui/lab';
-import { Typography } from '@mui/material';
+import { DialogActions, DialogTitle, Typography, Stack, Button } from '@mui/material';
 
 type PaymentCreationProps = {
   buttonName: string;
@@ -116,6 +118,7 @@ const PaymentCreation = ({
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { isLoadingCharge } = useSelector((state: RootState) => state.emoney);
+  const [isOpenGopayPopUp, setIsOpenGopayPopUp] = useState<boolean>(false);
   const [loadingSnap, setLoadingSnap] = useState<boolean>(false);
   const [payAccountExist, setPayAccountExist] = useState<Boolean>(false);
 
@@ -147,24 +150,61 @@ const PaymentCreation = ({
     fetchPayAccount();
   }, []);
 
+  const PaymentButton = () => {
+    return (
+      <LoadingButton
+        variant="contained"
+        loading={isLoadingCharge || loadingSnap}
+        onClick={() => {
+          paymentFunction(
+            setLoadingSnap,
+            paymentType,
+            transaction_details,
+            dispatch,
+            enqueueSnackbar
+          );
+        }}
+      >
+        {buttonName !== 'GOPAY TERDAFTAR' ? buttonName : 'YA'}
+      </LoadingButton>
+    );
+  };
+
   return (
     <>
-      {paymentType === 'OTHER' || payAccountExist ? (
-        <LoadingButton
-          variant="contained"
-          loading={isLoadingCharge || loadingSnap}
-          onClick={() => {
-            paymentFunction(
-              setLoadingSnap,
-              paymentType,
-              transaction_details,
-              dispatch,
-              enqueueSnackbar
-            );
-          }}
-        >
-          {buttonName}
-        </LoadingButton>
+      {paymentType === 'OTHER' ? (
+        <PaymentButton />
+      ) : payAccountExist ? (
+        <>
+          <DialogAnimate
+            open={isOpenGopayPopUp}
+            onClose={() => {
+              setIsOpenGopayPopUp(false);
+            }}
+          >
+            <DialogTitle sx={{ pb: 1 }}>Apakah anda yakin ingin membayar dengan gopay?</DialogTitle>
+            <DialogActions>
+              <Stack direction="row" spacing={2}>
+                <PaymentButton />
+                <Button
+                  onClick={() => {
+                    setIsOpenGopayPopUp(false);
+                  }}
+                >
+                  Tidak
+                </Button>
+              </Stack>
+            </DialogActions>
+          </DialogAnimate>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setIsOpenGopayPopUp(true);
+            }}
+          >
+            GOPAY TERDAFTAR
+          </Button>
+        </>
       ) : !payAccountExist ? (
         <Typography>Belum ada akun gopay terdaftar</Typography>
       ) : null}

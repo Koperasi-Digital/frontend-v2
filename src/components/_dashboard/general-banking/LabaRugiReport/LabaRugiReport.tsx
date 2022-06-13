@@ -7,9 +7,10 @@ import Expenses from './Expenses';
 import ExpensesCategories from './ExpensesCategories';
 import Income from './Income';
 
-import { styled } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 
 import {
+  IconButton,
   Stack,
   Table,
   TableRow,
@@ -17,9 +18,15 @@ import {
   TableBody,
   TableHead,
   TableCell,
+  Tooltip,
   Box,
-  Typography
+  Typography,
+  useMediaQuery
 } from '@mui/material';
+
+import { Icon } from '@iconify/react';
+
+import questionMarkCircleOutline from '@iconify/icons-eva/question-mark-circle-outline';
 
 import { fCurrency } from 'utils/formatNumber';
 
@@ -36,6 +43,9 @@ type LabaRugiReportProps = {
 
 export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
   const { user } = useAuth();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   interface ILabaRugiData {
     jumlahPenjualan: number;
@@ -166,74 +176,197 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
                     <TableBody>
                       <TableRow>
                         <TableCell align="left">1</TableCell>
-                        <TableCell align="left">Jumlah Penjualan</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                Jumlah penjualan
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={
+                                'Jumlah penjualan adalah nilai dana yang didapatkan dari penjualan di E-Commerce selama periode yang dipilih.'
+                              }
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">
                           {fCurrency(currentLabaRugiData.jumlahPenjualan)}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell align="left">2</TableCell>
-                        <TableCell align="left">Sisa Hasil Usaha</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                Sisa hasil usaha
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={
+                                'Sisa hasil usaha adalah nilai dana yang didapatkan dari penerimaan sisa hasil usaha selama periode yang dipilih.'
+                              }
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">
                           {fCurrency(currentLabaRugiData.sisaHasilUsaha)}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell align="left">3</TableCell>
-                        <TableCell align="left">Biaya Produksi Produk Terjual</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                Biaya produksi produk terjual
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={
+                                'Biaya produksi produk terjual adalah nilai dana bahan baku selama penjualan barang di E-Commerce selama periode yang dipilih.'
+                              }
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">
                           {fCurrency(currentLabaRugiData.biayaProduksiProdukTerjual)}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell align="left">4</TableCell>
-                        <TableCell align="left">Biaya Simpanan Pokok</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                Biaya simpanan pokok
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={
+                                'Biaya simpanan pokok adalah nilai dana simpanan pokok yang Anda bayar selama periode yang dipilih.'
+                              }
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">
                           {fCurrency(currentLabaRugiData.biayaSimpananPokok)}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell align="left">5</TableCell>
-                        <TableCell align="left">Biaya Simpanan Wajib</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                Biaya simpanan wajib
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={
+                                'Biaya simpanan wajib adalah nilai dana simpanan wajib yang Anda bayar selama periode yang dipilih.'
+                              }
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">
                           {fCurrency(currentLabaRugiData.biayaSimpananWajib)}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell align="left">5</TableCell>
-                        <TableCell align="left">Biaya Operasi</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                Biaya operasi
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={
+                                'Biaya operasi adalah dana operasi (biaya layanan) yang dibayar oleh Anda saat melakukan penjualan barang di E-Commerce selama periode yang dipilih.'
+                              }
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">
                           {fCurrency(currentLabaRugiData.biayaOperasi)}
                         </TableCell>
                       </TableRow>
                       <RowResultStyle>
                         <TableCell width={10}></TableCell>
-                        <TableCell align="left">Net</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row">
+                            <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                                <strong>Net</strong>
+                              </Typography>
+                            </Box>
+                            <Tooltip
+                              title={'Net adalah keuntungan Anda selama periode yang dipilih.'}
+                            >
+                              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">{fCurrency(currentLabaRugiData.net)}</TableCell>
                       </RowResultStyle>
                     </TableBody>
                   </Table>
                 </TableContainer>
               </Grid>
-              <Grid item xs={12} md={8}>
-                <Stack spacing={2}>
-                  <BalanceStatistics dateValue={dateValue} />
-                  <ExpensesCategories dateValue={dateValue} />
+              <Grid item xs={12} spacing={2}>
+                <Stack spacing={2} direction={isMobile ? 'column' : 'row'}>
+                  <Grid item xs={12} md={6}>
+                    <Income
+                      currentLabaRugiData={currentLabaRugiData}
+                      prevLabaRugiData={prevLabaRugiData}
+                      incomePercent={incomePercent}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Expenses
+                      currentLabaRugiData={currentLabaRugiData}
+                      prevLabaRugiData={prevLabaRugiData}
+                      expensePercent={expensePercent}
+                    />
+                  </Grid>
                 </Stack>
               </Grid>
-              <Grid item xs={12} md={4}>
-                <Stack spacing={2}>
-                  <Income
-                    currentLabaRugiData={currentLabaRugiData}
-                    prevLabaRugiData={prevLabaRugiData}
-                    incomePercent={incomePercent}
-                  />
-                  <Expenses
-                    currentLabaRugiData={currentLabaRugiData}
-                    prevLabaRugiData={prevLabaRugiData}
-                    expensePercent={expensePercent}
-                  />
-                </Stack>
+              <Grid item xs={12}>
+                <Grid item xs={12}>
+                  <BalanceStatistics dateValue={dateValue} />
+                </Grid>
+                <Grid item xs={12}>
+                  <ExpensesCategories dateValue={dateValue} />
+                </Grid>
               </Grid>
             </>
           ) : null}

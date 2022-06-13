@@ -14,6 +14,7 @@ import {
   Table,
   Button,
   MenuItem,
+  Stack,
   TableRow,
   TableBody,
   TableCell,
@@ -66,39 +67,64 @@ export function isOutcome(transaction: Transaction, userId: number) {
 
 export default function BankingTransactionsReport() {
   // Transactions Filter
-  const filterDropdownRef = useRef(null);
-  const [open, setOpen] = useState(false);
-  const [filterMode, setFilterMode] = useState<string>('semua');
+  const filterTypeDropdownRef = useRef(null);
+  const filterStatusDropdownRef = useRef(null);
+  const [openTypeFilter, setOpenTypeFilter] = useState(false);
+  const [openStatusFilter, setOpenStatusFilter] = useState(false);
+  const [filterTypeMode, setFilterTypeMode] = useState<string>('semua');
+  const [filterStatusMode, setFilterStatusMode] = useState<string>('semua');
   const [allTransactionData, setAllTransactionData] = useState<Transaction[]>([]);
   const [filteredTransactionData, setFilteredTransactionData] = useState<Transaction[]>([]);
   const { user } = useAuth();
   const userId = user?.id;
-  const handleOpen = () => {
-    setOpen(true);
+  const handleOpenTypeFilter = () => {
+    setOpenTypeFilter(true);
   };
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseTypeFilter = () => {
+    setOpenTypeFilter(false);
   };
-  const handleSearch = (filterName: string) => {
-    handleClose();
-
-    setFilterMode(filterName);
-
-    if (filterName === 'semua') {
-      setFilteredTransactionData(allTransactionData);
-    } else if (filterName === 'pemasukan') {
-      let result = [];
-      result = allTransactionData.filter((data) => {
+  const handleOpenStatusFilter = () => {
+    setOpenStatusFilter(true);
+  };
+  const handleCloseStatusFilter = () => {
+    setOpenStatusFilter(false);
+  };
+  const handleSearch = (param: { filterType?: string; filterStatus?: string }) => {
+    let filteredTransaction: Transaction[] = allTransactionData;
+    const typeFilter = param.filterType ? param.filterType : filterTypeMode;
+    const statusFilter = param.filterStatus ? param.filterStatus : filterStatusMode;
+    if (param.filterType) {
+      handleCloseTypeFilter();
+      setFilterTypeMode(param.filterType);
+    }
+    if (param.filterStatus) {
+      handleCloseStatusFilter();
+      setFilterStatusMode(param.filterStatus);
+    }
+    if (typeFilter === 'semua') {
+      //do nothing
+    } else if (typeFilter === 'pemasukan') {
+      filteredTransaction = filteredTransaction.filter((data) => {
         return !isOutcome(data, userId);
       });
-      setFilteredTransactionData(result);
-    } else if (filterName === 'pengeluaran') {
-      let result = [];
-      result = allTransactionData.filter((data) => {
+    } else {
+      filteredTransaction = filteredTransaction.filter((data) => {
         return isOutcome(data, userId);
       });
-      setFilteredTransactionData(result);
     }
+
+    if (statusFilter === 'semua') {
+      //do nothing
+    } else if (statusFilter === 'success') {
+      filteredTransaction = filteredTransaction.filter((data) => {
+        return data.status === 'success';
+      });
+    } else {
+      filteredTransaction = filteredTransaction.filter((data) => {
+        return data.status !== 'success';
+      });
+    }
+    setFilteredTransactionData(filteredTransaction);
   };
 
   //Table Pagination
@@ -166,7 +192,7 @@ export default function BankingTransactionsReport() {
             justifyContent="center"
             sx={{ mb: 2 }}
           >
-            <Grid item sm={12} lg={4}>
+            <Grid item sm={12} lg={6}>
               <Box display="flex" justifyContent="center" alignItems="center">
                 <DatePicker
                   disableFuture
@@ -182,7 +208,7 @@ export default function BankingTransactionsReport() {
               </Box>
             </Grid>
 
-            <Grid item sm={12} lg={4}>
+            <Grid item sm={12} lg={6}>
               <Box display="flex" justifyContent="center" alignItems="center">
                 <DatePicker
                   disableFuture
@@ -198,42 +224,86 @@ export default function BankingTransactionsReport() {
               </Box>
             </Grid>
 
-            <Grid item sm={12} lg={4}>
+            <Grid item sm={12} lg={6}>
               <Box display="flex" justifyContent="center" alignItems="center">
-                <Button
-                  onClick={handleOpen}
-                  ref={filterDropdownRef}
-                  sx={{ typography: 'h6', py: 1, px: 2.5, border: 2 }}
-                >
-                  {filterMode}
-                  <Icon icon={arrowDownOutline} width={16} height={16} />
-                </Button>
+                <Stack direction="row" spacing={2}>
+                  <Typography sx={{ mt: 2 }}>Filter tipe transaksi:</Typography>
+                  <Button
+                    onClick={handleOpenTypeFilter}
+                    ref={filterTypeDropdownRef}
+                    sx={{ typography: 'h6', py: 1, px: 2.5, border: 2 }}
+                  >
+                    {filterTypeMode}
+                    <Icon icon={arrowDownOutline} width={16} height={16} />
+                  </Button>
 
-                <MenuPopover
-                  open={open}
-                  onClose={handleClose}
-                  anchorEl={filterDropdownRef.current}
-                  sx={{ width: 220 }}
-                >
-                  <MenuItem
-                    onClick={() => handleSearch('semua')}
-                    sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                  <MenuPopover
+                    open={openTypeFilter}
+                    onClose={handleCloseTypeFilter}
+                    anchorEl={filterTypeDropdownRef.current}
+                    sx={{ width: 220 }}
                   >
-                    Semua
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => handleSearch('pemasukan')}
-                    sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    <MenuItem
+                      onClick={() => handleSearch({ filterType: 'semua' })}
+                      sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    >
+                      Semua
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => handleSearch({ filterType: 'pemasukan' })}
+                      sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    >
+                      Pemasukan
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => handleSearch({ filterType: 'pengeluaran' })}
+                      sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    >
+                      Pengeluaran
+                    </MenuItem>
+                  </MenuPopover>
+                </Stack>
+              </Box>
+            </Grid>
+            <Grid item sm={12} lg={6}>
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <Stack direction="row" spacing={2}>
+                  <Typography sx={{ mt: 2 }}>Filter status transaksi:</Typography>
+                  <Button
+                    onClick={handleOpenStatusFilter}
+                    ref={filterStatusDropdownRef}
+                    sx={{ typography: 'h6', py: 1, px: 2.5, border: 2 }}
                   >
-                    Pemasukan
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => handleSearch('pengeluaran')}
-                    sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    {filterStatusMode}
+                    <Icon icon={arrowDownOutline} width={16} height={16} />
+                  </Button>
+
+                  <MenuPopover
+                    open={openStatusFilter}
+                    onClose={handleCloseStatusFilter}
+                    anchorEl={filterStatusDropdownRef.current}
+                    sx={{ width: 220 }}
                   >
-                    Pengeluaran
-                  </MenuItem>
-                </MenuPopover>
+                    <MenuItem
+                      onClick={() => handleSearch({ filterStatus: 'semua' })}
+                      sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    >
+                      Semua
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => handleSearch({ filterStatus: 'success' })}
+                      sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    >
+                      Berhasil
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => handleSearch({ filterStatus: 'not success' })}
+                      sx={{ typography: 'body2', py: 1, px: 2.5 }}
+                    >
+                      Tidak berhasil
+                    </MenuItem>
+                  </MenuPopover>
+                </Stack>
               </Box>
             </Grid>
           </Grid>
@@ -294,11 +364,7 @@ export default function BankingTransactionsReport() {
                         </Box>
                         <Box sx={{ ml: 2 }}>
                           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            {row.type
-                              ? row.type
-                              : row.firstuser_id === userId
-                              ? row.destuser_display_name
-                              : row.firstuser_display_name}
+                            {row.type ? row.type : 'E-Commerce '}
                           </Typography>
                           <Typography variant="subtitle2">
                             {row.type
@@ -352,6 +418,13 @@ export default function BankingTransactionsReport() {
                   <TableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
                   </TableRow>
+                )}
+                {filteredTransactionData.length === 0 && (
+                  <TableCell colSpan={5}>
+                    <Stack direction="row" justifyContent="center">
+                      Tidak ada data
+                    </Stack>
+                  </TableCell>
                 )}
               </TableBody>
             </Table>

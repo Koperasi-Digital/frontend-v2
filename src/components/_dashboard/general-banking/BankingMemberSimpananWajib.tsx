@@ -179,10 +179,10 @@ export default function BankingMemberSimpananWajib() {
                 Lunas
               </MenuItem>
               <MenuItem
-                onClick={() => handleSearch('BELUM DIBAYAR')}
+                onClick={() => handleSearch('BELUM LUNAS')}
                 sx={{ typography: 'body2', py: 1, px: 2.5 }}
               >
-                Belum Dibayar
+                Belum Lunas
               </MenuItem>
             </MenuPopover>
           </Box>
@@ -235,6 +235,13 @@ export default function BankingMemberSimpananWajib() {
                   <TableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
                   </TableRow>
+                )}
+                {filteredSimpananWajibData.length === 0 && (
+                  <TableCell colSpan={3}>
+                    <Stack direction="row" justifyContent="center">
+                      Tidak ada data
+                    </Stack>
+                  </TableCell>
                 )}
               </TableBody>
             </Table>

@@ -5,6 +5,7 @@ import { handleGetCoopArusKasInfo } from 'utils/financeAxios/financeCoopReport';
 import { styled } from '@mui/material/styles';
 
 import {
+  IconButton,
   Stack,
   Table,
   TableRow,
@@ -12,9 +13,14 @@ import {
   TableBody,
   TableHead,
   TableCell,
+  Tooltip,
   Box,
   Typography
 } from '@mui/material';
+
+import { Icon } from '@iconify/react';
+
+import questionMarkCircleOutline from '@iconify/icons-eva/question-mark-circle-outline';
 
 import { fCurrency } from 'utils/formatNumber';
 
@@ -94,22 +100,90 @@ export default function CoopArusKasReport({ dateValue }: CoopArusKasReportProps)
                   <TableBody>
                     <TableRow>
                       <TableCell align="left">1</TableCell>
-                      <TableCell align="left">Jumlah Kas Awal</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Jumlah kas awal
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Jumlah kas awal adalah nilai kas koperasi di awal periode yang dipilih.'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(coopArusKasData.jumlahKasAwal)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">2</TableCell>
-                      <TableCell align="left">Kas Masuk</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Kas masuk
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Kas masuk adalah nilai dana yang masuk ke kas koperasi selama periode yang dipilih.'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(coopArusKasData.kasMasuk)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">3</TableCell>
-                      <TableCell align="left">Kas Keluar</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              Kas keluar
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Kas keluar adalah nilai dana yang keluar dari kas koperasi selama periode yang dipilih.'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">{fCurrency(coopArusKasData.kasKeluar)}</TableCell>
                     </TableRow>
                     <RowResultStyle>
                       <TableCell width={10}></TableCell>
-                      <TableCell align="left">Jumlah Kas Akhir</TableCell>
+                      <TableCell align="left">
+                        <Stack direction="row">
+                          <Box height={15} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="inherit" sx={{ mt: '0.33rem' }}>
+                              <strong>Jumlah kas akhir</strong>
+                            </Typography>
+                          </Box>
+                          <Tooltip
+                            title={
+                              'Jumlah kas akhir adalah nilai kas akhir koperasi selama periode yang dipilih / saat ini jika periode belum berakhir'
+                            }
+                          >
+                            <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                              <Icon icon={questionMarkCircleOutline} width={15} height={15} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
                       <TableCell align="left">
                         {fCurrency(coopArusKasData.jumlahKasAkhir)}
                       </TableCell>

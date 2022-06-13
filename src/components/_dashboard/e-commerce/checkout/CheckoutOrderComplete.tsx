@@ -1,9 +1,19 @@
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import arrowIosBackFill from '@iconify/icons-eva/arrow-ios-back-fill';
 // material
 import { styled } from '@mui/material/styles';
-import { Box, Button, Divider, Typography, Stack, DialogProps } from '@mui/material';
+import {
+  Box,
+  Button,
+  Divider,
+  Typography,
+  Stack,
+  DialogProps,
+  DialogActions,
+  DialogTitle
+} from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { resetCart } from '../../../../redux/slices/product';
@@ -33,10 +43,15 @@ export default function CheckoutOrderComplete({ open }: DialogProps) {
   const dispatch = useDispatch();
   const { checkout } = useSelector((state: { product: ProductState }) => state.product);
   const { orderId, paymentType } = checkout;
+  const [isOpenGopayPopUp, setIsOpenGopayPopUp] = useState<boolean>(false);
 
   const handleContinuePayment = () => {
-    dispatch(resetCart());
-    navigate(PATH_DASHBOARD.eCommerce.root + '/order/' + orderId + '/payment/' + paymentType);
+    if (paymentType === 'OTHER') {
+      dispatch(resetCart());
+      navigate(PATH_DASHBOARD.eCommerce.root + '/order/' + orderId + '/payment/' + paymentType);
+    } else {
+      setIsOpenGopayPopUp(true);
+    }
   };
 
   const handleContinueShopping = () => {
@@ -87,6 +102,35 @@ export default function CheckoutOrderComplete({ open }: DialogProps) {
             Lanjut Berbelanja
           </Button>
         </Stack>
+        <DialogAnimate
+          open={isOpenGopayPopUp}
+          onClose={() => {
+            setIsOpenGopayPopUp(false);
+          }}
+        >
+          <DialogTitle sx={{ pb: 1 }}>Apakah anda yakin ingin membayar dengan gopay?</DialogTitle>
+          <DialogActions>
+            <Stack direction="row" spacing={2}>
+              <Button
+                onClick={() => {
+                  dispatch(resetCart());
+                  navigate(
+                    PATH_DASHBOARD.eCommerce.root + '/order/' + orderId + '/payment/' + paymentType
+                  );
+                }}
+              >
+                Ya
+              </Button>
+              <Button
+                onClick={() => {
+                  setIsOpenGopayPopUp(false);
+                }}
+              >
+                Tidak
+              </Button>
+            </Stack>
+          </DialogActions>
+        </DialogAnimate>
       </Box>
     </DialogStyle>
   );

@@ -1,7 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { PaymentCreation as PaymentButton } from 'components/_dashboard/general-banking';
-
 import {
   handleGetSimpananPokok,
   handleAddOrderSimpananPokok
@@ -60,7 +59,7 @@ export default function SimpananPokok() {
               <>
                 <Typography>Bayar dengan</Typography>
                 <PaymentButton
-                  buttonName="Gopay terdaftar"
+                  buttonName="GOPAY TERDAFTAR"
                   transaction_details={{
                     order_id: simpananPokok.order.id,
                     gross_amount: simpananPokok.amount

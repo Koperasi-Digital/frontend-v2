@@ -1,5 +1,5 @@
 // material
-import { Container, Grid, Card, useMediaQuery } from '@mui/material';
+import { Container, Grid, Card, Typography, useMediaQuery } from '@mui/material';
 
 // components
 import Page from '../../components/Page';
@@ -26,6 +26,10 @@ export default function RepairRegister() {
         />
         <Card sx={{ padding: isMobile ? 2 : 10, paddingTop: 10 }}>
           <Grid container spacing={3} justifyContent="center">
+            <Typography paddingX={5} justifyContent="center" textAlign="center">
+              Biaya perbaikan adalah biaya perbaikan peralatan yang diperlukan karena terjadi
+              kerusakan sebelum peralatan tersebut dibeli baru.
+            </Typography>
             <Grid item xs={12}>
               <RepairRegisterForm />
             </Grid>
