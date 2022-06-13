@@ -52,6 +52,7 @@ import {
 import { SisaHasilUsaha as SisaHasilUsahaType } from '../../../../@types/sisa-hasil-usaha';
 import closeFill from '@iconify/icons-eva/close-fill';
 import { MIconButton } from 'components/@material-extend';
+import useAuth from 'hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -64,6 +65,7 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { user: loggedInUser } = useAuth();
   const { id, displayName, roles } = user;
   const isMember = roles.map((role: Role) => role.name).includes('MEMBER');
   const [bankAccount, setBankAccount] = useState<BankAccount>();
@@ -260,12 +262,14 @@ export default function UserMoreMenu({ user }: UserMoreMenuProps) {
           <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem onClick={() => onPrevDelete()} sx={{ color: 'text.secondary' }}>
-          <ListItemIcon>
-            <Icon icon={trash2Outline} width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText primary="Hapus" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
+        {loggedInUser?.id !== id && (
+          <MenuItem onClick={() => onPrevDelete()} sx={{ color: 'text.secondary' }}>
+            <ListItemIcon>
+              <Icon icon={trash2Outline} width={24} height={24} />
+            </ListItemIcon>
+            <ListItemText primary="Hapus" primaryTypographyProps={{ variant: 'body2' }} />
+          </MenuItem>
+        )}
       </Menu>
 
       <DialogAnimate open={isOpenDeleteModal} onClose={() => setIsOpenDeleteModal(false)}>

@@ -13,6 +13,7 @@ interface UserDetailProps {
 }
 
 export default function UserDetail({ user }: UserDetailProps) {
+  const isMember = user.roles.map((role) => role.name).includes('MEMBER');
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={8} order={{ xs: 2, md: 1 }}>
@@ -54,7 +55,7 @@ export default function UserDetail({ user }: UserDetailProps) {
               </Grid>
             </Card>
           </Grid>
-          {user?.store && (
+          {isMember && user?.store && (
             <Grid item xs={12}>
               <Card sx={{ p: 3 }}>
                 <Grid container spacing={2}>

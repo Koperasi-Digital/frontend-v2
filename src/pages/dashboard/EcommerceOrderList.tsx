@@ -176,7 +176,7 @@ export default function EcommerceOrderList() {
                         const timestamp = order.timestamp;
                         const product_name = product.name;
                         const cover = product.cover;
-                        const user_name = order.user.displayName;
+                        const user_name = order.user?.displayName || 'Pengguna yang telah dihapus';
 
                         return (
                           <TableRow hover key={id} tabIndex={-1}>
