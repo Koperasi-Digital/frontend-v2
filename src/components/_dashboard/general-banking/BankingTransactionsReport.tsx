@@ -364,11 +364,7 @@ export default function BankingTransactionsReport() {
                         </Box>
                         <Box sx={{ ml: 2 }}>
                           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            {row.type
-                              ? row.type
-                              : row.firstuser_id === userId
-                              ? row.destuser_display_name
-                              : row.firstuser_display_name}
+                            {row.type ? row.type : 'E-Commerce '}
                           </Typography>
                           <Typography variant="subtitle2">
                             {row.type
