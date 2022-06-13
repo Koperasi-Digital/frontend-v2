@@ -15,7 +15,7 @@ export default function BankingEMoneyForm({
   const getInitialValues = () => {
     const _event = {
       payment_type: 'gopay',
-      phone_number: '81212345678',
+      phone_number: '',
       country_code: '62'
     };
 
