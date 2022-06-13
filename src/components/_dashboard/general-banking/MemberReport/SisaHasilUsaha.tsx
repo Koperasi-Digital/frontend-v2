@@ -1,9 +1,14 @@
-import { Typography, Stack } from '@mui/material';
+import { Typography, Stack, Link, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { handleGetSisaHasilUsaha } from 'utils/financeAxios/financeSisaHasilUsaha';
 
 import { fCurrency } from 'utils/formatNumber';
+
+import { PATH_DASHBOARD } from 'routes/paths';
+import { Link as RouterLink } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import questionMarkCircleOutline from '@iconify/icons-eva/question-mark-circle-outline';
 
 import LoadingScreen from 'components/LoadingScreen';
 
@@ -36,7 +41,18 @@ export default function SisaHasilUsaha(props: { dateValue: Date }) {
       {sisaHasilUsaha ? (
         <>
           <Stack direction="column" alignItems="center" spacing={2} sx={{ mb: 2 }}>
-            <Typography variant="h6">SHU : {fCurrency(sisaHasilUsaha.total_cost)}</Typography>
+            <Stack direction="row" alignItems="center">
+              <Typography variant="h6">SHU : {fCurrency(sisaHasilUsaha.total_cost)}</Typography>
+              <Link
+                variant="body2"
+                component={RouterLink}
+                to={`${PATH_DASHBOARD.general.faq}/bagaimana-mekanisme-pembagian-shu-berdasarkan-keaktifan-anggota`}
+              >
+                <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                  <Icon icon={questionMarkCircleOutline} width={20} height={20} />
+                </IconButton>
+              </Link>
+            </Stack>
             <Typography variant="h6">
               periode {new Date(sisaHasilUsaha.periode).getDate()} - {1} -{' '}
               {new Date(sisaHasilUsaha.periode).getFullYear()}

@@ -247,6 +247,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
       deleteMessagingToken(messagingToken);
       setSession(null, null);
       setCurrentRole(null);
+      localStorage.removeItem('blogArrayId');
       dispatch({ type: Types.Logout });
     });
 

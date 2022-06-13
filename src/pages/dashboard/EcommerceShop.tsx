@@ -1,5 +1,6 @@
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
+import { NavLink as RouterLink } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import searchFill from '@iconify/icons-eva/search-fill';
 
@@ -14,13 +15,15 @@ import {
   Box,
   styled,
   OutlinedInput,
-  TablePagination
+  TablePagination,
+  IconButton,
+  Link
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts } from '../../redux/slices/product';
 // routes
-import { PATH_PAGE } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
 // utils
 import fakeRequest from '../../utils/fakeRequest';
 // @types
@@ -35,6 +38,7 @@ import {
   ShopFilterSidebar
 } from '../../components/_dashboard/e-commerce/shop';
 import CartWidget from '../../components/_dashboard/e-commerce/CartWidget';
+import questionMarkCircleOutline from '@iconify/icons-eva/question-mark-circle-outline';
 
 // ----------------------------------------------------------------------
 
@@ -151,7 +155,6 @@ export default function EcommerceShop() {
               </InputAdornment>
             }
           />
-
           <ShopTagFiltered
             filters={filters}
             formik={formik}
@@ -161,6 +164,15 @@ export default function EcommerceShop() {
           />
 
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
+            <Link
+              variant="body2"
+              component={RouterLink}
+              to={`${PATH_DASHBOARD.general.faq}/bagaimana-cara-melakukan-pembayaran-checkout-e-commerce`}
+            >
+              <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                <Icon icon={questionMarkCircleOutline} width={20} height={20} />
+              </IconButton>
+            </Link>
             <ShopFilterSidebar
               formik={formik}
               isOpenFilter={openFilter}

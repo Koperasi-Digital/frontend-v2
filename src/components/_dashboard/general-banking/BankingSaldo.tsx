@@ -1,14 +1,4 @@
-import {
-  Button,
-  Box,
-  Typography,
-  Link,
-  Card,
-  Tooltip,
-  IconButton,
-  Stack,
-  Grid
-} from '@mui/material';
+import { Button, Box, Typography, Link, Card, IconButton, Stack, Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Icon } from '@iconify/react';
@@ -31,8 +21,6 @@ export default function BankingSaldo() {
     fetchData();
   }, []);
 
-  const saldoExplanation = `Saldo adalah akumulasi dana pembayaran dari koperasi kepada anggota. Dapat berupa pembayaran sisa hasil usaha maupun hasil penjualan toko di e-commerce. Saldo tidak dapat dipakai kembali untuk melakukan transaksi pembayaran, tetapi dapat dicairkan ke akun rekening bank yang didaftarkan oleh anggota`;
-
   return (
     <>
       <Stack direction="row">
@@ -41,11 +29,15 @@ export default function BankingSaldo() {
             Saldo
           </Typography>
         </Box>
-        <Tooltip title={saldoExplanation}>
+        <Link
+          variant="body2"
+          component={RouterLink}
+          to={`${PATH_DASHBOARD.general.faq}/apa-itu-saldo-dan-bagaimana-cara-kerjanya`}
+        >
           <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
             <Icon icon={questionMarkCircleOutline} width={20} height={20} />
           </IconButton>
-        </Tooltip>
+        </Link>
       </Stack>
 
       <Card

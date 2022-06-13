@@ -15,7 +15,8 @@ import {
   Typography,
   Link,
   Button,
-  Stack
+  Stack,
+  IconButton
 } from '@mui/material';
 // utils
 import axios from 'utils/axios';
@@ -35,6 +36,7 @@ import { PATH_DASHBOARD } from 'routes/paths';
 
 //types
 import { BankAccount } from '../../@types/bankAccount';
+import questionMarkCircleOutline from '@iconify/icons-eva/question-mark-circle-outline';
 
 // ----------------------------------------------------------------------
 
@@ -211,9 +213,18 @@ export default function RequestMemberResignation() {
                 <>
                   <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
                     <Box sx={{ flexGrow: 1 }}>
-                      <Typography variant="h4" gutterBottom>
-                        Pengunduran Keanggotaan Koperasi
-                      </Typography>
+                      <Stack direction="row" alignItems="center">
+                        <Typography variant="h4">Pengunduran Keanggotaan Koperasi</Typography>
+                        <Link
+                          variant="body2"
+                          component={RouterLink}
+                          to={`${PATH_DASHBOARD.general.faq}/bagaimana-cara-mengundurkan-diri-dari-keanggotaan-koperasi`}
+                        >
+                          <IconButton sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Icon icon={questionMarkCircleOutline} width={20} height={20} />
+                          </IconButton>
+                        </Link>
+                      </Stack>
                       <Typography sx={{ color: 'text.secondary' }}>
                         Silakan isi formulir berikut untuk request pengunduran diri dari keanggotaan
                         koperasi.
