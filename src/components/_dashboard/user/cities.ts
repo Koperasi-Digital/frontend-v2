@@ -2507,12 +2507,21 @@ const cities = [
 ];
 
 export function getCityIDByName(target: string) {
+  target = removeCityType(target);
   const result = cities.find((city) => city.city_name === target);
   if (result) {
-    return parseInt(result.city_id);
+    return parseInt(result?.city_id || '1');
   } else {
-    return 0;
+    return 1;
   }
 }
 
 export default cities;
+
+function removeCityType(str: string) {
+  const indexOfSpace = str.indexOf(' ');
+  if (indexOfSpace === -1) {
+    return '';
+  }
+  return str.substring(indexOfSpace + 1);
+}
