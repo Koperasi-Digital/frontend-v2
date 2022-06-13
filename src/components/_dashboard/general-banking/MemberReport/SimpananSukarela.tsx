@@ -1,4 +1,4 @@
-import { Stack, Typography, Link } from '@mui/material';
+import { Button, Stack, Typography, Link } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { handleGetSimpananSukarela } from 'utils/financeAxios/financeSimpanan';
@@ -44,7 +44,7 @@ export default function SimpananSukarela() {
             }
           }}
         >
-          Tambahkan Simpanan Sukarela
+          <Button variant="contained">Tambahkan Simpanan Sukarela</Button>
         </Link>
       </Stack>
     </>
