@@ -1,4 +1,14 @@
-import { Typography, Link, Card, Tooltip, IconButton, Stack, Box } from '@mui/material';
+import {
+  Button,
+  Box,
+  Typography,
+  Link,
+  Card,
+  Tooltip,
+  IconButton,
+  Stack,
+  Grid
+} from '@mui/material';
 import { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Icon } from '@iconify/react';
@@ -53,9 +63,14 @@ export default function BankingSaldo() {
         </Typography>
       </Card>
       <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.finance.disbursementRequest}>
-        <Typography variant="body2" align="right" sx={{ m: '0.5rem', fontWeight: 'bold' }}>
-          Pencairan saldo
-        </Typography>
+        {/* <Button variant="contained" align="right" sx={{ m: '0.5rem', fontWeight: 'bold' }}>
+          Cairkan saldo
+        </Button> */}
+        <Grid container justifyContent="flex-end">
+          <Button variant="contained" sx={{ m: '0.5rem', fontWeight: 'bold' }}>
+            Cairkan saldo
+          </Button>
+        </Grid>
       </Link>
     </>
   );
