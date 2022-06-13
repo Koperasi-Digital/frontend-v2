@@ -22,7 +22,6 @@ const handleTokenExpired = (exp: number) => {
   const currentTime = Date.now();
   const timeLeft = exp * 1000 - currentTime;
   expiredTimer = window.setTimeout(async () => {
-    console.log('Token expired. Try to refresh token');
     const refreshToken = window.localStorage.getItem('refreshToken');
     try {
       if (!refreshToken) {
