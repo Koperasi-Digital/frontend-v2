@@ -51,6 +51,7 @@ export default function MyBlog() {
           }
         />
 
+        {ownPosts.length === 0 && <h4>Anda belum pernah membuat blog</h4>}
         <Grid container spacing={3}>
           {ownPosts.map((post) => (
             <BlogOwnPostCard key={post.id} post={post} />
