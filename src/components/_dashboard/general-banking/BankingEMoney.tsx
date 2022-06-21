@@ -95,7 +95,7 @@ export default function BankingEMoney() {
               </Typography>
             </Stack>
             <Button variant="contained" onClick={handleUnregisterEMoney}>
-              Batalkan pendaftaran Gopay
+              Batalkan pendaftaran E-Money
             </Button>
           </Box>
         ) : !isLoadingGetPaymentAccount &&
@@ -108,7 +108,7 @@ export default function BankingEMoney() {
               setOpenModalEMoney(true);
             }}
           >
-            Daftarkan Gopay
+            Daftarkan E-Money
           </Button>
         ) : isLoadingGetPaymentAccount ||
           isLoadingCharge ||
@@ -135,7 +135,7 @@ export default function BankingEMoney() {
           setOpenModalEMoney(false);
         }}
       >
-        <DialogTitle>Daftarkan Gopay</DialogTitle>
+        <DialogTitle>Daftarkan E-Money</DialogTitle>
         <BankingEMoneyForm
           handleCloseModal={handleCloseModal}
           handleRegisterEMoney={handleRegisterEMoney}

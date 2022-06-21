@@ -64,7 +64,7 @@ export default function SisaHasilUsaha(props: { dateValue: Date }) {
               sx={{ color: (theme) => theme.palette.error.main, textAlign: 'center' }}
               gutterBottom
             >
-              *15% SHU Koperasi dibagikan kepada anggota berdasarkan keaktifan anggota dalam
+              *25% SHU Koperasi dibagikan kepada anggota berdasarkan keaktifan anggota dalam
               menghadiri rapat dan melakukan pembelian pada E-Commerce
             </Typography>
           </Stack>
