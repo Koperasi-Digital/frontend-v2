@@ -38,6 +38,9 @@ export const ExportToExcel = (props: {
           { header: 'Jumlah', key: 'Jumlah', width: 32 }
         ];
 
+        worksheet.getColumn(3).alignment = { horizontal: 'right' };
+        worksheet.getColumn(3).numFmt = '"Rp "#,##0.00;[Red]-"Rp "#,##0.00';
+
         for (let j = 0; j < sheetData.length; j++) {
           worksheet.insertRow(j + 2, sheetData[j]);
         }
