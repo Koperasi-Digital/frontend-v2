@@ -149,7 +149,7 @@ export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProp
                       <TableRow>
                         <TableCell width={10}>#</TableCell>
                         <TableCell align="left">Komponen</TableCell>
-                        <TableCell align="left">Jumlah</TableCell>
+                        <TableCell align="right">Jumlah</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -173,7 +173,7 @@ export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProp
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="right">
                           {fCurrency(currentCoopLabaRugiData.jumlahSimpananPokok)}
                         </TableCell>
                       </TableRow>
@@ -197,7 +197,7 @@ export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProp
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="right">
                           {fCurrency(currentCoopLabaRugiData.jumlahSimpananWajib)}
                         </TableCell>
                       </TableRow>
@@ -221,7 +221,7 @@ export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProp
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="right">
                           {fCurrency(currentCoopLabaRugiData.jumlahBiayaLayanan)}
                         </TableCell>
                       </TableRow>
@@ -245,7 +245,7 @@ export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProp
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="right">
                           {fCurrency(currentCoopLabaRugiData.biayaSisaHasilUsaha)}
                         </TableCell>
                       </TableRow>
@@ -269,7 +269,7 @@ export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProp
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="right">
                           {fCurrency(currentCoopLabaRugiData.biayaOperasi)}
                         </TableCell>
                       </TableRow>
@@ -293,7 +293,9 @@ export default function CoopLabaRugiReport({ dateValue }: CoopLabaRugiReportProp
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{fCurrency(currentCoopLabaRugiData.net)}</TableCell>
+                        <TableCell align="right">
+                          {fCurrency(currentCoopLabaRugiData.net)}
+                        </TableCell>
                       </RowResultStyle>
                     </TableBody>
                   </Table>

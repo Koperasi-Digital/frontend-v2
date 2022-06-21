@@ -105,7 +105,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                     <TableRow>
                       <TableCell width={10}>#</TableCell>
                       <TableCell align="left">Komponen</TableCell>
-                      <TableCell align="left">Jumlah</TableCell>
+                      <TableCell align="right">Jumlah</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -125,7 +125,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(coopNeracaData.kas)}</TableCell>
+                      <TableCell align="right">{fCurrency(coopNeracaData.kas)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">2</TableCell>
@@ -147,7 +147,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(coopNeracaData.asetTetap)}</TableCell>
+                      <TableCell align="right">{fCurrency(coopNeracaData.asetTetap)}</TableCell>
                     </TableRow>
                     <RowResultStyle>
                       <TableCell width={10}></TableCell>
@@ -169,7 +169,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(coopNeracaData.aset)}</TableCell>
+                      <TableCell align="right">{fCurrency(coopNeracaData.aset)}</TableCell>
                     </RowResultStyle>
                     <TableRow>
                       <TableCell align="left">3</TableCell>
@@ -191,7 +191,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(coopNeracaData.saldoMember)}</TableCell>
+                      <TableCell align="right">{fCurrency(coopNeracaData.saldoMember)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">4</TableCell>
@@ -213,7 +213,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="right">
                         {fCurrency(coopNeracaData.simpananSukarela)}
                       </TableCell>
                     </TableRow>
@@ -237,7 +237,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(coopNeracaData.liabilitas)}</TableCell>
+                      <TableCell align="right">{fCurrency(coopNeracaData.liabilitas)}</TableCell>
                     </RowResultStyle>
                     <TableRow>
                       <TableCell align="left">5</TableCell>
@@ -259,7 +259,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(coopNeracaData.pendapatan)}</TableCell>
+                      <TableCell align="right">{fCurrency(coopNeracaData.pendapatan)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">6</TableCell>
@@ -277,7 +277,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(coopNeracaData.modal)}</TableCell>
+                      <TableCell align="right">{fCurrency(coopNeracaData.modal)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">7</TableCell>
@@ -299,7 +299,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(coopNeracaData.beban)}</TableCell>
+                      <TableCell align="right">{fCurrency(coopNeracaData.beban)}</TableCell>
                     </TableRow>
                     <RowResultStyle>
                       <TableCell width={10}></TableCell>
@@ -321,7 +321,7 @@ export default function CoopNeracaReport({ dateValue }: CoopNeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(coopNeracaData.ekuitas)}</TableCell>
+                      <TableCell align="right">{fCurrency(coopNeracaData.ekuitas)}</TableCell>
                     </RowResultStyle>
                   </TableBody>
                 </Table>

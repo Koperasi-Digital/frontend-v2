@@ -104,7 +104,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                     <TableRow>
                       <TableCell width={10}>#</TableCell>
                       <TableCell align="left">Komponen</TableCell>
-                      <TableCell align="left">Jumlah</TableCell>
+                      <TableCell align="right">Jumlah</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -124,7 +124,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(neracaData.kas)}</TableCell>
+                      <TableCell align="right">{fCurrency(neracaData.kas)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">2</TableCell>
@@ -144,7 +144,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(neracaData.persediaan)}</TableCell>
+                      <TableCell align="right">{fCurrency(neracaData.persediaan)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">3</TableCell>
@@ -164,7 +164,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(neracaData.simpananSukarela)}</TableCell>
+                      <TableCell align="right">{fCurrency(neracaData.simpananSukarela)}</TableCell>
                     </TableRow>
                     <RowResultStyle>
                       <TableCell width={10}></TableCell>
@@ -186,7 +186,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(neracaData.aset)}</TableCell>
+                      <TableCell align="right">{fCurrency(neracaData.aset)}</TableCell>
                     </RowResultStyle>
                     <TableRow>
                       <TableCell align="left">4</TableCell>
@@ -208,7 +208,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(neracaData.pendapatan)}</TableCell>
+                      <TableCell align="right">{fCurrency(neracaData.pendapatan)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">5</TableCell>
@@ -226,7 +226,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(neracaData.modal)}</TableCell>
+                      <TableCell align="right">{fCurrency(neracaData.modal)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">6</TableCell>
@@ -248,7 +248,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(neracaData.prive)}</TableCell>
+                      <TableCell align="right">{fCurrency(neracaData.prive)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">7</TableCell>
@@ -270,7 +270,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(neracaData.beban)}</TableCell>
+                      <TableCell align="right">{fCurrency(neracaData.beban)}</TableCell>
                     </TableRow>
                     <RowResultStyle>
                       <TableCell width={10}></TableCell>
@@ -292,7 +292,7 @@ export default function NeracaReport({ dateValue }: NeracaReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(neracaData.ekuitas)}</TableCell>
+                      <TableCell align="right">{fCurrency(neracaData.ekuitas)}</TableCell>
                     </RowResultStyle>
                   </TableBody>
                 </Table>

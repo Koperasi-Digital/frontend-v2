@@ -94,7 +94,7 @@ export default function ArusKasReport({ dateValue }: ArusKasReportProps) {
                     <TableRow>
                       <TableCell width={10}>#</TableCell>
                       <TableCell align="left">Komponen</TableCell>
-                      <TableCell align="left">Jumlah</TableCell>
+                      <TableCell align="right">Jumlah</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -118,7 +118,7 @@ export default function ArusKasReport({ dateValue }: ArusKasReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(arusKasData.jumlahKasAwal)}</TableCell>
+                      <TableCell align="right">{fCurrency(arusKasData.jumlahKasAwal)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">2</TableCell>
@@ -140,7 +140,7 @@ export default function ArusKasReport({ dateValue }: ArusKasReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(arusKasData.kasMasuk)}</TableCell>
+                      <TableCell align="right">{fCurrency(arusKasData.kasMasuk)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">3</TableCell>
@@ -162,7 +162,7 @@ export default function ArusKasReport({ dateValue }: ArusKasReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(arusKasData.kasKeluar)}</TableCell>
+                      <TableCell align="right">{fCurrency(arusKasData.kasKeluar)}</TableCell>
                     </TableRow>
                     <RowResultStyle>
                       <TableCell width={10}></TableCell>
@@ -184,7 +184,7 @@ export default function ArusKasReport({ dateValue }: ArusKasReportProps) {
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(arusKasData.jumlahKasAkhir)}</TableCell>
+                      <TableCell align="right">{fCurrency(arusKasData.jumlahKasAkhir)}</TableCell>
                     </RowResultStyle>
                   </TableBody>
                 </Table>

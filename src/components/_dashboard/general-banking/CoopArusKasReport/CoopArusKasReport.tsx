@@ -94,7 +94,7 @@ export default function CoopArusKasReport({ dateValue }: CoopArusKasReportProps)
                     <TableRow>
                       <TableCell width={10}>#</TableCell>
                       <TableCell align="left">Komponen</TableCell>
-                      <TableCell align="left">Jumlah</TableCell>
+                      <TableCell align="right">Jumlah</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -118,7 +118,9 @@ export default function CoopArusKasReport({ dateValue }: CoopArusKasReportProps)
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(coopArusKasData.jumlahKasAwal)}</TableCell>
+                      <TableCell align="right">
+                        {fCurrency(coopArusKasData.jumlahKasAwal)}
+                      </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">2</TableCell>
@@ -140,7 +142,7 @@ export default function CoopArusKasReport({ dateValue }: CoopArusKasReportProps)
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(coopArusKasData.kasMasuk)}</TableCell>
+                      <TableCell align="right">{fCurrency(coopArusKasData.kasMasuk)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">3</TableCell>
@@ -162,7 +164,7 @@ export default function CoopArusKasReport({ dateValue }: CoopArusKasReportProps)
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{fCurrency(coopArusKasData.kasKeluar)}</TableCell>
+                      <TableCell align="right">{fCurrency(coopArusKasData.kasKeluar)}</TableCell>
                     </TableRow>
                     <RowResultStyle>
                       <TableCell width={10}></TableCell>
@@ -184,7 +186,7 @@ export default function CoopArusKasReport({ dateValue }: CoopArusKasReportProps)
                           </Tooltip>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="right">
                         {fCurrency(coopArusKasData.jumlahKasAkhir)}
                       </TableCell>
                     </RowResultStyle>

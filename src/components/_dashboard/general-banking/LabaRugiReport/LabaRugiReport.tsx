@@ -170,7 +170,7 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
                       <TableRow>
                         <TableCell width={10}>#</TableCell>
                         <TableCell align="left">Komponen</TableCell>
-                        <TableCell align="left">Jumlah</TableCell>
+                        <TableCell align="right">Jumlah</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -194,7 +194,7 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="right">
                           {fCurrency(currentLabaRugiData.jumlahPenjualan)}
                         </TableCell>
                       </TableRow>
@@ -218,7 +218,7 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="right">
                           {fCurrency(currentLabaRugiData.sisaHasilUsaha)}
                         </TableCell>
                       </TableRow>
@@ -242,7 +242,7 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="right">
                           {fCurrency(currentLabaRugiData.biayaProduksiProdukTerjual)}
                         </TableCell>
                       </TableRow>
@@ -266,7 +266,7 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="right">
                           {fCurrency(currentLabaRugiData.biayaSimpananPokok)}
                         </TableCell>
                       </TableRow>
@@ -290,7 +290,7 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="right">
                           {fCurrency(currentLabaRugiData.biayaSimpananWajib)}
                         </TableCell>
                       </TableRow>
@@ -314,7 +314,7 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="right">
                           {fCurrency(currentLabaRugiData.biayaOperasi)}
                         </TableCell>
                       </TableRow>
@@ -336,7 +336,7 @@ export default function LabaRugiReport({ dateValue }: LabaRugiReportProps) {
                             </Tooltip>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{fCurrency(currentLabaRugiData.net)}</TableCell>
+                        <TableCell align="right">{fCurrency(currentLabaRugiData.net)}</TableCell>
                       </RowResultStyle>
                     </TableBody>
                   </Table>
