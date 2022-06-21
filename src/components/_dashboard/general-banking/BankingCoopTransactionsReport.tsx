@@ -185,7 +185,6 @@ export default function BankingCoopTransactionsReport() {
                 <DatePicker
                   disableFuture
                   label="Dari"
-                  openTo="year"
                   views={['year', 'month', 'day']}
                   value={fromDateValue}
                   onChange={(newValue) => {
@@ -201,7 +200,6 @@ export default function BankingCoopTransactionsReport() {
                 <DatePicker
                   disableFuture
                   label="Sampai"
-                  openTo="year"
                   views={['year', 'month', 'day']}
                   value={toDateValue}
                   onChange={(newValue) => {

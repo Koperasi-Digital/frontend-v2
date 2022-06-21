@@ -66,7 +66,6 @@ export default function Finance() {
                 <DatePicker
                   disableFuture
                   label="Pilih bulan"
-                  openTo="year"
                   views={['year', 'month']}
                   value={dateValue}
                   onChange={(newValue) => {
