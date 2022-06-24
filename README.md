@@ -1,42 +1,49 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Koperasi Digital - Frontend
 
-## 1.Install
+## How to use
 
-### npm
+[clone the repo](https://github.com/Koperasi-Digital/Front-End):
 
-```
-npm i
-or
-npm i --legacy-peer-deps
-```
-
-### yarn
-
-```
-yarn install
-```
-
-## 2.Start
+<!-- #default-branch-switch -->
 
 ```sh
-npm start
-or
+cd frontend-v2
+```
+
+Install it and run:
+
+```sh
+yarn install
 yarn start
 ```
 
-## 3.Build
+## vscode Settings
 
-```sh
-npm run build or yarn build
+1. Add Extension `Prettier - Code formatter` in your vscode
+
+2. Create `.vscode` folder
+
+3. Create `settings.json`
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
 ```
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Author
 
-The build is minified and the filenames include the hashes.<br>
+```txt
+13518024 Jovan Karuna Cahyadi
+13518030 Tony Eko Yuwono
+13518056 Michael Hans
+13518082 Rifaldy Aristya Kelana
+```
 
-Your app is ready to be deployed.
+## Credits
 
-## User Guide
-
-You can find detailed instructions on using Create React App and many tips in [its documentation](https://facebook.github.io/create-react-app/).
+[Minimal UI starter theme](https://github.com/minimal-ui-kit/material-kit-react)
